@@ -18,7 +18,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["src/api/*"],
+      "@component/*": ["src/component/*"],
+      "@container/*": ["src/container/*"],
+      "@feature/*": ["src/feature/*"],
+      "@hook/*": ["src/hook/*"],
+      "@util/*": ["src/util/*"],
+      "@/*": ["src/*"],
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
