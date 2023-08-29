@@ -9,17 +9,15 @@ interface IError {
 }
 
 function ErrorPage() {
-  const e = useRouteError() as IError;
+    const e = useRouteError() as IError;
 
-  return (
-    <div>
-        <h1>Oops!</h1>
-        <p>Sorry, an unexpected error has occurred.</p>
-        {e.error ? (
-          <i>{e.statusText || e.error.message}</i>
-        ) : null}
-    </div>
-  );
+    return (
+        <div>
+            <h1>Oops!</h1>
+            <p>Sorry, an unexpected error has occurred.</p>
+            {e.error ? <i>{e.statusText || e.error.message}</i> : null}
+        </div>
+    );
 }
 
 export default ErrorPage;
