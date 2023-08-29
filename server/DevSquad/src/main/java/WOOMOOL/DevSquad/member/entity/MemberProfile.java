@@ -1,12 +1,13 @@
 package WOOMOOL.DevSquad.member.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import WOOMOOL.DevSquad.position.entity.Position;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_ACTIVE;
 
@@ -14,10 +15,14 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_A
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MemberProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberProfileId;
+
+    @Column(nullable = false)
+    private String nickname;
 
     @Column(nullable = false)
     private String profilePicture = "";
@@ -48,11 +53,15 @@ public class MemberProfile {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToMany(mappedBy = "memberProfile")// 프론트에서 버튼을 누르면 String 타입의 문자가 박스에 담기고 그걸로 요청오게 해달라하기
-    private List<Position> positions;
+    @ManyToMany
+    @JoinTable(name = "profilePosition",
+            joinColumns = @JoinColumn(name = "memberProfileId"),
+            inverseJoinColumns = @JoinColumn(name = "positionId")
+    )
+    private Set<Position> positions;
     //todo: 나머지 매핑
 
-    enum MemberStatus {
+    public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
         MEMBER_QUIT("탈퇴함");
 

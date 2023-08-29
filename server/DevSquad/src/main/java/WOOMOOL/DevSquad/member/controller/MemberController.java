@@ -6,9 +6,19 @@ import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.mapper.MemberMapper;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.position.entity.Position;
+import WOOMOOL.DevSquad.position.repository.PositionRepository;
+import WOOMOOL.DevSquad.utils.PageInfo;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_ACTIVE;
 
 
 @RestController
@@ -16,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
+
+
 
     public MemberController(MemberService memberService, MemberMapper memberMapper) {
         this.memberService = memberService;
@@ -36,9 +48,45 @@ public class MemberController {
                                              @RequestBody MemberProfileDto.Patch patchDto){
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
         memberProfile.setMemberProfileId(memberId);
-        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile);
-        MemberProfileDto.Response response = memberMapper.entityToResponseDto(updateProfile);
+
+        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile,patchDto.getPosition());
+        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(updateProfile);
 
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+    // 한 명의 유저 프로필 조회
+    @GetMapping("/{member-id}")
+    public ResponseEntity getMemberProfile(@PathVariable("member-id") Long memberId){
+       MemberProfile memberProfile = memberService.getMemberProfile(memberId);
+       MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile);
+
+       return new ResponseEntity(response, HttpStatus.OK);
+    }
+    // 유저 리스트 조회 페이지네이션 10명까지
+    @GetMapping("/list")
+    public ResponseEntity getMemberProfiles(@RequestParam int page){
+
+        Page<MemberProfile> memberProfilePage = memberService.getMemberProfilePage(page-1);
+        List<MemberProfile> memberProfileList = memberService.getMemberProfiles(memberProfilePage);
+
+        List<MemberProfileDto.listResponse> response = memberMapper.entityToResponseDto(memberProfileList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,memberProfilePage), HttpStatus.OK);
+    }
+
+    // 중복 닉네임 확인
+    @GetMapping("/checkNickname")
+    public ResponseEntity checkNickname(@RequestParam String nickname){
+
+        memberService.checkNickname(nickname);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @DeleteMapping("/{member-id}")
+    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId){
+
+        memberService.deleteMember(memberId);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

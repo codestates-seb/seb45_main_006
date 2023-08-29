@@ -1,10 +1,12 @@
-package WOOMOOL.DevSquad.member.entity;
+package WOOMOOL.DevSquad.position.entity;
 
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Getter
@@ -18,7 +20,7 @@ public class Position {
     @Column(nullable = false)
     private String positionName;
 
-    @ManyToOne
-    @JoinColumn(name = "memberProfileId")
-    private MemberProfile memberProfile;
+    @ManyToMany(mappedBy = "positions")
+    private Set<MemberProfile> memberProfiles = new HashSet<>();
+
 }

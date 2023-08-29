@@ -25,7 +25,6 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-
     @Column(nullable = false)
     private String nickname;
 
@@ -37,9 +36,5 @@ public class Member {
         if(memberProfile.getMember() != this){
             memberProfile.setMember(this);
         }
-
     }
-
-
-
 }
