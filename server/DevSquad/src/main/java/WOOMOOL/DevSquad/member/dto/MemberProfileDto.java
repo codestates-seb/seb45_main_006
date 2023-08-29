@@ -4,6 +4,8 @@ package WOOMOOL.DevSquad.member.dto;
 import WOOMOOL.DevSquad.position.entity.Position;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -13,12 +15,21 @@ public class MemberProfileDto {
     @Setter
     @NoArgsConstructor
     public static class Patch{
+        @NotBlank(message = "닉네임을 입력해주세요")
+        @Pattern(regexp = "^[A-Za-z0-9가-힣]{2,8}$",
+                message = "닉네임은 2~8글자로 이루어져야 합니다.")
         private String nickname;
+
         private String profilePicture;
+
         private String githubId;
+
         private String introduction;
+
         private boolean listEnroll;
+
         private List<String> position;
+
         private List<String> stack;
 
 
@@ -28,10 +39,15 @@ public class MemberProfileDto {
     @Getter
     @AllArgsConstructor
     public static class listResponse{
+
         private String profilePicture;
+
         private String nickname;
+
         private String githubId;
+
         private Set<String> position;
+
         private List<String> stack;
 
     }
@@ -42,13 +58,21 @@ public class MemberProfileDto {
     public static class detailResponse{
 
         private String profilePicture;
+
         private String nickname;
+
         private String githubId;
+
         private String introduction;
+
         private boolean listEnroll;
+
         private boolean OAuthUser;
+
         private Set<String> position;
+
         private List<String> stack;
+
         private LocalDateTime modifiedAt;
 
     }

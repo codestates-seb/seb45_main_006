@@ -34,7 +34,17 @@ public interface MemberMapper {
         );
     }
 
-    List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles);
+    default List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles){
+        return memberProfiles.stream()
+                .map(memberProfile -> new MemberProfileDto.listResponse(
+                        memberProfile.getProfilePicture(),
+                        memberProfile.getNickname(),
+                        memberProfile.getGithubId(),
+                        memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
+                        new ArrayList<>()))
+                .collect(Collectors.toList());
+
+    }
 }
 
 

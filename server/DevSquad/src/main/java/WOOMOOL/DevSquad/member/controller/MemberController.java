@@ -13,8 +13,10 @@ import WOOMOOL.DevSquad.utils.PageResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,7 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_A
 
 @RestController
 @RequestMapping("/members")
+@Validated
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
@@ -36,7 +39,7 @@ public class MemberController {
 
     //멤버 생성
     @PostMapping
-    public ResponseEntity createMember(@RequestBody MemberPostDto postDto){
+    public ResponseEntity createMember(@Valid @RequestBody MemberPostDto postDto){
         Member member = memberMapper.postDtoToEntity(postDto);
         memberService.createMember(member);
 
@@ -45,7 +48,7 @@ public class MemberController {
     // 멤버 프로필 수정
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMemberProfile(@PathVariable("member-id") Long memberId,
-                                             @RequestBody MemberProfileDto.Patch patchDto){
+                                             @Valid @RequestBody MemberProfileDto.Patch patchDto){
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
         memberProfile.setMemberProfileId(memberId);
 
