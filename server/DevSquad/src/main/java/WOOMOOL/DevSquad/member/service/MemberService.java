@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +28,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PositionService positionService;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService) {
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -43,6 +45,9 @@ public class MemberService {
         MemberProfile memberProfile = new MemberProfile();
         memberProfile.setNickname(member.getNickname());
         member.addProfile(memberProfile);
+        // 패스워드 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
 
 
         Member createMember = memberRepository.save(member);
