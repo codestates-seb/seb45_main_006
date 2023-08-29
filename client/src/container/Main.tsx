@@ -1,9 +1,17 @@
+import { Suspense } from "react";
+import { Outlet } from "react-router";
+import Header from "@component/common/Header";
+
 function Main() {
-    const name = "world";
     return (
-        <div className="flex w-300 justify-center bg-project">
-            <h1 className="text-3xl font-bold underline">Hello {name}!</h1>
-        </div>
+        <>
+            <Header />
+            <main className="mt-110">
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Outlet />
+                </Suspense>
+            </main>
+        </>
     );
 }
 
