@@ -10,6 +10,7 @@ const customColor = {
     primary: "#191A20",
     "butotn-next": "#888888",
     "button-border": "#847D7D",
+    borderline: "#D9D9D9",
     background: "#C2C2C2",
     main: "#44AE4E",
     project: "#BAE5FD",
@@ -35,6 +36,10 @@ export default {
             width: px0_1000,
             height: px0_1000,
             colors: customColor,
+            fontFamily: {
+                sans: ["Noto Sans KR, sans-serif"],
+                ganpan: ["KCC-Ganpan"],
+            },
         },
     },
     plugins: [],
