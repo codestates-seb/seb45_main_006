@@ -7,12 +7,16 @@ import WOOMOOL.DevSquad.studyBoard.service.StudyService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @RequestMapping("/study")
+@Validated
 public class StudyController {
     private final StudyService service;
     private final StudyMapper mapper;
@@ -23,7 +27,7 @@ public class StudyController {
     }
 
     @PostMapping
-    public ResponseEntity postStudy(@RequestBody StudyDto.PostDto postDto) {
+    public ResponseEntity postStudy(@Valid @RequestBody StudyDto.PostDto postDto) {
          Study study = service.createStudy(mapper.postDtoToEntity(postDto));
 
          return new ResponseEntity<>(HttpStatus.CREATED);
@@ -40,15 +44,15 @@ public class StudyController {
 
     // 스터디 상세 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity getStudy(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity getStudy(@PathVariable("boardId") @Positive Long boardId) {
         StudyDto.AllResponseDto study = mapper.entityToAllResponseDto(service.getStudy(boardId));
 
         return new ResponseEntity<>(study, HttpStatus.OK);
     }
 
     @PatchMapping("/{boardId}")
-    public ResponseEntity updateStudy(@PathVariable("boardId") Long boardId,
-                                      @RequestBody StudyDto.PatchDto patchDto) {
+    public ResponseEntity updateStudy(@PathVariable("boardId") @Positive Long boardId,
+                                      @Valid @RequestBody StudyDto.PatchDto patchDto) {
         patchDto.setBoardId(boardId);
         Study study = service.updateStudy(mapper.patchDtoToEntity(patchDto));
 
@@ -56,7 +60,7 @@ public class StudyController {
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity deleteStudy(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity deleteStudy(@PathVariable("boardId") @Positive Long boardId) {
         service.deleteStudy(boardId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

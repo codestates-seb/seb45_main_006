@@ -7,12 +7,16 @@ import WOOMOOL.DevSquad.projectBoard.service.ProjectService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @RequestMapping("/project")
+@Validated
 public class ProjectController {
     private final ProjectService service;
     private final ProjectMapper mapper;
@@ -23,7 +27,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity postProject(@RequestBody ProjectDto.PostDto postDto) {
+    public ResponseEntity postProject(@Valid @RequestBody ProjectDto.PostDto postDto) {
         Project project = service.createStudy(mapper.postDtoToEntity(postDto));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -40,7 +44,7 @@ public class ProjectController {
 
     // 프로젝트 상세 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity getProject(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity getProject(@PathVariable("boardId") @Positive Long boardId) {
         Project project = service.getProject(boardId);
 
         ProjectDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(project);
@@ -48,8 +52,8 @@ public class ProjectController {
     }
 
     @PatchMapping("/{boardId}")
-    public ResponseEntity updateProject(@PathVariable("boardId") Long boardId,
-                                        @RequestBody ProjectDto.PatchDto patchDto) {
+    public ResponseEntity updateProject(@PathVariable("boardId") @Positive Long boardId,
+                                        @Valid @RequestBody ProjectDto.PatchDto patchDto) {
         patchDto.setBoardId(boardId);
         Project project = service.updateProject(mapper.patchDtoToEntity(patchDto));
 
@@ -57,7 +61,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity deleteProject(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity deleteProject(@PathVariable("boardId") @Positive Long boardId) {
         service.deleteProject(boardId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
