@@ -58,14 +58,14 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
     // 한 명의 유저 프로필 조회
-    @GetMapping("/{member-id}")
-    public ResponseEntity getMemberProfile(@PathVariable("member-id") Long memberId){
-       MemberProfile memberProfile = memberService.getMemberProfile(memberId);
+    @GetMapping()
+    public ResponseEntity getMemberProfile(){
+       MemberProfile memberProfile = memberService.getMemberProfile();
        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile);
 
        return new ResponseEntity(response, HttpStatus.OK);
     }
-    // 유저 리스트 조회 페이지네이션 10명까지
+    // 유저 리스트 조회 페이지네이션 10명까지?
     @GetMapping("/list")
     public ResponseEntity getMemberProfiles(@RequestParam int page){
 
@@ -77,6 +77,13 @@ public class MemberController {
         return new ResponseEntity(new PageResponseDto<>(response,memberProfilePage), HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity deleteMember(){
+
+        memberService.deleteMember();
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
     // 중복 닉네임 확인
     @GetMapping("/checkNickname")
     public ResponseEntity checkNickname(@RequestParam String nickname){
@@ -84,12 +91,5 @@ public class MemberController {
         memberService.checkNickname(nickname);
 
         return new ResponseEntity(HttpStatus.OK);
-    }
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId){
-
-        memberService.deleteMember(memberId);
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

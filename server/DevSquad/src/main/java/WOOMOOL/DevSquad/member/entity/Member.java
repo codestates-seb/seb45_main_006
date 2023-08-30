@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +29,9 @@ public class Member {
 
     @Column(nullable = false)
     private String nickname;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<String> roles = new ArrayList<>();
 
     @OneToOne(mappedBy = "member",cascade = CascadeType.ALL)
     private MemberProfile memberProfile;
