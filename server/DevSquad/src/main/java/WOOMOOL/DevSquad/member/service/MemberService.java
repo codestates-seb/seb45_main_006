@@ -30,7 +30,6 @@ public class MemberService {
     private final MemberProfileRepository memberProfileRepository;
     private final PositionService positionService;
     private final PasswordEncoder passwordEncoder;
-
     private final MemberAuthority memberAuthority;
 
     public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority) {

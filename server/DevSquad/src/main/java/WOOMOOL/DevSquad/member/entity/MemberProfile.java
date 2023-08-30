@@ -1,6 +1,8 @@
 package WOOMOOL.DevSquad.member.entity;
 
 import WOOMOOL.DevSquad.position.entity.Position;
+import WOOMOOL.DevSquad.projectBoard.entity.Project;
+import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -62,6 +64,12 @@ public class MemberProfile {
     private Set<Position> positions;
     //todo: 나머지 매핑
 
+    @OneToMany(mappedBy = "memberProfile")
+    private List<Project> projectlist;
+
+    @OneToMany(mappedBy = "memberProfile")
+    private List<Study> studyList;
+
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
         MEMBER_QUIT("탈퇴함");
@@ -71,5 +79,11 @@ public class MemberProfile {
         MemberStatus(String status) {
             this.status = status;
         }
+    }
+    public void addProject(Project project){
+        this.getProjectlist().add(project);
+    }
+    public void addStudy(Study study){
+        this.getStudyList().add(study);
     }
 }

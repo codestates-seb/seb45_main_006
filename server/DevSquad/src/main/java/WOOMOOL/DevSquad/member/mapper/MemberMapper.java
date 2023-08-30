@@ -30,6 +30,8 @@ public interface MemberMapper {
                 memberProfile.isOAuth2User(),
                 memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 new ArrayList<>(),
+                memberProfile.getProjectlist(),
+                memberProfile.getStudyList(),
                 memberProfile.getModifiedAt()
         );
     }
