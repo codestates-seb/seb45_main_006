@@ -26,7 +26,7 @@ public class ProjectController {
     public ResponseEntity postProject(@RequestBody ProjectDto.PostDto postDto) {
         Project project = service.createStudy(mapper.postDtoToEntity(postDto));
 
-        return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 프로젝트 페이지 조회

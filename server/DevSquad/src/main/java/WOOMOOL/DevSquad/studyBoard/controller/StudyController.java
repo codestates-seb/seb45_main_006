@@ -26,7 +26,7 @@ public class StudyController {
     public ResponseEntity postStudy(@RequestBody StudyDto.PostDto postDto) {
          Study study = service.createStudy(mapper.postDtoToEntity(postDto));
 
-         return new ResponseEntity<>(mapper.entityToAllResponseDto(study), HttpStatus.CREATED);
+         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 스터디 페이지 조회
