@@ -3,7 +3,6 @@ package WOOMOOL.DevSquad.position.service;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.position.repository.PositionRepository;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +18,12 @@ public class PositionService {
 
     // DB에 설정해놓은 Position 객체를 찾아서 프로필에 넣어줌
     // 유저 프로필 수정시 Position 생성 메서드
-    public void createPosition(List<String> positionlist, MemberProfile memberProfile) {
+    public void createPosition(List<String> positionlist, MemberProfile memberProfile){
 
         // 수정시 포지션 객체 초기화
         memberProfile.getPositions().clear();
 
-        if (positionlist.size() > 0) {
+        if(positionlist.size() > 0) {
             for (String positions : positionlist) {
                 Position position = positionRepository.findByPositionName(positions);
                 position.getMemberProfiles().add(memberProfile);
