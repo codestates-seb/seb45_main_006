@@ -59,6 +59,8 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
             String newAccessToken = delegateAccessToken(findMember);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
+
+            return; // 새로 발급받았을 때 HttpStatus가 뭐가 좋을까..
         }
 
         // 다른 예외면 에러 처리

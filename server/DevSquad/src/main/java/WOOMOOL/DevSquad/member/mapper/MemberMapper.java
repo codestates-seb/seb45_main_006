@@ -27,10 +27,10 @@ public interface MemberMapper {
                 memberProfile.getGithubId(),
                 memberProfile.getIntroduction(),
                 memberProfile.isListEnroll(),
-                memberProfile.isOAuth2User(),
+                memberProfile.isOAuth2Member(),
                 memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 new ArrayList<>(),
-                memberProfile.getProjectList(),
+                memberProfile.getProjectlist(),
                 memberProfile.getStudyList(),
                 memberProfile.getModifiedAt()
         );

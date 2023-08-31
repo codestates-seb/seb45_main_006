@@ -3,7 +3,6 @@ package WOOMOOL.DevSquad.member.entity;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -22,6 +21,13 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_A
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberProfile {
+
+    public MemberProfile(String nickname){
+        this.nickname = nickname;
+        this.oAuth2Member = true;
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberProfileId;
@@ -48,7 +54,7 @@ public class MemberProfile {
     private boolean ListEnroll = false;
 
     @Column
-    private boolean OAuth2User = false;
+    private boolean oAuth2Member = false;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus = MEMBER_ACTIVE;
@@ -64,16 +70,10 @@ public class MemberProfile {
             inverseJoinColumns = @JoinColumn(name = "positionId")
     )
     private Set<Position> positions;
-
-    @ManyToMany
-    @JoinTable(name = "profileStackTag",
-            joinColumns = @JoinColumn(name = "memberProfileId"),
-            inverseJoinColumns = @JoinColumn(name = "stackTagId"))
-    private Set<StackTag> stackTags;
     //todo: 나머지 매핑
 
     @OneToMany(mappedBy = "memberProfile")
-    private List<Project> projectList;
+    private List<Project> projectlist;
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Study> studyList;
@@ -87,17 +87,14 @@ public class MemberProfile {
 
         @Getter
         private String status;
-
         MemberStatus(String status) {
             this.status = status;
         }
     }
-
-    public void addProject(Project project) {
-        this.getProjectList().add(project);
+    public void addProject(Project project){
+        this.getProjectlist().add(project);
     }
-
-    public void addStudy(Study study) {
+    public void addStudy(Study study){
         this.getStudyList().add(study);
     }
 }

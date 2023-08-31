@@ -6,9 +6,8 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
-import WOOMOOL.DevSquad.stacktag.entity.StackTag;
-import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,15 +33,12 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
 
-    private final StackTagService stackTagService;
-
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority,StackTagService stackTagService) {
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
         this.passwordEncoder = passwordEncoder;
         this.memberAuthority = memberAuthority;
-        this.stackTagService = stackTagService;
     }
 
     // 멤버 생성
@@ -129,7 +125,6 @@ public class MemberService {
     // 토큰으로 멤버객체 찾기
     public Member findMemberFromToken() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("username : {}" , username);
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
 
         //todo: 예외처리
@@ -144,19 +139,43 @@ public class MemberService {
     public void checkNickname(String nickname) {
 
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
-        Member member = optionalMember.get();
-        // todo: 예외처리하기
-        if (optionalMember.isPresent() && member.getMemberProfile().getMemberStatus().equals(MEMBER_ACTIVE)) {
-            throw new RuntimeException();
-        }
+        optionalMember.ifPresent(member -> {
+                    if (member.getMemberProfile().getMemberStatus().equals(MEMBER_ACTIVE)) {
+                        //todo: 중복된 닉네임입니다.
+                        throw new RuntimeException("중복");
+                    }
+                }
+        );
     }
+    // 비밀번호 변경 메서드
+        public void changePassword (String rawPassword, String changePassword){
 
-    // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
-    private void isDeletedMember(Member member) {
-        if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
-            // todo: 예외처리하기
-            throw new RuntimeException();
+            checkPassword(rawPassword);
+            String newEncodedPassword = passwordEncoder.encode(changePassword);
+
+            Member updateMember = findMemberFromToken();
+            updateMember.setPassword(newEncodedPassword);
+
+        }
+
+        // 비밀변호 변경 전 확인 메서드
+        public void checkPassword (String rawPassword){
+
+            Member findMember = findMemberFromToken();
+            String encodedPassword = findMember.getPassword();
+
+            if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+                // todo: 비밀번호가 다릅니다
+                throw new RuntimeException();
+            }
+        }
+
+        // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
+        private void isDeletedMember (Member member){
+            if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
+                // todo: 예외처리하기
+                throw new RuntimeException();
+            }
         }
     }
-}
 
