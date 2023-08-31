@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Service
 public class ProjectService {
-    private final ProjectRepository repo;
+    private final ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository repo) {
-        this.repo = repo;
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
     }
 
     public Project createStudy(Project project) {
-        return repo.save(project);
+        return projectRepository.save(project);
     }
 
     public Project getProject(Long boardId) {
@@ -27,14 +27,14 @@ public class ProjectService {
 
         if( project.getProjectStatus() == Project.ProjectStatus.PROJECT_POSTED ) {
             project.setViewCount(project.getViewCount() + 1);
-            repo.save(project);
+            projectRepository.save(project);
             return project;
         } else throw new RuntimeException();
                         // todo : 예외처리
     }
 
     public List<Project> getProjects(Pageable pageable) {
-        Page<Project> projectPage = repo.findByProjectStatus(Project.ProjectStatus.PROJECT_POSTED, pageable);
+        Page<Project> projectPage = projectRepository.findByProjectStatus(Project.ProjectStatus.PROJECT_POSTED, pageable);
         return  projectPage.getContent();
     }
 
@@ -56,7 +56,7 @@ public class ProjectService {
 
         findProject.setModifiedAt(LocalDateTime.now());
 
-        repo.save(findProject);
+        projectRepository.save(findProject);
         return findProject;
     }
 
@@ -65,11 +65,11 @@ public class ProjectService {
 
         project.setProjectStatus(Project.ProjectStatus.PROJECT_DELETED);
 
-        repo.save(project);
+        projectRepository.save(project);
     }
 
     private Project findVerifiedProject(Long boardId) {
-        Optional<Project> optionalProject = repo.findById(boardId);
+        Optional<Project> optionalProject = projectRepository.findById(boardId);
         if( optionalProject.isPresent() )
             return optionalProject.get();
         else throw new RuntimeException();

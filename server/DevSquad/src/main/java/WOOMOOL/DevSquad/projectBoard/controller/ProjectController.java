@@ -18,17 +18,17 @@ import java.util.List;
 @RequestMapping("/project")
 @Validated
 public class ProjectController {
-    private final ProjectService service;
+    private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    public ProjectController(ProjectService service, ProjectMapper mapper) {
-        this.service = service;
+    public ProjectController(ProjectService projectService, ProjectMapper mapper) {
+        this.projectService = projectService;
         this.mapper = mapper;
     }
 
     @PostMapping
     public ResponseEntity postProject(@Valid @RequestBody ProjectDto.PostDto postDto) {
-        Project project = service.createStudy(mapper.postDtoToEntity(postDto));
+        Project project = projectService.createStudy(mapper.postDtoToEntity(postDto));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -36,7 +36,7 @@ public class ProjectController {
     // 프로젝트 페이지 조회
     @GetMapping("/list")
     public ResponseEntity getProjects(Pageable pageable) {
-        List<Project> projects = service.getProjects(pageable);
+        List<Project> projects = projectService.getProjects(pageable);
 
         List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -45,7 +45,7 @@ public class ProjectController {
     // 프로젝트 상세 조회
     @GetMapping("/{boardId}")
     public ResponseEntity getProject(@PathVariable("boardId") @Positive Long boardId) {
-        Project project = service.getProject(boardId);
+        Project project = projectService.getProject(boardId);
 
         ProjectDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(project);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -55,14 +55,14 @@ public class ProjectController {
     public ResponseEntity updateProject(@PathVariable("boardId") @Positive Long boardId,
                                         @Valid @RequestBody ProjectDto.PatchDto patchDto) {
         patchDto.setBoardId(boardId);
-        Project project = service.updateProject(mapper.patchDtoToEntity(patchDto));
+        Project project = projectService.updateProject(mapper.patchDtoToEntity(patchDto));
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity deleteProject(@PathVariable("boardId") @Positive Long boardId) {
-        service.deleteProject(boardId);
+        projectService.deleteProject(boardId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

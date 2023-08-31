@@ -1,7 +1,7 @@
 package WOOMOOL.DevSquad.studyBoard.entity;
 
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.projectBoard.entity.Board;
+import WOOMOOL.DevSquad.board.entity.Board;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter @Setter
 public class Study extends Board {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long studyId;
 
     @Column(nullable = false)
     private String title;
@@ -57,7 +54,4 @@ public class Study extends Board {
         }
     }
 
-//    @ManyToOne  // N : 1
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
 }

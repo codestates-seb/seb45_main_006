@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Service
 public class StudyService {
-    private final StudyRepository repo;
+    private final StudyRepository studyRepository;
 
-    public StudyService(StudyRepository repo) {
-        this.repo = repo;
+    public StudyService(StudyRepository studyRepository) {
+        this.studyRepository = studyRepository;
     }
 
     public Study createStudy(Study study) {
-        return repo.save(study);
+        return studyRepository.save(study);
     }
 
     public Study getStudy(Long boardId) {
@@ -27,14 +27,14 @@ public class StudyService {
 
         if( study.getStudyStatus() == Study.StudyStatus.STUDY_POSTED ) {
             study.setViewCount(study.getViewCount() + 1);
-            repo.save(study);
+            studyRepository.save(study);
             return study;
         } else throw new RuntimeException();
                         // todo : 예외처리
     }
 
     public List<Study> getStudies(Pageable pageable) {
-        Page<Study> studyPage = repo.findByStudyStatus(Study.StudyStatus.STUDY_POSTED, pageable);
+        Page<Study> studyPage = studyRepository.findByStudyStatus(Study.StudyStatus.STUDY_POSTED, pageable);
         return studyPage.getContent();
     }
 
@@ -54,7 +54,7 @@ public class StudyService {
 
         findStudy.setModifiedAt(LocalDateTime.now());
 
-        repo.save(findStudy);
+        studyRepository.save(findStudy);
         return findStudy;
     }
 
@@ -63,11 +63,11 @@ public class StudyService {
 
         study.setStudyStatus(Study.StudyStatus.STUDY_DELETED);
 
-        repo.save(study);
+        studyRepository.save(study);
     }
 
     private Study findVerifiedStudy(Long boardId) {
-        Optional<Study> optionalStudy = repo.findById(boardId);
+        Optional<Study> optionalStudy = studyRepository.findById(boardId);
         if( optionalStudy.isPresent() )
             return optionalStudy.get();
         else throw new RuntimeException();
