@@ -17,6 +17,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Member {
 
+    public Member(String email){
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
