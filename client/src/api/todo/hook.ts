@@ -72,10 +72,15 @@ export const useGetAllTodosOfUser = ({ userId }: GetReqTodoOwnerUser) => {
 
 // 투두 추가하기
 export const usePostTodos = ({ todo, completed, userId }: PostReqTodo) => {
+    const navigate = useNavigate();
     const setTodoResult = useSetRecoilState(addTodoResult);
     return useMutation<PostResTodo, AxiosError>({
         mutationFn: () => postTodo({ todo, completed, userId }),
-        onSuccess: (res) => setTodoResult(res),
+        onSuccess: (res) => {
+            setTodoResult(res);
+            alert("등록에 성공하였습니다");
+            navigate("/todos");
+        },
     });
 };
 

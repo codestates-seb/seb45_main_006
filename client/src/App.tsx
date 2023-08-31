@@ -8,6 +8,9 @@ import Container from "@container/Container";
 import ErrorPage from "@container/ErrorPage";
 import Main from "@container/Main";
 import MyPage from "@container/MyPage";
+import TodoList from "@container/todo/TodoList";
+import TodoDetail from "@container/todo/TodoDetail";
+import CreateTodo from "@container/todo/CreateTodo";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -25,6 +28,18 @@ const router = createBrowserRouter([
             {
                 path: "/members/1",
                 element: <MyPage />,
+            },
+            {
+                path: "/todos",
+                element: <TodoList />,
+            },
+            {
+                path: "/todos/:todoId",
+                element: <TodoDetail />,
+            },
+            {
+                path: "/todos/add",
+                element: <CreateTodo />,
             },
         ],
     },
