@@ -1,7 +1,6 @@
 package WOOMOOL.DevSquad.member.dto;
 
 
-import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
 import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import lombok.*;

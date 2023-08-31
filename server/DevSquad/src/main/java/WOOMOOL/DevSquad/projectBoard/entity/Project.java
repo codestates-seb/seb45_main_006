@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.projectBoard.entity;
 
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter @Setter
 public class Project extends Board {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long pjBoardId;
-
-//    private Long pjBoardId = getBoardId();
 
     @Column(nullable = false)
     private String title;
@@ -49,6 +45,10 @@ public class Project extends Board {
     @Column(nullable = false)
     private ProjectStatus projectStatus = ProjectStatus.PROJECT_POSTED;
 
+    @ManyToOne  // N : 1
+    @JoinColumn(name = "MEMBER_PROFILE_ID")
+    private MemberProfile memberProfile;
+
     public enum ProjectStatus {
         PROJECT_POSTED("게시 중"),
         PROJECT_CLOSED("모집 완료"),
@@ -61,7 +61,5 @@ public class Project extends Board {
         }
     }
 
-//    @ManyToOne  // N : 1
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
+
 }
