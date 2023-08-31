@@ -10,11 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter @Setter
 public class Project extends Board {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long pjBoardId;
-
-//    private Long pjBoardId = getBoardId();
 
     @Column(nullable = false)
     private String title;
@@ -66,7 +61,5 @@ public class Project extends Board {
         }
     }
 
-//    @ManyToOne  // N : 1
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
+
 }
