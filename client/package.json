@@ -14,6 +14,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@tanstack/react-query": "^4.33.0",
+        "@tanstack/react-query-devtools": "^4.33.0",
         "@types/node": "^20.5.7",
         "axios": "^1.5.0",
         "dayjs": "^1.11.9",
@@ -26,6 +28,7 @@
         "recoil": "^0.7.7"
     },
     "devDependencies": {
+        "@tanstack/eslint-plugin-query": "^4.34.1",
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
