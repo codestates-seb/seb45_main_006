@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.studyBoard.entity;
 
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.projectBoard.entity.Board;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +40,10 @@ public class Study extends Board {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Study.StudyStatus studyStatus = Study.StudyStatus.STUDY_POSTED;
+
+    @ManyToOne  // N : 1
+    @JoinColumn(name = "MEMBER_PROFILE_ID")
+    private MemberProfile memberProfile;
 
     public enum StudyStatus {
         STUDY_POSTED("게시 중"),
