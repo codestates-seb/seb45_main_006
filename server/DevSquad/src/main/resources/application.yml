@@ -1,3 +1,4 @@
+
 spring:
   h2:
     console:
@@ -5,26 +6,13 @@ spring:
       path: /h2
   datasource:
     url: jdbc:h2:mem:test
+
   jpa:
     hibernate:
       ddl-auto: create
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        color-codes: true
-        use_sql_comments: true
-  sql:
-    init:
-      data-locations: classpath*:db/h2/data.sql
-logging:
-  level:
-    org:
-      springframework:
-        orm:
-          jpa: DEBUG
-server:
-  servlet:
-    encoding:
-      force-response: true
+
+jwt:
+  access-Token-Expiration-Minutes: 60
+  refresh-Token-Expiration-Minutes: 120
+
