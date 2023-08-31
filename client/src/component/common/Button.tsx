@@ -1,22 +1,37 @@
+import { useEffect, useState } from "react";
+import Text from "@component/common/Text";
+
 type IButton = {
-    type: "PROJECT" | "STUDY" | "BOARD" | "MAIN";
+    type: "PROJECT" | "STUDY" | "BOARD" | "MAIN" | "SUB" | "WARN";
     label: string;
     isFullBtn: boolean;
     onClickHandler?: () => void;
 };
 
 function Button({ type, label, isFullBtn = false, onClickHandler }: IButton) {
-    const background = `bg-${type.toLocaleLowerCase()}`;
-    const width = isFullBtn ? "w-full" : "w-fit";
+    const [background, setBackground] = useState("bg-project");
+
+    useEffect(() => {
+        if (type === "PROJECT") setBackground("bg-project");
+        if (type === "STUDY") setBackground("bg-study");
+        if (type === "BOARD") setBackground("bg-board");
+        if (type === "MAIN") setBackground("bg-main");
+        if (type === "SUB") setBackground("bg-sub");
+        if (type === "WARN") setBackground("bg-warn");
+    }, [type]);
 
     return (
         <button
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`mr-4 h-40 rounded px-10 py-8 text-14 ${width} ${background}`}
+            className={`mb-2 mr-4 h-32 rounded px-8 py-6 text-14 ${isFullBtn ? "w-full" : "w-fit"} ${background}`}
         >
-            <p className={`${type === "MAIN" ? "text-white" : ""}`}>{label}</p>
+            <Text
+                type="SmallLabel"
+                color={type === "MAIN" || type === "SUB" || type === "WARN" ? "text-white" : ""}
+                text={label}
+            />
         </button>
     );
 }
