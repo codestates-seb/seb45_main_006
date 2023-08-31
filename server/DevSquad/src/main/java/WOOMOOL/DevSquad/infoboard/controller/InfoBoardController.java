@@ -54,12 +54,14 @@ public class InfoBoardController {
 
         return new ResponseEntity<>(mapper.InfoBoardToInfoBoardResponseDto(updatedInfoBoard), HttpStatus.OK);
     }
+    //정보게시판 전체 검색
     @GetMapping
     public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search) {
         List<InfoBoard> infoBoardList = infoBoardService.findAllInfoBoard(null, search);
 
         return new ResponseEntity<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), HttpStatus.OK);
     }
+    //정보게시판 카테고리별로 검색
     @GetMapping("/{category}")
     public ResponseEntity getCategoryInfoBoard(@PathVariable("category") String category,
                                                @RequestParam(name = "search", required = false) String search) {
@@ -68,6 +70,7 @@ public class InfoBoardController {
         return new ResponseEntity<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), HttpStatus.OK);
     }
 
+    //뷰카운트 올리기 (정보게시판을 펼쳐서 보기때문에 상세페이지가 따로 없어서 펼치기를 누르면 조회수가 올라감
     @PostMapping("/{board-id}")
     public ResponseEntity increaseViewCount(@PathVariable("board-id") @Positive long boardId) {
         infoBoardService.increaseViewCount(boardId);

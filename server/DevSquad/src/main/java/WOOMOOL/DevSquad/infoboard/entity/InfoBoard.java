@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.infoboard.entity;
 
-import WOOMOOL.DevSquad.board.Board;
+
+import WOOMOOL.DevSquad.projectBoard.entity.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

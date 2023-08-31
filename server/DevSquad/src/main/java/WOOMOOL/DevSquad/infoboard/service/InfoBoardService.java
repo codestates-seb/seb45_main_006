@@ -34,7 +34,7 @@ public class InfoBoardService {
 
         return infoBoardRepository.save(findInfoBoard);
     }
-
+    //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
     public List<InfoBoard> findAllInfoBoard(String categoryName, String search) {
         List<InfoBoard> result = new ArrayList<>();
         InfoBoard.Category category = InfoBoard.stringToCategory(categoryName);
