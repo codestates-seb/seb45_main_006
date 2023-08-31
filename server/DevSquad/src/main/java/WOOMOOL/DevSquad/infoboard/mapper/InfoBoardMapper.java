@@ -12,7 +12,9 @@ import java.util.List;
 public interface InfoBoardMapper {
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     InfoBoard InfoBoardPostDtoToInfoBoard(InfoBoardDto.Post request);
+    @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     InfoBoard InfoBoardPatchDtoToInfoBoard(InfoBoardDto.Patch request);
+    @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     InfoBoardDto.Response InfoBoardToInfoBoardResponseDto(InfoBoard infoBoard);
     List<InfoBoardDto.Response> InfoBoardListToInfoBoardResponseDtoList(List<InfoBoard> infoBoardList);
 

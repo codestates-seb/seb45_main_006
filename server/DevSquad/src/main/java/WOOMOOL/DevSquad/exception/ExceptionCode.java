@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum ExceptionCode {
     INFOBOARD_NOT_FOUND(404, "InfoBoard not found"),
-    STACK_NOT_FOUND(404, "Stack not found");
+    STACK_NOT_FOUND(404, "Stack not found"),
+    FORBIDDEN(403, "Forbidden");
 
     @Getter
     private int status;

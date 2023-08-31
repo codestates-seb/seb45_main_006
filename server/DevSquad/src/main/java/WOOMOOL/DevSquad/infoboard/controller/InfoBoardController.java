@@ -24,19 +24,15 @@ import java.util.List;
 public class InfoBoardController {
     private final static String INFOBOARD_DEFAULT_URL = "/information";
     private final InfoBoardService infoBoardService;
-    private final MemberService memberService;
     private final InfoBoardMapper mapper;
 
     public InfoBoardController(InfoBoardService infoBoardService,
-                               MemberService memberService,
                                InfoBoardMapper mapper) {
         this.infoBoardService = infoBoardService;
-        this.memberService = memberService;
         this.mapper = mapper;
     }
     @PostMapping
     public ResponseEntity postInfoBoard(@Valid @RequestBody InfoBoardDto.Post requestBody) {
-        requestBody.setMemberId(memberService.findMemberFromToken().getMemberId());
 
         InfoBoard infoBoard = mapper.InfoBoardPostDtoToInfoBoard(requestBody);
 
@@ -55,6 +51,7 @@ public class InfoBoardController {
     public ResponseEntity patchInfoBoard(@Valid @RequestBody InfoBoardDto.Patch requestBody,
                                          @PathVariable("board-id") @Positive long boardId) {
         requestBody.setBoardId(boardId);
+
         InfoBoard infoBoard = mapper.InfoBoardPatchDtoToInfoBoard(requestBody);
 
         InfoBoard updatedInfoBoard = infoBoardService.updateInfoBoard(infoBoard);
