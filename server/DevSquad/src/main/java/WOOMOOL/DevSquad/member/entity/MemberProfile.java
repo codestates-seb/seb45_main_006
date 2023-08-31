@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.member.entity;
 
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
 import WOOMOOL.DevSquad.studyBoard.entity.Study;
@@ -69,6 +70,9 @@ public class MemberProfile {
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Study> studyList;
+
+    @OneToMany(mappedBy = "memberProfile")
+    private List<InfoBoard> infoBoardList;
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),

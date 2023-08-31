@@ -4,6 +4,8 @@ import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.mapper.InfoBoardMapper;
 import WOOMOOL.DevSquad.infoboard.service.InfoBoardService;
+import WOOMOOL.DevSquad.member.entity.Member;
+import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,15 +24,20 @@ import java.util.List;
 public class InfoBoardController {
     private final static String INFOBOARD_DEFAULT_URL = "/information";
     private final InfoBoardService infoBoardService;
+    private final MemberService memberService;
     private final InfoBoardMapper mapper;
 
     public InfoBoardController(InfoBoardService infoBoardService,
+                               MemberService memberService,
                                InfoBoardMapper mapper) {
         this.infoBoardService = infoBoardService;
+        this.memberService = memberService;
         this.mapper = mapper;
     }
     @PostMapping
     public ResponseEntity postInfoBoard(@Valid @RequestBody InfoBoardDto.Post requestBody) {
+        requestBody.setMemberId(memberService.findMemberFromToken().getMemberId());
+
         InfoBoard infoBoard = mapper.InfoBoardPostDtoToInfoBoard(requestBody);
 
         InfoBoard createdInfoBoard = infoBoardService.createInfoBoard(infoBoard);

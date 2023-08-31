@@ -1,7 +1,8 @@
 package WOOMOOL.DevSquad.infoboard.entity;
 
 
-import WOOMOOL.DevSquad.projectBoard.entity.Board;
+import WOOMOOL.DevSquad.board.entity.Board;
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,10 +21,10 @@ public class InfoBoard extends Board {
     private String title;
 
     private String content;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-    private Long memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberProfile memberProfile;
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
