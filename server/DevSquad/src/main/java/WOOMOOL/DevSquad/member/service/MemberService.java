@@ -6,6 +6,8 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
+import WOOMOOL.DevSquad.stacktag.entity.StackTag;
+import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -33,12 +35,15 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
 
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority) {
+    private final StackTagService stackTagService;
+
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority,StackTagService stackTagService) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
         this.passwordEncoder = passwordEncoder;
         this.memberAuthority = memberAuthority;
+        this.stackTagService = stackTagService;
     }
 
     // 멤버 생성
