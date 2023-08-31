@@ -146,7 +146,7 @@ public class MemberService {
                 }
         );
     }
-                // 비밀번호 변경 메서드
+    // 비밀번호 변경 메서드
         public void changePassword (String rawPassword, String changePassword){
 
             checkPassword(rawPassword);
@@ -154,8 +154,6 @@ public class MemberService {
 
             Member updateMember = findMemberFromToken();
             updateMember.setPassword(newEncodedPassword);
-
-            memberRepository.save(updateMember);
 
         }
 
