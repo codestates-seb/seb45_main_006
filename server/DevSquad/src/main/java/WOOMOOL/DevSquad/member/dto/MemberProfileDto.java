@@ -32,7 +32,6 @@ public class MemberProfileDto {
 
         private List<String> position;
 
-        private List<String> stack;
 
 
     }
