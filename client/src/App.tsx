@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
-import Main from "@container/Main";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import Container from "@container/Container";
 import ErrorPage from "@container/ErrorPage";
+import Main from "@container/Main";
 import MyPage from "@container/MyPage";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -14,9 +15,13 @@ import MyPage from "@container/MyPage";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Main />,
+        element: <Container />,
         errorElement: <ErrorPage />,
         children: [
+            {
+                path: "/",
+                element: <Main />,
+            },
             {
                 path: "/members/1",
                 element: <MyPage />,
