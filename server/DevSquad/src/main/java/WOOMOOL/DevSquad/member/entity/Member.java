@@ -17,8 +17,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Member {
 
+    // oAuth2로 생성된 회원
     public Member(String email){
         this.email = email;
+        this.nickname = email;
     }
 
     @Id

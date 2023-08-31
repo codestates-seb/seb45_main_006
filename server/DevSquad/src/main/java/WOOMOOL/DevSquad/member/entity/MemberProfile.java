@@ -21,11 +21,11 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_A
 @AllArgsConstructor
 public class MemberProfile {
 
-    //oAuth2로 회원생성시 기본값
     public MemberProfile(String nickname){
         this.nickname = nickname;
-        this.oAuth2User = true;
+        this.oAuth2Member = true;
     }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +53,7 @@ public class MemberProfile {
     private boolean ListEnroll = false;
 
     @Column
-    private boolean oAuth2User = false;
+    private boolean oAuth2Member = false;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus = MEMBER_ACTIVE;
