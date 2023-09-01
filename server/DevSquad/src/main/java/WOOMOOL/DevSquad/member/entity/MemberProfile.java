@@ -2,15 +2,14 @@ package WOOMOOL.DevSquad.member.entity;
 
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.position.entity.Position;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

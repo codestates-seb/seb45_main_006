@@ -1,7 +1,7 @@
-package WOOMOOL.DevSquad.projectBoard.mapper;
+package WOOMOOL.DevSquad.projectboard.mapper;
 
-import WOOMOOL.DevSquad.projectBoard.dto.ProjectDto;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import org.mapstruct.Mapper;
 
 import java.util.List;
