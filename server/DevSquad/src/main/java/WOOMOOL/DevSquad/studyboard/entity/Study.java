@@ -1,7 +1,7 @@
-package WOOMOOL.DevSquad.projectBoard.entity;
+package WOOMOOL.DevSquad.studyboard.entity;
 
-import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
+import WOOMOOL.DevSquad.board.entity.Board;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,21 +10,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class Project extends Board {
+public class Study extends Board {
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String content;
-
-    // 미정 / 날짜 형식
-    @Column(nullable = false)
-    private String startDate;
-
-    // 미정 / 날짜 형식
-    @Column(nullable = false)
-    private String deadline;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -44,20 +36,20 @@ public class Project extends Board {
     // Soft Delete
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private ProjectStatus projectStatus = ProjectStatus.PROJECT_POSTED;
+    private Study.StudyStatus studyStatus = Study.StudyStatus.STUDY_POSTED;
 
     @ManyToOne  // N : 1
     @JoinColumn(name = "MEMBER_PROFILE_ID")
     private MemberProfile memberProfile;
 
-    public enum ProjectStatus {
-        PROJECT_POSTED("게시 중"),
-        PROJECT_CLOSED("모집 완료"),
-        PROJECT_DELETED("삭제");
+    public enum StudyStatus {
+        STUDY_POSTED("게시 중"),
+        STUDY_CLOSED("모집 완료"),
+        STUDY_DELETED("삭제");
 
         private String status;
 
-        ProjectStatus(String status) {
+        StudyStatus(String status) {
             this.status = status;
         }
     }

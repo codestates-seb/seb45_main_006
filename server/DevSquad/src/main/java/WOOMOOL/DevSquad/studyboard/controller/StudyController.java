@@ -1,9 +1,9 @@
-package WOOMOOL.DevSquad.studyBoard.controller;
+package WOOMOOL.DevSquad.studyboard.controller;
 
-import WOOMOOL.DevSquad.studyBoard.dto.StudyDto;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
-import WOOMOOL.DevSquad.studyBoard.mapper.StudyMapper;
-import WOOMOOL.DevSquad.studyBoard.service.StudyService;
+import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
+import WOOMOOL.DevSquad.studyboard.mapper.StudyMapper;
+import WOOMOOL.DevSquad.studyboard.service.StudyService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

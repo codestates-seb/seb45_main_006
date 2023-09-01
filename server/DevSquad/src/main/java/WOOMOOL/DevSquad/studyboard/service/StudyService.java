@@ -1,12 +1,11 @@
-package WOOMOOL.DevSquad.studyBoard.service;
+package WOOMOOL.DevSquad.studyboard.service;
 
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
-import WOOMOOL.DevSquad.studyBoard.repository.StudyRepository;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
+import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

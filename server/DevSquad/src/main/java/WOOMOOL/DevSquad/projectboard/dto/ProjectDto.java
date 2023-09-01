@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.projectBoard.dto;
+package WOOMOOL.DevSquad.projectboard.dto;
 
 import lombok.Getter;
 import lombok.Setter;

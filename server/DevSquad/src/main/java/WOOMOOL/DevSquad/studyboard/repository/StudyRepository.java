@@ -1,7 +1,6 @@
-package WOOMOOL.DevSquad.studyBoard.repository;
+package WOOMOOL.DevSquad.studyboard.repository;
 
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

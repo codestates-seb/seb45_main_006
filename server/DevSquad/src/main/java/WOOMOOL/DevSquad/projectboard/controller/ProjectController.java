@@ -1,11 +1,9 @@
-package WOOMOOL.DevSquad.projectBoard.controller;
+package WOOMOOL.DevSquad.projectboard.controller;
 
-import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
-import WOOMOOL.DevSquad.projectBoard.dto.ProjectDto;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.projectBoard.mapper.ProjectMapper;
-import WOOMOOL.DevSquad.projectBoard.service.ProjectService;
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
+import WOOMOOL.DevSquad.projectboard.service.ProjectService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
