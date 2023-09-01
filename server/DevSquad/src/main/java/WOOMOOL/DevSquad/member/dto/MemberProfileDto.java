@@ -1,9 +1,8 @@
 package WOOMOOL.DevSquad.member.dto;
 
-
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;

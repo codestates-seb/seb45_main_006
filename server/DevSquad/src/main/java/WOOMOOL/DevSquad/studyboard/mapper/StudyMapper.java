@@ -1,7 +1,7 @@
-package WOOMOOL.DevSquad.studyBoard.mapper;
+package WOOMOOL.DevSquad.studyboard.mapper;
 
-import WOOMOOL.DevSquad.studyBoard.dto.StudyDto;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
+import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import org.mapstruct.Mapper;
 
 import java.util.List;
