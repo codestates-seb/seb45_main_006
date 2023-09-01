@@ -1,11 +1,14 @@
 package WOOMOOL.DevSquad.member.service;
 
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
+import WOOMOOL.DevSquad.stacktag.entity.StackTag;
+import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -32,13 +35,15 @@ public class MemberService {
     private final PositionService positionService;
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
+    private final StackTagService stackTagService;
 
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority) {
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
         this.passwordEncoder = passwordEncoder;
         this.memberAuthority = memberAuthority;
+        this.stackTagService = stackTagService;
     }
 
     // 멤버 생성
@@ -64,12 +69,13 @@ public class MemberService {
     }
 
     // 프로필 수정
-    public MemberProfile updateMemberProfile(MemberProfile memberProfile, List<String> position) {
+    public MemberProfile updateMemberProfile(MemberProfile memberProfile, List<String> position,List<String> stackTag) {
 
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
 
         positionService.createPosition(position, findMemberProfile);
+        stackTagService.createStackTag(stackTag, findMemberProfile);
 
         Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.setNickname(nickname));
         Optional.ofNullable(memberProfile.getProfilePicture()).ifPresent(profilePicture -> findMemberProfile.setProfilePicture(profilePicture));
@@ -97,12 +103,19 @@ public class MemberService {
         return memberProfileRepository.findAll(PageRequest.of(page, 10, Sort.by("memberProfileId")));
     }
 
-    // 활동중, 등록 처리한 유저리스트 조회
+    // 활동중, 등록 처리함, 블랙리스트에 없는 유저리스트 조회
     public List<MemberProfile> getMemberProfiles(Page<MemberProfile> memberProfilePage) {
 
+        // 블랙리스트 멤버에 있는 memberId를 List로 추출
+        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockMemberList().stream()
+                .map(blockMember -> blockMember.getBlockMemberId())
+                .collect(Collectors.toList());
+
+        // 추출한 memberId와 memberProfile 의 id가 같으면 필터링
         return memberProfilePage.getContent().stream()
                 .filter(memberProfile -> memberProfile.getMemberStatus().equals(MEMBER_ACTIVE))
                 .filter(memberProfile -> memberProfile.isListEnroll() == true)
+                .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
     }
 
@@ -133,6 +146,12 @@ public class MemberService {
 
         return findMember;
 
+    }
+    public Member findMember(long memberId){
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember = optionalMember.orElseThrow(()-> new RuntimeException());
+
+        return findMember;
     }
 
     // 중복 닉네임 확인

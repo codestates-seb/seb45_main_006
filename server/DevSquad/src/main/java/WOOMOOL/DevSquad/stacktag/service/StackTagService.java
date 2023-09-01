@@ -23,7 +23,7 @@ public class StackTagService {
 
     public void createStackTag(List<String> stackTaglist, MemberProfile memberProfile){
 
-        // 수정시 포지션 객체 초기화
+        // 수정시 스택 객체 초기화
         memberProfile.getStackTags().clear();
 
         if(stackTaglist.size() > 0) {

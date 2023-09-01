@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.member.dto;
 
 
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
 import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import lombok.*;
@@ -49,7 +50,7 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
     }
 
@@ -72,11 +73,15 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
         private List<Project> projectList;
 
         private List<Study> studyList;
+
+        private List<InfoBoard> infoBoardList;
+
+        private List<String> blockMemberList;
 
         private LocalDateTime modifiedAt;
 
