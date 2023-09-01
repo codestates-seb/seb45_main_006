@@ -1,14 +1,17 @@
 package WOOMOOL.DevSquad.member.service;
 
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
-import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
-import WOOMOOL.DevSquad.stacktag.entity.StackTag;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
+import WOOMOOL.DevSquad.projectboard.service.ProjectService;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
+import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
+import WOOMOOL.DevSquad.studyboard.service.StudyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -37,13 +40,19 @@ public class MemberService {
     private final MemberAuthority memberAuthority;
     private final StackTagService stackTagService;
 
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService) {
+    private final ProjectRepository projectRepository;
+
+    private final StudyRepository studyRepository;
+
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService, ProjectRepository projectRepository, StudyRepository studyRepository) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
         this.passwordEncoder = passwordEncoder;
         this.memberAuthority = memberAuthority;
         this.stackTagService = stackTagService;
+        this.projectRepository = projectRepository;
+        this.studyRepository = studyRepository;
     }
 
     // 멤버 생성
@@ -93,9 +102,11 @@ public class MemberService {
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
 
+        List<Project> projectList = getMemberProjectList(findMember.getMemberId());
+        findMemberProfile.setProjectlist(projectList);
+
         return findMemberProfile;
     }
-
 
     // 유저 리스트 페이지
     public Page<MemberProfile> getMemberProfilePage(int page) {
@@ -196,5 +207,15 @@ public class MemberService {
                 throw new RuntimeException();
             }
         }
+
+        // 특정 멤버가 가지고 있는 프로젝트 리스트
+    private List<Project> getMemberProjectList(Long memberProfileId) {
+
+        List<Project> projects = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
+
+        return projects;
     }
+}
+
+
 
