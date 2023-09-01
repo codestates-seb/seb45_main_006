@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.comment.entity;
 
 
 import WOOMOOL.DevSquad.board.entity.Board;
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,10 +20,10 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
-//    @ManyToOne(fetch = FatchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-    private Long memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberProfile memberProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
