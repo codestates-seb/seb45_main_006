@@ -21,7 +21,7 @@ public class ProjectDto {
         private String deadline;
 
         @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
 
         private boolean recruitStatus;
     }
@@ -40,7 +40,7 @@ public class ProjectDto {
         private String deadline;
 
 //        @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
     }
 
     @Getter @Setter
@@ -51,7 +51,7 @@ public class ProjectDto {
         private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
@@ -65,7 +65,7 @@ public class ProjectDto {
         private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }

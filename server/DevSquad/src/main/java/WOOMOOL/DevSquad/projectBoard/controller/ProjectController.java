@@ -1,5 +1,7 @@
 package WOOMOOL.DevSquad.projectBoard.controller;
 
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
+import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.projectBoard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
 import WOOMOOL.DevSquad.projectBoard.mapper.ProjectMapper;
@@ -49,6 +51,14 @@ public class ProjectController {
 
         ProjectDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(project);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/list/{memberProfileId}")
+    public ResponseEntity getProjectsForMember(@PathVariable("memberProfileId") Long memberProfileId) {
+        List<Project> projects = projectService.getProjectsForMember(memberProfileId);
+
+        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/{boardId}")
