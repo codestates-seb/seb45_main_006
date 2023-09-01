@@ -33,9 +33,7 @@ public class InfoBoardController {
     }
     @PostMapping
     public ResponseEntity postInfoBoard(@Valid @RequestBody InfoBoardDto.Post requestBody) {
-
         InfoBoard infoBoard = mapper.InfoBoardPostDtoToInfoBoard(requestBody);
-
         InfoBoard createdInfoBoard = infoBoardService.createInfoBoard(infoBoard);
 
         URI location = UriComponentsBuilder
