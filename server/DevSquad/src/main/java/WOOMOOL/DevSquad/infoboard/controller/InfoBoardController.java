@@ -4,6 +4,8 @@ import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.mapper.InfoBoardMapper;
 import WOOMOOL.DevSquad.infoboard.service.InfoBoardService;
+import WOOMOOL.DevSquad.member.entity.Member;
+import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +33,7 @@ public class InfoBoardController {
     }
     @PostMapping
     public ResponseEntity postInfoBoard(@Valid @RequestBody InfoBoardDto.Post requestBody) {
+
         InfoBoard infoBoard = mapper.InfoBoardPostDtoToInfoBoard(requestBody);
 
         InfoBoard createdInfoBoard = infoBoardService.createInfoBoard(infoBoard);
@@ -48,6 +51,7 @@ public class InfoBoardController {
     public ResponseEntity patchInfoBoard(@Valid @RequestBody InfoBoardDto.Patch requestBody,
                                          @PathVariable("board-id") @Positive long boardId) {
         requestBody.setBoardId(boardId);
+
         InfoBoard infoBoard = mapper.InfoBoardPatchDtoToInfoBoard(requestBody);
 
         InfoBoard updatedInfoBoard = infoBoardService.updateInfoBoard(infoBoard);

@@ -61,5 +61,4 @@ public class Project extends Board {
             this.status = status;
         }
     }
-
 }
