@@ -47,7 +47,7 @@ public class MemberController {
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
         memberProfile.setMemberProfileId(memberId);
 
-        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition());
+        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition(),patchDto.getStack());
         MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(updateProfile);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -61,6 +61,10 @@ public class MemberController {
         memberService.checkPassword(passwordDto.getRawPassword());
         MemberProfile memberProfile = memberService.getMemberProfile();
         MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile);
+
+        // 프로젝트 리스트
+        // 스터디 리스트
+        // 자유게시판 리스트 추가 반환
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -76,6 +80,7 @@ public class MemberController {
 
         return new ResponseEntity(new PageResponseDto<>(response, memberProfilePage), HttpStatus.OK);
     }
+    // 회원 삭제
 
     @DeleteMapping
     public ResponseEntity deleteMember() {

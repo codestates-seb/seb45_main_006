@@ -2,7 +2,7 @@ package WOOMOOL.DevSquad.member.dto;
 
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
-
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -49,7 +49,7 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
     }
 
@@ -72,11 +72,15 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
         private List<Project> projectList;
 
         private List<Study> studyList;
+
+        private List<InfoBoard> infoBoardList;
+
+        private List<String> blockMemberList;
 
         private LocalDateTime modifiedAt;
 
