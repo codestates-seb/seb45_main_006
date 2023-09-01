@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.projectBoard.dto;
+package WOOMOOL.DevSquad.studyboard.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,8 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
-public class ProjectDto {
-
+public class StudyDto {
     @Getter
     public static class PostDto {
         @NotBlank(message = "제목을 작성해 주세요.")
@@ -17,11 +16,8 @@ public class ProjectDto {
         @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-        private String startDate;
-        private String deadline;
-
         @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
 
         private boolean recruitStatus;
     }
@@ -36,22 +32,20 @@ public class ProjectDto {
 //        @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-        private String startDate;
-        private String deadline;
-
 //        @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
+
+        private boolean recruitStatus;
     }
 
     @Getter @Setter
     public static class previewResponseDto {
+//        private Long studyId;
         private Long boardId;
         private String title;
-        private String startDate;
-        private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
@@ -61,11 +55,9 @@ public class ProjectDto {
         private Long boardId;
         private String title;
         private String content;
-        private String startDate;
-        private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }

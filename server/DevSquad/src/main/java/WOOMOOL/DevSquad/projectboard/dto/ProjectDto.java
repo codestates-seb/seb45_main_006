@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.studyBoard.dto;
+package WOOMOOL.DevSquad.projectboard.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
-public class StudyDto {
+public class ProjectDto {
+
     @Getter
     public static class PostDto {
         @NotBlank(message = "제목을 작성해 주세요.")
@@ -16,8 +17,11 @@ public class StudyDto {
         @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
+        private String startDate;
+        private String deadline;
+
         @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
 
         private boolean recruitStatus;
     }
@@ -32,20 +36,22 @@ public class StudyDto {
 //        @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-//        @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private String startDate;
+        private String deadline;
 
-        private boolean recruitStatus;
+//        @Positive(message = "모집 인원을 작성해 주세요.")
+        private Integer recruitNum;
     }
 
     @Getter @Setter
     public static class previewResponseDto {
-//        private Long studyId;
         private Long boardId;
         private String title;
+        private String startDate;
+        private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
@@ -55,9 +61,11 @@ public class StudyDto {
         private Long boardId;
         private String title;
         private String content;
+        private String startDate;
+        private String deadline;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
