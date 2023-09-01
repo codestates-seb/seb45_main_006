@@ -1,7 +1,9 @@
 package WOOMOOL.DevSquad.member.entity;
 
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectBoard.entity.Project;
+import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.studyBoard.entity.Study;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -69,13 +71,21 @@ public class MemberProfile {
             inverseJoinColumns = @JoinColumn(name = "positionId")
     )
     private Set<Position> positions;
-    //todo: 나머지 매핑
+    @ManyToMany
+    @JoinTable(name = "profileStackTag",
+            joinColumns = @JoinColumn(name = "memberProfileId"),
+            inverseJoinColumns = @JoinColumn(name = "stackTagId")
+    )
+    private Set<StackTag> stackTags;
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Project> projectlist;
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Study> studyList;
+
+    @OneToMany(mappedBy = "memberProfile")
+    private List<InfoBoard> infoBoardList;
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),

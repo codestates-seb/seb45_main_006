@@ -1,7 +1,7 @@
 package WOOMOOL.DevSquad.studyBoard.entity;
 
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.projectBoard.entity.Board;
+import WOOMOOL.DevSquad.board.entity.Board;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -18,7 +18,7 @@ public class StackTagController {
     }
     //스택태그를 추가할때의 검색기능
     @GetMapping
-    public ResponseEntity getStackTags(@RequestParam(name = "keyword", required = false) String keyword) {
-        return new ResponseEntity<>(stackTagService.getStackTags(keyword), HttpStatus.OK);
+    public ResponseEntity getStackTags(@RequestParam(name = "search", required = false) String search) {
+        return new ResponseEntity<>(stackTagService.getStackTags(search), HttpStatus.OK);
     }
 }

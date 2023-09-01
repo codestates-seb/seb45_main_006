@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface StackTagRepository extends JpaRepository<StackTag,Long> {
     //스택이름을 DB에서 찾아 반환
-    Optional<StackTag> findByTagName(String stack);
+    StackTag findByTagName(String stack);
     //입력된 검색어가 포함되어 있는 스택태그들을 반환 (검색어로 시작하는 스택들의 순서를 앞으로 하는 기능 아직 미구현)
     //ORDER BY 줄은 작동하지만 제대로 작동하진않아서 일단 놔둠
     @Query("SELECT t FROM StackTag t WHERE LOWER(t.tagName) " +

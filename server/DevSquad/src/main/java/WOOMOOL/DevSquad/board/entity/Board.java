@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.projectBoard.entity;
+package WOOMOOL.DevSquad.board.entity;
 
 import lombok.Getter;
 import lombok.Setter;
