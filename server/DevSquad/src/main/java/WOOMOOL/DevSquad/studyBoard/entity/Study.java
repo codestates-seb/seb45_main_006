@@ -25,7 +25,7 @@ public class Study extends Board {
     private LocalDateTime modifiedAt;
 
     @Column(nullable = false)
-    private int recruitNum;
+    private Integer recruitNum;
 
     @Column(nullable = false)
     private boolean recruitStatus = false;

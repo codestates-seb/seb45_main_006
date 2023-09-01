@@ -17,7 +17,7 @@ public class StudyDto {
         private String content;
 
         @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
 
         private boolean recruitStatus;
     }
@@ -33,7 +33,7 @@ public class StudyDto {
         private String content;
 
 //        @Positive(message = "모집 인원을 작성해 주세요.")
-        private int recruitNum;
+        private Integer recruitNum;
 
         private boolean recruitStatus;
     }
@@ -45,7 +45,7 @@ public class StudyDto {
         private String title;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
@@ -57,7 +57,7 @@ public class StudyDto {
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int recruitNum;
+        private Integer recruitNum;
         private boolean recruitStatus;
         private int viewCount;
     }
