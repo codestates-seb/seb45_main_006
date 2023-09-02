@@ -25,7 +25,7 @@ function Header() {
         { label: "Todo", route: "/todos", selected: false },
     ];
 
-    const [isSignPage, setIsSignPage] = useState<boolean>(false);
+    const [isSignPage, setIsSignPage] = useState<boolean>(true);
     const [navItems, setNavItems] = useState<INavItems>(defaultNavItems);
 
     // pathname에 따라
@@ -36,7 +36,7 @@ function Header() {
             }),
         );
 
-        if (pathname === "/signup" || pathname === "/login") {
+        if (pathname.includes("/signup") || pathname.includes("/login")) {
             setIsSignPage(true);
         } else {
             setIsSignPage(false);
@@ -62,7 +62,6 @@ function Header() {
         return (
             <li
                 onClick={() => {
-                    console.log("ite", item.route);
                     navigate(item.route);
                 }}
             >
@@ -76,15 +75,15 @@ function Header() {
     const AuthBtns = () => {
         return (
             <div>
-                <Button type="MAIN" label="로그인" isFullBtn={false} onClickHandler={() => navigate("/signup")} />
-                <Button type="MAIN" label="회원가입" isFullBtn={false} onClickHandler={() => navigate("/login")} />
+                <Button type="MAIN" label="로그인" isFullBtn={false} onClickHandler={() => navigate("/login")} />
+                <Button type="MAIN" label="회원가입" isFullBtn={false} onClickHandler={() => navigate("/signup")} />
             </div>
         );
     };
 
     return (
-        <div className="fixed z-10 flex w-full max-w-screen-xl flex-col bg-white px-16">
-            <header className="flex h-70 w-full items-center justify-between border-b-1 border-slate-200">
+        <>
+            <header className="flex h-70 w-full items-center justify-between border-b-1 border-slate-200 px-16">
                 <button onClick={() => navigate("/")} className="flex items-center justify-between">
                     <img src={IconLogo} alt="DevSquad 로고" />
                     <Text type="Logo" text="Dev Squad" color="text-main" />
@@ -100,7 +99,7 @@ function Header() {
                     </ul>
                 </nav>
             ) : null}
-        </div>
+        </>
     );
 }
 
