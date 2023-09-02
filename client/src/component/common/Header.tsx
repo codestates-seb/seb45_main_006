@@ -77,6 +77,12 @@ function Header() {
             <div>
                 <Button type="MAIN" label="로그인" isFullBtn={false} onClickHandler={() => navigate("/login")} />
                 <Button type="MAIN" label="회원가입" isFullBtn={false} onClickHandler={() => navigate("/signup")} />
+                <Button
+                    type="WARN"
+                    label="회원가입(테스트용)"
+                    isFullBtn={false}
+                    onClickHandler={() => navigate("/signup/temp")}
+                />
             </div>
         );
     };
