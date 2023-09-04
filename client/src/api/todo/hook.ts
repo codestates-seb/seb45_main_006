@@ -1,8 +1,5 @@
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { addTodoResult, isReadStatus } from "@feature/Todo";
 
 import {
     getAllTodos,
@@ -36,7 +33,7 @@ import {
 
 // 모든 투두 리스트 조회
 export const useGetAllTodos = ({ limit, skip }: GetReqAllTodos) => {
-    return useQuery<GetResAllTodos, AxiosError, GetResAllTodos>({
+    return useQuery<AxiosResponse<GetResAllTodos>, AxiosError, GetResAllTodos>({
         queryKey: todoKeyFactory.all({ limit, skip }),
         queryFn: () => getAllTodos({ limit, skip }),
     });
@@ -44,7 +41,7 @@ export const useGetAllTodos = ({ limit, skip }: GetReqAllTodos) => {
 
 // 하나의 투두 상세 조회
 export const useGetDetailTodo = ({ todoId }: GetReqDetailTodo) => {
-    return useQuery<GetResDetailTodo, AxiosError, GetResDetailTodo, [string, GetReqDetailTodo]>({
+    return useQuery<AxiosResponse<GetResDetailTodo>, AxiosError, GetResDetailTodo, [string, GetReqDetailTodo]>({
         queryKey: todoKeyFactory.detail({ todoId }),
         queryFn: () => getDetailTodo({ todoId }),
     });
@@ -52,17 +49,19 @@ export const useGetDetailTodo = ({ todoId }: GetReqDetailTodo) => {
 
 // 하나의 투두 상세 조회로 얻은 유저 아이디로 유저 상세 조회
 export const useGetTodoOwnerUser = ({ userId }: GetReqTodoOwnerUser) => {
-    return useQuery<GetResTodoOwnerUser, AxiosError, GetResTodoOwnerUser, [string, GetReqTodoOwnerUser]>({
-        queryKey: todoKeyFactory.ownerUser({ userId }),
-        queryFn: () => getTodoOwnerUser({ userId }),
-        // useQuery의 동기처리: userId가 존재해야 해당 api 요청
-        enabled: !!userId,
-    });
+    return useQuery<AxiosResponse<GetResTodoOwnerUser>, AxiosError, GetResTodoOwnerUser, [string, GetReqTodoOwnerUser]>(
+        {
+            queryKey: todoKeyFactory.ownerUser({ userId }),
+            queryFn: () => getTodoOwnerUser({ userId }),
+            // useQuery의 동기처리: userId가 존재해야 해당 api 요청
+            enabled: !!userId,
+        },
+    );
 };
 
 // 유저 아이디로 해당 유저가 만든 모든 투두 조회하기
 export const useGetAllTodosOfUser = ({ userId }: GetReqTodoOwnerUser) => {
-    return useQuery<GetResAllTodos, AxiosError, GetResAllTodos, [string, GetReqTodoOwnerUser]>({
+    return useQuery<AxiosResponse<GetResAllTodos>, AxiosError, GetResAllTodos, [string, GetReqTodoOwnerUser]>({
         queryKey: todoKeyFactory.allOfUser({ userId }),
         queryFn: () => getAllTodosOfUser({ userId }),
         // useQuery의 동기처리: userId가 존재해야 해당 api 요청
@@ -71,36 +70,16 @@ export const useGetAllTodosOfUser = ({ userId }: GetReqTodoOwnerUser) => {
 };
 
 // 투두 추가하기
-export const usePostTodos = ({ todo, completed, userId }: PostReqTodo) => {
-    const navigate = useNavigate();
-    const setTodoResult = useSetRecoilState(addTodoResult);
-    return useMutation<PostResTodo, AxiosError>({
-        mutationFn: () => postTodo({ todo, completed, userId }),
-        onSuccess: (res) => {
-            setTodoResult(res);
-            alert("등록에 성공하였습니다");
-            navigate("/todos");
-        },
-    });
+export const usePostTodos = () => {
+    return useMutation<AxiosResponse<PostResTodo>, AxiosError, PostReqTodo>(postTodo);
 };
 
 // 투두 수정하기
-export const usePutTodos = ({ todo, completed, todoId }: PutReqTodo) => {
-    const setIsReadStatus = useSetRecoilState(isReadStatus);
-    return useMutation<PutResTodo, AxiosError>({
-        mutationFn: () => putTodo({ todo, completed, todoId }),
-        onSuccess: () => setIsReadStatus(true),
-    });
+export const usePutTodos = () => {
+    return useMutation<AxiosResponse<PutResTodo>, AxiosError, PutReqTodo>(putTodo);
 };
 
 // 투두 삭제하기
-export const useDeleteTodos = ({ todoId }: DeleteReqTodo) => {
-    const navigate = useNavigate();
-    return useMutation<DeleteResTodo, AxiosError>({
-        mutationFn: () => deleteTodo({ todoId }),
-        onSuccess: () => {
-            alert("삭제되었습니다.");
-            navigate("/todos");
-        },
-    });
+export const useDeleteTodos = () => {
+    return useMutation<AxiosResponse<DeleteResTodo>, AxiosError, DeleteReqTodo>(deleteTodo);
 };
