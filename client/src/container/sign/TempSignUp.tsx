@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Text from "@component/common/Text";
 import Button from "@component/common/Button";
@@ -38,12 +39,29 @@ const SignUpInput = ({ id, label, type, value, setValue, placeholder }: ISignUpI
 };
 
 function TempSignUp() {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState<string>("");
     const [nickname, setNickname] = useState<string>("");
     const [pw, setPw] = useState<string>("");
     const [pwRe, setPwRe] = useState<string>("");
 
-    const { mutate: postMember } = usePostMember({ nickname, email, password: pw });
+    const { mutate: postMember } = usePostMember();
+
+    const createMemberHandler = () => {
+        postMember(
+            { nickname, email, password: pw },
+            {
+                onSuccess: () => {
+                    alert("회원가입 완료되었습니다. 로그인 후 서비스를 이용해주세요!");
+                    navigate("/logins");
+                },
+                onError: (err) => {
+                    alert(err.message);
+                },
+            },
+        );
+    };
 
     return (
         <div className="flex h-full w-full items-center justify-center bg-background">
@@ -96,7 +114,7 @@ function TempSignUp() {
                         isFullBtn={false}
                         onClickHandler={() => {
                             console.log(email, nickname, pw, pwRe);
-                            postMember();
+                            createMemberHandler();
                         }}
                     />
                 </div>

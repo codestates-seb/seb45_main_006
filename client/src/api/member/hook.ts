@@ -1,8 +1,6 @@
 import { AxiosError } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import { useNavigate } from "react-router-dom";
-
 import { deleteMember, getAllMembers, getMemberDetail, patchMember } from "@api/member/api";
 import { memberKeyFactory } from "@api/member/memberKeyFactory";
 
@@ -18,47 +16,19 @@ export const useGetAllMembers = ({ page, size }: GetReqAllMembers) => {
 };
 
 // 멤버 상세 조회하기
-export const useGetMemberDetail = ({ userId }: GetReqMemberDetail) => {
+export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
     return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
-        queryKey: memberKeyFactory.detail({ userId }),
-        queryFn: () => getMemberDetail({ userId }),
+        queryKey: memberKeyFactory.detail({ memberId }),
+        queryFn: () => getMemberDetail({ memberId }),
     });
 };
 
 // 마이페이지 수정 - 멤버 수정하기
-export const usePutMember = ({
-    userId,
-    nickname,
-    profilePicture,
-    githubId,
-    introduction,
-    listEnroll,
-    position,
-    stack,
-}: PatchReqMember) => {
-    return useMutation<PatchResMember, AxiosError>({
-        mutationFn: () =>
-            patchMember({
-                userId,
-                nickname,
-                profilePicture,
-                githubId,
-                introduction,
-                listEnroll,
-                position,
-                stack,
-            }),
-    });
+export const usePutMember = () => {
+    return useMutation<PatchResMember, AxiosError, PatchReqMember>(patchMember);
 };
 
 // 탈퇴 - 멤버 삭제하기
-export const useDeleteTodos = ({ userId }: DeleteReqMember) => {
-    const navigate = useNavigate();
-    return useMutation<DeleteResMember, AxiosError>({
-        mutationFn: () => deleteMember({ userId }),
-        onSuccess: () => {
-            alert("탈퇴 처리 되었습니다.");
-            navigate("/");
-        },
-    });
+export const useDeleteTodos = () => {
+    return useMutation<DeleteResMember, AxiosError, DeleteReqMember>(deleteMember);
 };
