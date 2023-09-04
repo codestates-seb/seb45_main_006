@@ -1,7 +1,6 @@
 import Typography from "./Typography";
 
 export interface ITextarea {
-    type: "OUTLINED" | "FIELD";
     placeholder: string;
     disabled?: boolean;
     minlength?: number;
@@ -9,10 +8,10 @@ export interface ITextarea {
     name?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    borderStyle: string;
 }
 
 function Textarea({
-    type,
     placeholder,
     disabled = false,
     minlength = 2,
@@ -20,15 +19,14 @@ function Textarea({
     name,
     value = "",
     onChange,
+    borderStyle,
 }: ITextarea) {
     return (
         <div className="relative w-full">
             <textarea
                 name={name}
                 disabled={disabled}
-                className={`h-100 w-full rounded-md p-4 ${
-                    type === "OUTLINED" ? "border-1 border-borderline" : "shadow-md"
-                }`}
+                className={`h-120 w-full rounded-md p-4 ${borderStyle ? borderStyle : ""}`}
                 minLength={minlength}
                 maxLength={maxlength}
                 placeholder={placeholder}

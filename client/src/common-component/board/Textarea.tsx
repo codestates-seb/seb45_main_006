@@ -26,7 +26,6 @@ export default function BoardTextarea({
                 {required && <Typography text="*" type="Body" color="text-warn" />}
             </div>
             <Textarea
-                type="FIELD"
                 name={name}
                 disabled={disabled}
                 minlength={minlength}
@@ -34,6 +33,7 @@ export default function BoardTextarea({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
+                borderStyle="shadow-md"
             />
         </div>
     );

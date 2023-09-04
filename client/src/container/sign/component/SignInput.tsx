@@ -13,12 +13,12 @@ function SignInput({ name, label, description, type, value, onChange, placeholde
     const [isNeededWarn, setIsNeededWarn] = useState<boolean>(false);
 
     useEffect(() => {
-        if (value && regex && description && !regex.test(value)) {
+        if (regex && value && typeof value === "string" && !regex.test(value)) {
             setIsNeededWarn(true);
         } else {
             setIsNeededWarn(false);
         }
-    }, [description, regex, value]);
+    }, [regex, value]);
 
     return (
         <div className="mb-18 flex flex-col">
@@ -33,10 +33,10 @@ function SignInput({ name, label, description, type, value, onChange, placeholde
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    lineColor={isNeededWarn ? "border-warn focus:outline-none" : ""}
+                    borderStyle={isNeededWarn ? "border-warn outline-none focus:outline-none" : ""}
                 />
             </div>
-            {isNeededWarn ? (
+            {description && isNeededWarn ? (
                 <Typography type="Description" text={description || ""} styles="ml-123" color="text-warn" />
             ) : null}
         </div>
