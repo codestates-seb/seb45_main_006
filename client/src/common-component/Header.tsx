@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import IconLogo from "@assets/icon_logo.png";
-import Button from "@component/common/Button";
-import Text from "@component/common/Text";
+import Button from "@component/Button";
+import Typography from "@component/Typography";
 
 type INavItem = {
     label: string;
@@ -66,7 +66,7 @@ function Header() {
                 }}
             >
                 <button className="mr-16 font-spoqa text-18 font-medium" onClick={() => onClickNavItem(item)}>
-                    <Text type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
+                    <Typography type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
                 </button>
             </li>
         );
@@ -75,29 +75,30 @@ function Header() {
     const AuthBtns = () => {
         return (
             <div>
-                <Button type="MAIN" label="로그인" isFullBtn={false} onClickHandler={() => navigate("/login")} />
-                <Button type="MAIN" label="회원가입" isFullBtn={false} onClickHandler={() => navigate("/signup")} />
-                <Button
-                    type="WARN"
-                    label="회원가입(테스트용)"
-                    isFullBtn={false}
-                    onClickHandler={() => navigate("/signup/temp")}
-                />
+                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/login")}>
+                    <Typography type="Label" text="로그인" />
+                </Button>
+                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup")}>
+                    <Typography type="Label" text="회원가입" />
+                </Button>
+                <Button type="WARN" isFullBtn={false} onClickHandler={() => navigate("/signup/temp")}>
+                    <Typography type="Label" text="회원가입" />
+                </Button>
             </div>
         );
     };
 
     return (
         <>
-            <header className="flex h-70 w-full items-center justify-between border-b-1 border-slate-200 px-16">
+            <header className="border-slate-200 flex h-70 w-full items-center justify-between border-b-1 px-16">
                 <button onClick={() => navigate("/")} className="flex items-center justify-between">
                     <img src={IconLogo} alt="DevSquad 로고" />
-                    <Text type="Logo" text="Dev Squad" color="text-main" />
+                    <Typography type="Logo" text="Dev Squad" color="text-main" />
                 </button>
                 {!isSignPage ? <AuthBtns /> : null}
             </header>
             {!isSignPage ? (
-                <nav className="flex h-40 w-full border-b-1 border-slate-200">
+                <nav className="border-slate-200 flex h-40 w-full border-b-1">
                     <ul className="flex w-full items-center">
                         {navItems.map((v: INavItem) => (
                             <NavItem key={v.label} item={v} />
@@ -110,3 +111,11 @@ function Header() {
 }
 
 export default Header;
+
+// 4시 30분까지 마무리해서 PR -> 이후에 작업
+// TODO: 버튼, Text 바뀐 부분 모든 파일에 적용해서 에러 나지 않도록 수정
+// TODO: eslint, prettier 파일 다시 보도록 하겠습니다!
+// "tailwindConfig": "tailwind.config.js",
+// "plugins": [
+//     "prettier-plugin-tailwindcss"
+// ]

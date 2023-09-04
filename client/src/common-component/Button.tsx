@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
-import Text from "@component/common/Text";
+import { ReactNode, useEffect, useState } from "react";
 
 type IButton = {
-    type: "PROJECT" | "STUDY" | "BOARD" | "MAIN" | "SUB" | "WARN";
-    label: string;
+    type: "PROJECT" | "PROJECT_POINT" | "STUDY" | "STUDY_POINT" | "BOARD" | "MAIN" | "SUB" | "WARN";
+    children: ReactNode;
     isFullBtn: boolean;
     styles?: string;
     onClickHandler?: () => void;
 };
 
-function Button({ type, label, styles, isFullBtn = false, onClickHandler }: IButton) {
+function Button({ children, type, styles, isFullBtn = false, onClickHandler }: IButton) {
     const [background, setBackground] = useState("bg-project");
 
     useEffect(() => {
         if (type === "PROJECT") setBackground("bg-project");
+        if (type === "PROJECT_POINT") setBackground("bg-project_point");
         if (type === "STUDY") setBackground("bg-study");
+        if (type === "STUDY_POINT") setBackground("bg-study_point");
         if (type === "BOARD") setBackground("bg-board");
         if (type === "MAIN") setBackground("bg-main");
         if (type === "SUB") setBackground("bg-sub");
@@ -26,15 +27,11 @@ function Button({ type, label, styles, isFullBtn = false, onClickHandler }: IBut
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`mb-2 mr-4 h-32 rounded px-8 py-6 text-14 ${
+            className={`mb-2 mr-4 flex h-fit items-end justify-center rounded px-30 py-6 text-14 ${
                 isFullBtn ? "w-full" : "w-fit"
             } ${background} ${styles}`}
         >
-            <Text
-                type="SmallLabel"
-                color={type === "MAIN" || type === "SUB" || type === "WARN" ? "text-white" : ""}
-                text={label}
-            />
+            {children}
         </button>
     );
 }
