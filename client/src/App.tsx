@@ -12,6 +12,8 @@ import MyPage from "@container/MyPage";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
+import ProjectBoard from "@container/project/ProjectBoard";
+import ProjectRegister from "@container/project/ProjectRegister";
 import SignUp from "@container/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
 
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Main />,
+            },
+            {
+                path: "/projects",
+                element: <ProjectBoard />,
+            },
+            {
+                path: "/projects/register",
+                element: <ProjectRegister />,
             },
             {
                 path: "/members/1",
