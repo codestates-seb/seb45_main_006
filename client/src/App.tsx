@@ -12,6 +12,7 @@ import MyPage from "@container/MyPage";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
+import SignUp from "@container/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: "/members/1",
                 element: <MyPage />,
+            },
+            {
+                path: "/signup",
+                element: <SignUp />,
             },
             {
                 path: "/todos",

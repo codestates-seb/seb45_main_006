@@ -33,13 +33,15 @@ export default withMT({
     ],
     theme: {
         extend: {
+            spacing: { ...px0_200, 1120: "1120px" },
+            borderRadius: { none: "0", DEFAULT: "43px", large: "62px" },
+            padding: { "25px": "25px" },
             borderWidth: px0_10,
             fontSize: px0_100,
             minWidth: px0_1000,
             minHeight: px0_1000,
             maxWidth: px0_1000,
             maxHeight: px0_1000,
-            spacing: px0_200,
             width: px0_1000,
             height: px0_1000,
             colors: customColor,
