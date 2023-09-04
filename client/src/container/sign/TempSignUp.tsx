@@ -1,56 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Typography from "@component/Typography";
-import Button from "@component/Button";
-
-import IconPeople from "@assets/icon_people.png";
-
 import { usePostMember } from "@api/sign/hook";
 
-type ISignUpInput = {
-    id: string;
-    label: string;
-    type: string;
-    value: string;
-    placeholder: string;
-    setValue: (s: string) => void;
-};
+import Typography from "@component/Typography";
+import SignLayout from "@container/sign/component/SignLayout";
+import SignInput from "@container/sign/component/SignInput";
+import SignButton from "@container/sign/component/SignButton";
 
-// TODO: 컴포넌트 안의 컴포넌트는 매번 렌더링될 때마다 같이 또 업데이트?!
-// 링크: https://stackoverflow.com/questions/42573017/in-react-es6-why-does-the-input-field-lose-focus-after-typing-a-character
-const SignUpInput = ({ id, label, type, value, setValue, placeholder }: ISignUpInput) => {
-    return (
-        <div className="mb-24 flex">
-            <div className="w-100 p-4">
-                <Typography type="Highlight" text={label} />
-            </div>
-            <input
-                key={id}
-                type={type}
-                autoComplete="new-password"
-                value={value}
-                onChange={(e) => setValue(e.currentTarget.value)}
-                placeholder={placeholder}
-                className="ml-16 w-350 border-b-1 border-borderline p-4 text-sm"
-            />
-        </div>
-    );
-};
+import progress from "@assets/sign/progress_bar2.png";
 
-function TempSignUp() {
+const SignUpContent2 = () => {
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState<string>("");
-    const [nickname, setNickname] = useState<string>("");
-    const [pw, setPw] = useState<string>("");
-    const [pwRe, setPwRe] = useState<string>("");
+    const [inputs, setInputs] = useState({
+        email: "",
+        nickname: "",
+        password: "",
+        passwordRe: "",
+    });
+
+    function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
+        const { name, value } = e.target;
+
+        setInputs({ ...inputs, [name]: value });
+    }
 
     const { mutate: postMember } = usePostMember();
 
     const createMemberHandler = () => {
         postMember(
-            { nickname, email, password: pw },
+            { nickname: inputs.nickname, email: inputs.email, password: inputs.password },
             {
                 onSuccess: () => {
                     alert("회원가입 완료되었습니다. 로그인 후 서비스를 이용해주세요!");
@@ -64,63 +44,71 @@ function TempSignUp() {
     };
 
     return (
-        <div className="flex h-full w-full items-center justify-center bg-background">
-            <div className="relative flex h-400 w-500 flex-col rounded-xl bg-white p-10">
-                <img src={IconPeople} alt="사람 도트 이미지" className="absolute -top-56 left-0" />
-                <div className="my-24 text-center">
-                    <Typography type="Label" text="회원가입" />
-                </div>
-
-                <SignUpInput
-                    id="email"
+        <>
+            <div>
+                <Typography type="Highlight" text="계정정보" styles="ml-4 mb-24" />
+                <SignInput
+                    name="email"
                     label="이메일"
                     type="text"
-                    value={email}
-                    setValue={setEmail}
+                    value={inputs.email}
+                    onChange={handleInput}
                     placeholder="이메일을 입력해주세요."
+                    regex={new RegExp("[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$")}
+                    description="이메일 형식이 맞지 않습니다."
                 />
 
-                <SignUpInput
-                    id="nickname"
+                <SignInput
+                    name="nickname"
                     label="닉네임"
                     type="text"
-                    value={nickname}
-                    setValue={setNickname}
+                    value={inputs.nickname}
+                    onChange={handleInput}
                     placeholder="닉네임을 입력해주세요. (2자 ~ 10자)"
+                    regex={new RegExp("^[가-힣a-zA-Z0-9].{1,9}$")}
+                    description="닉네임 형식이 맞지 않습니다."
                 />
 
-                <SignUpInput
-                    id="password"
+                <SignInput
+                    name="password"
                     label="비밀번호"
                     type="password"
-                    value={pw}
-                    setValue={setPw}
+                    value={inputs.password}
+                    onChange={handleInput}
                     placeholder="비밀번호을 입력해주세요. (영문, 숫자 포함 6 ~ 12자)"
+                    regex={new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9]).{6,12}$")}
+                    description="비밀번호 형식이 맞지 않습니다."
                 />
 
-                <SignUpInput
-                    id="passwordRe"
+                <SignInput
+                    name="passwordRe"
                     label="비밀번호 확인"
                     type="password"
-                    value={pwRe}
-                    setValue={setPwRe}
+                    value={inputs.passwordRe}
                     placeholder="비밀번호을 입력해주세요."
+                    regex={new RegExp(inputs.password)}
+                    onChange={handleInput}
+                    description="입력된 비밀번호와 다릅니다."
                 />
-
-                <div className="mt-20 flex justify-center">
-                    <Button
-                        type="PROJECT"
-                        isFullBtn={false}
-                        onClickHandler={() => {
-                            console.log(email, nickname, pw, pwRe);
-                            createMemberHandler();
-                        }}
-                    >
-                        <Typography type="Label" text="회원가입" />
-                    </Button>
-                </div>
             </div>
-        </div>
+
+            <div className="flex justify-center">
+                <SignButton type="OUTLINED" onClickHandler={() => {}} styles="mr-20">
+                    <Typography type="SmallLabel" text="이전" styles="font-bold" />
+                </SignButton>
+                <SignButton type="FILLED" onClickHandler={createMemberHandler}>
+                    <Typography type="SmallLabel" text="다음" color="text-white" styles="font-bold" />
+                </SignButton>
+            </div>
+        </>
+    );
+};
+
+function TempSignUp() {
+    return (
+        <SignLayout title="회원가입" progressImage={progress}>
+            <SignUpContent2 />
+        </SignLayout>
     );
 }
 

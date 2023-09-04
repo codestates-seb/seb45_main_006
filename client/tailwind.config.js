@@ -9,7 +9,7 @@ const px0_200 = Object.fromEntries(pixels.slice(0, 200 + 1));
 const px0_1000 = Object.fromEntries(pixels);
 const customColor = {
     primary: "#191A20",
-    "butotn-next": "#888888",
+    "button-next": "#888888",
     "button-border": "#847D7D",
     borderline: "#D9D9D9",
     background: "#F1F1F1",

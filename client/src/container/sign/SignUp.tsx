@@ -1,7 +1,29 @@
-import progress from "@assets/progress_bar1.png";
-import googleImg from "@assets/google.png";
-import githubImg from "@assets/github.png";
-import fontImg from "@assets/font.png";
+import progress from "@assets/sign/progress_bar1.png";
+import googleImg from "@assets/sign/google.png";
+import githubImg from "@assets/sign/github.png";
+import fontImg from "@assets/sign/font.png";
+import Typography from "@component/Typography";
+import SignLayout from "@container/sign/component/SignLayout";
+
+const SignUpContent1 = ({ handleGoogleClick }: { handleGoogleClick: () => void }) => (
+    <>
+        <img className="absolute -top-32 left-96" src={fontImg} />
+        <button className="m-auto flex w-350 justify-center rounded bg-black p-8">
+            <Typography type="Highlight" text="DevSquad로 가입하기" color="text-white" />
+        </button>
+        <button
+            className="m-auto mt-25 flex w-350 justify-center rounded border-2 border-solid border-black p-6"
+            onClick={handleGoogleClick}
+        >
+            <img className="flex w-30 pr-5" src={googleImg} />
+            <Typography type="Highlight" text="Google 계정으로 가입" />
+        </button>
+        <button className="m-auto mt-25 flex w-350 justify-center rounded border-2 border-solid border-black p-6">
+            <img className="flex w-30 pr-5" src={githubImg} />
+            <Typography type="Highlight" text="GitHub 계정으로 가입" />
+        </button>
+    </>
+);
 
 function SignUp() {
     const handleGoogleClick = () => {
@@ -9,40 +31,9 @@ function SignUp() {
     };
 
     return (
-        <>
-            <div className="w-1180 flex h-screen justify-center bg-background">
-                <div className="flex-cal h-614 w-501 justify-items-center rounded bg-white">
-                    <div className="h-300 flex-col justify-center pt-25">
-                        <div className="flex-col justify-between"></div>
-                        <div className="flex justify-center">
-                            <img className="flex w-210 justify-center" src={progress} />
-                        </div>
-                        <div className="flex justify-center pt-25 text-2xl font-bold">
-                            회원가입 방법을
-                            <br />
-                            선택해주세요!
-                        </div>
-                        <img className="right flex" src={fontImg} />
-                    </div>
-                    <div className="flex-col justify-between">
-                        <button className="m-auto flex w-350 justify-center rounded bg-black p-8">
-                            <span className="font-bold text-white">DevSquad로 가입하기</span>
-                        </button>
-                        <button
-                            className="m-auto mt-25 flex w-350 justify-center rounded border-2 border-solid border-black p-6"
-                            onClick={handleGoogleClick}
-                        >
-                            <img className="flex w-30 pr-5" src={googleImg} />
-                            <span className="font-bold text-black">Google 계정으로 가입</span>
-                        </button>
-                        <button className="m-auto mt-25 flex w-350 justify-center rounded border-2 border-solid border-black p-6">
-                            <img className="flex w-30 pr-5" src={githubImg} />
-                            <span className="font-bold text-black">GitHub 계정으로 가입</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </>
+        <SignLayout title="회원가입 방법을" subTitle="선택해주세요!" progressImage={progress}>
+            <SignUpContent1 handleGoogleClick={handleGoogleClick} />
+        </SignLayout>
     );
 }
 
