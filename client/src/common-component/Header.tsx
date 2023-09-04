@@ -111,11 +111,3 @@ function Header() {
 }
 
 export default Header;
-
-// 4시 30분까지 마무리해서 PR -> 이후에 작업
-// TODO: 버튼, Text 바뀐 부분 모든 파일에 적용해서 에러 나지 않도록 수정
-// TODO: eslint, prettier 파일 다시 보도록 하겠습니다!
-// "tailwindConfig": "tailwind.config.js",
-// "plugins": [
-//     "prettier-plugin-tailwindcss"
-// ]
