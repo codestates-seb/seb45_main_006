@@ -1,7 +1,7 @@
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 
-import ProjectInput from "@container/project/component/ProjectInput";
+import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
@@ -41,7 +41,7 @@ export default function Register() {
         <div className="m-80 flex items-center justify-center">
             <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-project">
                 <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
-                <ProjectInput
+                <BoardInput
                     name="projectName"
                     label="프로젝트명"
                     required={true}
@@ -59,7 +59,7 @@ export default function Register() {
                     value={inputs.detail}
                     onChange={handleInput}
                 />
-                <ProjectInput
+                <BoardInput
                     name="stack"
                     label="요구스택"
                     required={true}
@@ -67,8 +67,8 @@ export default function Register() {
                     value={inputs.stack}
                     onChange={handleInput}
                 />
-                <ProjectInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
-                <ProjectInput
+                <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                <BoardInput
                     name="date"
                     label="프로젝트 기간"
                     required={true}
@@ -76,7 +76,7 @@ export default function Register() {
                     value={inputs.date}
                     onChange={handleInput}
                 />
-                <ProjectInput
+                <BoardInput
                     name="group"
                     label="모집인원"
                     required={true}

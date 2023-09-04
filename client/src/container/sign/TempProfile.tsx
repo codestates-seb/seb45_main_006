@@ -22,7 +22,7 @@ const ProfileContent4 = () => {
                 maxlength={200}
                 name="introduce"
                 value={introduce}
-                onChange={setIntroduce}
+                onChange={(e) => setIntroduce(e.currentTarget.value)}
                 placeholder="200자 이내로 작성해주세요."
             />
             <div className="mb-40 flex items-center justify-center">
