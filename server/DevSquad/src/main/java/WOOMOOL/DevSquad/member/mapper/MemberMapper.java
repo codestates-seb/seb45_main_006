@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.member.mapper;
 
+import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.member.dto.MemberPostDto;
 import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
 import WOOMOOL.DevSquad.member.entity.Member;
@@ -38,7 +39,10 @@ public interface MemberMapper {
     }
 
     // MemberProfile 상세 정보 Mapping
-    default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile, List<ProjectDto.previewResponseDto> projectResponseDto){
+    default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile,
+                                                                List<ProjectDto.previewResponseDto> projectResponseDto,
+                                                                List<StudyDto.previewResponseDto> studyResponseDto,
+                                                                List<InfoBoardDto.Response> infoBoardResponseDto){
 
         return new MemberProfileDto.detailResponse(
                 memberProfile.getProfilePicture(),
@@ -52,8 +56,8 @@ public interface MemberMapper {
                 memberProfile.getStackTags().stream()
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
                 projectResponseDto,// response 수정해야함
-               new ArrayList<>(), // response 수정해야함
-                new ArrayList<>(), // 보드 게시판 추가
+                studyResponseDto,
+                infoBoardResponseDto,
                 memberProfile.getBlockMemberList().stream()
                                 .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
                 memberProfile.getModifiedAt()

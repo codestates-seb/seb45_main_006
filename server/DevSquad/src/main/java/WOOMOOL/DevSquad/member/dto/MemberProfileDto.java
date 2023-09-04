@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.member.dto;
 
+import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
@@ -103,7 +104,7 @@ public class MemberProfileDto {
 
         private List<StudyDto.previewResponseDto> studyList;
 
-        private List<InfoBoard> infoBoardList;
+        private List<InfoBoardDto.Response> infoBoardList;
 
         private List<String> blockMemberList;
 

@@ -3,6 +3,8 @@ package WOOMOOL.DevSquad.member.service;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
+import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
@@ -12,11 +14,13 @@ import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import WOOMOOL.DevSquad.projectboard.service.ProjectService;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import WOOMOOL.DevSquad.studyboard.service.StudyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,10 +49,11 @@ public class MemberService {
     private final StackTagService stackTagService;
 
     private final ProjectRepository projectRepository;
-
     private final StudyRepository studyRepository;
 
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService, ProjectRepository projectRepository, StudyRepository studyRepository) {
+    private final InfoBoardRepository infoBoardRepository;
+
+    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService, ProjectRepository projectRepository, StudyRepository studyRepository, InfoBoardRepository infoBoardRepository) {
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.positionService = positionService;
@@ -57,6 +62,7 @@ public class MemberService {
         this.stackTagService = stackTagService;
         this.projectRepository = projectRepository;
         this.studyRepository = studyRepository;
+        this.infoBoardRepository = infoBoardRepository;
     }
 
     // 멤버 생성
@@ -108,20 +114,27 @@ public class MemberService {
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
 
+        // 프로젝트 리스트 정보
         List<Project> projectList = getMemberProjectList(findMember.getMemberId());
         findMemberProfile.setProjectlist(projectList);
+        // 스터디 리스트 정보
+        List<Study> studyList = getMemberStudyList(findMember.getMemberId());
+        findMemberProfile.setStudyList(studyList);
+        // 정보 게시판 리스트 정보
+        List<InfoBoard> infoBoardList = getMemberInfoBoardList(findMember.getMemberId());
+        findMemberProfile.setInfoBoardList(infoBoardList);
+        // 북마크 정보
 
         return findMemberProfile;
     }
 
-    // 유저 리스트 페이지
+//     유저 리스트 페이지
     public Page<MemberProfile> getMemberProfilePage(int page) {
-
         // 정렬기준 뭐로할지?
         return memberProfileRepository.findAll(PageRequest.of(page, 8));
     }
 
-    // 활동중, 등록 처리함, 블랙리스트에 없는 유저리스트 조회
+    // 활동중, 등록 허가한 회원, 블랙리스트에 없는 유저리스트 조회
     public List<MemberProfile> getMemberProfiles(Page<MemberProfile> memberProfilePage) {
 
         // 블랙리스트 멤버에 있는 memberId를 List로 추출
@@ -131,8 +144,6 @@ public class MemberService {
 
         // list에 등록되어 있고 활동중인 회원, 추출한 차단 memberId와 memberProfile 의 id가 같으면 필터링
         return memberProfilePage.getContent().stream()
-                .filter(memberProfile -> memberProfile.getMemberStatus().equals(MEMBER_ACTIVE))
-                .filter(memberProfile -> memberProfile.isListEnroll() == true)
                 .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
     }
@@ -221,13 +232,25 @@ public class MemberService {
     // 특정 멤버가 가지고 있는 프로젝트 리스트
     private List<Project> getMemberProjectList(Long memberProfileId) {
 
-        List<Project> projects = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
+        List<Project> projectList = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
 
-        return projects;
+        return projectList;
     }
     // 특정 멤버가 가지고 있는 스터디 리스트
+    private List<Study> getMemberStudyList(Long memberProfileId){
+
+        List<Study> studyList = studyRepository.findByStudyStatusAndMemberProfile(memberProfileId);
+
+        return studyList;
+    }
 
     // 특정 멤버가 가지고 있는 정보게시판 리스트
+    private List<InfoBoard> getMemberInfoBoardList(Long memberProfileId){
+
+        List<InfoBoard> infoBoardList = infoBoardRepository.findAllByMemberProfile(memberProfileId);
+
+        return infoBoardList;
+    }
 
     // 북마크한 게시판들
 }
