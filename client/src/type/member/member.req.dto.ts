@@ -24,3 +24,9 @@ export type PatchReqMember = {
 
 // 탈퇴 - 멤버 삭제하기 - JWT 기능이 들어가면 depth 뺄 예정
 export type DeleteReqMember = GetReqMemberDetail;
+
+// 비밀번호 변경
+export type PatchReqMemberPw = {
+    rawPassword: string;
+    changePassword: string;
+};
