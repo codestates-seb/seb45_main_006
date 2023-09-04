@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 
 // TODO jwt payload 확인 후 수정
 type ACCESS_TOKEN = {
-    userId: number;
+    memberId: number;
     nickname: string;
     email: string;
     iat: Date;

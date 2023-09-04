@@ -2,5 +2,5 @@ import { GetReqAllMembers, GetReqMemberDetail } from "@type/member/member.req.dt
 
 export const memberKeyFactory = {
     all: ({ page, size }: GetReqAllMembers): [string, GetReqAllMembers] => ["todos", { page, size }],
-    detail: ({ userId }: GetReqMemberDetail): [string, GetReqMemberDetail] => ["todos", { userId }],
+    detail: ({ memberId }: GetReqMemberDetail): [string, GetReqMemberDetail] => ["todos", { memberId }],
 };

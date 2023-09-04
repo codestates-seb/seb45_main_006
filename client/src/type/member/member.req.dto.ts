@@ -6,13 +6,13 @@ export type GetReqAllMembers = {
 
 // 멤버 상세 조회하기 - JWT 기능이 들어가면 depth 뺄 예정
 export type GetReqMemberDetail = {
-    userId: number;
+    memberId: number;
 };
 
 // 마이페이지 수정 - 멤버 수정하기
 // TODO: listEnroll enum 공유받기
 export type PatchReqMember = {
-    userId?: number;
+    memberId?: number;
     nickname: string;
     profilePicture: string;
     githubId: string;
