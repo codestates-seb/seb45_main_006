@@ -6,8 +6,8 @@ import { isReadStatus } from "@feature/Todo";
 
 import { usePutTodos, useDeleteTodos } from "@api/todo/hook";
 
-import Button from "@component/common/Button";
-import Text from "@component/common/Text";
+import Button from "@component/Button";
+import Typography from "@component/Typography";
 import { GetResDetailTodo } from "@type/todo/todo.res.dto";
 
 type IReadOrUpdateTodo = {
@@ -67,35 +67,40 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
             <div className="mb-24 flex w-full justify-end">
                 {isRead ? (
                     <>
-                        <Button type="SUB" label="수정" isFullBtn={false} onClickHandler={() => setIsRead(false)} />
-                        <Button type="WARN" label="삭제" isFullBtn={false} onClickHandler={deleteTodoHandler} />
+                        <Button type="SUB" isFullBtn={false} onClickHandler={() => setIsRead(false)}>
+                            <Typography text="수정" type="Body" />
+                        </Button>
+                        <Button type="WARN" isFullBtn={false} onClickHandler={deleteTodoHandler}>
+                            <Typography text="수정" type="Body" />
+                        </Button>
                     </>
                 ) : (
                     <Button
                         type="SUB"
-                        label="완료"
                         isFullBtn={false}
                         onClickHandler={() => {
                             setIsRead(true);
                             updateTodoHandler();
                         }}
-                    />
+                    >
+                        <Typography text="수정" type="Body" />
+                    </Button>
                 )}
             </div>
             {singleTodo ? (
                 <ul className="flex h-140 w-600 flex-col justify-between">
                     <li className="flex border-b-1 border-borderline py-8">
-                        <Text type="Body" text="아이디" styles="w-100" />
-                        <Text type="Body" text={singleTodo.id.toString()} />
+                        <Typography type="Body" text="아이디" styles="w-100" />
+                        <Typography type="Body" text={singleTodo.id.toString()} />
                     </li>
                     <li className="flex border-b-1 border-borderline py-8">
-                        <Text type="Body" text="유저 아이디" styles="w-100" />
-                        <Text type="Body" text={singleTodo.userId.toString()} />
+                        <Typography type="Body" text="유저 아이디" styles="w-100" />
+                        <Typography type="Body" text={singleTodo.userId.toString()} />
                     </li>
                     <li className="flex border-b-1 border-borderline py-8">
-                        <Text type="Body" text="할일" styles="w-100" />
+                        <Typography type="Body" text="할일" styles="w-100" />
                         {isRead ? (
-                            <Text type="Body" text={value} />
+                            <Typography type="Body" text={value} />
                         ) : (
                             <input
                                 type="text"
@@ -106,9 +111,9 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
                         )}
                     </li>
                     <li className="flex border-b-1 border-borderline py-8">
-                        <Text type="Body" text="완료 여부" styles="w-100" />
+                        <Typography type="Body" text="완료 여부" styles="w-100" />
                         {isRead ? (
-                            <Text type="Body" text={isCompleted ? "✅" : "❎"} />
+                            <Typography type="Body" text={isCompleted ? "✅" : "❎"} />
                         ) : (
                             <input
                                 type="checkbox"
