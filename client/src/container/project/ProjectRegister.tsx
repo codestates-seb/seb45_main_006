@@ -39,7 +39,7 @@ export default function ProjectRegister() {
     return (
         <div className="m-80 flex items-center justify-center">
             <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-project">
-                <Text type="Heading" text="어떤 프로젝트인가요?" styles="py-60 pl-60 self-baseline"></Text>
+                <Text type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline"></Text>
                 <ProjectInput
                     name="projectName"
                     label="프로젝트명"
