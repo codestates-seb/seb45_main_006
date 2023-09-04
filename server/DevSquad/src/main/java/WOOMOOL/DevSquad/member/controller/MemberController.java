@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.member.controller;
 
+import WOOMOOL.DevSquad.member.dto.NicknameDto;
 import WOOMOOL.DevSquad.member.dto.PasswordDto;
 import WOOMOOL.DevSquad.member.dto.MemberPostDto;
 import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
@@ -73,7 +74,7 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    // 유저 리스트 조회 페이지네이션 10명까지?
+    // 유저 리스트 조회 8명 까지
     @GetMapping("/list")
     public ResponseEntity getMemberProfiles(@RequestParam int page) {
 
@@ -96,16 +97,16 @@ public class MemberController {
 
     // 중복 닉네임 확인
     @GetMapping("/checkNickname")
-    public ResponseEntity checkNickname(@RequestParam String nickname) {
+    public ResponseEntity checkNickname(@Valid @RequestBody NicknameDto nickname) {
 
-        memberService.checkNickname(nickname);
+        memberService.checkNickname(nickname.getNickname());
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     // 비밀번호 변경
     @PatchMapping("/password")
-    public ResponseEntity changePassword(@RequestBody PasswordDto passwordDto) {
+    public ResponseEntity changePassword(@Valid @RequestBody PasswordDto passwordDto) {
 
         memberService.changePassword(passwordDto.getRawPassword(), passwordDto.getChangePassword());
 

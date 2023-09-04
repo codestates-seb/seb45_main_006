@@ -72,7 +72,6 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .newInstance()
                 .scheme("http")
                 .host("localhost")
-                .path("/receive-token.html") // 나중에 uri 바꾸기
                 .queryParams(queryParams)
                 .build()
                 .toUri();

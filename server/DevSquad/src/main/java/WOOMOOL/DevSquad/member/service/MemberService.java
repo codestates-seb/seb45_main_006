@@ -117,7 +117,8 @@ public class MemberService {
     // 유저 리스트 페이지
     public Page<MemberProfile> getMemberProfilePage(int page) {
 
-        return memberProfileRepository.findAll(PageRequest.of(page, 10, Sort.by("memberProfileId")));
+        // 정렬기준 뭐로할지?
+        return memberProfileRepository.findAll(PageRequest.of(page, 8));
     }
 
     // 활동중, 등록 처리함, 블랙리스트에 없는 유저리스트 조회
@@ -128,8 +129,10 @@ public class MemberService {
                 .map(blockMember -> blockMember.getBlockMemberId())
                 .collect(Collectors.toList());
 
-        // 추출한 memberId와 memberProfile 의 id가 같으면 필터링
+        // list에 등록되어 있고 활동중인 회원, 추출한 차단 memberId와 memberProfile 의 id가 같으면 필터링
         return memberProfilePage.getContent().stream()
+                .filter(memberProfile -> memberProfile.getMemberStatus().equals(MEMBER_ACTIVE))
+                .filter(memberProfile -> memberProfile.isListEnroll() == true)
                 .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
     }
@@ -162,9 +165,10 @@ public class MemberService {
         return findMember;
 
     }
-    public Member findMember(long memberId){
+
+    public Member findMember(long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.orElseThrow(()-> new BusinessLogicException(MEMBER_NOT_FOUND));
+        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(MEMBER_NOT_FOUND));
 
         return findMember;
     }
@@ -173,6 +177,7 @@ public class MemberService {
     public void checkNickname(String nickname) {
 
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+
         optionalMember.ifPresent(member -> {
                     if (member.getMemberProfile().getMemberStatus().equals(MEMBER_ACTIVE)) {
 
@@ -181,44 +186,50 @@ public class MemberService {
                 }
         );
     }
+
     // 비밀번호 변경 메서드
-        public void changePassword (String rawPassword, String changePassword){
+    public void changePassword(String rawPassword, String changePassword) {
 
-            checkPassword(rawPassword);
-            String newEncodedPassword = passwordEncoder.encode(changePassword);
+        checkPassword(rawPassword);
+        String newEncodedPassword = passwordEncoder.encode(changePassword);
 
-            Member updateMember = findMemberFromToken();
-            updateMember.setPassword(newEncodedPassword);
+        Member updateMember = findMemberFromToken();
+        updateMember.setPassword(newEncodedPassword);
 
+    }
+
+    // 비밀변호 변경 전 확인 메서드
+    public void checkPassword(String rawPassword) {
+
+        Member findMember = findMemberFromToken();
+        String encodedPassword = findMember.getPassword();
+
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+
+            throw new BusinessLogicException(UNMATCHED_PASSWORD);
         }
+    }
 
-        // 비밀변호 변경 전 확인 메서드
-        public void checkPassword (String rawPassword){
+    // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
+    private void isDeletedMember(Member member) {
+        if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
 
-            Member findMember = findMemberFromToken();
-            String encodedPassword = findMember.getPassword();
-
-            if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-
-                throw new BusinessLogicException(UNMATCHED_PASSWORD);
-            }
+            throw new BusinessLogicException(QUITED_MEMBER);
         }
+    }
 
-        // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
-        private void isDeletedMember (Member member){
-            if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
-
-                throw new BusinessLogicException(QUITED_MEMBER);
-            }
-        }
-
-        // 특정 멤버가 가지고 있는 프로젝트 리스트
+    // 특정 멤버가 가지고 있는 프로젝트 리스트
     private List<Project> getMemberProjectList(Long memberProfileId) {
 
         List<Project> projects = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
 
         return projects;
     }
+    // 특정 멤버가 가지고 있는 스터디 리스트
+
+    // 특정 멤버가 가지고 있는 정보게시판 리스트
+
+    // 북마크한 게시판들
 }
 
 

@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MemberProfileRepository extends JpaRepository<MemberProfile, Long> {
 
-    // list에 등록하고 활동 중인 회원만
-    @Query("SELECT mp from MemberProfile mp WHERE mp.listEnroll = true and mp.memberStatus = 'ACTIVE'")
     Page<MemberProfile> findAll(Pageable pageable);
+
 
 }

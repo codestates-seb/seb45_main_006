@@ -62,6 +62,13 @@ public class BlockMemberService {
 
         Long memberProfileId = loginMemberProfile.getMemberProfileId();
 
+        // 삭제할 차단 멤버 객체 찾기
+        Optional<BlockMember> optionalBlockMember = blockMemberRepository.findByBlockId(blockMemberId);
+        BlockMember findBlockMember = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
+
+        // DB 에 차단 멤버 객체 삭제
+        blockMemberRepository.delete(findBlockMember);
+
         // 현재 로그인한 회원의 블랙리스트 필터링
         List<BlockMember> blockMemberList = blockMemberRepository.findByMemberProfileId(memberProfileId)
                 .stream().filter(blockMember -> !(blockMember.getBlockMemberId() == blockMemberId))
@@ -73,12 +80,7 @@ public class BlockMemberService {
         // 다시 할당
         loginMemberProfile.setBlockMemberList(blockMemberList);
 
-        // 삭제할 차단 멤버 객체 찾기
-        Optional<BlockMember> optionalBlockMember = blockMemberRepository.findByBlockId(blockMemberId);
-        BlockMember findBlockMember = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
 
-        // DB 에 차단 멤버 객체 삭제
-        blockMemberRepository.delete(findBlockMember);
     }
 
     // 현재 로그인 중인 회원 프로필 찾기
