@@ -1,18 +1,14 @@
 import Textarea from "@component/Textarea";
+import Typography from "@component/Typography";
 
-interface IProps {
+import { ITextarea } from "@component/Textarea";
+
+interface IBoardTextarea extends ITextarea {
     label: string;
     required?: boolean;
-    placeholder: string;
-    disabled?: boolean;
-    minlength?: number;
-    maxlength?: number;
-    name?: string;
-    value?: string;
-    onChange: (value: string) => void;
 }
 
-export default function ProjectTextarea({
+export default function BoardTextarea({
     label,
     required = false,
     placeholder,
@@ -22,13 +18,13 @@ export default function ProjectTextarea({
     name,
     value = "",
     onChange,
-}: IProps) {
+}: IBoardTextarea) {
     return (
-        <div className="my-10 flex w-11/12 flex-col items-center justify-center p-10">
-            <label className="self-start">
-                {label}
-                {required && <span className="text-red-500">*</span>}
-            </label>
+        <div className="my-10 flex w-11/12 flex-col p-10">
+            <div className="mb-10 flex">
+                <Typography text={`${label}`} type="Body" />
+                {required && <Typography text="*" type="Body" color="text-warn" />}
+            </div>
             <Textarea
                 type="FIELD"
                 name={name}

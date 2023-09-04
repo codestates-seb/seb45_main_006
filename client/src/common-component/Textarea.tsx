@@ -1,6 +1,6 @@
 import Typography from "./Typography";
 
-interface IProps {
+export interface ITextarea {
     type: "OUTLINED" | "FIELD";
     placeholder: string;
     disabled?: boolean;
@@ -8,7 +8,7 @@ interface IProps {
     maxlength?: number;
     name?: string;
     value?: string;
-    onChange: (value: string) => void;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 function Textarea({
@@ -20,7 +20,7 @@ function Textarea({
     name,
     value = "",
     onChange,
-}: IProps) {
+}: ITextarea) {
     return (
         <div className="relative w-full">
             <textarea
@@ -33,7 +33,7 @@ function Textarea({
                 maxLength={maxlength}
                 placeholder={placeholder}
                 value={value}
-                onChange={(e) => onChange(e.currentTarget.value)}
+                onChange={onChange}
             />
             <Typography
                 type="Description"

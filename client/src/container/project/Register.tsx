@@ -1,7 +1,8 @@
-import ProjectInput from "@container/project/component/ProjectInput";
-import ProjectTextarea from "@container/project/component/ProjectTextarea";
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
+
+import ProjectInput from "@container/project/component/ProjectInput";
+import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
 
@@ -49,7 +50,8 @@ export default function Register() {
                     onChange={handleInput}
                     maxlength={20}
                 />
-                <ProjectTextarea
+                <BoardTextarea
+                    type="FIELD"
                     name="detail"
                     label="프로젝트 상세내용"
                     required={true}
