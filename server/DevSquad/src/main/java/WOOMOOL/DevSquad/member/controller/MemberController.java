@@ -7,6 +7,9 @@ import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.mapper.MemberMapper;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
+import WOOMOOL.DevSquad.studyboard.mapper.StudyMapper;
 import WOOMOOL.DevSquad.utils.PageResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,10 +28,12 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
 
+    private final ProjectMapper projectMapper;
 
-    public MemberController(MemberService memberService, MemberMapper memberMapper) {
+    public MemberController(MemberService memberService, MemberMapper memberMapper, ProjectMapper projectMapper) {
         this.memberService = memberService;
         this.memberMapper = memberMapper;
+        this.projectMapper = projectMapper;
     }
 
     //멤버 생성
@@ -47,8 +52,8 @@ public class MemberController {
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
         memberProfile.setMemberProfileId(memberId);
 
-        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition());
-        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(updateProfile);
+        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition(),patchDto.getStack());
+        MemberProfileDto.patchResponse response = memberMapper.entityToResponseDto(updateProfile);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -60,7 +65,12 @@ public class MemberController {
         // 조회 전 비밀번호 확인하기?
         memberService.checkPassword(passwordDto.getRawPassword());
         MemberProfile memberProfile = memberService.getMemberProfile();
-        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile);
+        List<ProjectDto.previewResponseDto> projectResponses = projectMapper.entityToPreviewResponseDto(memberProfile.getProjectlist());
+        // List<StudyDto.previewResponseDto> studyResponse = studyResponse.entityToPreviewResponseDto();
+        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile,projectResponses);
+
+        // 스터디 리스트
+        // 자유게시판 리스트 추가 반환
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -76,6 +86,7 @@ public class MemberController {
 
         return new ResponseEntity(new PageResponseDto<>(response, memberProfilePage), HttpStatus.OK);
     }
+    // 회원 삭제
 
     @DeleteMapping
     public ResponseEntity deleteMember() {

@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, QueryCache } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { isAxiosError } from "axios";
 
 import Container from "@container/Container";
 import ErrorPage from "@container/ErrorPage";
@@ -13,6 +14,8 @@ import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
 import ProjectBoard from "@container/project/ProjectBoard";
 import ProjectRegister from "@container/project/ProjectRegister";
+import SignUp from "@container/SignUp";
+import TempSignUp from "@container/sign/TempSignUp";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -40,6 +43,10 @@ const router = createBrowserRouter([
                 element: <MyPage />,
             },
             {
+                path: "/signup",
+                element: <SignUp />,
+            },
+            {
                 path: "/todos",
                 element: <TodoList />,
             },
@@ -51,11 +58,34 @@ const router = createBrowserRouter([
                 path: "/todos/add",
                 element: <CreateTodo />,
             },
+            {
+                path: "/signup/temp",
+                element: <TempSignUp />,
+            },
         ],
     },
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+            retry: 0,
+        },
+    },
+    queryCache: new QueryCache({
+        onError: (error) => {
+            if (isAxiosError(error)) {
+                if (error.response?.status === 500) {
+                    // 서버 500 에러
+                }
+                // 토큰 만료 오류 체크
+            }
+        },
+    }),
+});
 
 function App() {
     return (
