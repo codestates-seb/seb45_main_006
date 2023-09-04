@@ -2,6 +2,8 @@ import ProjectInput from "@component/project/ProjectInput";
 import ProjectTextarea from "@component/project/ProjectTextarea";
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
+import Button from "@component/common/Button";
+import Text from "@component/common/Text";
 
 export default function ProjectRegister() {
     //const navigate = useNavigate();
@@ -14,30 +16,30 @@ export default function ProjectRegister() {
         group: 0,
     });
 
-    function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
 
         setInputs({ ...inputs, [name]: value });
     }
 
     // async function handleSubmit() {
-    //     const path = "/login";
+    //     const path = "/projects";
     //     const body = {
     //         ...inputs,
     //     };
-    //     const { code, message, data } = await axios.post(path, body);
+    //     const { code, message, data } = await axios.post(path, body); //hook으로 바꾸기
 
     //     if (code !== 200) {
     //         alert(message);
     //         return;
     //     }
 
-    //     navigate("/todos");
+    //     navigate("/todos/register");
     // }
     return (
-        <div className="flex items-center justify-center">
-            <div className="w-5/6 rounded-lg bg-project">
-                <h1 className="m-20 text-xl">어떤 프로젝트인가요?</h1>
+        <div className="m-80 flex items-center justify-center">
+            <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-project">
+                <Text type="Heading" text="어떤 프로젝트인가요?" styles="py-60 pl-60 self-baseline"></Text>
                 <ProjectInput
                     name="projectName"
                     label="프로젝트명"
@@ -45,6 +47,7 @@ export default function ProjectRegister() {
                     placeholder="ex) 카메라 서비스 개발"
                     value={inputs.projectName}
                     onChange={handleInput}
+                    maxlength={20}
                 />
                 <ProjectTextarea
                     name="detail"
@@ -67,7 +70,7 @@ export default function ProjectRegister() {
                     name="date"
                     label="프로젝트 기간"
                     required={true}
-                    placeholder="2023-09-22"
+                    placeholder="ex) 2023-09-22"
                     value={inputs.date}
                     onChange={handleInput}
                 />
@@ -79,8 +82,16 @@ export default function ProjectRegister() {
                     value={inputs.group}
                     onChange={handleInput}
                 />
+                <Button
+                    type="PROJECT"
+                    label="등록하기"
+                    styles="bg-project_point text-white font-semibold px-30 mb-20"
+                    isFullBtn={false}
+                    onClickHandler={() => {
+                        // Handle the click event for the "Create Project" button here...
+                    }}
+                />
             </div>
-            <button onClick={() => {}}></button>
         </div>
     );
 }
