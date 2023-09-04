@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useRecoilState } from "recoil";
 import { isReadStatus } from "@feature/Todo";
 
@@ -13,12 +15,14 @@ type IReadOrUpdateTodo = {
 };
 
 function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
+    const navigate = useNavigate();
+
     const [isRead, setIsRead] = useRecoilState(isReadStatus);
     const [value, setValue] = useState<string>(singleTodo?.todo || "");
     const [isCompleted, setIsCompleted] = useState<boolean>(!!singleTodo?.completed);
 
-    const { mutate: putTodo } = usePutTodos({ todoId: singleTodo?.id || 0, completed: isCompleted, todo: value });
-    const { mutate: deleteTodo } = useDeleteTodos({ todoId: singleTodo?.id || 0 });
+    const { mutate: putTodo } = usePutTodos();
+    const { mutate: deleteTodo } = useDeleteTodos();
 
     useEffect(() => {
         if (singleTodo?.todo) {
@@ -30,13 +34,41 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
         }
     }, [singleTodo]);
 
+    const updateTodoHandler = () => {
+        if (!value) {
+            alert("할 일을 입력해주세요!");
+            return;
+        }
+
+        putTodo(
+            { todo: value, completed: false, todoId: singleTodo?.id || 0 },
+            {
+                onSuccess: () => {
+                    alert("수정에 성공하였습니다.");
+                },
+            },
+        );
+    };
+
+    const deleteTodoHandler = () => {
+        deleteTodo(
+            { todoId: singleTodo?.id || 0 },
+            {
+                onSuccess: () => {
+                    alert("삭제에 성공하였습니다.");
+                    navigate("/todos");
+                },
+            },
+        );
+    };
+
     return (
         <div className="flex flex-1 flex-col p-24">
             <div className="mb-24 flex w-full justify-end">
                 {isRead ? (
                     <>
                         <Button type="SUB" label="수정" isFullBtn={false} onClickHandler={() => setIsRead(false)} />
-                        <Button type="WARN" label="삭제" isFullBtn={false} onClickHandler={() => deleteTodo()} />
+                        <Button type="WARN" label="삭제" isFullBtn={false} onClickHandler={deleteTodoHandler} />
                     </>
                 ) : (
                     <Button
@@ -45,7 +77,7 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
                         isFullBtn={false}
                         onClickHandler={() => {
                             setIsRead(true);
-                            putTodo();
+                            updateTodoHandler();
                         }}
                     />
                 )}
