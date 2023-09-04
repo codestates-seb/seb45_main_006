@@ -1,21 +1,23 @@
-import Button from "@component/common/Button";
+import Button from "@component/Button";
+import Typography from "@component/Typography";
 import { useNavigate } from "react-router-dom";
 
-const ProjectBoard = () => {
+const Board = () => {
     const navigate = useNavigate();
     return (
         <div>
             <Button
                 type="PROJECT"
-                label="프로젝트 등록하기"
                 styles="bg-project font-semibold m-20"
                 isFullBtn={false}
                 onClickHandler={() => {
                     navigate("/projects/register");
                 }}
-            />
+            >
+                <Typography type="Body" text="프로젝트 등록하기" />
+            </Button>
         </div>
     );
 };
 
-export default ProjectBoard;
+export default Board;

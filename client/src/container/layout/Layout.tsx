@@ -1,11 +1,11 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router";
 
-import Header from "@component/common/Header";
+import Header from "@component/Header";
 
 import { useElementWidthAndHeight } from "@hook/useElementWidthAndHeight";
 
-function Container() {
+function Layout() {
     const headerRef = useRef(null);
     const { height } = useElementWidthAndHeight(headerRef);
     const [marginTop, setMarginTop] = useState<number>(height);
@@ -31,4 +31,4 @@ function Container() {
     );
 }
 
-export default Container;
+export default Layout;

@@ -1,11 +1,11 @@
-import ProjectInput from "@component/project/ProjectInput";
-import ProjectTextarea from "@component/project/ProjectTextarea";
+import ProjectInput from "@container/project/component/ProjectInput";
+import ProjectTextarea from "@container/project/component/ProjectTextarea";
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
-import Button from "@component/common/Button";
-import Text from "@component/common/Text";
+import Button from "@component/Button";
+import Typography from "@component/Typography";
 
-export default function ProjectRegister() {
+export default function Register() {
     //const navigate = useNavigate();
 
     const [inputs, setInputs] = useState({
@@ -39,7 +39,7 @@ export default function ProjectRegister() {
     return (
         <div className="m-80 flex items-center justify-center">
             <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-project">
-                <Text type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline"></Text>
+                <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
                 <ProjectInput
                     name="projectName"
                     label="프로젝트명"
@@ -83,14 +83,15 @@ export default function ProjectRegister() {
                     onChange={handleInput}
                 />
                 <Button
-                    type="PROJECT"
-                    label="등록하기"
-                    styles="bg-project_point text-white font-semibold px-30 mb-20"
+                    type="PROJECT_POINT"
+                    styles="mb-20"
                     isFullBtn={false}
                     onClickHandler={() => {
                         // Handle the click event for the "Create Project" button here...
                     }}
-                />
+                >
+                    <Typography text="등록하기" type="Label" color="text-white" />
+                </Button>
             </div>
         </div>
     );
