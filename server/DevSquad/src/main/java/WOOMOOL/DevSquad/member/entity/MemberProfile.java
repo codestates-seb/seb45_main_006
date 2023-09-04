@@ -53,7 +53,7 @@ public class MemberProfile {
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Column
-    private boolean ListEnroll = false;
+    private boolean listEnroll = false;
 
     @Column
     private boolean oAuth2Member = false;

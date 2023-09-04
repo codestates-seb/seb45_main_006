@@ -46,11 +46,9 @@ public class MemberController {
     }
 
     // 멤버 프로필 수정
-    @PatchMapping("/{member-id}")
-    public ResponseEntity patchMemberProfile(@PathVariable("member-id") Long memberId,
-                                             @Valid @RequestBody MemberProfileDto.Patch patchDto){
+    @PatchMapping()
+    public ResponseEntity patchMemberProfile(@Valid @RequestBody MemberProfileDto.Patch patchDto){
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
-        memberProfile.setMemberProfileId(memberId);
 
         MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition(),patchDto.getStack());
         MemberProfileDto.patchResponse response = memberMapper.entityToResponseDto(updateProfile);

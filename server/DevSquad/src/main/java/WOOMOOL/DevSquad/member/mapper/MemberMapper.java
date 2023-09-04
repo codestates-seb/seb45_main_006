@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +22,20 @@ public interface MemberMapper {
 
     MemberProfile patchDtoToEntity(MemberProfileDto.Patch patchDto);
 
-    MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile);
+    // 프로필 수정 응답
+    default MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile){
+        return new MemberProfileDto.patchResponse(
+                memberProfile.getNickname(),
+                memberProfile.getProfilePicture(),
+                memberProfile.getGithubId(),
+                memberProfile.getIntroduction(),
+                memberProfile.isListEnroll(),
+                memberProfile.getPositions().stream()
+                        .map(position -> position.getPositionName()).collect(Collectors.toSet()),
+                memberProfile.getStackTags().stream()
+                        .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())
+        );
+    }
 
     // MemberProfile 상세 정보 Mapping
     default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile, List<ProjectDto.previewResponseDto> projectResponseDto){

@@ -1,6 +1,8 @@
 package WOOMOOL.DevSquad.member.service;
 
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.exception.BusinessLogicException;
+import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
@@ -24,8 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static WOOMOOL.DevSquad.exception.ExceptionCode.*;
 import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_ACTIVE;
 import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_QUIT;
 
@@ -78,14 +82,16 @@ public class MemberService {
     }
 
     // 프로필 수정
-    public MemberProfile updateMemberProfile(MemberProfile memberProfile, List<String> position,List<String> stackTag) {
+    public MemberProfile updateMemberProfile(MemberProfile memberProfile, Set<String> position, Set<String> stackTag) {
 
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
 
+        // 스택과 포지션 수정
         positionService.createPosition(position, findMemberProfile);
         stackTagService.createStackTag(stackTag, findMemberProfile);
 
+        // 기타 정보 수정
         Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.setNickname(nickname));
         Optional.ofNullable(memberProfile.getProfilePicture()).ifPresent(profilePicture -> findMemberProfile.setProfilePicture(profilePicture));
         Optional.ofNullable(memberProfile.getGithubId()).ifPresent(githubId -> findMemberProfile.setGithubId(githubId));
@@ -124,8 +130,6 @@ public class MemberService {
 
         // 추출한 memberId와 memberProfile 의 id가 같으면 필터링
         return memberProfilePage.getContent().stream()
-                .filter(memberProfile -> memberProfile.getMemberStatus().equals(MEMBER_ACTIVE))
-                .filter(memberProfile -> memberProfile.isListEnroll() == true)
                 .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
     }
@@ -142,8 +146,8 @@ public class MemberService {
     private void verifyExistEmail(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        // todo: 예외처리하기
-        if (optionalMember.isPresent()) throw new RuntimeException();
+
+        if (optionalMember.isPresent()) throw new BusinessLogicException(EXIST_EMAIL);
     }
 
     // 토큰으로 멤버객체 찾기
@@ -151,8 +155,8 @@ public class MemberService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
 
-        //todo: 예외처리
-        Member findMember = optionalMember.orElseThrow(() -> new RuntimeException());
+        // 토큰으로 멤버를 못찾으면 토큰이 잘못된거니까 NO AUTH가 좀 더 어울릴 듯?
+        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(NO_AUTHORIZATION));
         isDeletedMember(findMember);
 
         return findMember;
@@ -160,7 +164,7 @@ public class MemberService {
     }
     public Member findMember(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.orElseThrow(()-> new RuntimeException());
+        Member findMember = optionalMember.orElseThrow(()-> new BusinessLogicException(MEMBER_NOT_FOUND));
 
         return findMember;
     }
@@ -171,8 +175,8 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         optionalMember.ifPresent(member -> {
                     if (member.getMemberProfile().getMemberStatus().equals(MEMBER_ACTIVE)) {
-                        //todo: 중복된 닉네임입니다.
-                        throw new RuntimeException("중복");
+
+                        throw new BusinessLogicException(DUPLICATE_NICKNAME);
                     }
                 }
         );
@@ -195,16 +199,16 @@ public class MemberService {
             String encodedPassword = findMember.getPassword();
 
             if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-                // todo: 비밀번호가 다릅니다
-                throw new RuntimeException();
+
+                throw new BusinessLogicException(UNMATCHED_PASSWORD);
             }
         }
 
         // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
         private void isDeletedMember (Member member){
             if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
-                // todo: 예외처리하기
-                throw new RuntimeException();
+
+                throw new BusinessLogicException(QUITED_MEMBER);
             }
         }
 

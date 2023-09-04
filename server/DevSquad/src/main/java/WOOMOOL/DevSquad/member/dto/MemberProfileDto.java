@@ -33,9 +33,9 @@ public class MemberProfileDto {
         @NotNull
         private boolean listEnroll;
         @NotNull
-        private List<String> position;
+        private Set<String> position;
         @NotNull
-        private List<String> stack;
+        private Set<String> stack;
 
 
     }

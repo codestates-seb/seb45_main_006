@@ -8,10 +8,12 @@ import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.stacktag.repository.StackTagRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 @Service
 public class StackTagService {
@@ -20,8 +22,7 @@ public class StackTagService {
     public StackTagService(StackTagRepository stackTagRepository) {
         this.stackTagRepository = stackTagRepository;
     }
-
-    public void createStackTag(List<String> stackTaglist, MemberProfile memberProfile){
+    public void createStackTag(Set<String> stackTaglist, MemberProfile memberProfile){
 
         // 수정시 스택 객체 초기화
         memberProfile.getStackTags().clear();
