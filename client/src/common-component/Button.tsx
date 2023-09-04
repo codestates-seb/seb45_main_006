@@ -27,9 +27,9 @@ function Button({ children, type, styles, isFullBtn = false, onClickHandler }: I
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`mb-2 mr-4 flex h-fit items-end justify-center rounded px-30 py-6 text-14 ${
+            className={`mb-2 mr-4 flex h-fit justify-center rounded px-30 py-6 ${
                 isFullBtn ? "w-full" : "w-fit"
-            } ${background} ${styles}`}
+            } ${background} ${styles ? styles : ""}`}
         >
             {children}
         </button>
