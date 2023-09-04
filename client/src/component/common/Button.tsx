@@ -5,10 +5,11 @@ type IButton = {
     type: "PROJECT" | "STUDY" | "BOARD" | "MAIN" | "SUB" | "WARN";
     label: string;
     isFullBtn: boolean;
+    styles?: string;
     onClickHandler?: () => void;
 };
 
-function Button({ type, label, isFullBtn = false, onClickHandler }: IButton) {
+function Button({ type, label, styles, isFullBtn = false, onClickHandler }: IButton) {
     const [background, setBackground] = useState("bg-project");
 
     useEffect(() => {
@@ -25,7 +26,9 @@ function Button({ type, label, isFullBtn = false, onClickHandler }: IButton) {
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`mb-2 mr-4 h-32 rounded px-8 py-6 text-14 ${isFullBtn ? "w-full" : "w-fit"} ${background}`}
+            className={`mb-2 mr-4 h-32 rounded px-8 py-6 text-14 ${
+                isFullBtn ? "w-full" : "w-fit"
+            } ${background} ${styles}`}
         >
             <Text
                 type="SmallLabel"

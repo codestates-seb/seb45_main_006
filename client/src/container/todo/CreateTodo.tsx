@@ -1,14 +1,38 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { useSetRecoilState } from "recoil";
+import { addTodoResult } from "@feature/Todo";
 import { usePostTodos } from "@api/todo/hook";
 
 import Button from "@component/common/Button";
 import Text from "@component/common/Text";
 
 function CreateTodo() {
-    const [todoValue, setTodoValue] = useState<string>("");
+    const navigate = useNavigate();
 
-    const { mutate: postTodo } = usePostTodos({ todo: todoValue, completed: false, userId: 1 });
+    const [todoValue, setTodoValue] = useState<string>("");
+    const setTodoResult = useSetRecoilState(addTodoResult);
+
+    const { mutate: postTodo } = usePostTodos();
+
+    const addTodoHandler = () => {
+        if (!todoValue) {
+            alert("할 일을 입력해주세요!");
+            return;
+        }
+
+        postTodo(
+            { todo: todoValue, completed: false, userId: 1 },
+            {
+                onSuccess: (res) => {
+                    setTodoResult(res.data);
+                    alert("등록에 성공하였습니다.");
+                    navigate("/todos");
+                },
+            },
+        );
+    };
 
     return (
         <div className="flex h-500 flex-col items-center justify-center p-30">
@@ -20,9 +44,9 @@ function CreateTodo() {
                     type="text"
                     value={todoValue}
                     onChange={(e) => setTodoValue(e.currentTarget.value)}
-                    className="mr-16 border-1 border-slate-700"
+                    className="border-slate-700 mr-16 border-1"
                 />
-                <Button type="PROJECT" label="등록" isFullBtn={false} onClickHandler={() => postTodo()} />
+                <Button type="PROJECT" label="등록" isFullBtn={false} onClickHandler={addTodoHandler} />
             </div>
             <div>
                 <Text
