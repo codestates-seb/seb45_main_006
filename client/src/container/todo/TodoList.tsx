@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllTodos } from "@api/todo/hook";
 import { TODO_LIMIT_NUM } from "@type/todo/todo.req.dto";
 
-import Button from "@component/common/Button";
-import Pagination from "@component/common/Pagination";
-import { TodoListTitle, TodoItem } from "@component/todo/TodoComponents";
+import Button from "@component/Button";
+import Pagination from "@component/Pagination";
+import { TodoListTitle, TodoItem } from "@container/todo/todo/TodoComponents";
 
 function TodoList() {
     const navigate = useNavigate();

@@ -5,16 +5,16 @@ import { QueryClient, QueryClientProvider, QueryCache } from "@tanstack/react-qu
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { isAxiosError } from "axios";
 
-import Container from "@container/Container";
+import Layout from "@container/layout/Layout";
 import ErrorPage from "@container/ErrorPage";
-import Main from "@container/Main";
-import MyPage from "@container/MyPage";
+import Main from "@container/main/Main";
+import MyPage from "@container/mypage/MyPage";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
-import ProjectBoard from "@container/project/ProjectBoard";
-import ProjectRegister from "@container/project/ProjectRegister";
-import SignUp from "@container/SignUp";
+import ProjectBoard from "@container/project/Board";
+import ProjectRegister from "@container/project/Register";
+import SignUp from "@container/sign/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -23,7 +23,7 @@ import TempSignUp from "@container/sign/TempSignUp";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Container />,
+        element: <Layout />,
         errorElement: <ErrorPage />,
         children: [
             {

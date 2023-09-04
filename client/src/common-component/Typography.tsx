@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 export type ITextType = "Logo" | "Heading" | "Label" | "Highlight" | "Body" | "SmallLabel" | "Description";
 
 function Text({
@@ -43,4 +45,5 @@ function Text({
     return <>{renderText()}</>;
 }
 
-export default Text;
+export const Typography = memo(Text); // 불필요한 렌더링을 방지해주는 기능: memo
+export default Typography;

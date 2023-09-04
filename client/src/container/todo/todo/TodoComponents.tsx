@@ -1,21 +1,21 @@
 import { useNavigate } from "react-router-dom";
 
 import { GetResDetailTodo } from "@type/todo/todo.res.dto";
-import Text from "@component/common/Text";
+import Typography from "@component/Typography";
 
 export const TodoListTitle = () => (
     <li className="mb-20 flex">
         <div className="w-50 text-center">
-            <Text type="Highlight" text="아이디" />
+            <Typography type="Highlight" text="아이디" />
         </div>
         <div className="w-100 text-center">
-            <Text type="Highlight" text="유저 아이디" />
+            <Typography type="Highlight" text="유저 아이디" />
         </div>
         <div className="w-600 text-center">
-            <Text type="Highlight" text="할일" />
+            <Typography type="Highlight" text="할일" />
         </div>
         <div className="w-80 text-center">
-            <Text type="Highlight" text="완료 여부" />
+            <Typography type="Highlight" text="완료 여부" />
         </div>
     </li>
 );
@@ -30,16 +30,16 @@ export const TodoItem = ({ id, userId, todo, completed }: GetResDetailTodo) => {
             onClick={() => navigate(`/todos/${id}`)}
         >
             <div className="w-50 text-center">
-                <Text type="Body" text={id.toString()} />
+                <Typography type="Body" text={id.toString()} />
             </div>
             <div className="w-100 text-center">
-                <Text type="Body" text={userId.toString()} />
+                <Typography type="Body" text={userId.toString()} />
             </div>
             <div className="w-600">
-                <Text type="Body" text={todo} />
+                <Typography type="Body" text={todo} />
             </div>
             <div className="w-80 text-center">
-                <Text type="Body" text={completed ? "✅" : ""} />
+                <Typography type="Body" text={completed ? "✅" : ""} />
             </div>
         </li>
     );

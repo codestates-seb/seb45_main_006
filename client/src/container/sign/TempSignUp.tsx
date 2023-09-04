@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Text from "@component/common/Text";
-import Button from "@component/common/Button";
+import Typography from "@component/Typography";
+import Button from "@component/Button";
 
 import IconPeople from "@assets/icon_people.png";
 
@@ -23,7 +23,7 @@ const SignUpInput = ({ id, label, type, value, setValue, placeholder }: ISignUpI
     return (
         <div className="mb-24 flex">
             <div className="w-100 p-4">
-                <Text type="Highlight" text={label} />
+                <Typography type="Highlight" text={label} />
             </div>
             <input
                 key={id}
@@ -68,7 +68,7 @@ function TempSignUp() {
             <div className="relative flex h-400 w-500 flex-col rounded-xl bg-white p-10">
                 <img src={IconPeople} alt="사람 도트 이미지" className="absolute -top-56 left-0" />
                 <div className="my-24 text-center">
-                    <Text type="Label" text="회원가입" />
+                    <Typography type="Label" text="회원가입" />
                 </div>
 
                 <SignUpInput
@@ -110,13 +110,14 @@ function TempSignUp() {
                 <div className="mt-20 flex justify-center">
                     <Button
                         type="PROJECT"
-                        label="회원가입"
                         isFullBtn={false}
                         onClickHandler={() => {
                             console.log(email, nickname, pw, pwRe);
                             createMemberHandler();
                         }}
-                    />
+                    >
+                        <Typography type="Label" text="회원가입" />
+                    </Button>
                 </div>
             </div>
         </div>

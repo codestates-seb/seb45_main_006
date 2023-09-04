@@ -33,3 +33,6 @@ export type PatchResMember = GetResMemberDetail;
 
 // 탈퇴 - 멤버 삭제하기 - status code: 204
 export type DeleteResMember = Record<string, never>; // empty object
+
+// 비밀번호 변경
+export type PatchResMemberPw = Record<string, never>; // empty object

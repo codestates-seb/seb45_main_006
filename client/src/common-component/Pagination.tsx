@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getPaginationRange } from "@util/pagination-helper";
 import { TODO_LIMIT_NUM } from "@type/todo/todo.req.dto";
 
-import Text from "@component/common/Text";
+import Typography from "@component/Typography";
 
 type IPagination = {
     curPage: number;
@@ -28,24 +28,24 @@ function Pagination({ curPage, setCurPage, totalItems }: IPagination) {
         <ol className="flex w-full justify-center">
             {paginationArr[0] !== 1 ? (
                 <button className="mr-8" onClick={() => setCurPage(paginationArr[0] - 1)}>
-                    <Text type="Body" text="&lt;&lt;" />
+                    <Typography type="Body" text="&lt;&lt;" />
                 </button>
             ) : null}
             {paginationArr.map((v, i) => (
                 <li key={v} className="mr-6 flex">
                     <button onClick={() => setCurPage(v)} className="mr-6">
                         {curPage === v ? (
-                            <Text type="Highlight" text={v.toString()} color="text-main" />
+                            <Typography type="Highlight" text={v.toString()} color="text-main" />
                         ) : (
-                            <Text type="Body" text={v.toString()} />
+                            <Typography type="Body" text={v.toString()} />
                         )}
                     </button>
-                    {i !== paginationArr.length - 1 ? <Text type="Body" text="/" /> : null}
+                    {i !== paginationArr.length - 1 ? <Typography type="Body" text="/" /> : null}
                 </li>
             ))}
             {paginationArr[paginationArr.length - 1] !== endPage ? (
                 <button onClick={() => setCurPage(paginationArr[paginationArr.length - 1] + 1)}>
-                    <Text type="Body" text="&gt;&gt;" />
+                    <Typography type="Body" text="&gt;&gt;" />
                 </button>
             ) : null}
         </ol>
