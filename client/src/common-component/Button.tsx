@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 
 type IButton = {
-    type: "PROJECT" | "PROJECT_POINT" | "STUDY" | "STUDY_POINT" | "BOARD" | "MAIN" | "SUB" | "WARN";
+    type: "BLACK" | "PROJECT" | "PROJECT_POINT" | "STUDY" | "STUDY_POINT" | "BOARD" | "MAIN" | "SUB" | "WARN";
     children: ReactNode;
     isFullBtn: boolean;
     styles?: string;
@@ -12,6 +12,7 @@ function Button({ children, type, styles, isFullBtn = false, onClickHandler }: I
     const [background, setBackground] = useState("bg-project");
 
     useEffect(() => {
+        if (type === "BLACK") setBackground("bg-black");
         if (type === "PROJECT") setBackground("bg-project");
         if (type === "PROJECT_POINT") setBackground("bg-project_point");
         if (type === "STUDY") setBackground("bg-study");
