@@ -55,7 +55,7 @@ public interface MemberMapper {
                         .map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 memberProfile.getStackTags().stream()
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
-                projectResponseDto,// response 수정해야함
+                projectResponseDto,
                 studyResponseDto,
                 infoBoardResponseDto,
                 memberProfile.getBlockMemberList().stream()

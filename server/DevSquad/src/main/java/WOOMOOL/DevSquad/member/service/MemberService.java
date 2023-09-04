@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
+import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
@@ -69,17 +70,23 @@ public class MemberService {
     public Member createMember(Member member) {
 
         verifyExistEmail(member.getEmail());
+
+        // 패스워드 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
+
         // 기본 값 프로필 객체 생성하고 넣기
         MemberProfile memberProfile = new MemberProfile();
         memberProfile.setNickname(member.getNickname());
         member.addProfile(memberProfile);
-        // 패스워드 암호화
-        String encodedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encodedPassword);
+
+        // 레벨 시스템 추가
+        Level level = new Level();
+        memberProfile.addLevel(level);
+
         // 권한 추가
         List<String> roles = memberAuthority.createRoles(member.getEmail());
         member.setRoles(roles);
-
 
         Member createMember = memberRepository.save(member);
 
