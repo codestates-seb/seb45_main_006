@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { useRecoilState } from "recoil";
+import { isSignPageAtom } from "@feature/Global";
+
 import IconLogo from "@assets/icon_logo.png";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
@@ -16,6 +19,8 @@ function Header() {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
+    const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
+
     const defaultNavItems: INavItems = [
         { label: "프로젝트", route: "/projects", selected: false },
         { label: "스터디", route: "/studies", selected: false },
@@ -25,7 +30,6 @@ function Header() {
         { label: "Todo", route: "/todos", selected: false },
     ];
 
-    const [isSignPage, setIsSignPage] = useState<boolean>(true);
     const [navItems, setNavItems] = useState<INavItems>(defaultNavItems);
 
     // pathname에 따라
