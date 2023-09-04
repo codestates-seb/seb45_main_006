@@ -33,3 +33,10 @@ export const deleteMember = async ({ memberId }: DeleteReqMember) => {
     const { data } = await withAuthApi.delete(url);
     return data;
 };
+
+// 비밀번호 수정
+export const patchMemberPw = async (requstObj: PatchReqMember) => {
+    const url = `${COMMON_API_PATH.MEMBER.CHANGE_PASSWORD}`;
+    const { data } = await commonApi.patch(url, requstObj);
+    return data;
+};

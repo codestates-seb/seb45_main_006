@@ -9,5 +9,6 @@ export const COMMON_API_PATH = {
     MEMBER: {
         PATH: "/members",
         NICKNAME: "/members/checkNickname",
+        CHANGE_PASSWORD: "/members/password",
     },
 } as const;
