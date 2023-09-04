@@ -74,15 +74,15 @@ function Header() {
 
     const AuthBtns = () => {
         return (
-            <div>
+            <div className="flex">
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/login")}>
-                    <Typography type="Label" text="로그인" />
+                    <Typography type="Body" text="로그인" color="text-white" />
                 </Button>
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup")}>
-                    <Typography type="Label" text="회원가입" />
+                    <Typography type="Body" text="회원가입" color="text-white" />
                 </Button>
                 <Button type="WARN" isFullBtn={false} onClickHandler={() => navigate("/signup/temp")}>
-                    <Typography type="Label" text="회원가입" />
+                    <Typography type="Body" text="회원가입(임시)" color="text-white" />
                 </Button>
             </div>
         );
@@ -90,7 +90,7 @@ function Header() {
 
     return (
         <>
-            <header className="border-slate-200 flex h-70 w-full items-center justify-between border-b-1 px-16">
+            <header className="flex h-70 w-full items-center justify-between border-b-1 border-borderline px-16">
                 <button onClick={() => navigate("/")} className="flex items-center justify-between">
                     <img src={IconLogo} alt="DevSquad 로고" />
                     <Typography type="Logo" text="Dev Squad" color="text-main" />
@@ -98,7 +98,7 @@ function Header() {
                 {!isSignPage ? <AuthBtns /> : null}
             </header>
             {!isSignPage ? (
-                <nav className="border-slate-200 flex h-40 w-full border-b-1">
+                <nav className="flex h-40 w-full border-b-1 border-borderline">
                     <ul className="flex w-full items-center">
                         {navItems.map((v: INavItem) => (
                             <NavItem key={v.label} item={v} />

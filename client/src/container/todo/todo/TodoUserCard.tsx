@@ -1,5 +1,5 @@
 import Typography from "@component/Typography";
-import IconGithub from "@assets/icon_github.png";
+import IconGithub from "@assets/sign/icon_github.png";
 import Button from "@component/Button";
 
 import { TbDeviceDesktopCode } from "react-icons/tb";
