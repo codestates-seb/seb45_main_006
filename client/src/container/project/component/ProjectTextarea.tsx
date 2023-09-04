@@ -1,3 +1,5 @@
+import Textarea from "@component/Textarea";
+
 interface IProps {
     label: string;
     required?: boolean;
@@ -6,8 +8,8 @@ interface IProps {
     minlength?: number;
     maxlength?: number;
     name?: string;
-    value?: string | number;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    value?: string;
+    onChange: (value: string) => void;
 }
 
 export default function ProjectTextarea({
@@ -27,16 +29,16 @@ export default function ProjectTextarea({
                 {label}
                 {required && <span className="text-red-500">*</span>}
             </label>
-            <textarea
+            <Textarea
+                type="FIELD"
                 name={name}
                 disabled={disabled}
-                className="m-10 h-100 w-full rounded-md p-4 shadow-md"
-                minLength={minlength}
-                maxLength={maxlength}
+                minlength={minlength}
+                maxlength={maxlength}
                 placeholder={placeholder}
                 value={value}
-                onChange={(e) => onChange(e)}
-            ></textarea>
+                onChange={onChange}
+            />
         </div>
     );
 }
