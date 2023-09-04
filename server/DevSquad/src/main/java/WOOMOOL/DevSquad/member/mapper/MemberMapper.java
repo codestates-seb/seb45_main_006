@@ -4,6 +4,8 @@ import WOOMOOL.DevSquad.member.dto.MemberPostDto;
 import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
@@ -19,8 +21,11 @@ public interface MemberMapper {
 
     MemberProfile patchDtoToEntity(MemberProfileDto.Patch patchDto);
 
+    MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile);
+
     // MemberProfile 상세 정보 Mapping
-    default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile){
+    default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile, List<ProjectDto.previewResponseDto> projectResponseDto){
+
         return new MemberProfileDto.detailResponse(
                 memberProfile.getProfilePicture(),
                 memberProfile.getNickname(),
@@ -28,14 +33,20 @@ public interface MemberMapper {
                 memberProfile.getIntroduction(),
                 memberProfile.isListEnroll(),
                 memberProfile.isOAuth2Member(),
-                memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
-                new ArrayList<>(),
-                memberProfile.getProjectlist(),
-                memberProfile.getStudyList(),
+                memberProfile.getPositions().stream()
+                        .map(position -> position.getPositionName()).collect(Collectors.toSet()),
+                memberProfile.getStackTags().stream()
+                        .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
+                projectResponseDto,// response 수정해야함
+               new ArrayList<>(), // response 수정해야함
+                new ArrayList<>(), // 보드 게시판 추가
+                memberProfile.getBlockMemberList().stream()
+                                .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
                 memberProfile.getModifiedAt()
         );
     }
 
+    // 유저 리스트 Mapping
     default List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles){
         return memberProfiles.stream()
                 .map(memberProfile -> new MemberProfileDto.listResponse(
@@ -43,7 +54,7 @@ public interface MemberMapper {
                         memberProfile.getNickname(),
                         memberProfile.getGithubId(),
                         memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
-                        new ArrayList<>()))
+                        memberProfile.getStackTags().stream().map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())))
                 .collect(Collectors.toList());
 
     }

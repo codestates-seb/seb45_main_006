@@ -1,11 +1,14 @@
 package WOOMOOL.DevSquad.member.dto;
 
-
-import WOOMOOL.DevSquad.projectBoard.entity.Project;
-import WOOMOOL.DevSquad.studyBoard.entity.Study;
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +23,28 @@ public class MemberProfileDto {
         @Pattern(regexp = "^[A-Za-z0-9가-힣]{2,8}$",
                 message = "닉네임은 2~8글자로 이루어져야 합니다.")
         private String nickname;
+        @NotNull
+        private String profilePicture;
+
+        @NotNull
+        private String githubId;
+        @NotNull
+        private String introduction;
+        @NotNull
+        private boolean listEnroll;
+        @NotNull
+        private List<String> position;
+        @NotNull
+        private List<String> stack;
+
+
+    }
+    // 패치 response
+    @Getter
+    @AllArgsConstructor
+    public static class patchResponse{
+
+        private String nickname;
 
         private String profilePicture;
 
@@ -29,9 +54,9 @@ public class MemberProfileDto {
 
         private boolean listEnroll;
 
-        private List<String> position;
+        private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
 
     }
@@ -49,7 +74,7 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
     }
 
@@ -72,11 +97,15 @@ public class MemberProfileDto {
 
         private Set<String> position;
 
-        private List<String> stack;
+        private Set<String> stack;
 
-        private List<Project> projectList;
+        private List<ProjectDto.previewResponseDto> projectList;
 
-        private List<Study> studyList;
+        private List<StudyDto.previewResponseDto> studyList;
+
+        private List<InfoBoard> infoBoardList;
+
+        private List<String> blockMemberList;
 
         private LocalDateTime modifiedAt;
 

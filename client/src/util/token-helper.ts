@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 
-// TODO jwt payload 확인 후 수정
+type USER_ROLE = "USER" | "ADMIN";
+
 type ACCESS_TOKEN = {
-    userId: number;
-    nickname: string;
-    email: string;
-    iat: Date;
+    roles: Array<USER_ROLE>;
+    username: string;
+    sub: string;
     exp: Date;
 };
 

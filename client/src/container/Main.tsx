@@ -1,5 +1,11 @@
+import CarouselCustomNavigation from "@component/main/CarouselCustomNavigation";
+
 function Main() {
-    return <div>hello</div>;
+    return (
+        <>
+            <CarouselCustomNavigation />
+        </>
+    );
 }
 
 export default Main;

@@ -1,8 +1,8 @@
 package WOOMOOL.DevSquad.comment.entity;
 
-
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

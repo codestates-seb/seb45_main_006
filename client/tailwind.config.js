@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import withMT from "@material-tailwind/react/utils/withMT";
 
 const range = (length) => Array.from({ length }, (_, i) => i);
 const pixels = range(1000 + 1).map((x) => [x, `calc(${x}rem / 16)`]);
@@ -23,8 +24,13 @@ const customColor = {
     toast: "#BAE5FD",
 };
 
-export default {
-    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+export default withMT({
+    content: [
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}",
+        "path-to-your-node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
+        "path-to-your-node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
+    ],
     theme: {
         extend: {
             spacing: { ...px0_200, 1120: "1120px" },
@@ -47,4 +53,4 @@ export default {
         },
     },
     plugins: [],
-};
+});
