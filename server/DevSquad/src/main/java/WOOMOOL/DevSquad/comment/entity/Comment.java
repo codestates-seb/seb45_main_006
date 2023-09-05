@@ -33,7 +33,10 @@ public class Comment {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+
+
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
 

@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class InfoBoardService {
     private final InfoBoardRepository infoBoardRepository;
     private final MemberService memberService;
@@ -57,7 +59,7 @@ public class InfoBoardService {
         return result;
     }
 
-    public void deleteInfoBoard(Long boardId) {
+    public void deleteInfoBoard(long boardId) {
         InfoBoard findInfoBoard = findVerifiedInfoBoard(boardId);
 
         verifiedIsWriter(memberService.findMemberFromToken().getMemberId(), findInfoBoard.getMemberProfile().getMemberProfileId());
@@ -67,13 +69,14 @@ public class InfoBoardService {
         infoBoardRepository.save(findInfoBoard);
     }
 
-    public InfoBoard findVerifiedInfoBoard(Long boardId) {
-        Optional<InfoBoard> findInfoBoard = infoBoardRepository.findById(boardId);
-        InfoBoard infoBoard = findInfoBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFOBOARD_NOT_FOUND));
-        return infoBoard;
+    public InfoBoard findVerifiedInfoBoard(long boardId) {
+        Optional<InfoBoard> infoBoard = infoBoardRepository.findById(boardId);
+        InfoBoard findInfoBoard = infoBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFOBOARD_NOT_FOUND));
+
+        return findInfoBoard;
     }
 
-    public void increaseViewCount(Long boardId) {
+    public void increaseViewCount(long boardId) {
         InfoBoard infoBoard = findVerifiedInfoBoard(boardId);
         infoBoard.setViewCount(infoBoard.getViewCount()+1);
         infoBoardRepository.save(infoBoard);

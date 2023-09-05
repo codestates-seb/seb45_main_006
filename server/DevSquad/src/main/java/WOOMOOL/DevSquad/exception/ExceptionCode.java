@@ -5,6 +5,10 @@ import lombok.Getter;
 public enum ExceptionCode {
     INFOBOARD_NOT_FOUND(404, "InfoBoard not found"),
     STACK_NOT_FOUND(404, "Stack not found"),
+    COMMENT_NOT_FOUND(404,"Comment not found"),
+    QUESTION_NOT_FOUND(404, "Question not found"),
+    ANSWER_NOT_FOUND(404, "Answer not found"),
+    ACCEPT_ALREADY_EXISTS(409, "Accept already exists"),
 
     // 찾기 편하려고 이모지 잠깐 넣어뒀어요. 나중에 뺄게요!
     PROJECT_NOT_FOUND(404, "🚨🚨🚨 Project not found 🚨🚨🚨"),

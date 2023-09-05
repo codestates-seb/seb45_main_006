@@ -26,7 +26,8 @@ public class ProjectDto {
         private boolean recruitStatus;
     }
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class PatchDto {
         private Long boardId;
 
@@ -43,7 +44,8 @@ public class ProjectDto {
         private Integer recruitNum;
     }
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class previewResponseDto {
         private Long boardId;
         private String title;
@@ -56,7 +58,8 @@ public class ProjectDto {
         private int viewCount;
     }
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class AllResponseDto {
         private Long boardId;
         private String title;
