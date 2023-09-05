@@ -19,6 +19,7 @@ import SignUp from "@container/sign/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
+import ToastList from "@component/ToastList";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -108,6 +109,7 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <RecoilRoot>
                     <RouterProvider router={router} />
+                    <ToastList />
                 </RecoilRoot>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
