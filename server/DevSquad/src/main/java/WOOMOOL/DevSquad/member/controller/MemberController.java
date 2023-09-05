@@ -54,10 +54,10 @@ public class MemberController {
 
     // 멤버 프로필 수정
     @PatchMapping()
-    public ResponseEntity patchMemberProfile(@Valid @RequestBody MemberProfileDto.Patch patchDto){
+    public ResponseEntity patchMemberProfile(@Valid @RequestBody MemberProfileDto.Patch patchDto) {
         MemberProfile memberProfile = memberMapper.patchDtoToEntity(patchDto);
 
-        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition(),patchDto.getStack());
+        MemberProfile updateProfile = memberService.updateMemberProfile(memberProfile, patchDto.getPosition(), patchDto.getStack());
         MemberProfileDto.patchResponse response = memberMapper.entityToResponseDto(updateProfile);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -67,31 +67,49 @@ public class MemberController {
     @GetMapping()
     public ResponseEntity getMemberProfile(@RequestBody PasswordDto passwordDto) {
 
-        // 조회 전 비밀번호 확인하기?
+        // 조회 전 비밀번호 확인하기
         memberService.checkPassword(passwordDto.getRawPassword());
+
         MemberProfile memberProfile = memberService.getMemberProfile();
         List<ProjectDto.previewResponseDto> projectResponses = projectMapper.entityToPreviewResponseDto(memberProfile.getProjectlist());
-         List<StudyDto.previewResponseDto> studyResponse = studyMapper.entityToPreviewResponseDto(memberProfile.getStudyList());
-         List<InfoBoardDto.Response> infoBoardResponse = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(memberProfile.getInfoBoardList());
+        List<StudyDto.previewResponseDto> studyResponse = studyMapper.entityToPreviewResponseDto(memberProfile.getStudyList());
+        List<InfoBoardDto.Response> infoBoardResponse = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(memberProfile.getInfoBoardList());
 
-        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile,projectResponses,studyResponse,infoBoardResponse);
+        MemberProfileDto.detailResponse response = memberMapper.entityToResponseDto(memberProfile, projectResponses, studyResponse, infoBoardResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    // 유저 리스트 조회 8명 까지
+    // 유저 리스트 조회 8명 까지 + 포지션, 스택 별로 필터링
     @GetMapping("/list")
-    public ResponseEntity getMemberProfiles(@RequestParam int page) {
+    public ResponseEntity getMemberProfiles(@RequestParam int page,
+                                            @RequestParam(required = false) List<String> positions,
+                                            @RequestParam(required = false) List<String> stacks) {
 
-        Page<MemberProfile> memberProfilePage = memberService.getMemberProfilePage(page - 1);
+        Page<MemberProfile> memberProfilePage;
+        // 포지션 필터링
+        if (positions != null) {
+
+            memberProfilePage = memberService.getMemberProfilesByPosition(page - 1, positions);
+        // 스택 필터링
+        } else if (stacks != null) {
+
+            memberProfilePage = memberService.getMemberProfilesByStack(page - 1, stacks);
+        // 필터링 X
+        } else {
+
+            memberProfilePage = memberService.getMemberProfilePage(page - 1);
+
+        }
+
         List<MemberProfile> memberProfileList = memberService.getMemberProfiles(memberProfilePage);
-
         List<MemberProfileDto.listResponse> response = memberMapper.entityToResponseDto(memberProfileList);
+
 
         return new ResponseEntity(new PageResponseDto<>(response, memberProfilePage), HttpStatus.OK);
     }
-    // 회원 삭제
 
+    // 회원 삭제
     @DeleteMapping
     public ResponseEntity deleteMember() {
 

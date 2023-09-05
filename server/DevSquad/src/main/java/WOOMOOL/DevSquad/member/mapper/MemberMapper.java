@@ -24,7 +24,7 @@ public interface MemberMapper {
     MemberProfile patchDtoToEntity(MemberProfileDto.Patch patchDto);
 
     // 프로필 수정 응답
-    default MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile){
+    default MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile) {
         return new MemberProfileDto.patchResponse(
                 memberProfile.getNickname(),
                 memberProfile.getProfilePicture(),
@@ -42,7 +42,7 @@ public interface MemberMapper {
     default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile,
                                                                 List<ProjectDto.previewResponseDto> projectResponseDto,
                                                                 List<StudyDto.previewResponseDto> studyResponseDto,
-                                                                List<InfoBoardDto.Response> infoBoardResponseDto){
+                                                                List<InfoBoardDto.Response> infoBoardResponseDto) {
 
         return new MemberProfileDto.detailResponse(
                 memberProfile.getProfilePicture(),
@@ -55,17 +55,17 @@ public interface MemberMapper {
                         .map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 memberProfile.getStackTags().stream()
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
-                projectResponseDto,// response 수정해야함
+                projectResponseDto,
                 studyResponseDto,
                 infoBoardResponseDto,
                 memberProfile.getBlockMemberList().stream()
-                                .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
+                        .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
                 memberProfile.getModifiedAt()
         );
     }
 
     // 유저 리스트 Mapping
-    default List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles){
+    default List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles) {
         return memberProfiles.stream()
                 .map(memberProfile -> new MemberProfileDto.listResponse(
                         memberProfile.getProfilePicture(),
