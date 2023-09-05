@@ -42,7 +42,7 @@ const ProfileContent4 = () => {
     );
 };
 
-function TempProfile() {
+function TempProfile4() {
     return (
         <SignLayout title="간단한 자기소개를" subTitle="작성해주세요!" progressImage={progress}>
             <ProfileContent4 />
@@ -50,4 +50,4 @@ function TempProfile() {
     );
 }
 
-export default TempProfile;
+export default TempProfile4;
