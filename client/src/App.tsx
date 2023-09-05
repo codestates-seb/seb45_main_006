@@ -13,6 +13,7 @@ import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
 import ProjectBoard from "@container/project/Board";
+import ProjectDetails from "@container/project/Details";
 import ProjectRegister from "@container/project/Register";
 import SignUp from "@container/sign/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: "/projects/register",
                 element: <ProjectRegister />,
+            },
+            {
+                path: "/projects/:projectBoardId",
+                element: <ProjectDetails />,
             },
             {
                 path: "/members/1",

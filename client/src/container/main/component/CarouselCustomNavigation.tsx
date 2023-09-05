@@ -61,9 +61,9 @@ function CarouselCustomNavigation() {
                 </IconButton>
             )}
         >
-            <img src={ProjectImg} alt="image 1" className="h-300 w-full max-w-screen-xl object-cover" />
-            <img src={StudyImg} alt="image 2" className="h-300 w-full max-w-screen-xl object-cover" />
-            <img src={BoardImg} alt="image 3" className="h-300 w-full max-w-screen-xl object-cover" />
+            <img src={ProjectImg} alt="image 1" className="h-300 w-full max-w-screen-xl object-contain" />
+            <img src={StudyImg} alt="image 2" className="h-300 w-full max-w-screen-xl object-contain" />
+            <img src={BoardImg} alt="image 3" className="h-300 w-full max-w-screen-xl object-contain" />
         </Carousel>
     );
 }

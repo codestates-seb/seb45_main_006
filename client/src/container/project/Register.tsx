@@ -1,5 +1,5 @@
 import { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
@@ -7,7 +7,7 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 
 export default function Register() {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [inputs, setInputs] = useState({
         projectName: "",
@@ -89,7 +89,7 @@ export default function Register() {
                     styles="mb-20"
                     isFullBtn={false}
                     onClickHandler={() => {
-                        // Handle the click event for the "Create Project" button here...
+                        navigate("/projects/:projectBoardId");
                     }}
                 >
                     <Typography text="등록하기" type="Label" color="text-white" />
