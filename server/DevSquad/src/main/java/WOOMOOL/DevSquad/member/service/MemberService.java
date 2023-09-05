@@ -135,25 +135,41 @@ public class MemberService {
         return findMemberProfile;
     }
 
-//     유저 리스트 페이지
+    //    필터없는 유저 리스트 페이지
     public Page<MemberProfile> getMemberProfilePage(int page) {
         // 정렬기준 뭐로할지?
         return memberProfileRepository.findAll(PageRequest.of(page, 8));
+    }
+    // 포지션 별로 필터링
+    public Page<MemberProfile> getMemberProfilesByPosition(int page, List<String> positions) {
+
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions,positions.stream().count());
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8), memberProfileList.size());
+
+        return memberProfilePage;
+    }
+
+    // 스택 별로 필터링
+    public Page<MemberProfile> getMemberProfilesByStack(int page, List<String> stacks) {
+
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks,stacks.stream().count());
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8), memberProfileList.size());
+
+        return memberProfilePage;
     }
 
     // 활동중, 등록 허가한 회원, 블랙리스트에 없는 유저리스트 조회
     public List<MemberProfile> getMemberProfiles(Page<MemberProfile> memberProfilePage) {
 
         // 블랙리스트 멤버에 있는 memberId를 List로 추출
-        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockMemberList().stream()
-                .map(blockMember -> blockMember.getBlockMemberId())
-                .collect(Collectors.toList());
+        List<Long> blockMemberList = getBlockMemberId();
 
         // list에 등록되어 있고 활동중인 회원, 추출한 차단 memberId와 memberProfile 의 id가 같으면 필터링
         return memberProfilePage.getContent().stream()
                 .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
     }
+
 
     // 회원 탈퇴 soft delete
     public void deleteMember() {
@@ -228,6 +244,16 @@ public class MemberService {
         }
     }
 
+    private List<Long> getBlockMemberId() {
+        // 블랙리스트 멤버에 있는 memberId를 List로 추출
+        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockMemberList().stream()
+                .map(blockMember -> blockMember.getBlockMemberId())
+                .collect(Collectors.toList());
+
+        return blockMemberList;
+    }
+
+
     // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
     private void isDeletedMember(Member member) {
         if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
@@ -243,8 +269,9 @@ public class MemberService {
 
         return projectList;
     }
+
     // 특정 멤버가 가지고 있는 스터디 리스트
-    private List<Study> getMemberStudyList(Long memberProfileId){
+    private List<Study> getMemberStudyList(Long memberProfileId) {
 
         List<Study> studyList = studyRepository.findByStudyStatusAndMemberProfile(memberProfileId);
 
@@ -252,7 +279,7 @@ public class MemberService {
     }
 
     // 특정 멤버가 가지고 있는 정보게시판 리스트
-    private List<InfoBoard> getMemberInfoBoardList(Long memberProfileId){
+    private List<InfoBoard> getMemberInfoBoardList(Long memberProfileId) {
 
         List<InfoBoard> infoBoardList = infoBoardRepository.findAllByMemberProfile(memberProfileId);
 
