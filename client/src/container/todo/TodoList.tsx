@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllTodos } from "@api/todo/hook";
 import { TODO_LIMIT_NUM } from "@type/todo/todo.req.dto";
 
-import Button from "@component/common/Button";
-import Pagination from "@component/common/Pagination";
-import { TodoListTitle, TodoItem } from "@component/todo/TodoComponents";
+import Button from "@component/Button";
+import Pagination from "@component/Pagination";
+import { TodoListTitle, TodoItem } from "@container/todo/todo/TodoComponents";
+import Typography from "@component/Typography";
 
 function TodoList() {
     const navigate = useNavigate();
@@ -34,12 +35,9 @@ function TodoList() {
     return (
         <div className="flex w-full flex-col items-center p-30">
             <div className="mb-24 flex w-full justify-end rounded">
-                <Button
-                    type="PROJECT"
-                    label="할일 추가하기"
-                    isFullBtn={false}
-                    onClickHandler={() => navigate("/todos/add")}
-                />
+                <Button type="PROJECT" isFullBtn={false} onClickHandler={() => navigate("/todos/add")}>
+                    <Typography type="Body" text="할일 추가하기" />
+                </Button>
             </div>
             <ul className="mb-48 w-fit">
                 <TodoListTitle />

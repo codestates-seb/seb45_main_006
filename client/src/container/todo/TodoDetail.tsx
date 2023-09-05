@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useGetDetailTodo, useGetTodoOwnerUser, useGetAllTodosOfUser } from "@api/todo/hook";
 
-import Text from "@component/common/Text";
-import TodoUserCard from "@component/todo/TodoUserCard";
-import ReadOrUpdateTodo from "@component/todo/ReadOrUpdateTodo";
-import { TodoListTitle, TodoItem } from "@component/todo/TodoComponents";
+import Typography from "@component/Typography";
+import TodoUserCard from "@container/todo/todo/TodoUserCard";
+import ReadOrUpdateTodo from "@container/todo/todo/ReadOrUpdateTodo";
+import { TodoListTitle, TodoItem } from "@container/todo/todo/TodoComponents";
 
 function TodoDetail() {
     const { todoId } = useParams();
@@ -20,7 +20,7 @@ function TodoDetail() {
                 <TodoUserCard ownerUser={ownerUser} />
                 <ReadOrUpdateTodo singleTodo={singleTodo} />
             </div>
-            <Text type="Label" text={`그 외 ${ownerUser?.lastName}이/가 등록한 할일들`} />
+            <Typography type="Label" text={`그 외 ${ownerUser?.lastName}이/가 등록한 할일들`} />
             <ul className="mb-48 mt-12 w-fit">
                 <TodoListTitle />
                 {Array.isArray(todos) &&

@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.member.entity;
 
 import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
+import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
@@ -54,7 +55,7 @@ public class MemberProfile {
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Column
-    private boolean ListEnroll = false;
+    private boolean listEnroll = false;
 
     @Column
     private boolean oAuth2Member = false;
@@ -66,6 +67,9 @@ public class MemberProfile {
     @OneToOne
     @JoinColumn(name = "memberId")
     private Member member;
+
+    @OneToOne(mappedBy = "memberProfile",cascade = CascadeType.PERSIST)
+    private Level level;
 
     @ManyToMany
     @JoinTable(name = "profilePosition",
@@ -108,15 +112,15 @@ public class MemberProfile {
         }
     }
 
-    public void addProject(Project project) {
-        this.getProjectlist().add(project);
-    }
-
-    public void addStudy(Study study) {
-        this.getStudyList().add(study);
-    }
-
-    public void addBlockMember(BlockMember blockMember){
+    public void addBlockMember(BlockMember blockMember) {
         this.getBlockMemberList().add(blockMember);
+    }
+
+    public void addLevel(Level level) {
+        this.level = level;
+        if (level.getMemberProfile() != this) {
+            level.setMemberProfile(this);
+        }
+
     }
 }

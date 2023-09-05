@@ -11,15 +11,15 @@ module.exports = {
     ],
     settings: {
         tailwindcss: {
+            config: "tailwind.config.js",
             callees: ["cls", "classnames", "clsx", "ctl"],
             classRegex: "^(class(Name)?|\\w+Style)$",
-            config: "tailwind.config.js",
             cssFiles: "./src/**/*.css",
         },
     },
     ignorePatterns: ["dist", ".eslintrc.cjs"],
     parser: "@typescript-eslint/parser",
-    plugins: ["react-refresh"],
+    plugins: ["react-refresh", "tailwindcss"],
     rules: {
         "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
         "tailwindcss/classnames-order": "warn",

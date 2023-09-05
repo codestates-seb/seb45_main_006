@@ -15,7 +15,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @DeleteMapping("/refreshToken")
+    @DeleteMapping("/logOut")
     public ResponseEntity logOut(@RequestBody LogoutDto logoutDto){
 
         authService.deleteRefreshToken(logoutDto.getEmail());
