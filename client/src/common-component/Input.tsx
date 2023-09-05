@@ -7,7 +7,7 @@ export interface IInput {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     minlength?: number;
     maxlength?: number;
-    lineColor?: string;
+    borderStyle?: string;
 }
 
 function Input({
@@ -18,8 +18,8 @@ function Input({
     minlength = 2,
     maxlength = 20,
     value = "",
-    lineColor,
     onChange,
+    borderStyle,
 }: IInput) {
     return (
         <input
@@ -32,9 +32,7 @@ function Input({
             placeholder={placeholder}
             minLength={minlength}
             maxLength={maxlength}
-            className={`w-full border-b-1 p-4 text-sm leading-tight outline-none ${
-                lineColor ? lineColor : "border-borderline"
-            }`}
+            className={`w-full rounded-md border-b-1 p-8 text-sm leading-tight ${borderStyle ? borderStyle : ""}`}
         />
     );
 }

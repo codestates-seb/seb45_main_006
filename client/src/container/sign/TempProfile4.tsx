@@ -18,12 +18,12 @@ const ProfileContent4 = () => {
                 <Typography type="Highlight" text="나와 잘맞는 스터디/프로젝트와 매칭될 확률이 높아요!" />
             </div>
             <Textarea
-                type="OUTLINED"
                 maxlength={200}
                 name="introduce"
                 value={introduce}
                 onChange={(e) => setIntroduce(e.currentTarget.value)}
                 placeholder="200자 이내로 작성해주세요."
+                borderStyle="border-1 border-borderline"
             />
             <div className="mb-40 flex items-center justify-center">
                 <Button type="BLACK" isFullBtn={false}>
@@ -42,7 +42,7 @@ const ProfileContent4 = () => {
     );
 };
 
-function TempProfile() {
+function TempProfile4() {
     return (
         <SignLayout title="간단한 자기소개를" subTitle="작성해주세요!" progressImage={progress}>
             <ProfileContent4 />
@@ -50,4 +50,4 @@ function TempProfile() {
     );
 }
 
-export default TempProfile;
+export default TempProfile4;
