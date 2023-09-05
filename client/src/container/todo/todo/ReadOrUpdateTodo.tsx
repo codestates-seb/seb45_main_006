@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import { isReadStatus } from "@feature/Todo";
 
 import { usePutTodos, useDeleteTodos } from "@api/todo/hook";
-import { useToast } from "@hook/useTodo";
+import { useToast } from "@hook/useToast";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";

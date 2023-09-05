@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useToast } from "@hook/useTodo";
+import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
 

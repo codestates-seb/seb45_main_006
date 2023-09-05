@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { addTodoResult } from "@feature/Todo";
 import { usePostTodos } from "@api/todo/hook";
+import { useToast } from "@hook/useToast";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import { useToast } from "@hook/useTodo";
 
 function CreateTodo() {
     const navigate = useNavigate();
