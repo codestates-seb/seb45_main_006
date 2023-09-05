@@ -10,6 +10,9 @@ version = '0.0.1-SNAPSHOT'
 java {
 	sourceCompatibility = '11'
 }
+jar{
+	enabled = false
+}
 
 configurations {
 	compileOnly {
