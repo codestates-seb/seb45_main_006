@@ -1,11 +1,13 @@
 package WOOMOOL.DevSquad.questionboard.dto;
 
+import WOOMOOL.DevSquad.answer.dto.AnswerDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class QuestionBoardDto {
     @Getter
@@ -40,6 +42,8 @@ public class QuestionBoardDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;
-        private String infoBoardStatus;
+        private String QuestionBoardStatus;
+        private boolean isAnswered;
+        private List<AnswerDto.Response> answerList;
     }
 }

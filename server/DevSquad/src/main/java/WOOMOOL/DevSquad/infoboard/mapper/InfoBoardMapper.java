@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.infoboard.mapper;
 
+import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import org.mapstruct.Mapper;
@@ -8,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {CommentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface InfoBoardMapper {
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     InfoBoard InfoBoardPostDtoToInfoBoard(InfoBoardDto.Post request);

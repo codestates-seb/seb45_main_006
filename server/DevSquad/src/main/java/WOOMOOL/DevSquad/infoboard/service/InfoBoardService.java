@@ -71,7 +71,7 @@ public class InfoBoardService {
 
     public InfoBoard findVerifiedInfoBoard(long boardId) {
         Optional<InfoBoard> infoBoard = infoBoardRepository.findById(boardId);
-        InfoBoard findInfoBoard = infoBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFOBOARD_NOT_FOUND));
+        InfoBoard findInfoBoard = infoBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
 
         return findInfoBoard;
     }

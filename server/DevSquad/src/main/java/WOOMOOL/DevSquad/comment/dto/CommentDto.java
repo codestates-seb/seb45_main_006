@@ -16,6 +16,7 @@ public class CommentDto {
     public static class Post {
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private String content;
     }
@@ -26,6 +27,7 @@ public class CommentDto {
         private Long commentId;
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private Long content;
     }
@@ -35,10 +37,11 @@ public class CommentDto {
         private Long commentId;
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private List<CommentDto.Response> commentList = new ArrayList<>();
+        private List<CommentDto.Response> commentList;
     }
 }

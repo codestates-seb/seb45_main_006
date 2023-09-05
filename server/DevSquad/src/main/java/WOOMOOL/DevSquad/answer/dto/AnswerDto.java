@@ -1,11 +1,13 @@
 package WOOMOOL.DevSquad.answer.dto;
 
+import WOOMOOL.DevSquad.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AnswerDto {
     @Getter
@@ -37,5 +39,6 @@ public class AnswerDto {
         private boolean isAccepted;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
+        private List<CommentDto.Response> commentList;
     }
 }

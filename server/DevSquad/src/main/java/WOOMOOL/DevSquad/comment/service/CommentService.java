@@ -1,5 +1,7 @@
 package WOOMOOL.DevSquad.comment.service;
 
+import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
+import WOOMOOL.DevSquad.answer.service.AnswerService;
 import WOOMOOL.DevSquad.board.repository.BoardRepository;
 import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.comment.repository.CommentRepository;
@@ -18,24 +20,42 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final AnswerService answerService;
     private final MemberService memberService;
 
     public CommentService(CommentRepository commentRepository,
                           BoardRepository boardRepository,
+                          AnswerService answerService,
                           MemberService memberService) {
         this.commentRepository = commentRepository;
         this.boardRepository = boardRepository;
+        this.answerService = answerService;
         this.memberService = memberService;
     }
 
-    public Comment createComment(Long boardId, Comment comment) {
-        comment.setBoard(boardRepository.findById(boardId).get());
+    public Comment createComment(long boardId, Comment comment) {
+        comment.setBoard(boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND)));
+        comment.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+        comment.setAnswer(null);
+        if(comment.getParent().getCommentId()==null)
+            comment.setParent(null);
+        else {
+            commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+            comment.setBoard(null);
+        }
+
+
+        return commentRepository.save(comment);
+    }
+    public Comment createAnswerComment(Comment comment) {
+        comment.setAnswer(answerService.findVerifiedAnswer(comment.getAnswer().getAnswerId()));
         comment.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
         if(comment.getParent().getCommentId()==null)
             comment.setParent(null);
-        else
-            commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(()-> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-
+        else {
+            commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+            comment.setAnswer(null);
+        }
 
         return commentRepository.save(comment);
     }

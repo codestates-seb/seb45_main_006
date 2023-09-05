@@ -1,11 +1,13 @@
 package WOOMOOL.DevSquad.infoboard.dto;
 
+import WOOMOOL.DevSquad.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class InfoBoardDto {
     @Getter
@@ -46,5 +48,6 @@ public class InfoBoardDto {
         private int viewCount;
         private String category;
         private String infoBoardStatus;
+        private List<CommentDto.Response> commentList;
     }
 }

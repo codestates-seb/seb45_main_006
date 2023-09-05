@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.answer.entity;
 
 
+import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +33,9 @@ public class Answer {
     private String content;
 
     private boolean isAccepted = false;
+
+    @OneToMany(mappedBy = "answer")
+    List<Comment> commentList = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
