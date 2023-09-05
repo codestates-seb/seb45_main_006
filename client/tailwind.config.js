@@ -24,6 +24,7 @@ const customColor = {
     deadline: "#FF9356",
     warn: "#F86D7D",
     toast: "#BAE5FD",
+    modal: "rgba(0, 0, 0, 0.4)",
 };
 
 export default withMT({
@@ -43,7 +44,7 @@ export default withMT({
             minWidth: px0_1000,
             minHeight: px0_1000,
             maxWidth: px0_1000,
-            maxHeight: px0_1000,
+            maxHeight: { ...px0_1000, "4/5": "80%" },
             width: px0_1000,
             height: px0_1000,
             colors: customColor,

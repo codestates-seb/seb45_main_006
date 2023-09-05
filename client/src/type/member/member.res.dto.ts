@@ -4,9 +4,9 @@ import { PageInfo } from "@type/common";
 export type OneMember = {
     nickname: string;
     profilePicture: string;
-    githubId: string;
+    githubId?: string;
     position: Array<string>;
-    stack?: Array<string>;
+    stack: Array<string>;
 };
 
 // 유저 리스트 - 멤버 리스트 조회하기
@@ -21,11 +21,15 @@ export type GetResMemberDetail = {
     profilePicture: string;
     githubId: string;
     introduction: string;
-    listEnroll: number;
+    listEnroll: boolean;
     position: Array<string>;
-    stack?: Array<string>;
+    stack: Array<string>;
     modifiedAt: string; // 날짜 string 형식으로 도착
     oauthUser: boolean;
+    blockMemberList: Array<string>;
+    projectList: Array<unknown>;
+    studyList: Array<unknown>;
+    infoBoardList: Array<unknown>;
 };
 
 // 마이페이지 수정 - 멤버 수정하기
