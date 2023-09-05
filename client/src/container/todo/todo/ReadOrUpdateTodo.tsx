@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import { isReadStatus } from "@feature/Todo";
 
 import { usePutTodos, useDeleteTodos } from "@api/todo/hook";
+import { useToast } from "@hook/useTodo";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
@@ -16,6 +17,7 @@ type IReadOrUpdateTodo = {
 
 function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
     const navigate = useNavigate();
+    const { fireToast, createToast } = useToast();
 
     const [isRead, setIsRead] = useRecoilState(isReadStatus);
     const [value, setValue] = useState<string>(singleTodo?.todo || "");
@@ -36,7 +38,14 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
 
     const updateTodoHandler = () => {
         if (!value) {
-            alert("할 일을 입력해주세요!");
+            fireToast({
+                content: (
+                    <div className="flex items-center">
+                        <Typography type="Highlight" text={"할 일을 입력해주세요!"} />
+                    </div>
+                ),
+                isConfirm: false,
+            });
             return;
         }
 
@@ -44,7 +53,15 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
             { todo: value, completed: false, todoId: singleTodo?.id || 0 },
             {
                 onSuccess: () => {
-                    alert("수정에 성공하였습니다.");
+                    createToast({
+                        content: (
+                            <div className="flex items-center">
+                                <Typography type="Highlight" text={"수정이 완료되었습니다."} />
+                            </div>
+                        ),
+                        isConfirm: false,
+                    });
+                    setIsRead(true);
                 },
             },
         );
@@ -71,19 +88,12 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
                             <Typography text="수정" type="Body" />
                         </Button>
                         <Button type="WARN" isFullBtn={false} onClickHandler={deleteTodoHandler}>
-                            <Typography text="수정" type="Body" />
+                            <Typography text="삭제" type="Body" />
                         </Button>
                     </>
                 ) : (
-                    <Button
-                        type="SUB"
-                        isFullBtn={false}
-                        onClickHandler={() => {
-                            setIsRead(true);
-                            updateTodoHandler();
-                        }}
-                    >
-                        <Typography text="수정" type="Body" />
+                    <Button type="SUB" isFullBtn={false} onClickHandler={updateTodoHandler}>
+                        <Typography text="완료" type="Body" />
                     </Button>
                 )}
             </div>

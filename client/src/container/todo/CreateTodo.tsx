@@ -7,6 +7,7 @@ import { usePostTodos } from "@api/todo/hook";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
+import { useToast } from "@hook/useTodo";
 
 function CreateTodo() {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ function CreateTodo() {
     const setTodoResult = useSetRecoilState(addTodoResult);
 
     const { mutate: postTodo } = usePostTodos();
+    const { createToast } = useToast();
 
     const addTodoHandler = () => {
         if (!todoValue) {
@@ -27,8 +29,18 @@ function CreateTodo() {
             {
                 onSuccess: (res) => {
                     setTodoResult(res.data);
-                    alert("등록에 성공하였습니다.");
-                    navigate("/todos");
+                    createToast({
+                        content: (
+                            <div className="flex items-center">
+                                <Typography
+                                    type="Highlight"
+                                    text={"등록이 완료되었습니다. TODO 화면으로 이동할까요?"}
+                                />
+                            </div>
+                        ),
+                        isConfirm: true,
+                        callback: () => navigate("/todos"),
+                    });
                 },
                 onError: (err) => {
                     console.log(err);
@@ -42,12 +54,12 @@ function CreateTodo() {
             <div className="mb-20">
                 <Typography type="Label" text="할 일을 추가해주세요!" />
             </div>
-            <div className="mb-40">
+            <div className="mb-40 flex">
                 <input
                     type="text"
                     value={todoValue}
                     onChange={(e) => setTodoValue(e.currentTarget.value)}
-                    className="border-slate-700 mr-16 border-1"
+                    className="mr-16 border-1 border-borderline"
                 />
                 <Button type="PROJECT" isFullBtn={false} onClickHandler={addTodoHandler}>
                     <Typography text="등록" type="Body" />
