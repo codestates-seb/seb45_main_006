@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PositionService {
@@ -18,7 +19,7 @@ public class PositionService {
 
     // DB에 설정해놓은 Position 객체를 찾아서 프로필에 넣어줌
     // 유저 프로필 수정시 Position 생성 메서드
-    public void createPosition(List<String> positionlist, MemberProfile memberProfile){
+    public void createPosition(Set<String> positionlist, MemberProfile memberProfile){
 
         // 수정시 포지션 객체 초기화
         memberProfile.getPositions().clear();

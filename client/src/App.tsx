@@ -17,6 +17,7 @@ import ProjectDetails from "@container/project/Details";
 import ProjectRegister from "@container/project/Register";
 import SignUp from "@container/sign/SignUp";
 import TempSignUp from "@container/sign/TempSignUp";
+import TempProfile from "@container/sign/TempProfile";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
             {
                 path: "/signup/temp",
                 element: <TempSignUp />,
+            },
+            {
+                path: "/signup/profile/temp",
+                element: <TempProfile />,
             },
         ],
     },

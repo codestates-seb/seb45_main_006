@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { useRecoilState } from "recoil";
+import { isSignPageAtom } from "@feature/Global";
+
 import IconLogo from "@assets/icon_logo.png";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
@@ -16,6 +19,8 @@ function Header() {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
+    const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
+
     const defaultNavItems: INavItems = [
         { label: "프로젝트", route: "/projects", selected: false },
         { label: "스터디", route: "/studies", selected: false },
@@ -25,7 +30,6 @@ function Header() {
         { label: "Todo", route: "/todos", selected: false },
     ];
 
-    const [isSignPage, setIsSignPage] = useState<boolean>(true);
     const [navItems, setNavItems] = useState<INavItems>(defaultNavItems);
 
     // pathname에 따라
@@ -74,15 +78,15 @@ function Header() {
 
     const AuthBtns = () => {
         return (
-            <div>
+            <div className="flex">
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/login")}>
-                    <Typography type="Label" text="로그인" />
+                    <Typography type="Body" text="로그인" color="text-white" />
                 </Button>
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup")}>
-                    <Typography type="Label" text="회원가입" />
+                    <Typography type="Body" text="회원가입" color="text-white" />
                 </Button>
                 <Button type="WARN" isFullBtn={false} onClickHandler={() => navigate("/signup/temp")}>
-                    <Typography type="Label" text="회원가입" />
+                    <Typography type="Body" text="회원가입(임시)" color="text-white" />
                 </Button>
             </div>
         );
@@ -90,7 +94,7 @@ function Header() {
 
     return (
         <>
-            <header className="border-slate-200 flex h-70 w-full items-center justify-between border-b-1 px-16">
+            <header className="flex h-70 w-full items-center justify-between border-b-1 border-borderline px-16">
                 <button onClick={() => navigate("/")} className="flex items-center justify-between">
                     <img src={IconLogo} alt="DevSquad 로고" />
                     <Typography type="Logo" text="Dev Squad" color="text-main" />
@@ -98,7 +102,7 @@ function Header() {
                 {!isSignPage ? <AuthBtns /> : null}
             </header>
             {!isSignPage ? (
-                <nav className="border-slate-200 flex h-40 w-full border-b-1">
+                <nav className="flex h-40 w-full border-b-1 border-borderline">
                     <ul className="flex w-full items-center">
                         {navItems.map((v: INavItem) => (
                             <NavItem key={v.label} item={v} />

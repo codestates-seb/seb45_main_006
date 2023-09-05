@@ -1,18 +1,29 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router";
 
+import { useRecoilValue } from "recoil";
+import { isSignPageAtom } from "@feature/Global";
+
 import Header from "@component/Header";
 
-import { useElementWidthAndHeight } from "@hook/useElementWidthAndHeight";
+const HEIGHT = {
+    SIGN_HEADER: 70,
+    MAIN_HEADER: 110,
+} as const;
 
 function Layout() {
     const headerRef = useRef(null);
-    const { height } = useElementWidthAndHeight(headerRef);
-    const [marginTop, setMarginTop] = useState<number>(height);
+    const isSignPage = useRecoilValue(isSignPageAtom);
+
+    const [marginTop, setMarginTop] = useState<number>(HEIGHT.MAIN_HEADER);
 
     useEffect(() => {
-        setMarginTop(height);
-    }, [height]);
+        if (isSignPage) {
+            setMarginTop(HEIGHT.SIGN_HEADER);
+        } else {
+            setMarginTop(HEIGHT.MAIN_HEADER);
+        }
+    }, [isSignPage]);
 
     return (
         <>
