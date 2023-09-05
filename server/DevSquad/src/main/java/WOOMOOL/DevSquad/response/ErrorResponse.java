@@ -1,7 +1,9 @@
 package WOOMOOL.DevSquad.response;
 
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import lombok.Getter;
 
+@Getter
 public class ErrorResponse {
     private int status;
     private String message;
