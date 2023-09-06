@@ -5,7 +5,7 @@ const range = (length) => Array.from({ length }, (_, i) => i);
 const pixels = range(1000 + 1).map((x) => [x, `calc(${x}rem / 16)`]);
 const px0_10 = Object.fromEntries(pixels.slice(0, 10 + 1));
 const px0_100 = Object.fromEntries(pixels.slice(0, 100 + 1));
-const px0_200 = Object.fromEntries(pixels.slice(0, 200 + 1));
+const px0_500 = Object.fromEntries(pixels.slice(0, 500 + 1));
 const px0_1000 = Object.fromEntries(pixels);
 const customColor = {
     primary: "#191A20",
@@ -36,7 +36,7 @@ export default withMT({
     ],
     theme: {
         extend: {
-            spacing: { ...px0_200, 1120: "1120px" },
+            spacing: { ...px0_500, 1120: "1120px" },
             borderRadius: { none: "0", DEFAULT: "43px", large: "62px" },
             padding: { "25px": "25px" },
             borderWidth: px0_10,

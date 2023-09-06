@@ -13,7 +13,7 @@ const Details = () => {
                             <Typography type="SmallLabel" text="모집중" styles="text-white" />
                         </div>
                         <h3 className="mx-20 mt-40">
-                            <Typography type="Heading" text="여기가 바로 제목입니다~!" />
+                            <Typography type="Heading" text="여기가 바로 스터디 제목입니다~!" />
                         </h3>
                         <ul className="flex flex-col p-20">
                             <li className="my-10">
@@ -45,7 +45,7 @@ const Details = () => {
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
                     <div className="h-200 w-full border-2 border-solid border-borderline">유저리스트</div>
-                    <Button type="PROJECT_POINT" styles="font-semibold m-20" isFullBtn={true}>
+                    <Button type="STUDY_POINT" styles="font-semibold m-20" isFullBtn={true}>
                         <Typography type="Body" text="참여하기" />
                     </Button>
                 </div>
@@ -59,7 +59,7 @@ const Details = () => {
                     댓글란
                 </textarea>
             </div>
-            <Button type="PROJECT_POINT" styles="font-semibold mx-20" isFullBtn={false}>
+            <Button type="STUDY_POINT" styles="font-semibold mx-20" isFullBtn={false}>
                 <Typography type="Body" text="댓글등록" />
             </Button>
         </div>
