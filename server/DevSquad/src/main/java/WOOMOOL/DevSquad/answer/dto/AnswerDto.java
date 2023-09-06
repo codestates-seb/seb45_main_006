@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.infoboard.dto;
+package WOOMOOL.DevSquad.answer.dto;
 
 import WOOMOOL.DevSquad.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
@@ -9,45 +9,36 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class InfoBoardDto {
+public class AnswerDto {
     @Getter
     @Setter
     @NoArgsConstructor
     public static class Post {
         private Long memberId;
 
-        private String title;
+        private Long boardId;
 
         private String content;
-
-        private String category;
     }
     @Getter
     @Setter
     @NoArgsConstructor
     public static class Patch {
-        private Long boardId;
-
-        private Long memberId;
-
-        private String title;
+        private Long answerId;
 
         private String content;
 
-        private String category;
     }
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private Long boardId;
-        private String title;
-        private String content;
+        private Long answerId;
         private Long memberId;
+        private Long boardId;
+        private Long title;
+        private boolean isAccepted;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private int viewCount;
-        private String category;
-        private String infoBoardStatus;
         private List<CommentDto.Response> commentList;
     }
 }

@@ -1,6 +1,6 @@
-package WOOMOOL.DevSquad.infoboard.dto;
+package WOOMOOL.DevSquad.questionboard.dto;
 
-import WOOMOOL.DevSquad.comment.dto.CommentDto;
+import WOOMOOL.DevSquad.answer.dto.AnswerDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class InfoBoardDto {
+public class QuestionBoardDto {
     @Getter
     @Setter
     @NoArgsConstructor
@@ -19,8 +19,6 @@ public class InfoBoardDto {
         private String title;
 
         private String content;
-
-        private String category;
     }
     @Getter
     @Setter
@@ -33,8 +31,6 @@ public class InfoBoardDto {
         private String title;
 
         private String content;
-
-        private String category;
     }
     @Getter
     @AllArgsConstructor
@@ -46,8 +42,8 @@ public class InfoBoardDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;
-        private String category;
-        private String infoBoardStatus;
-        private List<CommentDto.Response> commentList;
+        private String QuestionBoardStatus;
+        private boolean isAnswered;
+        private List<AnswerDto.Response> answerList;
     }
 }

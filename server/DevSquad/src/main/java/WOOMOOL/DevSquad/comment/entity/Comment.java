@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.comment.entity;
 
+import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 
@@ -33,7 +34,11 @@ public class Comment {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "answer_id")
+    private Answer answer;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
 

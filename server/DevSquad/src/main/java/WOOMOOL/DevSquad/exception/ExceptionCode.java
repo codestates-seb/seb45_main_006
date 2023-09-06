@@ -3,8 +3,12 @@ package WOOMOOL.DevSquad.exception;
 import lombok.Getter;
 
 public enum ExceptionCode {
-    INFOBOARD_NOT_FOUND(404, "InfoBoard not found"),
-    STACK_NOT_FOUND(404, "Stack not found"),
+    BOARD_NOT_FOUND(404, "게시판을 찾을 수 없습니다"),
+    STACK_NOT_FOUND(404, "스택을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(404,"댓글을 찾을 수 없습니다"),
+    QUESTION_NOT_FOUND(404, "질문을 찾을 수 없습니다"),
+    ANSWER_NOT_FOUND(404, "질문을 찾을 수 없습니다"),
+    ACCEPT_ALREADY_EXISTS(409, "이미 채택이 완료된 질문입니다."),
 
     // 찾기 편하려고 이모지 잠깐 넣어뒀어요. 나중에 뺄게요!
     PROJECT_NOT_FOUND(404, "🚨🚨🚨 Project not found 🚨🚨🚨"),
