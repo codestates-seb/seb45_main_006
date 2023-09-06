@@ -38,7 +38,7 @@ export default function Register() {
     //     navigate("/todos/register");
     // }
     return (
-        <div className="m-80">
+        <div className="m-80 flex justify-center">
             <div className="flex w-11/12 justify-center rounded-lg bg-project">
                 <div className="flex w-11/12 flex-col">
                     <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-10 self-baseline" />

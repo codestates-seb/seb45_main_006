@@ -32,7 +32,9 @@ function Input({
             placeholder={placeholder}
             minLength={minlength}
             maxLength={maxlength}
-            className={`w-full rounded-md border-b-1 p-8 text-sm leading-tight ${borderStyle ? borderStyle : ""}`}
+            className={`min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight ${
+                borderStyle ? borderStyle : ""
+            }`}
         />
     );
 }

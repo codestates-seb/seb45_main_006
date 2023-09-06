@@ -132,3 +132,5 @@ export const user = {
     modifiedAt: "2023-09-04T11:20:03.373275",
     oauthUser: false,
 };
+
+export const infoCategory = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];
