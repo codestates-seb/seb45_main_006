@@ -23,6 +23,7 @@ import TempSignUp from "@container/sign/TempSignUp";
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
 import ToastList from "@component/ToastList";
+import UserList from "@container/user/List";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
                 path: "/signup/profile/4",
                 element: <TempProfile4 />,
             },
+            {
+                path: "/members",
+                element: <UserList />,
+            },
         ],
     },
 ]);
@@ -117,6 +122,7 @@ const queryClient = new QueryClient({
         },
     }),
 });
+// queryClient.invalidateQueries({ queryKey: ["members"] });
 
 function App() {
     return (

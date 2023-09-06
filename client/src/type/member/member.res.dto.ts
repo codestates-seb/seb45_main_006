@@ -2,6 +2,7 @@ import { PageInfo } from "@type/common";
 
 // 멤버 리스트 중 하나의 객체
 export type OneMember = {
+    memberId: number;
     nickname: string;
     profilePicture: string;
     githubId?: string;
@@ -15,8 +16,9 @@ export type GetResAllMembers = {
     pageInfo: PageInfo;
 };
 
-// 멤버 상세 조회하기
+// 유저 리스트 - 멤버 상세 조회하기
 export type GetResMemberDetail = {
+    memberId: number;
     nickname: string;
     profilePicture: string;
     githubId: string;
@@ -32,11 +34,11 @@ export type GetResMemberDetail = {
     infoBoardList: Array<unknown>;
 };
 
-// 마이페이지 수정 - 멤버 수정하기
+// 마이페이지 - 비밀번호 수정 - status code: 200
+export type PatchResMemberPw = Record<string, never>; // empty object
+
+// 마이페이지 - 정보 수정하기
 export type PatchResMember = GetResMemberDetail;
 
-// 탈퇴 - 멤버 삭제하기 - status code: 204
+// 헤더 - 로그아웃 - status code: 204
 export type DeleteResMember = Record<string, never>; // empty object
-
-// 비밀번호 변경
-export type PatchResMemberPw = Record<string, never>; // empty object
