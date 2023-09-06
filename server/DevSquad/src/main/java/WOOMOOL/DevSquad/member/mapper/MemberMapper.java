@@ -8,6 +8,7 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public interface MemberMapper {
     // 프로필 수정 응답
     default MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile) {
         return new MemberProfileDto.patchResponse(
+                memberProfile.getMemberProfileId(),
                 memberProfile.getNickname(),
                 memberProfile.getProfilePicture(),
                 memberProfile.getGithubId(),
@@ -45,6 +47,7 @@ public interface MemberMapper {
                                                                 List<InfoBoardDto.Response> infoBoardResponseDto) {
 
         return new MemberProfileDto.detailResponse(
+                memberProfile.getMemberProfileId(),
                 memberProfile.getProfilePicture(),
                 memberProfile.getNickname(),
                 memberProfile.getGithubId(),
@@ -68,6 +71,7 @@ public interface MemberMapper {
     default List<MemberProfileDto.listResponse> entityToResponseDto(List<MemberProfile> memberProfiles) {
         return memberProfiles.stream()
                 .map(memberProfile -> new MemberProfileDto.listResponse(
+                        memberProfile.getMemberProfileId(),
                         memberProfile.getProfilePicture(),
                         memberProfile.getNickname(),
                         memberProfile.getGithubId(),

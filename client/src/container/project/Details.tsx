@@ -1,11 +1,13 @@
 import Button from "@component/Button";
 import Typography from "@component/Typography";
+import bookmark from "@assets/bookmark.svg";
+import siren from "@assets/siren.png";
 
 const Details = () => {
     return (
         <div>
             <div className="m-20 flex gap-20">
-                <section className="relative flex w-3/4 justify-between border-2 border-solid border-borderline">
+                <section className="relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline">
                     <div>
                         <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline ">
                             <Typography type="SmallLabel" text="모집중" styles="text-white" />
@@ -37,8 +39,8 @@ const Details = () => {
                         </ul>
                     </div>
                     <div>
-                        <div>북마크</div>
-                        <div>신고</div>
+                        <img src={bookmark} className="m-10 h-28 w-28" />
+                        <img src={siren} className="m-10 h-24 w-24" />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -53,7 +55,9 @@ const Details = () => {
             </div>
             <div className="mx-20 flex items-start">
                 <div className="mt-20 h-40 w-40 rounded-3xl bg-deadline">유저</div>
-                <textarea className="m-20 h-100 w-11/12 border-2 border-solid border-borderline">댓글란</textarea>
+                <textarea className="m-20 h-100 w-11/12 rounded-xl border-2 border-solid border-borderline">
+                    댓글란
+                </textarea>
             </div>
             <Button type="PROJECT_POINT" styles="font-semibold mx-20" isFullBtn={false}>
                 <Typography type="Body" text="댓글등록" />

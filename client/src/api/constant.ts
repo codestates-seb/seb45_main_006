@@ -6,9 +6,13 @@ export const COMMON_API_PATH = {
         PATH: "/todos",
         ADD: "/todos/add",
     },
-    MEMBER: {
+    SIGN: {
         PATH: "/members",
         NICKNAME: "/members/checkNickname",
+    },
+    MEMBER: {
+        PATH: "/members",
+        LIST: "/members/list",
         CHANGE_PASSWORD: "/members/password",
     },
 } as const;
