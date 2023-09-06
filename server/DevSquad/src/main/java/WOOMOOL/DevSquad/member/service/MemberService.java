@@ -18,6 +18,7 @@ import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import WOOMOOL.DevSquad.studyboard.service.StudyService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,7 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_Q
 @Service
 @Transactional
 @Slf4j
+@AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -48,23 +50,9 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
     private final StackTagService stackTagService;
-
     private final ProjectRepository projectRepository;
     private final StudyRepository studyRepository;
-
     private final InfoBoardRepository infoBoardRepository;
-
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService, ProjectRepository projectRepository, StudyRepository studyRepository, InfoBoardRepository infoBoardRepository) {
-        this.memberRepository = memberRepository;
-        this.memberProfileRepository = memberProfileRepository;
-        this.positionService = positionService;
-        this.passwordEncoder = passwordEncoder;
-        this.memberAuthority = memberAuthority;
-        this.stackTagService = stackTagService;
-        this.projectRepository = projectRepository;
-        this.studyRepository = studyRepository;
-        this.infoBoardRepository = infoBoardRepository;
-    }
 
     // 멤버 생성
     public Member createMember(Member member) {

@@ -15,6 +15,7 @@ import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import WOOMOOL.DevSquad.studyboard.mapper.StudyMapper;
 import WOOMOOL.DevSquad.utils.PageResponseDto;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,20 +29,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/members")
 @Validated
+@AllArgsConstructor
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
     private final ProjectMapper projectMapper;
     private final StudyMapper studyMapper;
     private final InfoBoardMapper infoBoardMapper;
-
-    public MemberController(MemberService memberService, MemberMapper memberMapper, ProjectMapper projectMapper, StudyMapper studyMapper, InfoBoardMapper infoBoardMapper) {
-        this.memberService = memberService;
-        this.memberMapper = memberMapper;
-        this.projectMapper = projectMapper;
-        this.studyMapper = studyMapper;
-        this.infoBoardMapper = infoBoardMapper;
-    }
 
     //멤버 생성
     @PostMapping
