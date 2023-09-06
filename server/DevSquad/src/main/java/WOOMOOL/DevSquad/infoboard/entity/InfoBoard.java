@@ -40,7 +40,7 @@ public class InfoBoard extends Board {
     private int viewCount;
 
     @Enumerated(EnumType.STRING)
-    private Category category = Category.ETC;
+    private Category category;
     @Enumerated(EnumType.STRING)
     private InfoBoardStatus infoBoardStatus = InfoBoardStatus.INFOBOARD_POSTED;
 
@@ -48,8 +48,7 @@ public class InfoBoard extends Board {
         NEWS("뉴스레터"),
         JOB("구직자 정보"),
         TECH("기술 정보"),
-        BOOTCAMP("부트캠프"),
-        ETC("기타");
+        BOOTCAMP("부트캠프");
 
         @Getter
         private String categoryName;
@@ -62,7 +61,7 @@ public class InfoBoard extends Board {
         Optional<Category> result = Arrays.stream(Category.values())
                 .filter(category -> category.getCategoryName().equals(categoryName))
                 .findFirst();
-        this.category = result.orElse(Category.ETC);
+        this.category = result.orElse(Category.NEWS);
     }
     public static Category stringToCategory(String str) {
         Optional<Category> result = Arrays.stream(Category.values())
