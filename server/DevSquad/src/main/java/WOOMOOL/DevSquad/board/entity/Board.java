@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
-    public abstract class Board {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private long boardId;
-    }
+public abstract class Board {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long boardId;
+}

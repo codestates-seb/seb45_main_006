@@ -8,6 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .env
+.env.mock
+.env.dev
+.env.prod
 
 node_modules
 dist

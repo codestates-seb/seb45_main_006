@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 
@@ -95,6 +96,9 @@ public class MemberProfile {
 
     @OneToMany(mappedBy = "memberProfile")
     private List<InfoBoard> infoBoardList;
+
+    @OneToMany(mappedBy = "memberProfile")
+    private List<QuestionBoard> questionBoardList;
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
