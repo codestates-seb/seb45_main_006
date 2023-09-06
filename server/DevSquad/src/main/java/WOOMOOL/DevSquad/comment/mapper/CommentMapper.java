@@ -11,17 +11,25 @@ import org.mapstruct.ObjectFactory;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CommentMapper {
-    CommentMapper INSTANCE =Mappers.getMapper(CommentMapper.class);
 
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     @Mapping(source = "parentId", target = "parent.commentId")
+    @Mapping(source = "answerId", target = "answer.answerId")
     Comment commentPostDtoToComment(CommentDto.Post request);
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     @Mapping(source = "parentId", target = "parent.commentId")
+    @Mapping(source = "answerId", target = "answer.answerId")
     Comment commentPatchDtoToComment(CommentDto.Patch request);
     @Mapping(source = "board.boardId", target = "boardId")
+    @Mapping(source = "answer.answerId", target = "answerId")
+    @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
+    @Mapping(source = "parent.commentId", target = "parentId")
     CommentDto.Response commentToCommentResponseDto(Comment comment);
+
+    List<CommentDto.Response> commentListToCommentResponseDtoList(List<Comment> commentList);
 
 }

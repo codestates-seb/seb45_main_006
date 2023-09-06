@@ -46,7 +46,6 @@ public class InfoBoard extends Board {
 
     public enum Category {
         NEWS("뉴스레터"),
-        QUESTION("질문"),
         JOB("구직자 정보"),
         TECH("기술 정보"),
         BOOTCAMP("부트캠프"),

@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 type IButton = {
     type: "BLACK" | "PROJECT" | "PROJECT_POINT" | "STUDY" | "STUDY_POINT" | "BOARD" | "MAIN" | "SUB" | "WARN";
     children: ReactNode;
-    isFullBtn: boolean;
+    isFullBtn?: boolean;
     styles?: string;
     onClickHandler?: () => void;
 };

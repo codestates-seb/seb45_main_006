@@ -47,6 +47,7 @@ const SignUpContent2 = () => {
         <>
             <div>
                 <Typography type="Highlight" text="계정정보" styles="ml-4 mb-24" />
+
                 <SignInput
                     name="email"
                     label="이메일"
@@ -86,7 +87,7 @@ const SignUpContent2 = () => {
                     type="password"
                     value={inputs.passwordRe}
                     placeholder="비밀번호을 입력해주세요."
-                    regex={new RegExp(inputs.password)}
+                    regex={new RegExp(`^${inputs.password}$`)}
                     onChange={handleInput}
                     description="입력된 비밀번호와 다릅니다."
                 />

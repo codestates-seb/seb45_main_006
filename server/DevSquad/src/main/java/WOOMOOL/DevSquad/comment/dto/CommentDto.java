@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommentDto {
     @Getter
@@ -14,6 +16,7 @@ public class CommentDto {
     public static class Post {
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private String content;
     }
@@ -24,6 +27,7 @@ public class CommentDto {
         private Long commentId;
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private Long content;
     }
@@ -33,9 +37,11 @@ public class CommentDto {
         private Long commentId;
         private Long memberId;
         private Long boardId;
+        private Long answerId;
         private Long parentId;
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
+        private List<CommentDto.Response> commentList;
     }
 }
