@@ -12,7 +12,7 @@ type ISignLayout = {
 function SignLayout({ title, subTitle, progressImage, children }: ISignLayout) {
     return (
         <div className="flex h-full w-full items-center justify-center bg-background">
-            <div className="relative flex h-530 w-501 flex-col justify-between rounded-xl bg-white p-30">
+            <div className="relative flex h-max min-h-530 w-501 flex-col justify-between rounded-xl bg-white p-30">
                 <img src={IconPeople} alt="사람 도트 이미지" className="absolute -top-56 left-0" />
                 <div className="h-150 flex-col justify-center pt-25">
                     <div className="flex justify-center">

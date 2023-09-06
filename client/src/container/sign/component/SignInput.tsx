@@ -33,7 +33,7 @@ function SignInput({ name, label, description, type, value, onChange, placeholde
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    borderStyle={isNeededWarn ? "border-warn outline-none focus:outline-none" : ""}
+                    borderStyle={`rounded-none outline-none focus:outline-none ${isNeededWarn ? "border-warn" : ""}`}
                 />
             </div>
             {description && isNeededWarn ? (
