@@ -52,6 +52,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Member member = new Member(email);
         MemberProfile memberProfile = new MemberProfile(email);
+        memberProfile.setOAuth2Member(true);
         member.setMemberProfile(memberProfile);
 
         Level level = new Level();
