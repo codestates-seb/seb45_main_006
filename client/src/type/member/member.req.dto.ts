@@ -1,16 +1,22 @@
 // 유저 리스트 - 멤버 리스트 조회하기
 export type GetReqAllMembers = {
     page: number;
-    size: number;
+    posiions?: string;
+    stacks?: string;
 };
 
-// 멤버 상세 조회하기 - JWT 기능이 들어가면 depth 뺄 예정
+// 유저 리스트 - 멤버 상세 조회하기
 export type GetReqMemberDetail = {
     memberId: number;
 };
 
-// 마이페이지 수정 - 멤버 수정하기
-// TODO: listEnroll enum 공유받기
+// 마이페이지 - 비밀번호 수정
+export type PatchReqMemberPw = {
+    rawPassword: string;
+    changePassword: string;
+};
+
+// 마이페이지 - 정보 수정하기
 export type PatchReqMember = {
     memberId?: number;
     nickname: string;
@@ -22,11 +28,5 @@ export type PatchReqMember = {
     stack?: Array<string>;
 };
 
-// 탈퇴 - 멤버 삭제하기 - JWT 기능이 들어가면 depth 뺄 예정
+// 헤더 - 로그아웃
 export type DeleteReqMember = GetReqMemberDetail;
-
-// 비밀번호 변경
-export type PatchReqMemberPw = {
-    rawPassword: string;
-    changePassword: string;
-};
