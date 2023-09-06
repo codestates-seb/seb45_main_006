@@ -12,6 +12,7 @@ public enum ExceptionCode {
     NO_AUTHORIZATION(401, "🚨🚨🚨 No Auth 🚨🚨🚨"),
     FORBIDDEN(403, "Forbidden"),
 
+    UNMATCHED_CODE(400, "인증 코드가 다릅니다."),
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
     EXIST_EMAIL(400, "존재하는 이메일 입니다."),
     DUPLICATE_NICKNAME(400, "중복된 닉네임 입니다."),

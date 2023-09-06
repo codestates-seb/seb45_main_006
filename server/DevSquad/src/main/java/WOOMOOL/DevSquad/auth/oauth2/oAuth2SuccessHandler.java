@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.auth.oauth2;
 
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
@@ -52,6 +53,9 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Member member = new Member(email);
         MemberProfile memberProfile = new MemberProfile(email);
         member.setMemberProfile(memberProfile);
+
+        Level level = new Level();
+        memberProfile.setLevel(level);
 
         memberRepository.save(member);
     }
