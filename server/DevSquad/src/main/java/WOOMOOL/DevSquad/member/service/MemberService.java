@@ -57,6 +57,7 @@ public class MemberService {
     // 멤버 생성
     public Member createMember(Member member) {
 
+        // 나중에 메일 인증 기능 생기면 삭제해도 될듯
         verifyExistEmail(member.getEmail());
 
         // 패스워드 암호화
@@ -168,7 +169,7 @@ public class MemberService {
 
 
     // 동일 이메일 가입 확인 메서드
-    private void verifyExistEmail(String email) {
+    public void verifyExistEmail(String email) {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 

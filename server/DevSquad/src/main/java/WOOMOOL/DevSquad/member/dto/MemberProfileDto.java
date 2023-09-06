@@ -45,6 +45,8 @@ public class MemberProfileDto {
     @AllArgsConstructor
     public static class patchResponse{
 
+        private Long memberProfileId;
+
         private String nickname;
 
         private String profilePicture;
@@ -67,6 +69,8 @@ public class MemberProfileDto {
     @AllArgsConstructor
     public static class listResponse{
 
+        private Long memberProfileId;
+
         private String profilePicture;
 
         private String nickname;
@@ -83,6 +87,8 @@ public class MemberProfileDto {
     @Getter
     @AllArgsConstructor
     public static class detailResponse{
+
+        private Long memberProfileId;
 
         private String profilePicture;
 
