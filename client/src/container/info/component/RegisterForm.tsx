@@ -22,7 +22,7 @@ function RegisterForm({
 }: {
     label: string;
     needCategory?: boolean;
-    selectedItem: string;
+    selectedItem: CATEGORY_NAME | "";
     setSelectedItem: (v: CATEGORY_NAME | "") => void;
     title: string;
     setTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;

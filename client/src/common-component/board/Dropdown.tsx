@@ -3,6 +3,8 @@ import Typography from "@component/Typography";
 
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 
+import { CATEGORY_NAME } from "@type/info/common";
+
 function Dropdown({
     label,
     required,
@@ -18,9 +20,9 @@ function Dropdown({
     type?: "OUTLINED" | "UNDERLINED";
     isDropDownShow: boolean;
     setIsDropDownShow: (v: boolean) => void;
-    dropdownList: Array<string>;
-    selectedItem: string;
-    setSelectedItem: (v: string) => void;
+    dropdownList: Array<CATEGORY_NAME>;
+    selectedItem: CATEGORY_NAME | "";
+    setSelectedItem: (v: CATEGORY_NAME | "") => void;
 }) {
     const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
