@@ -9,7 +9,7 @@ import { infoKeyFactory } from "./infoKeyFactory";
 
 // 정보 게시판 - 리스트 조회
 export const useGetAllInfo = ({ category, search }: GetReqAllInfo) => {
-    return useQuery<AxiosResponse<GetResAllInfo>, AxiosError, GetReqAllInfo>({
+    return useQuery<AxiosResponse<GetResAllInfo>, AxiosError, GetResAllInfo>({
         queryKey: infoKeyFactory.all({ category, search }),
         queryFn: () => getAllInfo({ category, search }),
     });

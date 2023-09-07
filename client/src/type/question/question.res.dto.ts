@@ -13,7 +13,7 @@ interface QuestionDefaultType {
 
 // 질문 게시판 - 리스트 조회
 export interface GetResAllQuestion {
-    search?: string;
+    data: QuestionDefaultType;
 }
 
 // 질문 게시판 - 등록  - status code: 200

@@ -8,7 +8,7 @@ export const getAllInfo = async ({ search, category }: GetReqAllInfo) => {
     if (category) url += `/${category}`;
     if (search) url += `?search=${search}`;
 
-    const { data } = await withAuthApi.post(url);
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 

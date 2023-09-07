@@ -19,7 +19,7 @@ import { questionKeyFactory } from "./questionKeyFactory";
 
 // 질문 게시판 - 리스트 조회
 export const useGetAllQuestion = ({ search }: GetReqAllQuestion) => {
-    return useQuery<AxiosResponse<GetResAllQuestion>, AxiosError, GetReqAllQuestion>({
+    return useQuery<AxiosResponse<GetResAllQuestion>, AxiosError, GetResAllQuestion>({
         queryKey: questionKeyFactory.all({ search }),
         queryFn: () => getAllQuestion({ search }),
     });

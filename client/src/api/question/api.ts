@@ -12,7 +12,7 @@ export const getAllQuestion = async ({ search }: GetReqAllQuestion) => {
     let url = `${COMMON_API_PATH.QUESTION.PATH}`;
     if (search) url += `?search=${search}`;
 
-    const { data } = await withAuthApi.post(url);
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 

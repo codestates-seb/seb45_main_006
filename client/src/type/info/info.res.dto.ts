@@ -16,8 +16,7 @@ interface InfoDefaultType {
 
 // 정보 게시판 - 리스트 조회
 export interface GetResAllInfo {
-    category?: CATEGORY_ENUM;
-    search?: string;
+    data: InfoDefaultType;
 }
 
 // 정보 게시판 - 등록  - status code: 200
