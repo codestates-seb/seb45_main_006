@@ -79,6 +79,8 @@ export const defaultStack = [
     "Spring Boot",
 ];
 
+export const defaultPosition = ["Front", "Back", "UI/UX", "디자이너"];
+
 export const user = {
     profilePicture:
         "https://dszw1qtcnsa5e.cloudfront.net/community/20220519/453159ca-e328-429c-9b3f-460fc592d963/%EA%B7%80%EC%97%AC%EC%9A%B4%EB%AA%B0%EB%9D%BC%EB%AA%A8%EC%BD%94%EC%BD%94.png",
@@ -130,3 +132,5 @@ export const user = {
     modifiedAt: "2023-09-04T11:20:03.373275",
     oauthUser: false,
 };
+
+export const infoCategory = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];

@@ -23,7 +23,7 @@ export const useGetAllMembers = ({ page, stacks, posiions }: GetReqAllMembers) =
 
 // 유저 리스트 - 멤버 상세 조회하기
 export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
-    return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
+    return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.detail({ memberId }),
         queryFn: () => getMemberDetail({ memberId }),
     });
@@ -31,7 +31,7 @@ export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
 
 // 마이페이지 - 내 정보 상세 조회하기
 export const useGetMyDetail = () => {
-    return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
+    return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
         queryFn: getMyDetail,
     });

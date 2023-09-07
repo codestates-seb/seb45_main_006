@@ -31,12 +31,7 @@ function CreateTodo() {
                     setTodoResult(res.data);
                     createToast({
                         content: (
-                            <div className="flex items-center">
-                                <Typography
-                                    type="Highlight"
-                                    text={"등록이 완료되었습니다. TODO 화면으로 이동할까요?"}
-                                />
-                            </div>
+                            <Typography type="Highlight" text={"등록이 완료되었습니다. TODO 화면으로 이동할까요?"} />
                         ),
                         isConfirm: true,
                         callback: () => navigate("/todos"),

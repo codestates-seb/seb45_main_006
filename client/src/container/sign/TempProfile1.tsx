@@ -15,11 +15,12 @@ const ProfileContent1 = () => {
     return (
         <>
             <AutoCompletionTags
+                placeholder="기술 스택을 입력해주세요."
                 selectedTags={selectedTags}
                 setSelectedTags={setSelectedTags}
                 defaultSuggestions={defaultStack}
             />
-            <div className="mt-20 flex justify-center">
+            <div className="mt-200 flex justify-center">
                 <SignButton type="OUTLINED" onClickHandler={() => {}} styles="mr-20">
                     <Typography type="SmallLabel" text="다음에 할게요" styles="font-bold" />
                 </SignButton>

@@ -9,8 +9,8 @@ if (import.meta.env.VITE_APP_API_ENDPOINT && typeof import.meta.env.VITE_APP_API
     apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT;
 }
 
-const accessToken = getItemFromStorage("accessToken");
 // const refreshToken = getItemFromStorage("refreshToken");
+const accessToken = getItemFromStorage("accessToken");
 
 export const withAuthApi = axios.create({
     baseURL: apiEndpoint,
@@ -20,6 +20,8 @@ export const withAuthApi = axios.create({
     },
 });
 
+// TODO
+// access token이 없을 경우 처리
 // 백엔드에서 유효하지 않은 access token을 받을 경우
 // DB에 저장된 refresh token으로 access token을 발급해줌
 
