@@ -19,9 +19,9 @@ import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
 import SignUp from "@container/sign/SignUp";
-import TempSignUp from "@container/sign/TempSignUp";
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
+import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
 
@@ -83,16 +83,16 @@ const router = createBrowserRouter([
                 element: <CreateTodo />,
             },
             {
-                path: "/signup/temp",
-                element: <TempSignUp />,
-            },
-            {
                 path: "/signup/profile/1",
                 element: <TempProfile1 />,
             },
             {
                 path: "/signup/profile/4",
                 element: <TempProfile4 />,
+            },
+            {
+                path: "/login/find-pw",
+                element: <FindPw />,
             },
             {
                 path: "/members",
