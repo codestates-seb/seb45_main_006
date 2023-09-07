@@ -32,7 +32,7 @@ public class AnswerController {
     public ResponseEntity postAnswer(@Valid @RequestBody  AnswerDto.Post requestBody,
                                      @PathVariable("board-id") @Positive long boardId) {
         requestBody.setBoardId(boardId);
-        Answer answer = mapper.AnswerPostDtoToAnswer(requestBody);
+        Answer answer = mapper.answerPostDtoToAnswer(requestBody);
         Answer createdAnswer = answerService.createAnswer(answer);
 
         URI location = UriComponentsBuilder
@@ -49,17 +49,11 @@ public class AnswerController {
                                       @PathVariable("answer-id") @Positive long answerId) {
         requestBody.setAnswerId(answerId);
 
-        Answer answer = mapper.AnswerPatchDtoToAnswer(requestBody);
+        Answer answer = mapper.answerPatchDtoToAnswer(requestBody);
 
         Answer updatedAnswer = answerService.updateAnswer(answer);
 
-        return new ResponseEntity<>(mapper.AnswerToAnswerResponseDto(updatedAnswer), HttpStatus.OK);
-    }
-    @PostMapping("/{answer-id}/accept")
-    public ResponseEntity acceptAnswer(@PathVariable("answer-id") @Positive long answerId) {
-        answerService.acceptAnswer(answerId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(mapper.answerToAnswerResponseDto(updatedAnswer), HttpStatus.OK);
     }
 
     @DeleteMapping("/{answer-id}")
@@ -69,4 +63,10 @@ public class AnswerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/{answer-id}/accept")
+    public ResponseEntity acceptAnswer(@PathVariable("answer-id") @Positive long answerId) {
+        answerService.acceptAnswer(answerId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

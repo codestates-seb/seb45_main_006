@@ -18,4 +18,12 @@ export const COMMON_API_PATH = {
     INFO: {
         PATH: "/information",
     },
+    PROJECT: {
+        PATH: "/project",
+        LIST: "/project/list",
+    },
+    STUDY: {
+        PATH: "/study",
+        LIST: "/study/list",
+    },
 } as const;
