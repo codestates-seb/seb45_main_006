@@ -15,4 +15,12 @@ export const COMMON_API_PATH = {
         LIST: "/members/list",
         CHANGE_PASSWORD: "/members/password",
     },
+    PROJECT: {
+        PATH: "/project",
+        LIST: "/project/list",
+    },
+    STUDY: {
+        PATH: "/study",
+        LIST: "/study/list",
+    },
 } as const;
