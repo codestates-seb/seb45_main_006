@@ -35,7 +35,7 @@ export const patchMemberPw = async (requstObj: PatchReqMember) => {
 // 마이페이지 - 정보 수정하기
 export const patchMember = async (requestObj: PatchReqMember) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
-    const { data } = await withAuthApi.put(url, requestObj);
+    const { data } = await withAuthApi.patch(url, requestObj);
     return data;
 };
 
