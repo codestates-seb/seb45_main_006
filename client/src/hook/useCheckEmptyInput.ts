@@ -16,11 +16,13 @@ export const useCheckEmptyInput = () => {
             }
         });
 
-        fireToast({
-            content: `${emptyNames.join(", ")}은/는 필수 입력값입니다!`,
-            isConfirm: false,
-            isWarning: true,
-        });
+        if (emptyNames.length !== 0) {
+            fireToast({
+                content: `${emptyNames.join(", ")}은/는 필수 입력값입니다!`,
+                isConfirm: false,
+                isWarning: true,
+            });
+        }
 
         return emptyNames;
     };
