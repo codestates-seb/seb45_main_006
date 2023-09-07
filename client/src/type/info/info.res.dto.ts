@@ -1,4 +1,4 @@
-import { CATEGORY } from "./common";
+import { CATEGORY_ENUM } from "./common";
 
 interface InfoDefaultType {
     boardId: number;
@@ -7,7 +7,7 @@ interface InfoDefaultType {
     memberId: number;
     nickname: string;
     viewCount: number;
-    category: CATEGORY;
+    category: CATEGORY_ENUM;
     infoBoardStatus: string;
     commentList: Array<unknown>;
     createdAt: string;
@@ -16,7 +16,7 @@ interface InfoDefaultType {
 
 // 정보 게시판 - 리스트 조회
 export interface GetResAllInfo {
-    category?: CATEGORY;
+    category?: CATEGORY_ENUM;
     search?: string;
 }
 

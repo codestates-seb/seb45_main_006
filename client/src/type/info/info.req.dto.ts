@@ -1,14 +1,14 @@
-import { CATEGORY } from "./common";
+import { CATEGORY_ENUM } from "./common";
 
 interface InfoDefaultType {
     title: string;
     content: string;
-    category: CATEGORY;
+    category: CATEGORY_ENUM;
 }
 
 // 정보 게시판 - 리스트 조회
 export interface GetReqAllInfo {
-    category?: CATEGORY;
+    category?: CATEGORY_ENUM;
     search?: string;
 }
 
@@ -21,6 +21,6 @@ export interface PatchReqInfo extends InfoDefaultType {
 }
 
 // 정보 게시판 - 삭제 (본인이 작성한 글만 가능)
-export interface DeleteReqInfo extends InfoDefaultType {
+export interface DeleteReqInfo {
     infoId: number;
 }
