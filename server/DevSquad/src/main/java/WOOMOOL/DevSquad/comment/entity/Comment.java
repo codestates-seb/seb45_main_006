@@ -38,7 +38,7 @@ public class Comment {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> commentList = new ArrayList<>();
 
 

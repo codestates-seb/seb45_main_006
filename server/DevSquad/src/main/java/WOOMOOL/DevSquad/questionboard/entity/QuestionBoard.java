@@ -22,7 +22,7 @@ import java.util.Optional;
 @NoArgsConstructor
 public class QuestionBoard extends Board {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberProfile memberProfile;
 
@@ -34,7 +34,7 @@ public class QuestionBoard extends Board {
 
     private boolean isAnswered = false;
 
-    @OneToMany(mappedBy = "questionBoard")
+    @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY)
     private List<Answer> answerList = new ArrayList<>();
 
     @Column(updatable = false)
