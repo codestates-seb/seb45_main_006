@@ -1,7 +1,7 @@
-import Typography from "./Typography";
+import Typography from "@component/Typography";
 
 export interface ITextarea {
-    placeholder: string;
+    placeholder?: string;
     disabled?: boolean;
     minlength?: number;
     maxlength?: number;
@@ -12,7 +12,7 @@ export interface ITextarea {
 }
 
 function Textarea({
-    placeholder,
+    placeholder = "",
     disabled = false,
     minlength = 2,
     maxlength = 1000,

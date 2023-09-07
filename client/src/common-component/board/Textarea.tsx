@@ -14,7 +14,7 @@ export default function BoardTextarea({
     placeholder,
     disabled = false,
     minlength = 2,
-    maxlength = 500,
+    maxlength = 1000,
     name,
     value = "",
     onChange,
