@@ -24,6 +24,7 @@ import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
+import InfoRegister from "@container/info/Register";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
             {
                 path: "/members",
                 element: <UserList />,
+            },
+            {
+                path: "/infos/add",
+                element: <InfoRegister />,
             },
         ],
     },
