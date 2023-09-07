@@ -1,4 +1,3 @@
-import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo } from "@type/info/info.req.dto";
@@ -9,7 +8,7 @@ export const getAllInfo = async ({ search, category }: GetReqAllInfo) => {
     if (category) url += `/${category}`;
     if (search) url += `?search=${search}`;
 
-    const { data } = await commonApi.post(url);
+    const { data } = await withAuthApi.post(url);
     return data;
 };
 

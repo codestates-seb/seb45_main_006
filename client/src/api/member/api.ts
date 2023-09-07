@@ -1,4 +1,3 @@
-import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import { GetReqAllMembers, PatchReqMember, GetReqMemberDetail } from "@type/member/member.req.dto";
@@ -7,7 +6,7 @@ import { GetReqAllMembers, PatchReqMember, GetReqMemberDetail } from "@type/memb
 export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
     const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
     const url = `${COMMON_API_PATH.MEMBER.LIST}?${query}`;
-    const { data } = await commonApi.get(url);
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 
@@ -28,7 +27,7 @@ export const getMyDetail = async () => {
 // 마이페이지 - 비밀번호 수정
 export const patchMemberPw = async (requstObj: PatchReqMember) => {
     const url = `${COMMON_API_PATH.MEMBER.CHANGE_PASSWORD}`;
-    const { data } = await commonApi.patch(url, requstObj);
+    const { data } = await withAuthApi.patch(url, requstObj);
     return data;
 };
 
