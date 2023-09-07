@@ -51,13 +51,13 @@ export default function Register() {
                     maxlength={20}
                 />
                 <BoardTextarea
-                    type="FIELD"
                     name="detail"
                     label="스터디 상세내용"
                     required={true}
                     placeholder="ex) 카메라 서비스 개발"
                     value={inputs.detail}
                     onChange={handleInput}
+                    borderStyle={""}
                 />
                 <BoardInput
                     name="stack"

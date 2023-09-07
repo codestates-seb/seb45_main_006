@@ -1,8 +1,16 @@
 import Typography from "@component/Typography";
 import Tag from "@container/project/component/Tag";
-import bookmark from "@assets/bookmark.svg";
+import bookmark_unfill from "@assets/bookmark_unfill.svg";
+import bookmark_fill from "@assets/bookmark_fill.svg";
+import { useState } from "react";
 
 const BoardList = () => {
+    const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
+
+    // Function to toggle bookmark
+    const toggleBookmark = () => {
+        setIsBookmarked((prevState) => !prevState);
+    };
     return (
         <div className="my-10 flex w-full justify-between rounded-lg border-2 border-solid border-borderline p-20 shadow-lg">
             <div>
@@ -16,7 +24,11 @@ const BoardList = () => {
                 </div>
                 <div className="mt-4 text-14 text-gray-600">2023-08-24 ~ 2023-09-22</div>
             </div>
-            <img src={bookmark} className="h-28 w-28 cursor-pointer" />
+            <img
+                src={isBookmarked ? bookmark_fill : bookmark_unfill}
+                className="m-10 h-28 w-28 cursor-pointer"
+                onClick={toggleBookmark}
+            />
         </div>
     );
 };
