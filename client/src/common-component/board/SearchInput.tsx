@@ -2,12 +2,12 @@ import Input, { IInput } from "@component/Input";
 import search from "@assets/search.svg";
 
 interface ISearchInput extends IInput {
-    onClickSearchHandler: () => void;
+    onClickSearchHandler?: () => void;
 }
 
 function SearchInput({ value, onChange, placeholder, onClickSearchHandler }: ISearchInput) {
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key == "Enter") {
+        if (e.key == "Enter" && onClickSearchHandler) {
             onClickSearchHandler();
         }
     };

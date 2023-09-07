@@ -1,6 +1,6 @@
 import { CATEGORY_ENUM } from "./common";
 
-interface InfoDefaultType {
+export interface InfoDefaultType {
     boardId: number;
     title: string;
     content: string;
@@ -11,12 +11,12 @@ interface InfoDefaultType {
     infoBoardStatus: string;
     commentList: Array<unknown>;
     createdAt: string;
-    unpdatedAt: string;
+    updatedAt: string;
 }
 
 // 정보 게시판 - 리스트 조회
 export interface GetResAllInfo {
-    data: InfoDefaultType;
+    data: Array<InfoDefaultType>;
 }
 
 // 정보 게시판 - 등록  - status code: 200
