@@ -82,12 +82,16 @@ function Header() {
             <div className="flex">
                 <SignButton
                     type="OUTLINED"
-                    styles="px-8 w-80 rounded-sm mr-4"
+                    styles="px-8 w-80 rounded-sm mr-4 min-w-70"
                     onClickHandler={() => navigate("/login")}
                 >
                     <Typography type="Body" text="로그인" />
                 </SignButton>
-                <SignButton type="FILLED" styles="px-8 w-80 rounded-sm" onClickHandler={() => navigate("/signup")}>
+                <SignButton
+                    type="FILLED"
+                    styles="px-8 w-80 rounded-sm min-w-70"
+                    onClickHandler={() => navigate("/signup")}
+                >
                     <Typography type="Body" text="회원가입" color="text-white" />
                 </SignButton>
             </div>
