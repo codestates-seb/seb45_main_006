@@ -19,7 +19,7 @@ const customColor = {
     project_point: "#36B7FF",
     study: "#C0E5C8",
     study_point: "#26DC4D",
-    board: "#CCA9DD",
+    board: "#E3D2EB",
     bookmark: "#F8BD00",
     deadline: "#FF9356",
     warn: "#F86D7D",

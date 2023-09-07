@@ -12,10 +12,11 @@ import java.util.List;
 public interface AnswerMapper {
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     @Mapping(source = "boardId", target = "questionBoard.boardId")
-    Answer AnswerPostDtoToAnswer(AnswerDto.Post request);
-    Answer AnswerPatchDtoToAnswer(AnswerDto.Patch request);
+    Answer answerPostDtoToAnswer(AnswerDto.Post request);
+    Answer answerPatchDtoToAnswer(AnswerDto.Patch request);
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     @Mapping(source = "questionBoard.boardId", target = "boardId")
-    AnswerDto.Response AnswerToAnswerResponseDto(Answer answer);
-    List<AnswerDto.Response> AnswerListToAnswerResponseDtoList(List<Answer> answerList);
+    @Mapping(source = "memberProfile.nickname", target = "nickname")
+    AnswerDto.Response answerToAnswerResponseDto(Answer answer);
+    List<AnswerDto.Response> answerListToAnswerResponseDtoList(List<Answer> answerList);
 }

@@ -61,7 +61,7 @@ public class AnswerService {
     public void acceptAnswer(long answerId) {
         Answer findAnswer = findVerifiedAnswer(answerId);
 
-        verifiedIsWriter(findAnswer);
+        questionBoardService.verifiedIsWriter(findAnswer.getQuestionBoard());
 
         if(findAnswer.getQuestionBoard().isAnswered())
             throw new BusinessLogicException(ExceptionCode.ACCEPT_ALREADY_EXISTS);

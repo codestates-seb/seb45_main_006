@@ -22,7 +22,7 @@ function SignInput({ name, label, description, type, value, onChange, placeholde
 
     return (
         <div className="mb-18 flex flex-col">
-            <div className="mb-4 flex">
+            <div className="mb-4 flex items-center">
                 <div className="w-120 p-4">
                     <Typography type="SmallLabel" text={label} styles="font-bold" />
                 </div>

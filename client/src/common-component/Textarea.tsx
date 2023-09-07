@@ -8,7 +8,7 @@ export interface ITextarea {
     name?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    borderStyle: string;
+    borderStyle?: string;
 }
 
 function Textarea({

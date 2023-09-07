@@ -80,8 +80,9 @@ export default function Register() {
     //     navigate("/projects/:projectsBoardId");
     // }
     return (
-        <div className="m-80 flex items-center justify-center">
-            <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-project">
+        <div className="m-80 flex justify-center">
+            <div className="flex w-11/12 justify-center rounded-lg bg-project">
+                <div className="flex w-11/12 flex-col">
                 <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
                 <BoardInput
                     name="title"
@@ -119,16 +120,19 @@ export default function Register() {
                     value={inputs.recruitNum}
                     onChange={handleInput}
                 />
-                <Button
-                    type="PROJECT_POINT"
-                    styles="mb-20"
-                    isFullBtn={false}
-                    onClickHandler={() => {
-                        handleSubmit();
-                    }}
-                >
-                    <Typography text="등록하기" type="Label" color="text-white" />
-                </Button>
+                <div className="flex w-full justify-center">
+                        <Button
+                            type="PROJECT_POINT"
+                            styles="mb-20"
+                            isFullBtn={false}
+                            onClickHandler={() => {
+                                navigate("/projects/:projectBoardId");
+                            }}
+                        >
+                            <Typography text="등록하기" type="Label" color="text-white" />
+                        </Button>
+                    </div>
+                </div>
             </div>
         </div>
     );

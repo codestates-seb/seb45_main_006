@@ -38,8 +38,9 @@ export default function Register() {
     //     navigate("/todos/register");
     // }
     return (
-        <div className="m-80 flex items-center justify-center">
-            <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-study">
+        <div className="m-80 flex justify-center">
+            <div className="flex w-11/12 justify-center rounded-lg bg-study">
+                <div className="flex w-11/12 flex-col">
                 <Typography type="Heading" text="어떤 스터디인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
                 <BoardInput
                     name="studyName"
@@ -84,16 +85,19 @@ export default function Register() {
                     value={inputs.group}
                     onChange={handleInput}
                 />
-                <Button
-                    type="STUDY_POINT"
-                    styles="mb-20"
-                    isFullBtn={false}
-                    onClickHandler={() => {
-                        navigate("/studies/:studyBoardId");
-                    }}
-                >
-                    <Typography text="등록하기" type="Label" color="text-white" />
-                </Button>
+                <div className="flex w-full justify-center">
+                        <Button
+                            type="STUDY_POINT"
+                            styles="mb-20"
+                            isFullBtn={false}
+                            onClickHandler={() => {
+                                navigate("/studies/:studyBoardId");
+                            }}
+                        >
+                            <Typography text="등록하기" type="Label" color="text-white" />
+                        </Button>
+                    </div>
+                </div>
             </div>
         </div>
     );

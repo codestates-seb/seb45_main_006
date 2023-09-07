@@ -20,7 +20,7 @@ export default function BoardTextarea({
     onChange,
 }: IBoardTextarea) {
     return (
-        <div className="my-10 flex w-11/12 flex-col p-10">
+        <div className="my-10 flex flex-col p-10">
             <div className="mb-10 flex">
                 <Typography text={`${label}`} type="Body" />
                 {required && <Typography text="*" type="Body" color="text-warn" />}

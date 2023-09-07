@@ -16,6 +16,7 @@ public interface InfoBoardMapper {
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     InfoBoard InfoBoardPatchDtoToInfoBoard(InfoBoardDto.Patch request);
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
+    @Mapping(source = "memberProfile.nickname", target = "nickname")
     InfoBoardDto.Response InfoBoardToInfoBoardResponseDto(InfoBoard infoBoard);
     List<InfoBoardDto.Response> InfoBoardListToInfoBoardResponseDtoList(List<InfoBoard> infoBoardList);
 
