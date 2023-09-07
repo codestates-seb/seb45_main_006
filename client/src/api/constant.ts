@@ -15,4 +15,7 @@ export const COMMON_API_PATH = {
         LIST: "/members/list",
         CHANGE_PASSWORD: "/members/password",
     },
+    INFO: {
+        PATH: "/information",
+    },
 } as const;
