@@ -12,7 +12,7 @@ import BoardContent from "@component/board/BoardContent";
 import Dropdown from "@component/board/Dropdown";
 
 import { infoCategory } from "@component/mockData";
-import { CATEGORY } from "@api/info/constant";
+import { CATEGORY_TO_ENUM } from "@api/info/constant";
 import { CATEGORY_NAME } from "@type/info/common";
 
 function Register() {
@@ -44,7 +44,7 @@ function Register() {
 
         if (selectedItem !== "") {
             postInfo(
-                { title, content, category: CATEGORY[selectedItem] },
+                { title, content, category: CATEGORY_TO_ENUM[selectedItem] },
                 {
                     onSuccess: () => {
                         navigate("/infos");
