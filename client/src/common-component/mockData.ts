@@ -1,3 +1,5 @@
+import { CATEGORY_NAME } from "@type/info/common";
+
 export type IStack = {
     id: number;
     name: string;
@@ -133,4 +135,4 @@ export const user = {
     oauthUser: false,
 };
 
-export const infoCategory = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];
+export const infoCategory: Array<CATEGORY_NAME> = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];
