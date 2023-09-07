@@ -1,4 +1,4 @@
-import { CATEGORY_ENUM } from "./common";
+import { CATEGORY_TYPE } from "./common";
 
 export interface InfoDefaultType {
     boardId: number;
@@ -7,7 +7,7 @@ export interface InfoDefaultType {
     memberId: number;
     nickname: string;
     viewCount: number;
-    category: CATEGORY_ENUM;
+    category: CATEGORY_TYPE;
     infoBoardStatus: string;
     commentList: Array<unknown>;
     createdAt: string;

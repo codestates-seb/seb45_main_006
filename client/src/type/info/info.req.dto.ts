@@ -1,14 +1,18 @@
-import { CATEGORY_ENUM } from "./common";
+import { CATEGORY_TYPE } from "./common";
 
 interface InfoDefaultType {
     title: string;
     content: string;
-    category: CATEGORY_ENUM;
+    category: CATEGORY_TYPE;
+}
+
+interface SpecifyInfoId {
+    infoId: number;
 }
 
 // 정보 게시판 - 리스트 조회
 export interface GetReqAllInfo {
-    category?: CATEGORY_ENUM;
+    category?: CATEGORY_TYPE;
     search?: string;
 }
 
