@@ -18,6 +18,9 @@ export const COMMON_API_PATH = {
     INFO: {
         PATH: "/information",
     },
+    QUESTION: {
+        PATH: "/question",
+    },
     PROJECT: {
         PATH: "/project",
         LIST: "/project/list",
