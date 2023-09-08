@@ -19,6 +19,8 @@ public class MemberAuthenticationFailureHandler implements AuthenticationFailure
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("이메일과 비밀번호를 다시 확인해주세요.");
 
         log.error("# Authentication Fail : {}", exception.getMessage());
     }

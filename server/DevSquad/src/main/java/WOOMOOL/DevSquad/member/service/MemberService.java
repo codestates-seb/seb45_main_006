@@ -188,7 +188,7 @@ public class MemberService {
         return findMember;
 
     }
-
+    // 멤버객체 찾기
     public Member findMember(long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(MEMBER_NOT_FOUND));

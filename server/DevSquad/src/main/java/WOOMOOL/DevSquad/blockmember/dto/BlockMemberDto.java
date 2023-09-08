@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class BlockMemberDto {
 
-    private long blockId;
+    private long blockMemberId;
     @NotBlank
     private String reportContent;
 }

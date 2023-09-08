@@ -24,7 +24,10 @@ public enum ExceptionCode {
     QUITED_MEMBER(204, "탈퇴한 회원입니다."),
     NOT_BLOCKED_MEMBER(404, "차단하지 않은 회원입니다."),
     DUPLICATE_BLOCKING(400, "중복해서 차단할 수 없습니다."),
-    CANT_SELF_BLOCKING(400, "자신을 차단할 수 없습니다.");
+    CANT_SELF_BLOCKING(400, "자신을 차단할 수 없습니다."),
+    CHAT_ROOM_NOT_FOUND(404, "채팅방을 찾을 수 없습니다"),
+    DUPLICATE_CHAT_ROOM(400, "이미 서로 채팅중인 채팅방이 있습니다."),
+    CHAT_ROOM_CLOSED(404, "닫힌 채팅방 입니다.");
 
 
 
