@@ -40,7 +40,7 @@ function Header() {
             }),
         );
 
-        if (pathname.includes("/signup") || pathname.includes("/login")) {
+        if (pathname.includes("/signup/1") || pathname.includes("/login")) {
             setIsSignPage(true);
         } else {
             setIsSignPage(false);
@@ -82,7 +82,7 @@ function Header() {
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/login")}>
                     <Typography type="Body" text="로그인" color="text-white" />
                 </Button>
-                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup")}>
+                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup/1")}>
                     <Typography type="Body" text="회원가입" color="text-white" />
                 </Button>
                 <Button type="WARN" isFullBtn={false} onClickHandler={() => navigate("/signup/temp")}>
