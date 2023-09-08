@@ -1,3 +1,5 @@
+import { CommentDefaultType } from "@type/comment/comment.res.dto";
+
 interface QuestionDefaultType {
     boardId: number;
     title: string;
@@ -6,7 +8,7 @@ interface QuestionDefaultType {
     nickname: string;
     viewCount: number;
     QuestionBoardStatus: string;
-    commentList: Array<unknown>;
+    commentList: Array<CommentDefaultType>;
     createdAt: string;
     unpdatedAt: string;
 }

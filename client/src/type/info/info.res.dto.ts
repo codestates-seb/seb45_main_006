@@ -1,4 +1,5 @@
 import { CATEGORY_TYPE } from "./common";
+import { CommentDefaultType } from "@type/comment/comment.res.dto";
 
 export interface InfoDefaultType {
     boardId: number;
@@ -9,9 +10,9 @@ export interface InfoDefaultType {
     viewCount: number;
     category: CATEGORY_TYPE;
     infoBoardStatus: string;
-    commentList: Array<unknown>;
+    commentList: Array<CommentDefaultType>;
     createdAt: string;
-    updatedAt: string;
+    modifiedAt: string;
 }
 
 // 정보 게시판 - 리스트 조회
