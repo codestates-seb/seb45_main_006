@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePatchComment, useDeleteComment } from "@api/comment/hook";
+import { usePatchComment, useDeleteComment, usePostCommentRe } from "@api/comment/hook";
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
@@ -74,6 +74,7 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
     const { alertWhenEmptyFn } = useCheckEmptyInput();
     const { mutate: patchComment } = usePatchComment();
     const { mutate: deleteComment } = useDeleteComment();
+    const { mutate: postCommentRe } = usePostCommentRe();
 
     const onChangeCurComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setCurComment(e.currentTarget.value);
@@ -138,6 +139,34 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
                 );
             },
         });
+    };
+
+    const onSubmitReHanlder = () => {
+        const inputs = [{ name: "댓글", content: nextComment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postCommentRe(
+                { board: "information", boardId: v.boardId, commentId: parentId, content: nextComment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                    },
+                    // TODO: 에러 분기
+                    onError: (err) => {
+                        console.log(err);
+                        fireToast({
+                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
+                            isConfirm: false,
+                            isWarning: true,
+                        });
+                    },
+                },
+            );
+        }
     };
 
     return (
@@ -219,7 +248,7 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
                             <Typography type="Highlight" text={dummyUser.nickname} />
                         </div>
 
-                        <button onClick={() => {}}>
+                        <button onClick={onSubmitReHanlder}>
                             <Typography
                                 type="Description"
                                 text="등록"
