@@ -18,15 +18,19 @@ import ProjectRegister from "@container/project/Register";
 import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
+
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
 import SetPro from "@container/sign/setProfile";
 import TempSignUp from "@container/sign/TempSignUp";
+
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
+import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
+import InfoRegister from "@container/info/Register";
 
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -107,10 +111,6 @@ const router = createBrowserRouter([
                 element: <CreateTodo />,
             },
             {
-                path: "/signup/temp",
-                element: <TempSignUp />,
-            },
-            {
                 path: "/signup/profile/1",
                 element: <TempProfile1 />,
             },
@@ -119,8 +119,16 @@ const router = createBrowserRouter([
                 element: <TempProfile4 />,
             },
             {
+                path: "/login/find-pw",
+                element: <FindPw />,
+            },
+            {
                 path: "/members",
                 element: <UserList />,
+            },
+            {
+                path: "/infos/add",
+                element: <InfoRegister />,
             },
         ],
     },

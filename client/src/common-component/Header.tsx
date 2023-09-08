@@ -5,8 +5,9 @@ import { useRecoilState } from "recoil";
 import { isSignPageAtom } from "@feature/Global";
 
 import IconLogo from "@assets/icon_logo.png";
-import Button from "@component/Button";
+import IconLogoText from "@assets/icon_logo-text.png";
 import Typography from "@component/Typography";
+import SignButton from "@container/sign/component/SignButton";
 
 type INavItem = {
     label: string;
@@ -69,7 +70,7 @@ function Header() {
                     navigate(item.route);
                 }}
             >
-                <button className="mr-16 font-spoqa text-18 font-medium" onClick={() => onClickNavItem(item)}>
+                <button className="mr-16 w-max font-spoqa text-18 font-medium" onClick={() => onClickNavItem(item)}>
                     <Typography type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
                 </button>
             </li>
@@ -83,27 +84,27 @@ function Header() {
                     <Typography type="Body" text="로그인" color="text-white" />
                 </Button>
                 <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup/1")}>
+
                     <Typography type="Body" text="회원가입" color="text-white" />
-                </Button>
-                <Button type="WARN" isFullBtn={false} onClickHandler={() => navigate("/signup/temp")}>
-                    <Typography type="Body" text="회원가입(임시)" color="text-white" />
-                </Button>
+                </SignButton>
             </div>
         );
     };
 
     return (
         <>
-            <header className="flex h-70 w-full items-center justify-between border-b-1 border-borderline px-16">
+            <header className="flex h-60 w-full items-center justify-between px-10 lg:p-0">
                 <button onClick={() => navigate("/")} className="flex items-center justify-between">
-                    <img src={IconLogo} alt="DevSquad 로고" />
-                    <Typography type="Logo" text="Dev Squad" color="text-main" />
+                    <img src={IconLogo} alt="DevSquad 로고" width={50} />
+                    {/* <Typography type="Logo" text="Dev Squad" color="text-main" /> */}
+                    <img src={IconLogoText} width={200} alt="DevSquad" className="hidden sm:block" />
                 </button>
+
                 {!isSignPage ? <AuthBtns /> : null}
             </header>
             {!isSignPage ? (
-                <nav className="flex h-40 w-full border-b-1 border-borderline">
-                    <ul className="flex w-full items-center">
+                <nav className="flex h-50 w-full border-b-1 border-borderline px-10 lg:p-0">
+                    <ul className="flex w-full items-center overflow-x-scroll sm:overflow-hidden">
                         {navItems.map((v: INavItem) => (
                             <NavItem key={v.label} item={v} />
                         ))}
