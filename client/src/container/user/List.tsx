@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import UserCard from "@component/board/UserCard";
 import Pagination from "@component/Pagination";
+import SearchFilter from "@container/user/component/SearchFilter";
 
 import { useGetAllMembers } from "@api/member/hook";
-import SearchFilter from "@container/user/component/SearchFilter";
 
 function UserList() {
     // 페이지 필터
