@@ -16,6 +16,8 @@ export const useToast = () => {
                 id: id,
                 content: toast.content || "",
                 isConfirm: false,
+                isWarning: toast.isWarning || false,
+                callback: toast.callback,
             },
         ]);
 
@@ -25,6 +27,8 @@ export const useToast = () => {
                     id: id,
                     content: toast.content || "",
                     isConfirm: false,
+                    isWarning: toast.isWarning || false,
+                    callback: toast.callback,
                 },
             ]);
         }, 2500);
@@ -36,6 +40,7 @@ export const useToast = () => {
                 id: id,
                 content: toast.content || "",
                 isConfirm: toast.isConfirm || false,
+                isWarning: toast.isWarning || false,
                 callback: toast.callback,
             },
         ]);
@@ -47,6 +52,7 @@ export const useToast = () => {
                 id: toast.id,
                 content: toast.content || "",
                 isConfirm: toast.isConfirm || false,
+                isWarning: toast.isWarning || false,
                 callback: toast.callback,
             },
         ]);

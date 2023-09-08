@@ -43,6 +43,7 @@ public class InfoBoardDto {
         private String title;
         private String content;
         private Long memberId;
+        private String nickname;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;

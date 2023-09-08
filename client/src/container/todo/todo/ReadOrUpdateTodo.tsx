@@ -39,11 +39,7 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
     const updateTodoHandler = () => {
         if (!value) {
             fireToast({
-                content: (
-                    <div className="flex items-center">
-                        <Typography type="Highlight" text={"할 일을 입력해주세요!"} />
-                    </div>
-                ),
+                content: <Typography type="Highlight" text={"할 일을 입력해주세요!"} />,
                 isConfirm: false,
             });
             return;
@@ -54,11 +50,7 @@ function ReadOrUpdateTodo({ singleTodo }: IReadOrUpdateTodo) {
             {
                 onSuccess: () => {
                     createToast({
-                        content: (
-                            <div className="flex items-center">
-                                <Typography type="Highlight" text={"수정이 완료되었습니다."} />
-                            </div>
-                        ),
+                        content: <Typography type="Highlight" text={"수정이 완료되었습니다."} />,
                         isConfirm: false,
                     });
                     setIsRead(true);

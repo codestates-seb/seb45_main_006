@@ -34,9 +34,10 @@ public class AnswerDto {
     public static class Response {
         private Long answerId;
         private Long memberId;
+        private String nickname;
         private Long boardId;
-        private Long title;
-        private boolean isAccepted;
+        private boolean accepted;
+        private String answerStatus;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<CommentDto.Response> commentList;

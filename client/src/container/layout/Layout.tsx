@@ -7,7 +7,7 @@ import { isSignPageAtom } from "@feature/Global";
 import Header from "@component/Header";
 
 const HEIGHT = {
-    SIGN_HEADER: 70,
+    SIGN_HEADER: 60,
     MAIN_HEADER: 110,
 } as const;
 

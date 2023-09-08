@@ -20,14 +20,13 @@ public interface CommentMapper {
     @Mapping(source = "parentId", target = "parent.commentId")
     @Mapping(source = "answerId", target = "answer.answerId")
     Comment commentPostDtoToComment(CommentDto.Post request);
-    @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
-    @Mapping(source = "parentId", target = "parent.commentId")
-    @Mapping(source = "answerId", target = "answer.answerId")
+
     Comment commentPatchDtoToComment(CommentDto.Patch request);
     @Mapping(source = "board.boardId", target = "boardId")
     @Mapping(source = "answer.answerId", target = "answerId")
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     @Mapping(source = "parent.commentId", target = "parentId")
+    @Mapping(source = "memberProfile.nickname", target = "nickname")
     CommentDto.Response commentToCommentResponseDto(Comment comment);
 
     List<CommentDto.Response> commentListToCommentResponseDtoList(List<Comment> commentList);

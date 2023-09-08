@@ -6,12 +6,22 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { useSuggestionArr } from "@hook/useSuggestionArr";
 
 type IAutoCompletionTags = {
+    type?: "OUTLINED" | "UNDERLINED";
+    placeholder: string;
+    showResult?: boolean;
     selectedTags: Array<string>;
     defaultSuggestions: Array<string>;
     setSelectedTags: (tags: Array<string>) => void;
 };
 
-function AutoCompletionTags({ selectedTags, defaultSuggestions, setSelectedTags }: IAutoCompletionTags) {
+function AutoCompletionTags({
+    type = "OUTLINED",
+    placeholder,
+    showResult = true,
+    selectedTags,
+    defaultSuggestions,
+    setSelectedTags,
+}: IAutoCompletionTags) {
     const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
     const [isDropDownShow, setIsDropDownShow] = useState(false);
     const [text, setText] = useState<string>("");
@@ -42,13 +52,15 @@ function AutoCompletionTags({ selectedTags, defaultSuggestions, setSelectedTags 
     }, [isDropDownShow]);
 
     return (
-        <div className="flex h-250 w-full flex-col py-10">
+        <div className="flex w-full flex-col py-10">
             <div
-                className="flex flex-col rounded-2xl border-1 border-primary px-12 py-6"
+                className={`flex flex-col border-primary px-4 py-6 ${
+                    type === "OUTLINED" ? "rounded-2xl border-1" : "border-b-1"
+                }`}
                 ref={dropdownRef}
                 onClick={() => setIsDropDownShow(true)}
             >
-                {selectedTags.length > 0 ? (
+                {showResult && selectedTags.length > 0 ? (
                     <ol className="flex flex-wrap items-center">
                         {selectedTags.map((v) => (
                             <li key={v} className="flex w-fit items-center px-8">
@@ -63,8 +75,8 @@ function AutoCompletionTags({ selectedTags, defaultSuggestions, setSelectedTags 
                 <input
                     value={text}
                     onChange={(e) => setText(e.currentTarget.value)}
-                    className="px-8 outline-none"
-                    placeholder="기술 스택을 입력해주세요."
+                    className={`outline-none ${type === "OUTLINED" ? "px-8" : ""}`}
+                    placeholder={placeholder}
                 />
             </div>
 

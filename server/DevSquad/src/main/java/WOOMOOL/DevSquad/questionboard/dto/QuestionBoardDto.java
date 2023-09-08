@@ -39,11 +39,12 @@ public class QuestionBoardDto {
         private String title;
         private String content;
         private Long memberId;
+        private String nickname;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;
-        private String QuestionBoardStatus;
-        private boolean isAnswered;
+        private String questionBoardStatus;
+        private boolean answered;
         private List<AnswerDto.Response> answerList;
     }
 }
