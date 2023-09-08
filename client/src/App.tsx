@@ -24,6 +24,7 @@ import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
+import InfoBoard from "@container/info/Board";
 import InfoRegister from "@container/info/Register";
 import QuestionRegister from "@container/question/Register";
 
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
             {
                 path: "/members",
                 element: <UserList />,
+            },
+            {
+                path: "/infos",
+                element: <InfoBoard />,
             },
             {
                 path: "/infos/add",
