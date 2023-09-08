@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useRecoilValue } from "recoil";
+import { isLoggedInAtom } from "@feature/Global";
+
 import { useGetAllInfo } from "@api/info/hook";
+import { useToast } from "@hook/useToast";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
@@ -13,6 +17,10 @@ import { CATEGORY_TO_ENUM } from "@api/info/constant";
 
 function Board() {
     const navigate = useNavigate();
+    const { reqLoginToUserToast } = useToast();
+
+    const isLogginedIn = useRecoilValue(isLoggedInAtom);
+
     // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
     const [search, setSearch] = useState<string>("");
     // 검색 인풋 value 저장하기 위한 변수
@@ -34,6 +42,14 @@ function Board() {
         }
     };
 
+    const onClickRegisterHandler = () => {
+        if (isLogginedIn) {
+            navigate("/infos/add");
+        } else {
+            reqLoginToUserToast();
+        }
+    };
+
     return (
         <>
             <div className="fixed z-10 flex w-full max-w-screen-xl border-b-1 border-borderline bg-white">
@@ -47,7 +63,7 @@ function Board() {
                     />
                 </div>
                 <div className="hidden w-300 justify-end p-10 lg:flex">
-                    <Button type="INFO_POINT" onClickHandler={() => navigate("/infos/add")}>
+                    <Button type="INFO_POINT" onClickHandler={onClickRegisterHandler}>
                         <Typography type="Highlight" text="자유게시글 등록" />
                     </Button>
                 </div>
