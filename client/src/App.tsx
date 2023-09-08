@@ -22,7 +22,7 @@ import StudyRegister from "@container/study/Register";
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
-// import SetPro from "@container/sign/setProfile";
+import SetPro from "@container/sign/setProfile";
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
@@ -85,10 +85,10 @@ const router = createBrowserRouter([
                 path: "/signup/3",
                 element: <SignUp3 />,
             },
-            // {
-            //     path: "/setpro",
-            //     element: <SetPro />,
-            // },
+            {
+                path: "/setpro",
+                element: <SetPro />,
+            },
             {
                 path: "/signup/1",
                 element: <SignUp1 />,
