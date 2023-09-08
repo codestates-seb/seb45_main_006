@@ -62,7 +62,7 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
-            <div className="mb-8 flex w-100 flex-col items-center justify-end">
+            <div className="mb-8 flex w-50 flex-col items-center justify-end">
                 <button onClick={() => setIsLiked(!isLiked)}>
                     <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
                 </button>

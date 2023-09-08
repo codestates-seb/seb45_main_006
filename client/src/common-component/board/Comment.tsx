@@ -54,8 +54,7 @@ export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment)
 };
 
 export const ShowComment = ({ comment }: { comment: CommentDefaultType }) => {
-    console.log(comment);
-    // TODO: 내 아이디와 info member 아이디가 같은지 확인
+    // TODO: 내 아이디와 로컬스토리지에 저장된 member 아이디가 같은지 확인
     // const [isMine, setIsMine] = useState(true);
     const { data: user } = useGetMemberDetail({ memberId: comment.memberId });
 

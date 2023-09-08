@@ -7,6 +7,11 @@ export const isSignPageAtom = atom<boolean>({
     default: false,
 });
 
+export const isLoggedInAtom = atom<boolean>({
+    key: "isLoggedInAtom",
+    default: false,
+});
+
 export const toastState = atom<IToast[]>({
     key: "toastState",
     default: [],
