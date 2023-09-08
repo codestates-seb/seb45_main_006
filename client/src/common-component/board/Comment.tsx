@@ -61,7 +61,15 @@ export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment)
     );
 };
 
-export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; writerId: number }) => {
+export const OneComment = ({
+    v,
+    writerId,
+    boardId,
+}: {
+    v: CommentDefaultTypeWithRe;
+    writerId: number;
+    boardId: number;
+}) => {
     const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
@@ -90,7 +98,7 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
 
         if (emptyNames.length === 0) {
             patchComment(
-                { board: "information", boardId: v.boardId, commentId: v.commentId, content: curCommment },
+                { board: "information", boardId, commentId: v.commentId, content: curCommment },
                 {
                     onSuccess: () => {
                         fireToast({
@@ -119,7 +127,7 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
             isConfirm: true,
             callback: () => {
                 deleteComment(
-                    { board: "information", boardId: v.boardId, commentId: v.commentId },
+                    { board: "information", boardId, commentId: v.commentId },
                     {
                         onSuccess: () => {
                             fireToast({
@@ -147,7 +155,7 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
 
         if (emptyNames.length === 0) {
             postCommentRe(
-                { board: "information", boardId: v.boardId, commentId: parentId, content: nextComment },
+                { board: "information", boardId, commentId: parentId, content: nextComment },
                 {
                     onSuccess: () => {
                         fireToast({
@@ -271,12 +279,12 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
             {Array.isArray(v.commentList) &&
                 v.commentList.length > 0 &&
                 v.commentList.map((v) => (
-                    <div className="flex">
+                    <div className="flex" key={`${v.boardId}-${v.memberId}`}>
                         <div className="flex rotate-180 items-end p-8">
                             <BiReply />
                         </div>
                         <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} />
+                            <OneComment v={v} writerId={writerId} boardId={boardId} />
                         </div>
                     </div>
                 ))}
@@ -287,7 +295,12 @@ export const OneComment = ({ v, writerId }: { v: CommentDefaultTypeWithRe; write
 export const ShowComment = ({ comment, writerId }: { comment: CommentDefaultTypeWithRe; writerId: number }) => {
     return (
         <div className="mb-8 flex flex-col border-b-1 border-borderline">
-            <OneComment v={comment} writerId={writerId} />
+            <OneComment
+                v={comment}
+                writerId={writerId}
+                boardId={comment.boardId}
+                key={`${comment.boardId}-${comment.memberId}`}
+            />
         </div>
     );
 };
