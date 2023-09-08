@@ -6,15 +6,17 @@ import {
     PostReqQuestion,
     PatchReqQuestion,
     DeleteReqQuestion,
+    PostReqViewCount,
 } from "@type/question/question.req.dto";
 import {
     GetResAllQuestion,
     PostResQuestion,
     PatchResQuestion,
     DeleteResQuestion,
+    PostResViewCount,
 } from "@type/question/question.res.dto";
 
-import { getAllQuestion, postQuestion, patchQuestion, deleteQuestion } from "./api";
+import { getAllQuestion, postQuestion, patchQuestion, deleteQuestion, postViewCount } from "./api";
 import { questionKeyFactory } from "./questionKeyFactory";
 
 // 질문 게시판 - 리스트 조회
@@ -38,4 +40,9 @@ export const usePatchQuestion = () => {
 // 질문 게시판 - 삭제 (본인이 작성한 글만 가능)
 export const useDeleteQuestion = () => {
     return useMutation<AxiosResponse<DeleteResQuestion>, AxiosError, DeleteReqQuestion>(deleteQuestion);
+};
+
+// 질문 게시판 - 조회수 증가
+export const usePostViewcount = () => {
+    return useMutation<AxiosResponse<PostResViewCount>, AxiosError, PostReqViewCount>(postViewCount);
 };

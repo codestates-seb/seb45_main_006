@@ -5,6 +5,7 @@ import {
     PostReqQuestion,
     PatchReqQuestion,
     DeleteReqQuestion,
+    PostReqViewCount,
 } from "@type/question/question.req.dto";
 
 // 질문 게시판 - 리스트 조회
@@ -34,5 +35,12 @@ export const patchQuestion = async ({ questionId, ...requstObj }: PatchReqQuesti
 export const deleteQuestion = async ({ questionId }: DeleteReqQuestion) => {
     const url = `${COMMON_API_PATH.QUESTION.PATH}/${questionId}`;
     const { data } = await withAuthApi.delete(url);
+    return data;
+};
+
+// 질문 게시판 - 조회수 증가 - status code: 200
+export const postViewCount = async ({ questionId }: PostReqViewCount) => {
+    const url = `${COMMON_API_PATH.QUESTION.PATH}/${questionId}`;
+    const { data } = await withAuthApi.post(url);
     return data;
 };

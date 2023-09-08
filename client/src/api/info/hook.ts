@@ -1,10 +1,10 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo } from "@type/info/info.req.dto";
-import { GetResAllInfo, PostResInfo, PatchResInfo, DeleteResInfo } from "@type/info/info.res.dto";
+import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
+import { GetResAllInfo, PostResInfo, PatchResInfo, DeleteResInfo, PostResViewCount } from "@type/info/info.res.dto";
 
-import { getAllInfo, postInfo, patchInfo, deleteInfo } from "./api";
+import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount } from "./api";
 import { infoKeyFactory } from "./infoKeyFactory";
 
 // 정보 게시판 - 리스트 조회
@@ -28,4 +28,9 @@ export const usePatchInfo = () => {
 // 정보 게시판 - 삭제 (본인이 작성한 글만 가능)
 export const useDeleteInfo = () => {
     return useMutation<AxiosResponse<DeleteResInfo>, AxiosError, DeleteReqInfo>(deleteInfo);
+};
+
+// 정보 게시판 - 조회수 증가
+export const usePostViewCount = () => {
+    return useMutation<AxiosResponse<PostResViewCount>, AxiosError, PostReqViewCount>(postViewCount);
 };
