@@ -1,5 +1,5 @@
 import { CATEGORY_TYPE } from "./common";
-import { CommentDefaultType } from "@type/comment/comment.res.dto";
+import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 export interface InfoDefaultType {
     boardId: number;
@@ -10,7 +10,7 @@ export interface InfoDefaultType {
     viewCount: number;
     category: CATEGORY_TYPE;
     infoBoardStatus: string;
-    commentList: Array<CommentDefaultType>;
+    commentList: Array<CommentDefaultTypeWithRe>;
     createdAt: string;
     modifiedAt: string;
 }

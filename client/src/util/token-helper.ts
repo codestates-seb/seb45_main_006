@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 import { getItemFromStorage, setItemToStorage } from "./localstorage-helper";
 
@@ -35,9 +35,9 @@ export const isValidToken = (token: string): boolean | undefined => {
         console.log("jwt 토큰이 유효하지 않습니다.", token);
         return;
     }
-    const tokenJwtData = parseJwt(token);
-    console.log("실제 토큰 유효성 여부", dayjs(tokenJwtData.exp) > dayjs());
+    // const tokenJwtData = parseJwt(token);
     // return dayjs(tokenJwtData.exp) > dayjs();
+
     // TODO: 로그인 api 연동 후에 삭제할 코드
     return true;
 };
@@ -48,8 +48,7 @@ export const isExistToken = (): boolean => {
         return false;
     }
 
-    const tokenJwtData = parseJwt(accessToken);
-    console.log("토큰에 저장된 실제 memberId", tokenJwtData.memberId);
+    // const tokenJwtData = parseJwt(accessToken);
     // TODO: 로그인 api 연동 후에 1 대신 tokenJwtData.memberId 넣기
     //       - 타입 확인 후 == 를 === 로 바꾸기
     return accessToken && getItemFromStorage("memberId") && getItemFromStorage("memberId") == 1;
