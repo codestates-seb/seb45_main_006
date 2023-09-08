@@ -104,7 +104,7 @@ function Register() {
                 onError: (err) => {
                     console.log(err);
                     fireToast({
-                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                        content: "게시글 수정 중 에러가 발생하였습니다🥹",
                         isConfirm: false,
                         isWarning: true,
                     });

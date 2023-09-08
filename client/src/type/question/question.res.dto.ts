@@ -1,6 +1,6 @@
 import { CommentDefaultType } from "@type/comment/comment.res.dto";
 
-interface QuestionDefaultType {
+export interface QuestionDefaultType {
     boardId: number;
     title: string;
     content: string;
