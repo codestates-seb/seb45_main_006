@@ -29,17 +29,19 @@ public class CommentDto {
         private Long boardId;
         private Long answerId;
         private Long parentId;
-        private Long content;
+        private String content;
     }
     @Getter
     @AllArgsConstructor
     public static class Response {
         private Long commentId;
         private Long memberId;
+        private String nickname;
         private Long boardId;
         private Long answerId;
         private Long parentId;
         private String content;
+        private String commentStatus;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private List<CommentDto.Response> commentList;

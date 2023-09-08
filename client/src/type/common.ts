@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type PaginationParams = {
     limit: number;
     skip: number;
@@ -12,7 +14,8 @@ export type PageInfo = {
 
 export interface IToast {
     id?: string;
-    content: string | JSX.Element;
+    content: string | ReactNode;
     isConfirm: boolean;
     callback?: () => void;
+    isWarning?: boolean;
 }

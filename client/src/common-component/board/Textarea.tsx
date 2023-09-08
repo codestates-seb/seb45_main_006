@@ -14,13 +14,13 @@ export default function BoardTextarea({
     placeholder,
     disabled = false,
     minlength = 2,
-    maxlength = 500,
+    maxlength = 1000,
     name,
     value = "",
     onChange,
 }: IBoardTextarea) {
     return (
-        <div className="my-10 flex w-11/12 flex-col p-10">
+        <div className="my-10 flex flex-col p-10">
             <div className="mb-10 flex">
                 <Typography text={`${label}`} type="Body" />
                 {required && <Typography text="*" type="Body" color="text-warn" />}
