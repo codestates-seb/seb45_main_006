@@ -1,23 +1,23 @@
-import { CATEGORY } from "./common";
+import { CATEGORY_TYPE } from "./common";
+import { CommentDefaultType } from "@type/comment/comment.res.dto";
 
-interface InfoDefaultType {
+export interface InfoDefaultType {
     boardId: number;
     title: string;
     content: string;
     memberId: number;
     nickname: string;
     viewCount: number;
-    category: CATEGORY;
+    category: CATEGORY_TYPE;
     infoBoardStatus: string;
-    commentList: Array<unknown>;
+    commentList: Array<CommentDefaultType>;
     createdAt: string;
-    unpdatedAt: string;
+    modifiedAt: string;
 }
 
 // 정보 게시판 - 리스트 조회
 export interface GetResAllInfo {
-    category?: CATEGORY;
-    search?: string;
+    data: Array<InfoDefaultType>;
 }
 
 // 정보 게시판 - 등록  - status code: 200
@@ -28,3 +28,6 @@ export interface PatchResInfo extends InfoDefaultType {}
 
 // 정보 게시판 - 삭제 (본인이 작성한 글만 가능) - status code: 204
 export interface DeleteResInfo {}
+
+// 정보 게시판 - 조회수 증가 - status code: 200
+export interface PostResViewCount {}

@@ -21,7 +21,7 @@ export const useGetAllMembers = ({ page, stacks, posiions }: GetReqAllMembers) =
     });
 };
 
-// 유저 리스트 - 멤버 상세 조회하기
+// 유저 - 멤버 상세 조회하기
 export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
     return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.detail({ memberId }),

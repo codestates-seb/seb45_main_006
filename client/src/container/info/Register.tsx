@@ -5,8 +5,14 @@ import { usePostInfo } from "@api/info/hook";
 import { useToast } from "@hook/useToast";
 import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 
-import RegisterForm from "@container/info/component/RegisterForm";
-import { CATEGORY } from "@api/info/constant";
+import Typography from "@component/Typography";
+import Button from "@component/Button";
+import BoardInput from "@component/board/Input";
+import BoardContent from "@component/board/BoardContent";
+import Dropdown from "@component/board/Dropdown";
+
+import { infoCategory } from "@component/mockData";
+import { CATEGORY_TO_ENUM } from "@api/info/constant";
 import { CATEGORY_NAME } from "@type/info/common";
 
 function Register() {
@@ -15,6 +21,7 @@ function Register() {
     const { alertWhenEmptyFn } = useCheckEmptyInput();
     const { fireToast } = useToast();
 
+    const [isDropDownShow, setIsDropDownShow] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<CATEGORY_NAME | "">("");
 
     const [title, setTitle] = useState("");
@@ -37,7 +44,7 @@ function Register() {
 
         if (selectedItem !== "") {
             postInfo(
-                { title, content, category: CATEGORY[selectedItem] },
+                { title, content, category: CATEGORY_TO_ENUM[selectedItem] },
                 {
                     onSuccess: () => {
                         navigate("/infos");
@@ -62,18 +69,36 @@ function Register() {
     };
 
     return (
-        <div>
-            <RegisterForm
-                label="자유 게시글"
-                needCategory={true}
-                selectedItem={selectedItem}
-                setSelectedItem={setSelectedItem}
-                title={title}
-                setTitle={titleChangHandler}
-                content={content}
-                setContent={setContent}
-                onClickHandler={onClickHandler}
-            />
+        <div className="m-0 flex justify-center lg:m-80">
+            <div className="flex w-full flex-col rounded-lg bg-info p-8 sm:px-30 sm:py-60 lg:w-11/12">
+                <Typography type="Heading" text="자유게시판 등록" styles="pl-10 self-baseline" />
+
+                <Dropdown
+                    label="카테고리"
+                    required={true}
+                    type="OUTLINED"
+                    isDropDownShow={isDropDownShow}
+                    setIsDropDownShow={setIsDropDownShow}
+                    dropdownList={infoCategory}
+                    selectedItem={selectedItem}
+                    setSelectedItem={setSelectedItem}
+                />
+                <BoardInput
+                    name="title"
+                    label="게시글 제목"
+                    required={true}
+                    placeholder="게시글 제목을 적어주세요."
+                    value={title}
+                    onChange={titleChangHandler}
+                    maxlength={20}
+                />
+                <BoardContent label="게시글 상세내용" required={true} content={content} setContent={setContent} />
+                <div className="flex w-full justify-center">
+                    <Button type="INFO_POINT" styles="mt-20" isFullBtn={false} onClickHandler={onClickHandler}>
+                        <Typography text="등록하기" type="Label" color="text-white" />
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 }
