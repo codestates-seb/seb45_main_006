@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import MDEditor from "@uiw/react-md-editor";
@@ -7,9 +8,14 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePostViewCount } from "@api/info/hook";
+import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
+
+import { useCheckUser } from "@hook/useCheckUser";
+import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
+import Button from "@component/Button";
 import { EditComment, ShowComment } from "@component/board/Comment";
 
 import { CATEGORY_TO_NAME } from "@api/info/constant";
@@ -30,16 +36,66 @@ const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
 };
 
 const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
+    const navigate = useNavigate();
     const { category, title, viewCount, modifiedAt } = info;
     const { data: user } = useGetMemberDetail({ memberId: info.memberId });
+    const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
+
+    const { fireToast, createToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
+    const { mutate: deleteInfo } = useDeleteInfo();
+
+    const onClickDeleteHandler = () => {
+        createToast({
+            content: "해당 게시글을 삭제하시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                deleteInfo(
+                    { infoId: info.boardId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "게시글이 삭제되었습니다!",
+                                isConfirm: false,
+                            });
+                            navigate("/infos");
+                        },
+                        onError: () => {
+                            fireToast({
+                                content: "게시글이 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
+                                isConfirm: false,
+                                isWarning: true,
+                            });
+                        },
+                    },
+                );
+            },
+        });
+    };
+
     return (
         <div className="flex border-b-1 border-borderline">
-            <div className="flex-1">
-                <CategoryTag category={category} />
+            <div className="flex-1 p-8">
+                <div className="flex items-center justify-between">
+                    <CategoryTag category={category} />
+                    {isMine && (
+                        <div className="flex">
+                            <Button
+                                type="PROJECT_POINT"
+                                styles="px-4 py-2 rounded-sm"
+                                onClickHandler={() => navigate(`/infos/${info.boardId}/edit`, { state: info })}
+                            >
+                                <Typography text="수정" type="Description" color="text-white" />
+                            </Button>
+                            <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
+                                <Typography text="삭제" type="Description" color="text-white" />
+                            </Button>
+                        </div>
+                    )}
+                </div>
                 <div className="my-8 flex items-center justify-between">
                     <Typography text={title} type="Label" />
                     {user && (
@@ -62,13 +118,17 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
-            <div className="mb-8 flex w-50 flex-col items-center justify-end">
-                <button onClick={() => setIsLiked(!isLiked)}>
-                    <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                </button>
-                <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                    <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
-                </button>
+            <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">
+                {isLoggedIn && (
+                    <>
+                        <button onClick={() => setIsLiked(!isLiked)}>
+                            <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
+                        </button>
+                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
+                            <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
+                        </button>
+                    </>
+                )}
                 <button>
                     <BsFillShareFill />
                 </button>
