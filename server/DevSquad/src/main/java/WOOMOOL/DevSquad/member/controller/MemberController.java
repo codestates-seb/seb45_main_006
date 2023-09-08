@@ -103,7 +103,9 @@ public class MemberController {
         return new ResponseEntity(new PageResponseDto<>(response, memberProfilePage), HttpStatus.OK);
     }
 
-    // 회원 삭제
+    // 유저 리스트에서 유저 프로필 보기
+
+    // 회원 탈퇴
     @DeleteMapping
     public ResponseEntity deleteMember() {
 

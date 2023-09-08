@@ -31,14 +31,16 @@ public class BlockMemberService {
         // 현재 로그인한 회원의 프로필
         MemberProfile loginMemberProfile = findloginMemberProfile();
 
-        // 자신을 차단할 수 는 없음 혹시 모르니 추가
-        if (loginMemberProfile.getMemberProfileId() == blockMemberId) throw new BusinessLogicException(CANT_SELF_BLOCKING);
+        // 자신을 차단할 수 는 없음
+        if (loginMemberProfile.getMemberProfileId() == blockMemberId)
+            throw new BusinessLogicException(CANT_SELF_BLOCKING);
         // 블랙 리스트 확인하고 중복 차단이 되지 않게
         List<Long> blockMemberLIdList = loginMemberProfile.getBlockMemberList().stream()
                 .map(blockMember -> blockMember.getBlockId())
                 .collect(Collectors.toList());
         // Id로 변환한 블랙리스트에 같은 id 값 있으면 exception
-        if (blockMemberLIdList.contains(blockMemberId)) throw new BusinessLogicException(DUPLICATE_BLOCKING);
+        if (blockMemberLIdList.contains(blockMemberId))
+            throw new BusinessLogicException(DUPLICATE_BLOCKING);
 
         // 차단할 멤버 닉네임 값을 얻기 위해 멤버 객체 생성..
         Member findMember = memberService.findMember(blockMemberId);
@@ -67,14 +69,6 @@ public class BlockMemberService {
 
         // DB 에 차단 멤버 객체 삭제
         blockMemberRepository.delete(findBlockMember);
-
-//        // 현재 로그인한 회원의 블랙리스트 필터링
-//        List<BlockMember> blockMemberList = blockMemberRepository.findByMemberProfileId(memberProfileId)
-//                .stream().filter(blockMember -> !(blockMember.getBlockMemberId() == blockMemberId))
-//                        .collect(Collectors.toList());
-//        // 다시 할당
-//        loginMemberProfile.setBlockMemberList(blockMemberList);
-
 
     }
 

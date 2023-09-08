@@ -55,9 +55,6 @@ public class ChatRoomService {
             sender.addChatRoom(chatRoom);
             receiver.addChatRoom(chatRoom);
 
-            // 1->2 채팅방을 만들었는데 2->1 채팅방 만들었을 때 어떻게 할지?
-
-
             return chatRoomRepository.save(chatRoom);
         }
     }

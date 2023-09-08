@@ -12,7 +12,7 @@ public class ChatRoomDto {
     @Setter
     public static class Post{
 
-        private Long receiverId;
+        private Long memberId;
     }
     @Getter
     @Setter
