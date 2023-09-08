@@ -9,6 +9,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
 import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
+import { usePostComment } from "@api/comment/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
@@ -139,23 +140,54 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
 
 function InfoItem({ info }: { info: InfoDefaultType }) {
     const { commentList } = info;
+
+    const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
+    const { fireToast } = useToast();
+
     const [isOpened, setIsOpened] = useState(false);
     const [comment, setComment] = useState<string>("");
-    // TODO: 내 아이디와 info member 아이디가 같은지 확인
-    // const [isMine, setIsMine] = useState(true);
 
     const { mutate: postViewCount } = usePostViewCount();
+    const { mutate: postComment } = usePostComment();
+
+    const { alertWhenEmptyFn } = useCheckEmptyInput();
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setComment(e.currentTarget.value);
     };
 
-    // TODO: 댓글 등록 api
-    const onSubmitHanlder = () => {};
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "댓글", content: comment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postComment(
+                { board: "information", boardId: info.boardId, content: comment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setComment("");
+                        // TODO: 댓글 리스트 조회
+                    },
+                    // TODO: 에러 분기
+                    onError: (err) => {
+                        console.log(err);
+                        fireToast({
+                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
+                            isConfirm: false,
+                            isWarning: true,
+                        });
+                    },
+                },
+            );
+        }
+    };
 
     const onAddViewCount = () => {
         if (!isOpened) {
-            setIsOpened(false);
             // 열기 버튼 클릭 시 - 조회수 증가 api 요청 -> 요청 성공/실패 처리 X
             postViewCount({ infoId: info.boardId });
         }
@@ -167,25 +199,28 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
             <InfoTitle info={info} />
             <div
                 data-color-mode="light"
-                className={`relative overflow-hidden border-b-1 border-borderline py-8 ${isOpened ? "" : "max-h-300"}`}
+                className={`relative overflow-hidden border-b-1 border-borderline pb-32 pt-12 ${
+                    isOpened ? "" : "max-h-300"
+                }`}
             >
                 <MDEditor.Markdown source={info.content} style={{ whiteSpace: "pre-wrap" }} />
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : "열기"}`}
-                        color="text-blue-500 hover:text-blue-700"
+                        text={`${isOpened ? "닫기" : info.content.length < 300 ? "댓글 열기" : "열기"}`}
+                        color="text-blue-500 hover:text-blue-800"
                     />
                 </button>
             </div>
             {isOpened && (
                 <div className="p-8">
                     <Typography type="Highlight" text={`댓글 ${commentList.length}개`} />
-                    {/* TODO: 로그인한 유저에게만 보이도록 */}
-                    <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
+                    {isLoggedIn && (
+                        <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
+                    )}
                     <div className="my-16">
                         {commentList.map((v) => (
-                            <ShowComment key={v.commentId} comment={v} />
+                            <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
                         ))}
                     </div>
                 </div>

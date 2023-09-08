@@ -134,6 +134,10 @@ const router = createBrowserRouter([
                 element: <InfoRegister />,
             },
             {
+                path: "/infos/:infoId/edit",
+                element: <InfoRegister />,
+            },
+            {
                 path: "/questions/add",
                 element: <QuestionRegister />,
             },
