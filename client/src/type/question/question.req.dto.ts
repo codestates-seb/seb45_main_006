@@ -3,6 +3,10 @@ interface QuestionDefaultType {
     content: string;
 }
 
+interface SpecifyQuestionId {
+    questionId: number;
+}
+
 // 질문 게시판 - 리스트 조회
 export interface GetReqAllQuestion {
     search?: string;
@@ -17,6 +21,7 @@ export interface PatchReqQuestion extends QuestionDefaultType {
 }
 
 // 질문 게시판 - 삭제 (본인이 작성한 글만 가능)
-export interface DeleteReqQuestion {
-    questionId: number;
-}
+export interface DeleteReqQuestion extends SpecifyQuestionId {}
+
+// 질문 게시판 - 조회수 증가
+export interface PostReqViewCount extends SpecifyQuestionId {}

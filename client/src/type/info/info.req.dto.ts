@@ -25,6 +25,7 @@ export interface PatchReqInfo extends InfoDefaultType {
 }
 
 // 정보 게시판 - 삭제 (본인이 작성한 글만 가능)
-export interface DeleteReqInfo {
-    infoId: number;
-}
+export interface DeleteReqInfo extends SpecifyInfoId {}
+
+// 정보 게시판 - 조회수 증가
+export interface PostReqViewCount extends SpecifyInfoId {}
