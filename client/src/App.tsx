@@ -22,9 +22,7 @@ import StudyRegister from "@container/study/Register";
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
-import SetPro from "@container/sign/setProfile";
-import TempSignUp from "@container/sign/TempSignUp";
-
+// import SetPro from "@container/sign/setProfile";
 import TempProfile1 from "@container/sign/TempProfile1";
 import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
@@ -33,7 +31,6 @@ import UserList from "@container/user/List";
 import InfoBoard from "@container/info/Board";
 import InfoRegister from "@container/info/Register";
 import QuestionRegister from "@container/question/Register";
-
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
 // 예시) MyPage 화면
@@ -88,10 +85,10 @@ const router = createBrowserRouter([
                 path: "/signup/3",
                 element: <SignUp3 />,
             },
-            {
-                path: "/setpro",
-                element: <SetPro />,
-            },
+            // {
+            //     path: "/setpro",
+            //     element: <SetPro />,
+            // },
             {
                 path: "/signup/1",
                 element: <SignUp1 />,

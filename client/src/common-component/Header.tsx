@@ -80,11 +80,18 @@ function Header() {
     const AuthBtns = () => {
         return (
             <div className="flex">
-                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/login")}>
-                    <Typography type="Body" text="로그인" color="text-white" />
-                </Button>
-                <Button type="MAIN" isFullBtn={false} onClickHandler={() => navigate("/signup/1")}>
-
+                <SignButton
+                    type="OUTLINED"
+                    styles="px-8 w-80 rounded-sm mr-4 min-w-70"
+                    onClickHandler={() => navigate("/login")}
+                >
+                    <Typography type="Body" text="로그인" />
+                </SignButton>
+                <SignButton
+                    type="FILLED"
+                    styles="px-8 w-80 rounded-sm min-w-70"
+                    onClickHandler={() => navigate("/signup/1")}
+                >
                     <Typography type="Body" text="회원가입" color="text-white" />
                 </SignButton>
             </div>
