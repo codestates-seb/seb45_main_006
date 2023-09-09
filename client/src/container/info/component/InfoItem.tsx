@@ -42,7 +42,7 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
     const { data: user } = useGetMemberDetail({ memberId: info.memberId });
     const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
 
-    const { fireToast, createToast } = useToast();
+    const { fireToast, createToast, errorToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -64,12 +64,9 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                             });
                             navigate("/infos");
                         },
-                        onError: () => {
-                            fireToast({
-                                content: "게시글 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
-                                isConfirm: false,
-                                isWarning: true,
-                            });
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
                         },
                     },
                 );
@@ -142,7 +139,7 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
     const { commentList } = info;
 
     const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
-    const { fireToast } = useToast();
+    const { fireToast, errorToast } = useToast();
 
     const [isOpened, setIsOpened] = useState(false);
     const [comment, setComment] = useState<string>("");
@@ -175,11 +172,7 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
                     // TODO: 에러 분기
                     onError: (err) => {
                         console.log(err);
-                        fireToast({
-                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
+                        errorToast();
                     },
                 },
             );

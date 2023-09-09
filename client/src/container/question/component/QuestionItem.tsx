@@ -28,7 +28,7 @@ const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
     const { data: user } = useGetMemberDetail({ memberId: question.memberId });
     const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
-    const { fireToast, createToast } = useToast();
+    const { fireToast, createToast, errorToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -50,12 +50,9 @@ const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
                             });
                             navigate("/questions");
                         },
-                        onError: () => {
-                            fireToast({
-                                content: "질문 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
-                                isConfirm: false,
-                                isWarning: true,
-                            });
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
                         },
                     },
                 );
