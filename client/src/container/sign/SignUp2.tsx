@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-useless-escape */
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useToast } from "@hook/useToast";
 import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
@@ -19,6 +19,15 @@ import progress from "@assets/sign/progress_bar2.png";
 
 function SignUp2() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirectedEmail = searchParams.get("email");
+
+    useEffect(() => {
+        if (redirectedEmail) {
+            setIsRequestAuthenticate(true);
+            setAuthenticatedEmail(redirectedEmail);
+        }
+    }, [redirectedEmail])
 
     const { errorToast, fireToast, createToast } = useToast();
     const { mutate: postSignUp } = usePostMember();

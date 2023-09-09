@@ -110,6 +110,8 @@
               padding: 12px 0;
               border: 1px solid #e2e2e2;
               border-radius: 4px;
+              text-align: center;
+              letter-spacing: 2px;
             "
           >
             ${authCode}
@@ -125,22 +127,27 @@
             text-align: center;
           "
         >
-          <button
-            style="
-              padding: 12px;
-              letter-spacing: 4px;
-              text-align: center;
-              width: 80%;
-              margin-top: 8px;
-              padding: 6px 0;
-              border: none;
-              background-color: #38bf82;
-              border-radius: 4px;
-              cursor: pointer;
-            "
+          <a
+            style="width: 100%"
+            href="http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/signup/2?email=${email}"
           >
-            <p style="margin: 0; font-size: 18px; color: #ffffff">메일인증</p>
-          </button>
+            <button
+              style="
+                padding: 12px;
+                letter-spacing: 4px;
+                text-align: center;
+                width: 80%;
+                margin-top: 8px;
+                padding: 6px 0;
+                border: none;
+                background-color: #38bf82;
+                border-radius: 4px;
+                cursor: pointer;
+              "
+            >
+              <p style="margin: 0; font-size: 18px; color: #ffffff">메일인증</p>
+            </button>
+          </a>
         </div>
       </div>
     </div>

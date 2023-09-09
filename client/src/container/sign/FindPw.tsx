@@ -198,6 +198,7 @@ const RequestEmailAuthenticate = ({
 function FindPw() {
     const [searchParams] = useSearchParams();
     const isRedirected = searchParams.get("isRedirected");
+    const redirectedEmail = searchParams.get("email");
     // const randomId = getItemFromStorage("randomId");
     // const isAuthenticatedEmail = randomId && searchParams.get("randomId") === randomId;
 
@@ -245,7 +246,7 @@ function FindPw() {
     if (isRedirected) {
         return (
             <SignLayout title="비밀번호 재설정">
-                <FindPwContent email={email} />
+                <FindPwContent email={redirectedEmail || ""} />
             </SignLayout>
         );
     }
