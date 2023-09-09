@@ -19,6 +19,7 @@ export const COMMON_API_PATH = {
     AUTH: {
         FOR_SIGNUP: "/email/auth",
         FOR_FIND_PW: "/email/findPassword",
+        FOR_FIND_PW_AUTH: "/email/authPassword",
     },
     MEMBER: {
         PATH: "/members",

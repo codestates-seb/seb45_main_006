@@ -30,7 +30,7 @@ export const postAuthForFindPw = async (requestObj: PostReqAuthForFindPw) => {
 
 // 이메일 인증 확인 - 비밀번호 찾기
 export const getAuthForFindPw = async (requestObj: GetReqAuthForFindPw) => {
-    const url = `${COMMON_API_PATH.AUTH.FOR_FIND_PW}`;
+    const url = `${COMMON_API_PATH.AUTH.FOR_FIND_PW_AUTH}`;
     const { data } = await commonApi.get(url, { data: requestObj });
     return data;
 };
