@@ -9,10 +9,23 @@ interface ISignInput extends IInput {
     regex?: RegExp;
 }
 
-function SignInput({ name, label, description, type, value, onChange, placeholder, regex }: ISignInput) {
+function SignInput({
+    name,
+    label,
+    description,
+    type,
+    value,
+    onChange,
+    placeholder,
+    regex,
+    disabled = false,
+}: ISignInput) {
     const [isNeededWarn, setIsNeededWarn] = useState<boolean>(false);
 
     useEffect(() => {
+        if (name === "password" && regex && value && typeof value === "string") {
+            console.log(value, regex.test(value));
+        }
         if (regex && value && typeof value === "string" && !regex.test(value)) {
             setIsNeededWarn(true);
         } else {
@@ -21,19 +34,22 @@ function SignInput({ name, label, description, type, value, onChange, placeholde
     }, [regex, value]);
 
     return (
-        <div className="mb-18 flex flex-col">
-            <div className="mb-4 flex items-center">
-                <div className="w-120 p-4">
+        <div className="mb-8 flex w-full flex-col">
+            <div className="mb-4 flex w-full items-center">
+                <div className="min-w-88 p-4">
                     <Typography type="SmallLabel" text={label} styles="font-bold" />
                 </div>
                 <Input
                     name={name}
-                    disabled={false}
+                    disabled={disabled}
                     type={type}
                     value={value}
                     onChange={onChange}
+                    maxlength={100}
                     placeholder={placeholder}
-                    borderStyle={`rounded-none outline-none focus:outline-none ${isNeededWarn ? "border-warn" : ""}`}
+                    borderStyle={`flex-1 rounded-none outline-none focus:outline-none ${
+                        isNeededWarn ? "border-warn" : ""
+                    }`}
                 />
             </div>
             {description && isNeededWarn ? (
