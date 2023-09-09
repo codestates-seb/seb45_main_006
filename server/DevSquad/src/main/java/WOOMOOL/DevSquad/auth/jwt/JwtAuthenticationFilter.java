@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 리프레시 토큰 DB에 저장
         RefreshToken token = RefreshToken.builder()
                 .username(username)
-                .jws(refreshToken)
+                .refreshToken(refreshToken)
                 .build();
 
         refreshTokenRepository.save(token);

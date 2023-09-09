@@ -1,33 +1,30 @@
-package WOOMOOL.DevSquad.blockmember.entity;
+package WOOMOOL.DevSquad.block.entity;
 
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class BlockMember {
+public class Block {
 
-    public BlockMember(Long blockId,String reportContent,String nickname){
-        this.blockId = blockId;
+    public Block(Long blockMemberId, String reportContent, String nickname){
+        this.blockMemberId = blockMemberId;
         this.reportContent = reportContent;
         this.blockNickname = nickname;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long blockMemberId;
+    private Long blockId;
 
     @Column(nullable = false)
-    private Long blockId;
+    private Long blockMemberId;
 
     @Column(nullable = false)
     private String reportContent;

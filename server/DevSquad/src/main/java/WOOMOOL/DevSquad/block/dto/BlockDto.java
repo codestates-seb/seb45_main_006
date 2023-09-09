@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.blockmember.dto;
+package WOOMOOL.DevSquad.block.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class BlockMemberDto {
+public class BlockDto {
 
     private long blockMemberId;
     @NotBlank

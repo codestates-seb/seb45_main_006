@@ -1,12 +1,17 @@
 package WOOMOOL.DevSquad.auth.jwt;
 
+import WOOMOOL.DevSquad.auth.handler.MemberAuthenticationEntryPoint;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,14 +22,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static WOOMOOL.DevSquad.exception.ExceptionCode.*;
+
+@RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
-
-    public JwtVerificationFilter(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberAuthority = memberAuthority;
-    }
 
     // 인가 과정 filter
     @Override
@@ -32,12 +35,12 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
-        } catch (SignatureException sign) {
-            request.setAttribute("exception", sign);
-        } catch (ExpiredJwtException expire) {
-            request.setAttribute("exception", expire);
+        } catch (ExpiredJwtException e) {
+            throw new BusinessLogicException(TOKEN_EXPIRED);
+        } catch (SignatureException e) {
+            throw new BusinessLogicException(INVALID_TOKEN);
         } catch (Exception e) {
-            request.setAttribute("exception", e);
+            throw new BusinessLogicException(BAD_REQUEST);
         }
 
         filterChain.doFilter(request, response);
@@ -68,5 +71,4 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
 }

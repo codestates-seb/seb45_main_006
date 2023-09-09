@@ -2,7 +2,6 @@ package WOOMOOL.DevSquad.member.service;
 
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
-import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
@@ -13,16 +12,13 @@ import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
-import WOOMOOL.DevSquad.projectboard.service.ProjectService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
-import WOOMOOL.DevSquad.studyboard.service.StudyService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -193,6 +189,7 @@ public class MemberService {
 
     // 토큰으로 멤버객체 찾기
     public Member findMemberFromToken() {
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
 
@@ -251,8 +248,8 @@ public class MemberService {
 
     private List<Long> getBlockMemberId() {
         // 블랙리스트 멤버에 있는 memberId를 List로 추출
-        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockMemberList().stream()
-                .map(blockMember -> blockMember.getBlockId())
+        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockList().stream()
+                .map(blockMember -> blockMember.getBlockMemberId())
                 .collect(Collectors.toList());
 
         return blockMemberList;

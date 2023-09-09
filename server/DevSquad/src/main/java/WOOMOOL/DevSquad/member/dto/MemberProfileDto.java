@@ -103,7 +103,7 @@ public class MemberProfileDto {
 
         private Set<String> stack;
 
-        private List<String> blockMemberList;
+        private List<Long> blockMemberList;
 
         private LocalDateTime modifiedAt;
 

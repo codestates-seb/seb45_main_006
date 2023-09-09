@@ -50,8 +50,8 @@ public interface MemberMapper {
                         .map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 memberProfile.getStackTags().stream()
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
-                memberProfile.getBlockMemberList().stream()
-                        .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
+                memberProfile.getBlockList().stream()
+                        .map(blockMember -> blockMember.getBlockMemberId()).collect(Collectors.toList()),
                 memberProfile.getModifiedAt()
         );
     }
