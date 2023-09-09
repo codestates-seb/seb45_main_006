@@ -1,4 +1,4 @@
-import { CommentDefaultType, CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
+import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 export interface AnswerDefaultType {
     answerId: number;
@@ -10,7 +10,7 @@ export interface AnswerDefaultType {
     answerStatus: "ANSWER_POSTED" | "ANSER_DELETED";
     createdAt: string;
     modifiedAt: string;
-    commentList: Array<CommentDefaultType>;
+    commentList: Array<CommentDefaultTypeWithRe>;
 }
 
 // 질문 게시판 - 답변 등록 - status code: 201

@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { getRandomIDNotTracing } from "@util/random-helper";
 
 export type ITextType =
     | "Logo"
@@ -23,10 +24,11 @@ function Text({
 }) {
     const renderText = (textValue: string) => {
         const colorAndStyle = `${color ? color : ""} ${styles ? styles : ""}`;
+        const key = getRandomIDNotTracing();
 
         if (type === "Logo") {
             return (
-                <p key={textValue} className={`font-ganpan text-40 font-bold ${colorAndStyle}`}>
+                <p key={key} className={`font-ganpan text-40 font-bold ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -34,7 +36,7 @@ function Text({
 
         if (type === "Heading") {
             return (
-                <p key={textValue} className={`text-32 font-bold ${colorAndStyle}`}>
+                <p key={key} className={`text-32 font-bold ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -42,7 +44,7 @@ function Text({
 
         if (type === "SubHeading") {
             return (
-                <p key={textValue} className={`text-24 font-bold ${colorAndStyle}`}>
+                <p key={key} className={`text-24 font-bold ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -50,7 +52,7 @@ function Text({
 
         if (type === "Label") {
             return (
-                <p key={textValue} className={`font-spoqa text-20 font-medium ${colorAndStyle}`}>
+                <p key={key} className={`font-spoqa text-20 font-medium ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -58,7 +60,7 @@ function Text({
 
         if (type === "Highlight") {
             return (
-                <p key={textValue} className={`text-base font-semibold ${colorAndStyle}`}>
+                <p key={key} className={`text-base font-semibold ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -66,7 +68,7 @@ function Text({
 
         if (type === "Body") {
             return (
-                <p key={textValue} className={`text-base ${colorAndStyle}`}>
+                <p key={key} className={`text-base ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -74,7 +76,7 @@ function Text({
 
         if (type === "SmallLabel") {
             return (
-                <p key={textValue} className={`text-sm ${colorAndStyle}`}>
+                <p key={key} className={`text-sm ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -82,7 +84,7 @@ function Text({
 
         if (type === "Description") {
             return (
-                <p key={textValue} className={`text-xs ${colorAndStyle}`}>
+                <p key={key} className={`text-xs ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
