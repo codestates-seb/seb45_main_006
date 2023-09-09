@@ -3,9 +3,14 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { getNicknameDuplicated, postMember, postLogin, deleteLogout, postNewAccessToken } from "@api/sign/api";
 import { signKeyFactory } from "@api/sign/signKeyFactory";
-import { GetReqNicknameDuplicated, PostReqMember, PostReqLogin, DeleteReqLogout } from "@type/sign/sign.req.dto";
 import {
-    GetResNicknameDuplicated,
+    GetReqNicknameDuplicated as GetReqNickname,
+    PostReqMember,
+    PostReqLogin,
+    DeleteReqLogout,
+} from "@type/sign/sign.req.dto";
+import {
+    GetResNicknameDuplicated as GetResNickname,
     PostResMember,
     PostResLogin,
     DeleteResLogout,
@@ -18,15 +23,11 @@ export const usePostMember = () => {
 };
 
 // 닉네임 중복 체크
-export const useGetNicknameDuplicated = ({ nickname }: GetReqNicknameDuplicated) => {
-    return useQuery<
-        AxiosResponse<GetResNicknameDuplicated>,
-        AxiosError,
-        GetResNicknameDuplicated,
-        [string, GetReqNicknameDuplicated]
-    >({
+export const useGetNicknameDuplicated = ({ nickname }: GetReqNickname) => {
+    return useQuery<AxiosResponse<GetResNickname>, AxiosError, GetResNickname, [string, GetReqNickname]>({
         queryKey: signKeyFactory.nicknameDuplicated({ nickname }),
         queryFn: () => getNicknameDuplicated({ nickname }),
+        enabled: false,
     });
 };
 
