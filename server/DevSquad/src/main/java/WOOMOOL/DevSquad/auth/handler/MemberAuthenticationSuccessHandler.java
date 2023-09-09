@@ -23,6 +23,7 @@ import java.util.Map;
 public class MemberAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final MemberRepository memberRepository;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
