@@ -1,7 +1,7 @@
-package WOOMOOL.DevSquad.auth.controller;
+package WOOMOOL.DevSquad.auth.jwt.controller;
 
-import WOOMOOL.DevSquad.auth.dto.LogoutDto;
-import WOOMOOL.DevSquad.auth.service.JwtService;
+import WOOMOOL.DevSquad.auth.jwt.dto.LogoutDto;
+import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

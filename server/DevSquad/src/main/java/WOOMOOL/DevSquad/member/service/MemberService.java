@@ -193,7 +193,7 @@ public class MemberService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
 
-        // 토큰으로 멤버를 못찾으면 토큰이 잘못된거니까 NO AUTH가 좀 더 어울릴 듯?
+        // 토큰에서 걸러져서 굳이 필요 없을 듯..?
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(NO_AUTHORIZATION));
         isDeletedMember(findMember);
 

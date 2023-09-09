@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.auth.service;
+package WOOMOOL.DevSquad.auth.jwt.service;
 
 
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
