@@ -66,7 +66,7 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                         },
                         onError: () => {
                             fireToast({
-                                content: "게시글이 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
+                                content: "게시글 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
                                 isConfirm: false,
                                 isWarning: true,
                             });

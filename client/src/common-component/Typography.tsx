@@ -88,9 +88,10 @@ function Text({
             );
         }
     };
+
     return (
         <>
-            {text.includes("\n")
+            {text && text.includes("\n")
                 ? text.split("\n").map((v) => {
                       return renderText(v);
                   })
