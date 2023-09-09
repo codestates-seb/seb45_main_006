@@ -16,6 +16,7 @@ public interface QuestionBoardMapper {
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
     QuestionBoard QuestionBoardPatchDtoToQuestionBoard(QuestionBoardDto.Patch request);
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
+    @Mapping(source = "memberProfile.nickname", target = "nickname")
     QuestionBoardDto.Response QuestionBoardToQuestionBoardResponseDto(QuestionBoard questionBoard);
     List<QuestionBoardDto.Response> QuestionBoardListToQuestionBoardResponseDtoList(List<QuestionBoard> questionBoardList);
 

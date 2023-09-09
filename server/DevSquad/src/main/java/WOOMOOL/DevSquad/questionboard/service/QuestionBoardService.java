@@ -34,7 +34,7 @@ public class QuestionBoardService {
     public QuestionBoard updateQuestionBoard(QuestionBoard questionBoard) {
         QuestionBoard findQuestionBoard = findVerifiedQuestionBoard(questionBoard.getBoardId());
 
-        verifiedIsWriter(memberService.findMemberFromToken().getMemberId(), findQuestionBoard.getMemberProfile().getMemberProfileId());
+        verifiedIsWriter(findQuestionBoard);
 
         Optional.ofNullable(questionBoard.getTitle()).ifPresent(title -> findQuestionBoard.setTitle(title));
         Optional.ofNullable(questionBoard.getContent()).ifPresent(content -> findQuestionBoard.setContent(content));
@@ -57,7 +57,7 @@ public class QuestionBoardService {
     public void deleteQuestionBoard(Long boardId) {
         QuestionBoard findQuestionBoard = findVerifiedQuestionBoard(boardId);
 
-        verifiedIsWriter(memberService.findMemberFromToken().getMemberId(), findQuestionBoard.getMemberProfile().getMemberProfileId());
+        verifiedIsWriter(findQuestionBoard);
 
         findQuestionBoard.setQuestionBoardStatus(QuestionBoard.QuestionBoardStatus.QUESTIONBOARD_DELETED);
 
@@ -76,7 +76,9 @@ public class QuestionBoardService {
         questionBoard.setViewCount(questionBoard.getViewCount()+1);
         questionBoardRepository.save(questionBoard);
     }
-    public void verifiedIsWriter(Long currentId ,Long writerId) {
+    public void verifiedIsWriter(QuestionBoard questionBoard) {
+        long currentId = memberService.findMemberFromToken().getMemberId();
+        long writerId = questionBoard.getMemberProfile().getMemberProfileId();
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
     }

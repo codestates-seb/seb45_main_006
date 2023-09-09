@@ -87,11 +87,7 @@ function UserCardModal({ memberId, closeModal }: { memberId: number; closeModal:
     if (isError) {
         closeModal();
         fireToast({
-            content: (
-                <div className="flex items-center">
-                    <Typography type="Highlight" text={"삭제/차단 등의 이유로 조회할 수 없는 사용자입니다!"} />
-                </div>
-            ),
+            content: <Typography type="Highlight" text={"삭제/차단 등의 이유로 조회할 수 없는 사용자입니다!"} />,
             isConfirm: false,
         });
         return;

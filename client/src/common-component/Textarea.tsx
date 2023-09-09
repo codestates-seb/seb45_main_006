@@ -1,18 +1,18 @@
-import Typography from "./Typography";
+import Typography from "@component/Typography";
 
 export interface ITextarea {
-    placeholder: string;
+    placeholder?: string;
     disabled?: boolean;
     minlength?: number;
     maxlength?: number;
     name?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    borderStyle: string;
+    borderStyle?: string;
 }
 
 function Textarea({
-    placeholder,
+    placeholder = "",
     disabled = false,
     minlength = 2,
     maxlength = 1000,
