@@ -14,6 +14,8 @@ public class MessageDto {
     @Getter
     @Setter
     public static class Post {
+        private String accessToken;
+        private String refreshToken;
         private String content;
     }
 
@@ -22,7 +24,7 @@ public class MessageDto {
     @AllArgsConstructor
     public static class Response{
 
-        private String nickname;
+        private Long memberId;
         private String content;
         private LocalDateTime createAt;
     }

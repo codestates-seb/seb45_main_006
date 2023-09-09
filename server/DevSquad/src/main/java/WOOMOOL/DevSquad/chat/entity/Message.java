@@ -17,7 +17,7 @@ public class Message {
     private Long messageId;
 
     @Column
-    private String nickname;
+    private Long senderId;
 
     @Column
     private String content;

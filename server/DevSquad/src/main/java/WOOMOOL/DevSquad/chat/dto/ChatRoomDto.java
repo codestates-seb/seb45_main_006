@@ -20,7 +20,7 @@ public class ChatRoomDto {
     public static class listResponse{
 
         private Long chatRoomId;
-        private List<String> nickname;
+        private List<Long> membersId;
     }
 
     @Getter
@@ -29,7 +29,7 @@ public class ChatRoomDto {
     public static class detailResponse{
 
         private Long chatRoomId;
-        private List<String> nickname;
+        private List<Long> membersId;
         private List<MessageDto.Response> messageList;
 
     }

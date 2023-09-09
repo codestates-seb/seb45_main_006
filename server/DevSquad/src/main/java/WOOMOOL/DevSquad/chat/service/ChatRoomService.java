@@ -48,7 +48,6 @@ public class ChatRoomService {
            throw new BusinessLogicException(DUPLICATE_CHAT_ROOM);
         } else {
 
-
             ChatRoom chatRoom = new ChatRoom();
             // 유저와 채팅방 정보 서로 저장
             chatRoom.joinChatRoom(sender, receiver);
