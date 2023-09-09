@@ -13,7 +13,7 @@ function SignButton({ type, children, styles, onClickHandler }: ISignButton) {
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`flex h-40 w-145 items-center justify-center rounded px-30 ${
+            className={`flex h-40 w-fit min-w-145 items-center justify-center rounded px-30 ${
                 type === "OUTLINED" ? "border-1 border-button-border" : ""
             } ${type === "FILLED" ? "bg-button-next" : ""} ${styles}`}
         >

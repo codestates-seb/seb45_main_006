@@ -1,0 +1,32 @@
+.w-md-editor-input {
+    width: 100% !important;
+    height: 50% !important;
+}
+
+.w-md-editor-preview {
+    width: 100% !important;
+    top: 50% !important;
+    border-top: 1px solid #E2E2E2;
+}
+
+.wmde-markdown > p {
+    font-size: 14px;
+}
+
+@media (min-width: 960px) {
+    .w-md-editor-input {
+        width: 50% !important;
+        height: 100% !important;
+    }
+
+    .w-md-editor-preview {
+        width: 50% !important;
+        top: 0 !important;
+        border-top: none;
+    }
+
+    .wmde-markdown > p {
+        font-size: 16px;
+    }
+}
+
