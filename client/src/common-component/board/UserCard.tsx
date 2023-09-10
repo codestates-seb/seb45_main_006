@@ -1,13 +1,17 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Typography from "@component/Typography";
 import Modal from "@component/Modal";
 import UserCardModal from "@container/user/component/UserCardModal";
 
 import { useScrollControll } from "@hook/userScrollControl";
+import { useCheckUser } from "@hook/useCheckUser";
+import { useToast } from "@hook/useToast";
 
 import { OneMember } from "@type/member/member.res.dto";
 
 import IconGithub from "@assets/sign/icon_github.png";
-import { useState } from "react";
 
 export const UserImage = ({ nickname, profilePicture }: { nickname: string; profilePicture: string }) => (
     <img className="h-full w-full" src={profilePicture} alt={`${nickname}의 프로필 이미지`} />
@@ -44,12 +48,31 @@ const UserInfo = ({ user, type }: { user: OneMember; type: "stack" | "position" 
 };
 
 function UserCard({ user, setBlockedMemberId }: { user: OneMember; setBlockedMemberId: (v: number) => void }) {
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState<boolean>(false);
     // 열려있는 모달 위에 모달
     const [isUpperOpen, setIsUpperOpen] = useState<boolean>(false);
+
     const { lockScroll, openScroll } = useScrollControll();
+    const { isLoggedIn, isMine } = useCheckUser({ memberId: user.memberId });
+    const { reqLoginToUserToast, createToast } = useToast();
 
     const showModal = () => {
+        if (!isLoggedIn) {
+            reqLoginToUserToast();
+            return;
+        }
+
+        if (isMine) {
+            createToast({
+                content: "내 유저 카드입니다. 마이페이지로 이동하시겠습니까?",
+                isConfirm: true,
+                callback: () => navigate("/members/my"),
+            });
+            return;
+        }
+
         setIsOpen(true);
         lockScroll();
     };
