@@ -2,9 +2,14 @@ import Typography from "@component/Typography";
 import ProjectList from "@container/main/component/ProjectList";
 import StudyList from "@container/main/component/StudyList";
 import { useState } from "react";
+import { useGetAllProjects } from "@api/project/hook";
+import { useGetAllStudies } from "@api/study/hook";
 
 const ChangeComponent = () => {
     const [selectedComponent, setSelectedComponent] = useState("project");
+    const { data: projectsList } = useGetAllProjects();
+    const { data: studiesList } = useGetAllStudies();
+
     const handleProjectClick = () => {
         setSelectedComponent("project");
     };
@@ -33,7 +38,11 @@ const ChangeComponent = () => {
                     스터디
                 </span>
             </div>
-            {selectedComponent === "project" ? <ProjectList /> : <StudyList />}
+            <div className="flex">
+                {selectedComponent === "project"
+                    ? Array.isArray(projectsList) && projectsList.map((v) => <ProjectList project={v} />)
+                    : Array.isArray(studiesList) && studiesList.map((v) => <StudyList study={v} />)}
+            </div>
         </>
     );
 };
