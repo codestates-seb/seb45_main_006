@@ -26,6 +26,7 @@ export const COMMON_API_PATH = {
         LIST: "/members/list",
         MY_LIST: "/members/list",
         CHANGE_PASSWORD: "/members/password",
+        BLOCK: "/block",
     },
     INFO: {
         PATH: "/information",
