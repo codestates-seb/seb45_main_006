@@ -33,6 +33,7 @@ function Register() {
             setTitle(prevTitle);
             setContent(prevContent);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
 
     const titleChangHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -41,6 +41,7 @@ function Register() {
             setContent(prevContent);
             setSelectedItem(CATEGORY_TO_NAME[category]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
 
     const titleChangHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

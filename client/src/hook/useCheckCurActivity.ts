@@ -25,6 +25,8 @@ export const useCheckCurActivity = ({ location }: { location: Location }): { cur
         } else {
             setCurActivity("REGISTER");
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return { curActivity };

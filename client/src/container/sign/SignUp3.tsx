@@ -15,7 +15,7 @@ function SignUp3() {
     };
     return (
         <SignLayout title="설희님의 회원가입을" subTitle="축하합니다 🎉" progressImage={progress}>
-            <div className="flex-column justify-center pb-50">
+            <div className="flex-col justify-center pb-50">
                 <div className="flex justify-center pb-10">
                     <Typography type="Highlight" text="잠깐! 알고 계신가요?"></Typography>
                 </div>
@@ -35,7 +35,7 @@ function SignUp3() {
                 </div>
             </div>
 
-            <div className="aline-center flex flex-col items-center">
+            <div className="flex flex-col items-center">
                 <button
                     onClick={handleClickSetPro}
                     className="m-auto flex w-230 justify-center rounded bg-button-next p-9"

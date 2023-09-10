@@ -23,9 +23,6 @@ function SignInput({
     const [isNeededWarn, setIsNeededWarn] = useState<boolean>(false);
 
     useEffect(() => {
-        if (name === "password" && regex && value && typeof value === "string") {
-            console.log(value, regex.test(value));
-        }
         if (regex && value && typeof value === "string" && !regex.test(value)) {
             setIsNeededWarn(true);
         } else {
