@@ -47,7 +47,6 @@ export default function Register() {
 
     const { mutate: postProject } = usePostProject();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleSubmit = async () => {
         try {
             postProject(inputs, {
