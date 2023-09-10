@@ -138,7 +138,7 @@ function QuestionItem({ question }: { question: QuestionDefaultType }) {
     };
 
     return (
-        <div className="border-1 border-borderline p-8">
+        <div className="mb-32 border-1 border-borderline p-8">
             <QuestionTitle question={question} />
             <div
                 data-color-mode="light"

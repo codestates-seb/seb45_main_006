@@ -188,7 +188,7 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
     };
 
     return (
-        <div className="border-1 border-borderline p-8">
+        <div className="mb-32 border-1 border-borderline p-8">
             <InfoTitle info={info} />
             <div
                 data-color-mode="light"

@@ -3,6 +3,7 @@ export type GetReqAllMembers = {
     page: number;
     posiions?: string;
     stacks?: string;
+    blockedMemberId: number;
 };
 
 // 유저 리스트 - 멤버 상세 조회하기
@@ -26,6 +27,17 @@ export type PatchReqMember = {
     listEnroll: number;
     position: Array<string>;
     stack: Array<string>;
+};
+
+// 유저리스트 - 차단하기
+export type PostReqBlockMember = {
+    blockMemberId: number;
+    reportContent: string;
+};
+
+// 마이페이지 - 차단 해제
+export type DeleteReqBlockMember = {
+    memberId: number;
 };
 
 // 헤더 - 로그아웃

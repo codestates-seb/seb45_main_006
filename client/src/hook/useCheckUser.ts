@@ -21,13 +21,14 @@ export const useCheckUser = ({ memberId, comparedMemberId }: { memberId: number;
         } else {
             setIsMine(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn, memberId]);
 
     useEffect(() => {
         if (memberId && comparedMemberId) {
             setIsSameUser(memberId === comparedMemberId);
         }
-    }, [comparedMemberId]);
+    }, [comparedMemberId, memberId]);
 
     return { isLoggedIn, isMine, isSameUser };
 };
