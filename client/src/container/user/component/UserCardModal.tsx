@@ -1,8 +1,12 @@
-import Typography from "@component/Typography";
-import { UserNickname, UserImage } from "./UserCard";
-
 import { useGetMemberDetail } from "@api/member/hook";
 import { useToast } from "@hook/useToast";
+
+import { UserNickname, UserImage } from "@component/board/UserCard";
+import UserBlockModal from "./UserBlockModal";
+
+import Typography from "@component/Typography";
+import Button from "@component/Button";
+import Modal from "@component/Modal";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
 
@@ -11,15 +15,13 @@ import { PiUserFocus, PiBookOpenTextDuotone } from "react-icons/pi";
 import { GoProjectRoadmap } from "react-icons/go";
 import { BiBookmark } from "react-icons/bi";
 
-import Button from "@component/Button";
-
-const UserBtns = () => {
+const UserBtns = ({ setIsOpen }: { setIsOpen: (v: boolean) => void }) => {
     return (
         <div className="mb-20 flex w-full justify-end">
             <Button type="PROJECT_POINT">
                 <Typography type="Highlight" text="채팅하기" color="text-white" />
             </Button>
-            <Button type="WARN">
+            <Button type="WARN" onClickHandler={() => setIsOpen(true)}>
                 <Typography type="Highlight" text="차단하기" color="text-white" />
             </Button>
         </div>
@@ -80,7 +82,19 @@ const TempStudy = () => (
     </div>
 );
 
-function UserCardModal({ memberId, closeModal }: { memberId: number; closeModal: () => void }) {
+function UserCardModal({
+    memberId,
+    closeModal,
+    isUpperOpen,
+    setIsUpperOpen,
+    setBlockedMemberId,
+}: {
+    memberId: number;
+    closeModal: () => void;
+    isUpperOpen: boolean;
+    setIsUpperOpen: (v: boolean) => void;
+    setBlockedMemberId: (v: number) => void;
+}) {
     const { data: user, isError } = useGetMemberDetail({ memberId });
     const { fireToast } = useToast();
 
@@ -103,7 +117,7 @@ function UserCardModal({ memberId, closeModal }: { memberId: number; closeModal:
                             <UserInfo type="stack" user={user} />
                             <UserInfo type="position" user={user} />
                         </div>
-                        <UserBtns />
+                        <UserBtns setIsOpen={setIsUpperOpen} />
                     </div>
                     <div className="flex flex-1 items-center justify-center p-20">
                         <div className="max-w-300 flex-1 overflow-hidden rounded-xl border-1 border-borderline">
@@ -120,8 +134,8 @@ function UserCardModal({ memberId, closeModal }: { memberId: number; closeModal:
                             styles="font-bold ml-8"
                         />
                     </div>
-                    {user.projectList.map(() => (
-                        <TempProject />
+                    {user.projectList.map((_, i) => (
+                        <TempProject key={`project-${i}`} />
                     ))}
 
                     <div className="mt-32 flex items-center">
@@ -132,10 +146,15 @@ function UserCardModal({ memberId, closeModal }: { memberId: number; closeModal:
                             styles="font-bold ml-8"
                         />
                     </div>
-                    {user.studyList.map(() => (
-                        <TempStudy />
+                    {user.studyList.map((_, i) => (
+                        <TempStudy key={`study-${i}`} />
                     ))}
                 </div>
+                {user && isUpperOpen ? (
+                    <Modal upperModal={isUpperOpen} closeModal={() => setIsUpperOpen(false)}>
+                        <UserBlockModal user={user} closeModal={closeModal} setBlockedMemberId={setBlockedMemberId} />
+                    </Modal>
+                ) : null}
             </>
         );
     }

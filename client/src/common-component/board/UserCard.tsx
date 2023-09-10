@@ -1,6 +1,6 @@
 import Typography from "@component/Typography";
 import Modal from "@component/Modal";
-import UserCardModal from "@component/board/UserCardModal";
+import UserCardModal from "@container/user/component/UserCardModal";
 
 import { useScrollControll } from "@hook/userScrollControl";
 
@@ -43,8 +43,10 @@ const UserInfo = ({ user, type }: { user: OneMember; type: "stack" | "position" 
     );
 };
 
-function UserCard({ user }: { user: OneMember }) {
+function UserCard({ user, setBlockedMemberId }: { user: OneMember; setBlockedMemberId: (v: number) => void }) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    // 열려있는 모달 위에 모달
+    const [isUpperOpen, setIsUpperOpen] = useState<boolean>(false);
     const { lockScroll, openScroll } = useScrollControll();
 
     const showModal = () => {
@@ -53,6 +55,7 @@ function UserCard({ user }: { user: OneMember }) {
     };
 
     const closeModal = () => {
+        setIsUpperOpen(false);
         setIsOpen(false);
         openScroll();
     };
@@ -72,8 +75,14 @@ function UserCard({ user }: { user: OneMember }) {
                 <UserInfo user={user} type="position" />
             </figure>
             {isOpen && (
-                <Modal closeModal={closeModal}>
-                    <UserCardModal memberId={user.memberId} closeModal={closeModal} />
+                <Modal closeModal={closeModal} upperModal={isUpperOpen}>
+                    <UserCardModal
+                        memberId={user.memberId}
+                        closeModal={closeModal}
+                        isUpperOpen={isUpperOpen}
+                        setIsUpperOpen={setIsUpperOpen}
+                        setBlockedMemberId={setBlockedMemberId}
+                    />
                 </Modal>
             )}
         </>
