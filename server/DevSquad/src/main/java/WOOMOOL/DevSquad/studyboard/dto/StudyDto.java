@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class StudyDto {
     @Getter
@@ -22,7 +23,6 @@ public class StudyDto {
         @Positive(message = "모집 인원을 작성해 주세요.")
         private Integer recruitNum;
 
-        private boolean recruitStatus;
     }
 
     @Getter @Setter
@@ -38,19 +38,19 @@ public class StudyDto {
 //        @Positive(message = "모집 인원을 작성해 주세요.")
         private Integer recruitNum;
 
-        private boolean recruitStatus;
+        private Study.StudyStatus studyStatus;
     }
 
     @Getter @Setter
     public static class previewResponseDto {
-//        private Long studyId;
         private Long boardId;
         private String title;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
-        private boolean recruitStatus;
+        private Study.StudyStatus studyStatus;
         private int viewCount;
+        private MemberProfileDto.listResponse memberProfile;
     }
 
     @Getter @Setter

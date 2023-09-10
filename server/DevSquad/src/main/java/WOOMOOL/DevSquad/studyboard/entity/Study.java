@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+//@DiscriminatorValue("STUDY")
 public class Study extends Board {
 
     @Column(nullable = false)
@@ -31,9 +32,6 @@ public class Study extends Board {
 
     @Column(nullable = false)
     private Integer recruitNum;
-
-    @Column(nullable = false)
-    private boolean recruitStatus = false;
 
     @Column(nullable = false)
     private int viewCount = 0;

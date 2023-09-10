@@ -17,6 +17,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+//@DiscriminatorValue("PROJECT")
 public class Project extends Board {
 
     @Column(nullable = false)
@@ -41,9 +42,6 @@ public class Project extends Board {
 
     @Column(nullable = false)
     private Integer recruitNum;
-
-    @Column(nullable = false)
-    private boolean recruitStatus = false;
 
     @Column(nullable = false)
     private int viewCount = 0;

@@ -50,6 +50,7 @@ public class StudyController {
         return new ResponseEntity<>(study, HttpStatus.OK);
     }
 
+    // 스터디 수정
     @PatchMapping("/{boardId}")
     public ResponseEntity updateStudy(@PathVariable("boardId") @Positive Long boardId,
                                       @Valid @RequestBody StudyDto.PatchDto patchDto) {
@@ -57,6 +58,17 @@ public class StudyController {
         Study study = studyService.updateStudy(mapper.patchDtoToEntity(patchDto));
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(study), HttpStatus.OK);
+    }
+
+    // 모집 마감
+    @PatchMapping("/{boardId}/close")
+    public ResponseEntity closeProject(@PathVariable("boardId") @Positive Long boardId) {
+
+        Study study = studyService.getStudy(boardId);
+
+        studyService.closeStudy(study);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")

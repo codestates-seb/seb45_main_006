@@ -8,15 +8,19 @@ import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @Transactional
+@EnableScheduling
 public class StudyService {
     private final StudyRepository studyRepository;
     private final MemberService memberService;
@@ -47,6 +51,7 @@ public class StudyService {
         return studyPage.getContent();
     }
 
+    // 스터디 수정
     public Study updateStudy(Study study) {
 
         // 작성자, 로그인 멤버 일치 여부 확인
@@ -58,12 +63,28 @@ public class StudyService {
                 .ifPresent(content -> findStudy.setContent(content));
         Optional.ofNullable(study.getRecruitNum())
                 .ifPresent(recruitNum -> findStudy.setRecruitNum(recruitNum));
-        Optional.ofNullable(study.isRecruitStatus())
-                .ifPresent(recruitStatus -> findStudy.setRecruitStatus(recruitStatus));
 
         findStudy.setModifiedAt(LocalDateTime.now());
 
         return findStudy;
+    }
+
+    // 모집 마감 : 상태가 마감으로 바뀌고, 일정 시간 지나면 삭제( 목록에서 안 보이게 됨)
+    public void closeStudy(Study study) {
+        Study findStudy = checkLoginMemberHasAuth(study);
+
+        findStudy.setStudyStatus(Study.StudyStatus.STUDY_CLOSED);
+
+        Timer timer = new Timer();
+        long delayInMillis = 60000;    // 일단 1분
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                findStudy.setStudyStatus(Study.StudyStatus.STUDY_DELETED);
+                studyRepository.save(findStudy);
+            }
+        }, delayInMillis);
     }
 
     public void deleteStudy(Long boardId) {

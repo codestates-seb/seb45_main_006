@@ -47,6 +47,8 @@ public class ProjectDto {
 
 //        @Positive(message = "모집 인원을 작성해 주세요.")
         private Integer recruitNum;
+
+        private Project.ProjectStatus projectStatus;
     }
 
     @Getter
@@ -59,8 +61,9 @@ public class ProjectDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
-        private boolean recruitStatus;
+        private Project.ProjectStatus projectStatus;
         private int viewCount;
+        private MemberProfileDto.listResponse memberProfile;
     }
 
     @Getter
