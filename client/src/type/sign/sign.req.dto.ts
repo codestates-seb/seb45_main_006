@@ -9,3 +9,17 @@ export type PostReqMember = {
 export type GetReqNicknameDuplicated = {
     nickname: string;
 };
+
+// 로그인
+export type PostReqLogin = {
+    email: string;
+    password: string;
+};
+
+// 로그아웃
+export type DeleteReqLogout = {
+    email: string;
+};
+
+// 새로운 access token 요청
+// - 빈 객체

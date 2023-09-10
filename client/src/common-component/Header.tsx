@@ -119,7 +119,7 @@ function Header() {
             }),
         );
 
-        if (pathname.includes("/signup/1") || pathname.includes("/login")) {
+        if (pathname.includes("/signup") || pathname.includes("/login")) {
             setIsSignPage(true);
             onLogoutHandler();
         } else {

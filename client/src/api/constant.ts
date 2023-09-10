@@ -12,10 +12,19 @@ export const COMMON_API_PATH = {
     SIGN: {
         PATH: "/members",
         NICKNAME: "/members/checkNickname",
+        LOGIN: "/members/login",
+        LOGOUT: "/logOut",
+        NEW_ACCESS_TOKEN: "/accessToken",
+    },
+    AUTH: {
+        FOR_SIGNUP: "/email/auth",
+        FOR_FIND_PW: "/email/findPassword",
+        FOR_FIND_PW_AUTH: "/email/authPassword",
     },
     MEMBER: {
         PATH: "/members",
         LIST: "/members/list",
+        MY_LIST: "/members/list",
         CHANGE_PASSWORD: "/members/password",
     },
     INFO: {

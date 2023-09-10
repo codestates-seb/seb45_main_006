@@ -83,26 +83,26 @@ export default function Register() {
         <div className="m-80 flex justify-center">
             <div className="flex w-11/12 justify-center rounded-lg bg-project">
                 <div className="flex w-11/12 flex-col">
-                <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
-                <BoardInput
-                    name="title"
-                    label="프로젝트명"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.title}
-                    onChange={handleInput}
-                    maxlength={20}
-                />
-                <BoardTextarea
-                    name="content"
-                    label="프로젝트 상세내용"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.content}
-                    onChange={handleInput}
-                    borderStyle={""}
-                />
-                {/* <BoardInput
+                    <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
+                    <BoardInput
+                        name="title"
+                        label="프로젝트명"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.title}
+                        onChange={handleInput}
+                        maxlength={20}
+                    />
+                    <BoardTextarea
+                        name="content"
+                        label="프로젝트 상세내용"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.content}
+                        onChange={handleInput}
+                        borderStyle={""}
+                    />
+                    {/* <BoardInput
                     name="stack"
                     label="요구스택"
                     required={true}
@@ -110,17 +110,17 @@ export default function Register() {
                     value={inputs.stack}
                     onChange={handleInput}
                 /> */}
-                <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
-                <DateChoice onChange={handleDates} />
-                <BoardInput
-                    name="recruitNum"
-                    label="모집인원"
-                    required={true}
-                    placeholder="ex) 6명"
-                    value={inputs.recruitNum}
-                    onChange={handleInput}
-                />
-                <div className="flex w-full justify-center">
+                    <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                    <DateChoice onChange={handleDates} />
+                    <BoardInput
+                        name="recruitNum"
+                        label="모집인원"
+                        required={true}
+                        placeholder="ex) 6명"
+                        value={inputs.recruitNum}
+                        onChange={handleInput}
+                    />
+                    <div className="flex w-full justify-center">
                         <Button
                             type="PROJECT_POINT"
                             styles="mb-20"

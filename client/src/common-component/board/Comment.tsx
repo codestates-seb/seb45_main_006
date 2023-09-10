@@ -78,7 +78,7 @@ export const OneComment = ({
     const [parentId, setParentId] = useState(0);
     const [nextComment, setNextComment] = useState("");
 
-    const { fireToast, createToast } = useToast();
+    const { fireToast, createToast, errorToast } = useToast();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
     const { mutate: patchComment } = usePatchComment();
     const { mutate: deleteComment } = useDeleteComment();
@@ -109,11 +109,7 @@ export const OneComment = ({
                     // TODO: 에러 분기
                     onError: (err) => {
                         console.log(err);
-                        fireToast({
-                            content: "댓글 수정 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
+                        errorToast();
                     },
                     onSettled: () => setIsEdit(false),
                 },
@@ -136,12 +132,9 @@ export const OneComment = ({
                             });
                             // TODO: 댓글 리스트 조회
                         },
-                        onError: () => {
-                            fireToast({
-                                content: "댓글 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
-                                isConfirm: false,
-                                isWarning: true,
-                            });
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
                         },
                     },
                 );
@@ -166,11 +159,7 @@ export const OneComment = ({
                     // TODO: 에러 분기
                     onError: (err) => {
                         console.log(err);
-                        fireToast({
-                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
+                        errorToast();
                     },
                 },
             );

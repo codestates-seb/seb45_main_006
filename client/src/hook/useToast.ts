@@ -70,5 +70,16 @@ export const useToast = () => {
         ]);
     };
 
-    return { toasts, createToast, removeToast, fireToast, reqLoginToUserToast };
+    const errorToast = () => {
+        addToastItemFn([
+            {
+                id: id,
+                content: "요청 처리 중 에러가 발생하였습니다. 새로고침 후 다시 시도부탁드려요!🥹",
+                isConfirm: false,
+                isWarning: true,
+            },
+        ]);
+    };
+
+    return { toasts, createToast, removeToast, fireToast, reqLoginToUserToast, errorToast };
 };

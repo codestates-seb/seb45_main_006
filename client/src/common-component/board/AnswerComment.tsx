@@ -8,6 +8,10 @@ import { useCheckUser } from "@hook/useCheckUser";
 import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 
 import dayjs from "dayjs";
+import MDEditor from "@uiw/react-md-editor";
+import "@component/MarkdownEditor.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
 import MarkdownEditor from "@component/MarkdownEditor";
 import Typography from "@component/Typography";
@@ -48,7 +52,7 @@ export const OneCommentAnswer = ({
     const [parentId, setParentId] = useState(0);
     const [nextComment, setNextComment] = useState("");
 
-    const { fireToast, createToast } = useToast();
+    const { fireToast, createToast, errorToast } = useToast();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
     const { mutate: patchAnswerComment } = usePatchAnswerComment();
     const { mutate: deleteAnswerComment } = useDeleteAnswerComment();
@@ -71,11 +75,7 @@ export const OneCommentAnswer = ({
                     // TODO: 에러 분기
                     onError: (err) => {
                         console.log(err);
-                        fireToast({
-                            content: "댓글 수정 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
+                        errorToast();
                     },
                     onSettled: () => setIsEdit(false),
                 },
@@ -98,12 +98,9 @@ export const OneCommentAnswer = ({
                             });
                             // TODO: 댓글 리스트 조회
                         },
-                        onError: () => {
-                            fireToast({
-                                content: "댓글 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
-                                isConfirm: false,
-                                isWarning: true,
-                            });
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
                         },
                     },
                 );
@@ -128,11 +125,7 @@ export const OneCommentAnswer = ({
                     // TODO: 에러 분기
                     onError: (err) => {
                         console.log(err);
-                        fireToast({
-                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
+                        errorToast();
                     },
                 },
             );
@@ -193,7 +186,9 @@ export const OneCommentAnswer = ({
             ) : (
                 <div className="my-12">
                     {v.commentStatus === "COMMENT_POSTED" ? (
-                        <Typography type="Body" text={curCommment} />
+                        <div data-color-mode="light">
+                            <MDEditor.Markdown source={curCommment} style={{ whiteSpace: "pre-wrap" }} />
+                        </div>
                     ) : (
                         <Typography type="Body" text="삭제된 댓글입니다." color="text-gray-700" />
                     )}
