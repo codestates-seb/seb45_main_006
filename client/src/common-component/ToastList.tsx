@@ -7,7 +7,7 @@ function ToastList() {
     const toasts = useRecoilValue(toastState);
 
     return (
-        <div className="fixed left-2/4 top-120 -translate-x-2/4">
+        <div className="fixed left-2/4 top-180 -translate-x-2/4">
             {toasts.map((v) => (
                 <Toast key={v.id} toast={v} />
             ))}

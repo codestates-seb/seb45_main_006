@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import UserCard from "@component/board/UserCard";
 import Pagination from "@component/Pagination";
+import SearchFilter from "@container/user/component/SearchFilter";
 
 import { useGetAllMembers } from "@api/member/hook";
-import SearchFilter from "@container/user/component/SearchFilter";
 
 function UserList() {
     // 페이지 필터
@@ -15,11 +15,14 @@ function UserList() {
     // 스택, 포지션 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedPos, setSelectedPos] = useState<Array<string>>([]);
+    // 차단 후 새로 데이터를 불러오기 위한 queryKey로서 사용
+    const [blockedMemberId, setBlockedMemberId] = useState(0);
 
     const { data: users } = useGetAllMembers({
         page: curPage,
         stacks: selectedStacks.join(","),
         posiions: selectedPos.join(","),
+        blockedMemberId,
     });
 
     useEffect(() => {
@@ -45,7 +48,9 @@ function UserList() {
                     setSelectedPos={setSelectedPos}
                 />
                 <div className="my-20 flex flex-wrap">
-                    {users?.data.map((v, i) => <UserCard key={`${v.nickname}${i}`} user={v} />)}
+                    {users?.data.map((v, i) => (
+                        <UserCard key={`${v.nickname}${i}`} user={v} setBlockedMemberId={setBlockedMemberId} />
+                    ))}
                 </div>
             </div>
             <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />

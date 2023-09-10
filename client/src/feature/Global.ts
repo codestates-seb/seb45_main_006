@@ -7,6 +7,11 @@ export const isSignPageAtom = atom<boolean>({
     default: false,
 });
 
+export const isLoggedInAtom = atom<boolean>({
+    key: "isLoggedInAtom",
+    default: false,
+});
+
 export const toastState = atom<IToast[]>({
     key: "toastState",
     default: [],
@@ -17,7 +22,13 @@ export const addToastItem = selector({
     key: "addToastItem",
     get: ({ get }) => get(toastState),
     set: ({ set }, newToast: IToast[] | DefaultValue) => {
-        set(toastState, (prevToast) => [...prevToast, ...(newToast as [])]);
+        set(toastState, (prevToast) => {
+            const toastIds = prevToast.map((v) => v.id);
+            if (Array.isArray(newToast) && newToast[0] && newToast[0].id && toastIds.includes(newToast[0].id)) {
+                return [...prevToast];
+            }
+            return [...prevToast, ...(newToast as [])];
+        });
     },
 });
 // 기능 2. id에 해당하는 toastItem 삭제
