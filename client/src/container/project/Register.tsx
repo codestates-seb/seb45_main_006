@@ -8,14 +8,6 @@ import DateChoice from "@container/project/component/DateChoice";
 import { usePostProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
 
-// type IInput = {
-//     projectName: string;
-//     detail: string;
-//     stack: string;
-//     date: string;
-//     group: number;
-// };
-
 export default function Register() {
     const navigate = useNavigate();
     const { fireToast } = useToast();
@@ -28,13 +20,29 @@ export default function Register() {
         recruitNum: 0,
         recruitStatus: false,
     });
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    const validateForm = () => {
+        const { title, content, startDate, deadline, recruitNum } = inputs;
+        const isTitleValid = title.trim() !== "";
+        const isContentValid = content.trim() !== "";
+        const isStartDateValid = startDate.trim() !== "";
+        const isDeadlineValid = deadline.trim() !== "";
+        const isRecruitNumValid = recruitNum > 0;
+
+        const isValid = isTitleValid && isContentValid && isStartDateValid && isDeadlineValid && isRecruitNumValid;
+        setIsFormValid(isValid);
+    };
+
     const handleDates = (start: string, end: string): void => {
         setInputs({ ...inputs, startDate: start, deadline: end });
+        validateForm();
     };
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
         setInputs({ ...inputs, [name]: value });
+        validateForm();
     }
 
     const { mutate: postProject } = usePostProject();
@@ -43,8 +51,7 @@ export default function Register() {
         try {
             postProject(inputs, {
                 onSuccess: () => {
-                    navigate("/infos");
-
+                    navigate("/projects/:projectBoardId");
                     fireToast({
                         content: "게시글이 등록되었습니다!",
                         isConfirm: false,
@@ -65,44 +72,30 @@ export default function Register() {
         }
     };
 
-    // async function handleSubmit() {
-    //     const path = "/projects";
-    //     const body = {
-    //         ...inputs,
-    //     };
-    //     const { code, message, data } = await axios.post(path, body); //hook으로 바꾸기
-
-    //     if (code !== 200) {
-    //         alert(message);
-    //         return;
-    //     }
-
-    //     navigate("/projects/:projectsBoardId");
-    // }
     return (
         <div className="m-80 flex justify-center">
             <div className="flex w-11/12 justify-center rounded-lg bg-project">
                 <div className="flex w-11/12 flex-col">
-                <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
-                <BoardInput
-                    name="title"
-                    label="프로젝트명"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.title}
-                    onChange={handleInput}
-                    maxlength={20}
-                />
-                <BoardTextarea
-                    name="content"
-                    label="프로젝트 상세내용"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.content}
-                    onChange={handleInput}
-                    borderStyle={""}
-                />
-                {/* <BoardInput
+                    <Typography type="Heading" text="어떤 프로젝트인가요?" styles="pt-60 pb-30 self-baseline" />
+                    <BoardInput
+                        name="title"
+                        label="프로젝트명"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.title}
+                        onChange={handleInput}
+                        maxlength={20}
+                    />
+                    <BoardTextarea
+                        name="content"
+                        label="프로젝트 상세내용"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.content}
+                        onChange={handleInput}
+                        borderStyle={""}
+                    />
+                    {/* <BoardInput
                     name="stack"
                     label="요구스택"
                     required={true}
@@ -110,23 +103,30 @@ export default function Register() {
                     value={inputs.stack}
                     onChange={handleInput}
                 /> */}
-                <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
-                <DateChoice onChange={handleDates} />
-                <BoardInput
-                    name="recruitNum"
-                    label="모집인원"
-                    required={true}
-                    placeholder="ex) 6명"
-                    value={inputs.recruitNum}
-                    onChange={handleInput}
-                />
-                <div className="flex w-full justify-center">
+                    <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                    <DateChoice onChange={handleDates} />
+                    <BoardInput
+                        name="recruitNum"
+                        label="모집인원"
+                        required={true}
+                        placeholder="ex) 6명"
+                        value={inputs.recruitNum}
+                        onChange={handleInput}
+                    />
+                    <div className="flex w-full justify-center">
                         <Button
                             type="PROJECT_POINT"
-                            styles="mb-20"
+                            styles="mb-20 shadow-md hover:bg-blue-400"
                             isFullBtn={false}
                             onClickHandler={() => {
-                                navigate("/projects/:projectBoardId");
+                                if (isFormValid) {
+                                    handleSubmit();
+                                } else {
+                                    fireToast({
+                                        content: "빈 칸을 채워주세요!",
+                                        isConfirm: false,
+                                    });
+                                }
                             }}
                         >
                             <Typography text="등록하기" type="Label" color="text-white" />
