@@ -9,7 +9,7 @@ import {
 } from "@type/study/study.res.dto";
 import {
     DeleteReqStudy,
-    GetReqAllStudies,
+    // GetReqAllStudies,
     GetReqDetailStudy,
     PatchReqStudy,
     PostReqStudy,
@@ -19,14 +19,14 @@ import { deleteStudy, getAllStudies, getDetailStudy, patchStudy, postStudy } fro
 
 // 스터디 - 전체 조회하기
 export const useGetAllStudies = () => {
-    return useQuery<AxiosResponse<GetResAllStudies>, AxiosError, GetReqAllStudies>({
+    return useQuery<AxiosResponse<GetResAllStudies>, AxiosError, GetResAllStudies>({
         queryKey: studyKeyFactory.all(),
         queryFn: () => getAllStudies(),
     });
 };
 // 스터디 - 상세 조회하기
 export const useGetDetailStudy = ({ boardId }: GetReqDetailStudy) => {
-    return useQuery<AxiosResponse<GetResDetailStudy>, AxiosError, GetReqDetailStudy>({
+    return useQuery<AxiosResponse<GetResDetailStudy>, AxiosError, GetResDetailStudy>({
         queryKey: studyKeyFactory.detail({ boardId }),
         queryFn: () => getDetailStudy({ boardId }),
     });

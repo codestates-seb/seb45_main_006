@@ -1,7 +1,6 @@
-import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo } from "@type/info/info.req.dto";
+import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
 
 // 정보 게시판 - 리스트 조회
 export const getAllInfo = async ({ search, category }: GetReqAllInfo) => {
@@ -9,7 +8,7 @@ export const getAllInfo = async ({ search, category }: GetReqAllInfo) => {
     if (category) url += `/${category}`;
     if (search) url += `?search=${search}`;
 
-    const { data } = await commonApi.post(url);
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 
@@ -31,5 +30,12 @@ export const patchInfo = async ({ infoId, ...requstObj }: PatchReqInfo) => {
 export const deleteInfo = async ({ infoId }: DeleteReqInfo) => {
     const url = `${COMMON_API_PATH.INFO.PATH}/${infoId}`;
     const { data } = await withAuthApi.delete(url);
+    return data;
+};
+
+// 정보 게시판 - 조회수 증가 - status code: 200
+export const postViewCount = async ({ infoId }: PostReqViewCount) => {
+    const url = `${COMMON_API_PATH.INFO.PATH}/${infoId}`;
+    const { data } = await withAuthApi.post(url);
     return data;
 };

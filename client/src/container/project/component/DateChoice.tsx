@@ -17,6 +17,7 @@ const DateChoice = ({ onChange }: { onChange: (start: string, end: string) => vo
             const end = dayjs(endDate).format("M/D");
             onChange(start, end);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate]);
 
     return (

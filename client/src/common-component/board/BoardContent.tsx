@@ -18,7 +18,7 @@ function BoardContent({
                 <Typography text={`${label}`} type="Body" />
                 {required && <Typography text="*" type="Body" color="text-warn" />}
             </div>
-            <MarkdownEditor content={content} setContent={setContent} height={400} />
+            <MarkdownEditor content={content} setContent={setContent} height={400} maxlength={1000} />
         </div>
     );
 }
