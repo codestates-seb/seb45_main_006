@@ -18,7 +18,6 @@ import ProjectRegister from "@container/project/Register";
 import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
-
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
@@ -28,6 +27,7 @@ import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
+import UserDetail from "@container/user/UserDetail";
 import InfoBoard from "@container/info/Board";
 import InfoRegister from "@container/info/Register";
 import QuestionBoard from "@container/question/Board";
@@ -71,7 +71,7 @@ const router = createBrowserRouter([
                 element: <StudyDetails />,
             },
             {
-                path: "/members/1",
+                path: "/members/my",
                 element: <MyPage />,
             },
             {
@@ -125,6 +125,10 @@ const router = createBrowserRouter([
             {
                 path: "/members",
                 element: <UserList />,
+            },
+            {
+                path: "/members/:memberId",
+                element: <UserDetail />,
             },
             {
                 path: "/infos",
