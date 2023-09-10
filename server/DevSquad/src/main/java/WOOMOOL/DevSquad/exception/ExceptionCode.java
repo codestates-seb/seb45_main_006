@@ -9,11 +9,10 @@ public enum ExceptionCode {
     QUESTION_NOT_FOUND(404, "질문을 찾을 수 없습니다"),
     ANSWER_NOT_FOUND(404, "질문을 찾을 수 없습니다"),
     ACCEPT_ALREADY_EXISTS(409, "이미 채택이 완료된 질문입니다."),
-
-    // 찾기 편하려고 이모지 잠깐 넣어뒀어요. 나중에 뺄게요!
-    PROJECT_NOT_FOUND(404, "🚨🚨🚨 Project not found 🚨🚨🚨"),
-    STUDY_NOT_FOUND(404, "🚨🚨🚨 Study not found 🚨🚨🚨"),
-    NO_AUTHORIZATION(401, "🚨🚨🚨 No Auth 🚨🚨🚨"),
+    POST_NOT_FOUND(404, "게시물을 찾을 수 없습니다."),
+    PROJECT_NOT_FOUND(404, "프로젝트를 찾을 수 없습니다."),
+    STUDY_NOT_FOUND(404, "스터티를 찾을 수 없습니다."),
+    NO_AUTHORIZATION(401, "접근 권한이 없습니다."),
     FORBIDDEN(403, "Forbidden"),
 
     UNMATCHED_CODE(400, "인증 코드가 다릅니다."),
