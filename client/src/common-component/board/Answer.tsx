@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePatchComment, useDeleteComment, usePostCommentRe } from "@api/comment/hook";
+import { usePostAnswer, usePatchAnswer, useDeleteAnswer, usePostAnswerComment } from "@api/answer/hook";
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
@@ -9,18 +9,15 @@ import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 
 import dayjs from "dayjs";
 
-import Textarea, { ITextarea } from "@component/Textarea";
+import MarkdownEditor from "@component/MarkdownEditor";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
+import { OneCommentAnswer } from "@component/board/AnswerComment";
 
-import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
+import { AnswerDefaultType } from "@type/answer/answer.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
-
-interface IComment extends ITextarea {
-    onSubmitHanlder: () => void;
-}
 
 const dummyUser = {
     memberId: 5,
@@ -34,75 +31,95 @@ const dummyUser = {
     stack: ["Javascript", "Typescript", "React.js", "Node.js", "Next.js", "BootStrap", "tailwindcss"],
 };
 
-export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment) => {
+export const EditAnswer = ({
+    questionId,
+    content,
+    setContent,
+}: {
+    questionId: number;
+    content: string;
+    setContent: (v: string) => void;
+}) => {
+    const { mutate: postAnswer } = usePostAnswer();
+
+    const { fireToast } = useToast();
+    const { alertWhenEmptyFn } = useCheckEmptyInput();
+
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "답변", content }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postAnswer(
+                { questionId, content },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "답변이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setContent("");
+                        // TODO: 답변 리스트 조회
+                    },
+                    // TODO: 에러 분기
+                    onError: (err) => {
+                        console.log(err);
+                        fireToast({
+                            content: "답변 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
+                            isConfirm: false,
+                            isWarning: true,
+                        });
+                    },
+                },
+            );
+        }
+    };
+
     return (
         <div className="flex flex-col border-b-1 border-borderline py-12">
-            <div className="flex">
+            <div className="mb-8 flex">
                 <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
                     <img src={dummyUser.profilePicture} alt="" />
                 </div>
                 <div className="flex-1">
-                    <Textarea
-                        name="comment"
-                        maxlength={200}
-                        placeholder="댓글을 입력해주세요."
-                        value={value}
-                        onChange={onChange}
-                        borderStyle="border-1 border-borderline shadow-md"
-                    />
+                    <MarkdownEditor content={content} setContent={setContent} height={200} maxlength={1000} />
                 </div>
             </div>
             <div className="flex justify-end">
                 <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
-                    <Typography type="Highlight" text="댓글 등록" color="text-white" />
+                    <Typography type="Highlight" text="답변 등록" color="text-white" />
                 </Button>
             </div>
         </div>
     );
 };
 
-export const OneComment = ({
-    v,
-    writerId,
-    boardId,
-}: {
-    v: CommentDefaultTypeWithRe;
-    writerId: number;
-    boardId: number;
-}) => {
+export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writerId: number; boardId: number }) => {
     const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
     const [isEdit, setIsEdit] = useState(false);
-    const [curCommment, setCurComment] = useState(v.content);
-    const [parentId, setParentId] = useState(0);
+    const [curAnswer, setCurAnswer] = useState(v.content);
+    const [answerId, setAnswerId] = useState(0);
     const [nextComment, setNextComment] = useState("");
 
     const { fireToast, createToast } = useToast();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
-    const { mutate: patchComment } = usePatchComment();
-    const { mutate: deleteComment } = useDeleteComment();
-    const { mutate: postCommentRe } = usePostCommentRe();
-
-    const onChangeCurComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setCurComment(e.currentTarget.value);
-    };
-
-    const onChangeNextComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setNextComment(e.currentTarget.value);
-    };
+    const { mutate: patchAnswer } = usePatchAnswer();
+    const { mutate: deleteAnswer } = useDeleteAnswer();
+    const { mutate: postAnswerComment } = usePostAnswerComment();
 
     const onSubmitHanlder = () => {
-        const inputs = [{ name: "댓글", content: curCommment }];
+        const inputs = [{ name: "댓글", content: curAnswer }];
         const emptyNames = alertWhenEmptyFn(inputs);
 
         if (emptyNames.length === 0) {
-            patchComment(
-                { board: "information", boardId, commentId: v.commentId, content: curCommment },
+            patchAnswer(
+                { questionId: boardId, answerId: v.answerId, content: curAnswer },
                 {
                     onSuccess: () => {
                         fireToast({
-                            content: "댓글이 수정되었습니다!",
+                            content: "답변이 수정되었습니다!",
                             isConfirm: false,
                         });
                     },
@@ -110,7 +127,7 @@ export const OneComment = ({
                     onError: (err) => {
                         console.log(err);
                         fireToast({
-                            content: "댓글 수정 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
+                            content: "답변 수정 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
                             isConfirm: false,
                             isWarning: true,
                         });
@@ -123,11 +140,11 @@ export const OneComment = ({
 
     const onDeleteHanlder = () => {
         createToast({
-            content: "해당 댓글을 삭제하시겠습니까?",
+            content: "해당 답변을 삭제하시겠습니까?",
             isConfirm: true,
             callback: () => {
-                deleteComment(
-                    { board: "information", boardId, commentId: v.commentId },
+                deleteAnswer(
+                    { questionId: boardId, answerId: v.answerId },
                     {
                         onSuccess: () => {
                             fireToast({
@@ -154,14 +171,16 @@ export const OneComment = ({
         const emptyNames = alertWhenEmptyFn(inputs);
 
         if (emptyNames.length === 0) {
-            postCommentRe(
-                { board: "information", boardId, commentId: parentId, content: nextComment },
+            postAnswerComment(
+                { questionId: boardId, answerId, content: nextComment },
                 {
                     onSuccess: () => {
                         fireToast({
-                            content: "댓글이 등록되었습니다!",
+                            content: "답변에 대한 댓글이 등록되었습니다!",
                             isConfirm: false,
                         });
+                        setNextComment("");
+                        // TODO: 질문 리스트 조회
                     },
                     // TODO: 에러 분기
                     onError: (err) => {
@@ -218,7 +237,7 @@ export const OneComment = ({
                                 </button>
                             </>
                         )}
-                        <button onClick={() => setParentId(v.commentId)}>
+                        <button onClick={() => setAnswerId(v.answerId)}>
                             <RiReplyLine size={"1.2rem"} />
                         </button>
                     </div>
@@ -226,24 +245,18 @@ export const OneComment = ({
             </div>
             {isEdit ? (
                 <div className="my-12">
-                    <Textarea
-                        name="curComment"
-                        maxlength={200}
-                        value={curCommment}
-                        onChange={onChangeCurComment}
-                        borderStyle="border-1 border-borderline shadow-md"
-                    />
+                    <MarkdownEditor content={curAnswer} setContent={setCurAnswer} height={400} maxlength={1000} />
                 </div>
             ) : (
                 <div className="my-12">
-                    {v.commentStatus === "COMMENT_POSTED" ? (
-                        <Typography type="Body" text={curCommment} />
+                    {v.answerStatus === "ANSWER_POSTED" ? (
+                        <Typography type="Body" text={curAnswer} />
                     ) : (
                         <Typography type="Body" text="삭제된 댓글입니다." color="text-gray-700" />
                     )}
                 </div>
             )}
-            {parentId > 0 && (
+            {answerId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">
                         <div className="flex items-center">
@@ -265,12 +278,11 @@ export const OneComment = ({
                         </button>
                     </div>
                     <div className="ml-32 flex-1">
-                        <Textarea
-                            name="nextComment"
-                            maxlength={200}
-                            value={nextComment}
-                            onChange={onChangeNextComment}
-                            borderStyle="border-1 border-borderline shadow-md"
+                        <MarkdownEditor
+                            content={nextComment}
+                            setContent={setNextComment}
+                            height={200}
+                            maxlength={1000}
                         />
                     </div>
                 </div>
@@ -279,12 +291,17 @@ export const OneComment = ({
             {Array.isArray(v.commentList) &&
                 v.commentList.length > 0 &&
                 v.commentList.map((v) => (
-                    <div className="flex" key={`${v.boardId}-${v.memberId}`}>
+                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
                         <div className="flex rotate-180 items-end p-8">
                             <BiReply />
                         </div>
                         <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} boardId={boardId} />
+                            <OneCommentAnswer
+                                v={v}
+                                writerId={writerId}
+                                questionId={boardId}
+                                answerId={v.answerId || 0}
+                            />
                         </div>
                     </div>
                 ))}
@@ -292,14 +309,14 @@ export const OneComment = ({
     );
 };
 
-export const ShowComment = ({ comment, writerId }: { comment: CommentDefaultTypeWithRe; writerId: number }) => {
+export const ShowAnswer = ({ answer, writerId }: { answer: AnswerDefaultType; writerId: number }) => {
     return (
         <div className="mb-8 flex flex-col border-b-1 border-borderline">
-            <OneComment
-                v={comment}
+            <OneAnswer
+                v={answer}
                 writerId={writerId}
-                boardId={comment.boardId}
-                key={`${comment.boardId}-${comment.memberId}`}
+                boardId={answer.boardId}
+                key={`${answer.answerId}-${answer.memberId}`}
             />
         </div>
     );

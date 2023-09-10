@@ -8,65 +8,51 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
-import { usePostComment } from "@api/comment/hook";
+import { usePostViewCount, useDeleteQuestion } from "@api/question/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
 import Button from "@component/Button";
-import { EditComment, ShowComment } from "@component/board/Comment";
-
-import { CATEGORY_TO_NAME } from "@api/info/constant";
-import { CATEGORY_TYPE } from "@type/info/common";
-import { InfoDefaultType } from "@type/info/info.res.dto";
+import { EditAnswer, ShowAnswer } from "@component/board/Answer";
 
 import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
+import { QuestionDefaultType } from "@type/question/question.res.dto";
 
-const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
-    const tag = CATEGORY_TO_NAME[category];
-    return (
-        <div className="w-fit rounded-sm border-1 border-gray-400 px-12 py-4">
-            <Typography text={`#${tag}`} type="Highlight" color="text-gray-600" />
-        </div>
-    );
-};
-
-const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
+const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
     const navigate = useNavigate();
-    const { category, title, viewCount, modifiedAt } = info;
-    const { data: user } = useGetMemberDetail({ memberId: info.memberId });
-    const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
+    const { title, viewCount, modifiedAt } = question;
+    const { data: user } = useGetMemberDetail({ memberId: question.memberId });
+    const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
     const { fireToast, createToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    const { mutate: deleteInfo } = useDeleteInfo();
+    const { mutate: deleteQuestion } = useDeleteQuestion();
 
     const onClickDeleteHandler = () => {
         createToast({
             content: "해당 게시글을 삭제하시겠습니까?",
             isConfirm: true,
             callback: () => {
-                deleteInfo(
-                    { infoId: info.boardId },
+                deleteQuestion(
+                    { questionId: question.boardId },
                     {
                         onSuccess: () => {
                             fireToast({
-                                content: "게시글이 삭제되었습니다!",
+                                content: "질문이 삭제되었습니다!",
                                 isConfirm: false,
                             });
-                            navigate("/infos");
+                            navigate("/questions");
                         },
                         onError: () => {
                             fireToast({
-                                content: "게시글 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
+                                content: "질문 삭제에 실패하였습니다. 새로고침 후 다시 삭제 시도부탁드려요!🥹",
                                 isConfirm: false,
                                 isWarning: true,
                             });
@@ -80,23 +66,21 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
     return (
         <div className="flex border-b-1 border-borderline">
             <div className="flex-1 p-8">
-                <div className="flex items-center justify-between">
-                    <CategoryTag category={category} />
-                    {isMine && (
-                        <div className="flex">
-                            <Button
-                                type="PROJECT_POINT"
-                                styles="px-4 py-2 rounded-sm"
-                                onClickHandler={() => navigate(`/infos/${info.boardId}/edit`, { state: info })}
-                            >
-                                <Typography text="수정" type="Description" color="text-white" />
-                            </Button>
-                            <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
-                                <Typography text="삭제" type="Description" color="text-white" />
-                            </Button>
-                        </div>
-                    )}
-                </div>
+                {isMine && (
+                    <div className="flex items-center justify-end">
+                        <Button
+                            type="PROJECT_POINT"
+                            styles="px-4 py-2 rounded-sm"
+                            onClickHandler={() => navigate(`/questions/${question.boardId}/edit`, { state: question })}
+                        >
+                            <Typography text="수정" type="Description" color="text-white" />
+                        </Button>
+                        <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
+                            <Typography text="삭제" type="Description" color="text-white" />
+                        </Button>
+                    </div>
+                )}
+
                 <div className="my-8 flex items-center justify-between">
                     <Typography text={title} type="Label" />
                     {user && (
@@ -138,89 +122,49 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
     );
 };
 
-function InfoItem({ info }: { info: InfoDefaultType }) {
-    const { commentList } = info;
+function QuestionItem({ question }: { question: QuestionDefaultType }) {
+    const { answerList } = question;
 
-    const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
-    const { fireToast } = useToast();
+    const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
 
     const [isOpened, setIsOpened] = useState(false);
-    const [comment, setComment] = useState<string>("");
+    const [answer, setAnswer] = useState<string>("");
 
     const { mutate: postViewCount } = usePostViewCount();
-    const { mutate: postComment } = usePostComment();
-
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
-
-    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setComment(e.currentTarget.value);
-    };
-
-    const onSubmitHanlder = () => {
-        const inputs = [{ name: "댓글", content: comment }];
-        const emptyNames = alertWhenEmptyFn(inputs);
-
-        if (emptyNames.length === 0) {
-            postComment(
-                { board: "information", boardId: info.boardId, content: comment },
-                {
-                    onSuccess: () => {
-                        fireToast({
-                            content: "댓글이 등록되었습니다!",
-                            isConfirm: false,
-                        });
-                        setComment("");
-                        // TODO: 댓글 리스트 조회
-                    },
-                    // TODO: 에러 분기
-                    onError: (err) => {
-                        console.log(err);
-                        fireToast({
-                            content: "댓글 등록 중 에러가 발생하였습니다. 새로 고침하여 다시 시도해주세요🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
-                    },
-                },
-            );
-        }
-    };
 
     const onAddViewCount = () => {
         if (!isOpened) {
             // 열기 버튼 클릭 시 - 조회수 증가 api 요청 -> 요청 성공/실패 처리 X
-            postViewCount({ infoId: info.boardId });
+            postViewCount({ questionId: question.boardId });
         }
         setIsOpened(!isOpened);
     };
 
     return (
         <div className="border-1 border-borderline p-8">
-            <InfoTitle info={info} />
+            <QuestionTitle question={question} />
             <div
                 data-color-mode="light"
                 className={`relative overflow-hidden border-b-1 border-borderline pb-32 pt-12 ${
                     isOpened ? "" : "max-h-300"
                 }`}
             >
-                <MDEditor.Markdown source={info.content} style={{ whiteSpace: "pre-wrap" }} />
+                <MDEditor.Markdown source={question.content} style={{ whiteSpace: "pre-wrap" }} />
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : info.content.length < 300 ? "댓글 열기" : "열기"}`}
+                        text={`${isOpened ? "닫기" : question.content.length < 300 ? "답변 확인" : "열기"}`}
                         color="text-blue-500 hover:text-blue-800"
                     />
                 </button>
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`댓글 ${commentList.length}개`} />
-                    {isLoggedIn && (
-                        <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
-                    )}
+                    <Typography type="Highlight" text={`답변 ${answerList.length}개`} />
+                    {isLoggedIn && <EditAnswer questionId={question.boardId} content={answer} setContent={setAnswer} />}
                     <div className="my-16">
-                        {commentList.map((v) => (
-                            <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
+                        {answerList.map((v) => (
+                            <ShowAnswer key={v.answerId} answer={v} writerId={question.memberId} />
                         ))}
                     </div>
                 </div>
@@ -229,4 +173,4 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
     );
 }
 
-export default InfoItem;
+export default QuestionItem;

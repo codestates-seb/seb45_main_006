@@ -30,6 +30,7 @@ import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
 import InfoBoard from "@container/info/Board";
 import InfoRegister from "@container/info/Register";
+import QuestionBoard from "@container/question/Board";
 import QuestionRegister from "@container/question/Register";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -138,7 +139,15 @@ const router = createBrowserRouter([
                 element: <InfoRegister />,
             },
             {
+                path: "/questions",
+                element: <QuestionBoard />,
+            },
+            {
                 path: "/questions/add",
+                element: <QuestionRegister />,
+            },
+            {
+                path: "/questions/:questionId/edit",
                 element: <QuestionRegister />,
             },
         ],

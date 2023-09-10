@@ -18,14 +18,14 @@ export type PatchReqMemberPw = {
 
 // 마이페이지 - 정보 수정하기
 export type PatchReqMember = {
-    memberId?: number;
+    memberId: number;
     nickname: string;
     profilePicture: string;
     githubId: string;
     introduction: string;
     listEnroll: number;
     position: Array<string>;
-    stack?: Array<string>;
+    stack: Array<string>;
 };
 
 // 헤더 - 로그아웃

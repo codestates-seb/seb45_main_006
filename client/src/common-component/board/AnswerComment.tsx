@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePatchComment, useDeleteComment, usePostCommentRe } from "@api/comment/hook";
+import { usePatchAnswerComment, useDeleteAnswerComment, usePostAnswerCommentRe } from "@api/answer/hook";
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
@@ -9,18 +9,13 @@ import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 
 import dayjs from "dayjs";
 
-import Textarea, { ITextarea } from "@component/Textarea";
-import Button from "@component/Button";
+import MarkdownEditor from "@component/MarkdownEditor";
 import Typography from "@component/Typography";
 
 import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
-
-interface IComment extends ITextarea {
-    onSubmitHanlder: () => void;
-}
 
 const dummyUser = {
     memberId: 5,
@@ -34,41 +29,16 @@ const dummyUser = {
     stack: ["Javascript", "Typescript", "React.js", "Node.js", "Next.js", "BootStrap", "tailwindcss"],
 };
 
-export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment) => {
-    return (
-        <div className="flex flex-col border-b-1 border-borderline py-12">
-            <div className="flex">
-                <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                    <img src={dummyUser.profilePicture} alt="" />
-                </div>
-                <div className="flex-1">
-                    <Textarea
-                        name="comment"
-                        maxlength={200}
-                        placeholder="댓글을 입력해주세요."
-                        value={value}
-                        onChange={onChange}
-                        borderStyle="border-1 border-borderline shadow-md"
-                    />
-                </div>
-            </div>
-            <div className="flex justify-end">
-                <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
-                    <Typography type="Highlight" text="댓글 등록" color="text-white" />
-                </Button>
-            </div>
-        </div>
-    );
-};
-
-export const OneComment = ({
+export const OneCommentAnswer = ({
     v,
     writerId,
-    boardId,
+    questionId,
+    answerId,
 }: {
     v: CommentDefaultTypeWithRe;
     writerId: number;
-    boardId: number;
+    questionId: number;
+    answerId: number;
 }) => {
     const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
@@ -80,25 +50,17 @@ export const OneComment = ({
 
     const { fireToast, createToast } = useToast();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
-    const { mutate: patchComment } = usePatchComment();
-    const { mutate: deleteComment } = useDeleteComment();
-    const { mutate: postCommentRe } = usePostCommentRe();
-
-    const onChangeCurComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setCurComment(e.currentTarget.value);
-    };
-
-    const onChangeNextComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setNextComment(e.currentTarget.value);
-    };
+    const { mutate: patchAnswerComment } = usePatchAnswerComment();
+    const { mutate: deleteAnswerComment } = useDeleteAnswerComment();
+    const { mutate: postAnswerCommentRe } = usePostAnswerCommentRe();
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "댓글", content: curCommment }];
         const emptyNames = alertWhenEmptyFn(inputs);
 
         if (emptyNames.length === 0) {
-            patchComment(
-                { board: "information", boardId, commentId: v.commentId, content: curCommment },
+            patchAnswerComment(
+                { questionId, answerId, commentId: v.commentId, content: curCommment },
                 {
                     onSuccess: () => {
                         fireToast({
@@ -126,8 +88,8 @@ export const OneComment = ({
             content: "해당 댓글을 삭제하시겠습니까?",
             isConfirm: true,
             callback: () => {
-                deleteComment(
-                    { board: "information", boardId, commentId: v.commentId },
+                deleteAnswerComment(
+                    { questionId, answerId, commentId: v.commentId },
                     {
                         onSuccess: () => {
                             fireToast({
@@ -154,8 +116,8 @@ export const OneComment = ({
         const emptyNames = alertWhenEmptyFn(inputs);
 
         if (emptyNames.length === 0) {
-            postCommentRe(
-                { board: "information", boardId, commentId: parentId, content: nextComment },
+            postAnswerCommentRe(
+                { questionId, answerId, commentId: parentId, content: nextComment },
                 {
                     onSuccess: () => {
                         fireToast({
@@ -226,13 +188,7 @@ export const OneComment = ({
             </div>
             {isEdit ? (
                 <div className="my-12">
-                    <Textarea
-                        name="curComment"
-                        maxlength={200}
-                        value={curCommment}
-                        onChange={onChangeCurComment}
-                        borderStyle="border-1 border-borderline shadow-md"
-                    />
+                    <MarkdownEditor content={curCommment} setContent={setCurComment} height={200} maxlength={200} />
                 </div>
             ) : (
                 <div className="my-12">
@@ -265,12 +221,11 @@ export const OneComment = ({
                         </button>
                     </div>
                     <div className="ml-32 flex-1">
-                        <Textarea
-                            name="nextComment"
+                        <MarkdownEditor
+                            content={nextComment}
+                            setContent={setNextComment}
+                            height={200}
                             maxlength={200}
-                            value={nextComment}
-                            onChange={onChangeNextComment}
-                            borderStyle="border-1 border-borderline shadow-md"
                         />
                     </div>
                 </div>
@@ -279,28 +234,15 @@ export const OneComment = ({
             {Array.isArray(v.commentList) &&
                 v.commentList.length > 0 &&
                 v.commentList.map((v) => (
-                    <div className="flex" key={`${v.boardId}-${v.memberId}`}>
+                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
                         <div className="flex rotate-180 items-end p-8">
                             <BiReply />
                         </div>
                         <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} boardId={boardId} />
+                            <OneCommentAnswer v={v} writerId={writerId} questionId={questionId} answerId={answerId} />
                         </div>
                     </div>
                 ))}
         </>
-    );
-};
-
-export const ShowComment = ({ comment, writerId }: { comment: CommentDefaultTypeWithRe; writerId: number }) => {
-    return (
-        <div className="mb-8 flex flex-col border-b-1 border-borderline">
-            <OneComment
-                v={comment}
-                writerId={writerId}
-                boardId={comment.boardId}
-                key={`${comment.boardId}-${comment.memberId}`}
-            />
-        </div>
     );
 };

@@ -46,12 +46,12 @@ export const MAKE_API_PATH = {
         update: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
         delete: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
         accept: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
-        addComment: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
+        addComment: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}/comment`,
         updateComment: ({ questionId, answerId, commentId }: SpecifyAnswerComment) =>
-            `/question/${questionId}/answer/${answerId}/${commentId}`,
+            `/question/${questionId}/answer/${answerId}/comment/${commentId}`,
         addCommentRe: ({ questionId, answerId, commentId }: SpecifyAnswerComment) =>
-            `/question/${questionId}/answer/${answerId}/${commentId}`,
+            `/question/${questionId}/answer/${answerId}/comment/${commentId}`,
         deleteComment: ({ questionId, answerId, commentId }: SpecifyAnswerComment) =>
-            `/question/${questionId}/answer/${answerId}/${commentId}`,
+            `/question/${questionId}/answer/${answerId}/comment/${commentId}`,
     },
 };

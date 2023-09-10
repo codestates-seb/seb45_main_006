@@ -5,13 +5,13 @@ import { Location } from "react-router-dom";
 export type CurActivity = "REGISTER" | "EDIT" | "ERROR";
 
 export const useCheckCurActivity = ({ location }: { location: Location }): { curActivity: CurActivity } => {
-    const { fireToast } = useToast();
+    const { createToast } = useToast();
     const [curActivity, setCurActivity] = useState<CurActivity>("REGISTER");
 
     useEffect(() => {
         if (location.pathname.includes("edit")) {
             if (!location.state) {
-                fireToast({
+                createToast({
                     content: "올바른 접근이 아닙니다. 메인화면으로 이동합니다.",
                     isConfirm: false,
                     isWarning: false,
