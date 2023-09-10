@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.projectboard.controller;
 
+import WOOMOOL.DevSquad.bookmark.service.BookmarkService;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
@@ -21,9 +22,12 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    public ProjectController(ProjectService projectService, ProjectMapper mapper) {
+    private final BookmarkService bookmarkService;
+
+    public ProjectController(ProjectService projectService, ProjectMapper mapper, BookmarkService bookmarkService) {
         this.projectService = projectService;
         this.mapper = mapper;
+        this.bookmarkService = bookmarkService;
     }
 
     @PostMapping

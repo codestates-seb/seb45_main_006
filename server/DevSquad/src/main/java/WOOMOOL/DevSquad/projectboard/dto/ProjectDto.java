@@ -1,11 +1,16 @@
 package WOOMOOL.DevSquad.projectboard.dto;
 
+import WOOMOOL.DevSquad.comment.dto.CommentDto;
+import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 public class ProjectDto {
 
@@ -69,7 +74,10 @@ public class ProjectDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
-        private boolean recruitStatus;
+        private Project.ProjectStatus projectStatus;
+        private boolean bookmarked;
         private int viewCount;
+        private List<CommentDto.Response> commentList;
+        private MemberProfileDto.listResponse memberProfile;
     }
 }

@@ -1,5 +1,8 @@
 package WOOMOOL.DevSquad.studyboard.dto;
 
+import WOOMOOL.DevSquad.comment.dto.CommentDto;
+import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,7 +61,10 @@ public class StudyDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
-        private boolean recruitStatus;
+        private Study.StudyStatus studyStatus;
+        private boolean bookmarked;
         private int viewCount;
+        private List<CommentDto.Response> commentList;
+        private MemberProfileDto.listResponse memberProfile;
     }
 }
