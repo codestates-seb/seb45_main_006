@@ -2,8 +2,8 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
-import siren from "@assets/siren.png";
 import { useState } from "react";
+import Report from "@component/project-study/Report";
 
 const Details = () => {
     const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
@@ -53,7 +53,7 @@ const Details = () => {
                             className="m-10 h-28 w-28 cursor-pointer"
                             onClick={toggleBookmark}
                         />
-                        <img src={siren} className="m-10 h-24 w-24 cursor-pointer" />
+                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">

@@ -3,10 +3,9 @@ import Tag from "@component/project-study/Tag";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
 import { useState } from "react";
-import { CommonResProjects } from "@type/project/project.res.dto";
-import dayjs from "dayjs";
+import { CommonResStudies } from "@type/study/study.res.dto";
 
-const BoardList = ({ project }: { project: CommonResProjects }) => {
+const BoardList = ({ study }: { study: CommonResStudies }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     const toggleBookmark = () => {
@@ -18,14 +17,9 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                 <div className="flex w-48 items-center justify-center rounded bg-deadline ">
                     <Typography type="SmallLabel" text="모집중" styles="text-white" />
                 </div>
-                <h1 className="my-4 cursor-pointer text-24 font-bold">{project.title}</h1>
+                <h1 className="my-4 cursor-pointer text-24 font-bold">{study.title}</h1>
                 <div className="flex">
-                    <Tag type="PROJECT" text="Java"></Tag>
-                </div>
-                <div className="mt-4 text-14 text-gray-600">
-                    {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.startDate).format("MM-DD")}`}
-                    <span> ~ </span>
-                    {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.deadline).format("MM-DD")}`}
+                    <Tag type="STUDY" text="Java"></Tag>
                 </div>
             </div>
             <img
