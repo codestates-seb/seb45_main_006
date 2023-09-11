@@ -14,12 +14,10 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
     Optional<Likes> findByBoard_BoardIdAndMemberProfile_MemberProfileId(Long boardId, Long memberProfileId);
     @Query("SELECT q FROM QuestionBoard q JOIN Likes l ON q.boardId = l.board.boardId " +
             "WHERE l.memberProfile.memberProfileId = :memberProfileId " +
-            "AND q.questionBoardStatus = 'QUESTIONBOARD_POSTED' " +
-            "ORDER BY q.createdAt DESC ")
+            "AND q.questionBoardStatus = 'QUESTIONBOARD_POSTED' ")
     Page<QuestionBoard> findQuestionBoardByLikedMemberId(Long memberProfileId, Pageable pageable);
     @Query("SELECT i FROM InfoBoard i JOIN Likes l ON i.boardId = l.board.boardId " +
             "WHERE l.memberProfile.memberProfileId = :memberProfileId " +
-            "AND i.infoBoardStatus = 'INFOBOARD_POSTED' " +
-            "ORDER BY  i.createdAt DESC ")
+            "AND i.infoBoardStatus = 'INFOBOARD_POSTED' ")
     Page<InfoBoard> findInfoBoardByLikedMemberId(Long memberProfileId, Pageable pageable);
 }
