@@ -39,7 +39,8 @@ function Layout() {
         } else {
             setMarginTop(HEIGHT.MAIN_HEADER);
         }
-    }, [isSignPage]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSignPage, pathname]);
 
     return (
         <>
