@@ -24,7 +24,6 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final ChatRoomRepository chatRoomRepository;
-
     private final MemberService memberService;
 
     // 메세지 보내기
