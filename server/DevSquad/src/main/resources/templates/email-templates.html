@@ -7,49 +7,149 @@
 </head>
 <body>
 <!-- 이메일은 ${email} 인증코드는 ${authCode} -->
-<div style="display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
-  <div style="width: 500px; height: 500px; padding: 20px; background-color: #ffffff;">
-    <div style="width: 100%; height: 3px; background-color: #44ae4e;"></div>
-    <div style="margin: 24px 10px; display: flex; flex-direction: column;">
+<div
+        style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f5f5;
+      "
+>
+  <div
+          style="
+          width: 500px;
+          height: 500px;
+          padding: 20px;
+          background-color: #ffffff;
+        "
+  >
+    <div style="width: 100%; height: 3px; background-color: #44ae4e"></div>
+    <div style="margin: 24px 10px; display: flex; flex-direction: column">
       <div>
-        <p style="font-size: 12px; color: #888888; line-height: 1.5;">WM Company</p>
+        <p style="font-size: 12px; margin-right: 4px; color: #888888">
+          WM Company
+        </p>
       </div>
-      <div style="display: flex; flex-direction: row; align-items: center;">
-        <img src="https://dev-squad.s3.ap-northeast-2.amazonaws.com/images/icon_logo.png" alt="" />
-        <img src="https://dev-squad.s3.ap-northeast-2.amazonaws.com/images/icon_logo-text.png" alt="" width="200" />
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <p style="font-size: 24px; color: #38bf82; line-height: 1.5;">메일인증</p>
-      <p style="font-size: 24px; line-height: 1.5;">안내입니다.</p>
-    </div>
-    <div style="margin-bottom: 24px; display: flex; flex-direction: column;">
-      <p style="font-size: 16px; line-height: 1.5;"><span th:text="${email}"></span>님</p>
-      <div style="display: flex; flex-direction: row;">
-        <p style="font-size: 16px; line-height: 1.5;">프로젝트/스터디를 함께할</p>
-        <p style="font-size: 16px; color: #38bf82; font-weight: 700; line-height: 1.5;">파티원을</p>
-        <p style="font-size: 16px; line-height: 1.5;">구하는</p>
-      </div>
-      <div style="display: flex; flex-direction: row;">
-        <p style="font-size: 16px; color: #38bf82; font-weight: 700; line-height: 1.5;">Dev Squad</p>
-        <p style="font-size: 16px; line-height: 1.5;">서비스를 이용해주셔서 감사합니다.</p>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <img
+                src="https://dev-squad.s3.ap-northeast-2.amazonaws.com/images/icon_logo.png"
+                alt=""
+        />
+        <img
+                src="https://dev-squad.s3.ap-northeast-2.amazonaws.com/images/icon_logo-text.png"
+                alt=""
+                width="200"
+        />
       </div>
     </div>
-    <div style="margin-bottom: 24px; display: flex; flex-direction: column;">
-      <div style="display: flex; flex-direction: row;">
-        <p style="font-size: 16px; line-height: 1.5;">아래</p>
-        <p style="font-size: 16px; font-weight: 700; line-height: 1.5;">메일 인증 버튼 > 인증 코드를 입력하여</p>
-        <p style="font-size: 16px; line-height: 1.5;">회원가입을 완료해주세요.</p>
+    <div style="display: flex; flex-direction: row; align-items: center">
+      <p style="font-size: 24px; margin: 0 4px 4px 0; color: #38bf82">
+        메일인증
+      </p>
+      <p style="font-size: 24px; margin: 0 4px 4px 0">안내입니다.</p>
+    </div>
+    <div style="margin-bottom: 24px; display: flex; flex-direction: column">
+      <p style="font-size: 16px; margin: 0 4px 4px 0"><span th:text="${email}"></span>님</p>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <p style="font-size: 16px; margin: 0 4px 4px 0">
+          프로젝트/스터디를 함께할
+        </p>
+        <p
+                style="
+                color: #38bf82;
+                font-weight: 700;
+                font-size: 16px;
+                margin: 0 4px 4px 0;
+              "
+        >
+          파티원을
+        </p>
+        <p style="font-size: 16px; margin: 0 4px 4px 0">구하는</p>
       </div>
-      <div style="display: flex; flex-direction: row;">
-        <p style="font-size: 16px; line-height: 1.5;">감사합니다.</p>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <p
+                style="
+                color: #38bf82;
+                font-weight: 700;
+                font-size: 16px;
+                margin: 0 4px 4px 0;
+              "
+        >
+          Dev Squad
+        </p>
+        <p style="font-size: 16px; margin: 0 4px 4px 0">
+          서비스를 이용해주셔서 감사합니다.
+        </p>
       </div>
     </div>
-    <div style="display: flex; justify-content: center;">
-      <div style="width: 80%; padding: 12px 0; border: 1px solid #e2e2e2; border-radius: 4px; letter-spacing: 4px; text-align: center;">
+    <div style="margin-bottom: 24px; display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <p style="font-size: 16px; margin: 0 4px 4px 0">아래</p>
+        <p style="font-size: 16px; margin: 0 4px 4px 0; font-weight: 700">
+          메일 인증 버튼 > 인증 코드를 입력하여
+        </p>
+        <p style="font-size: 16px; margin: 0 4px 4px 0">
+          회원가입을 완료해주세요.
+        </p>
+      </div>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <p style="font-size: 16px; margin: 0 4px 4px 0">감사합니다.</p>
+      </div>
+    </div>
+    <div
+            style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+          "
+    >
+      <div
+              style="
+              width: 80%;
+              padding: 12px 0;
+              border: 1px solid #e2e2e2;
+              border-radius: 4px;
+              text-align: center;
+              letter-spacing: 2px;
+            "
+      >
         <span th:text="${authCode}"></span>
       </div>
     </div>
-    <div style="display: flex; justify-content: center;">
-      <button style="width: 80%; margin-top: 8px; padding: 6px 0; border: none; background-color: #38bf82; border-radius: 4px; cursor: pointer;">
-        <p style="margin: 0; font-size: 18px; color: #ffffff; text-align: center;">메일인증
+    <div
+            style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 4px;
+            text-align: center;
+          "
+    >
+      <a
+              style="width: 100%"
+              th:href="@{'http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/signup/2?email=' + ${email}}"
+      >
+        <button
+                style="
+                padding: 12px;
+                letter-spacing: 4px;
+                text-align: center;
+                width: 80%;
+                margin-top: 8px;
+                padding: 6px 0;
+                border: none;
+                background-color: #38bf82;
+                border-radius: 4px;
+                cursor: pointer;
+              "
+        >
+          <p style="margin: 0; font-size: 18px; color: #ffffff">메일인증</p>
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

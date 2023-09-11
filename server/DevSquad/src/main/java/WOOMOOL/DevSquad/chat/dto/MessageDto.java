@@ -15,7 +15,6 @@ public class MessageDto {
     @Setter
     public static class Post {
         private String accessToken;
-        private String refreshToken;
         private String content;
     }
 
