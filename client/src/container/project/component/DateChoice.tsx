@@ -17,10 +17,11 @@ const DateChoice = ({ onChange }: { onChange: (start: string, end: string) => vo
             const end = dayjs(endDate).format("M/D");
             onChange(start, end);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate]);
 
     return (
-        <div className="my-10 flex w-11/12 flex-col p-10">
+        <div className="my-10 flex flex-col p-10">
             <div className="mb-10 flex">
                 <Typography text="프로젝트 기간" type="Body" />
                 <Typography text="*" type="Body" color="text-warn" />

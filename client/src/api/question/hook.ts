@@ -43,6 +43,6 @@ export const useDeleteQuestion = () => {
 };
 
 // 질문 게시판 - 조회수 증가
-export const usePostViewcount = () => {
+export const usePostViewCount = () => {
     return useMutation<AxiosResponse<PostResViewCount>, AxiosError, PostReqViewCount>(postViewCount);
 };

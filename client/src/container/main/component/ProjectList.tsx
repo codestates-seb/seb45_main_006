@@ -1,19 +1,25 @@
 import Typography from "@component/Typography";
-import Tag from "@container/project/component/Tag";
+import Tag from "@component/project-study/Tag";
+import { CommonResProjects } from "@type/project/project.res.dto";
+import dayjs from "dayjs";
 
-const ProjectList = () => {
+const ProjectList = ({ project }: { project: CommonResProjects }) => {
     return (
         <div className="m-10 flex h-300 w-1/4 flex-col justify-between rounded-lg border-2 border-solid border-project p-20 shadow-lg">
             <div>
                 <div className="flex w-48 items-center justify-center rounded bg-deadline ">
                     <Typography type="SmallLabel" text="모집중" styles="text-white" />
                 </div>
-                <h1 className="my-20 cursor-pointer text-24 font-bold">여기가 프로젝트 제목입니다~!</h1>
+                <h1 className="my-20 cursor-pointer text-24 font-bold">{project.title}</h1>
                 <div className="my-20 flex">
                     <Tag type="PROJECT" text="Java"></Tag>
                     <Tag type="PROJECT" text="JavaScript"></Tag>
                 </div>
-                <div className="my-20 text-14 text-gray-600">2023-08-24 ~ 2023-09-22</div>
+                <div className="my-20 text-14 text-gray-600">
+                    {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.startDate).format("MM-DD")}`}
+                    <span> ~ </span>
+                    {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.deadline).format("MM-DD")}`}
+                </div>
             </div>
             <hr />
             <div className="flex cursor-pointer items-center">
