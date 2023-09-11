@@ -37,6 +37,7 @@ public class CommentDto {
         private Long commentId;
         private Long memberId;
         private String nickname;
+        private String profilePicture;
         private Long boardId;
         private Long answerId;
         private Long parentId;

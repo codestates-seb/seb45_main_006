@@ -58,12 +58,18 @@ public class InfoBoardController {
 
         return new ResponseEntity<>(mapper.InfoBoardToInfoBoardResponseDto(updatedInfoBoard), HttpStatus.OK);
     }
+    @GetMapping("/{board-id}")
+    public ResponseEntity getInfoBoard(@PathVariable("board-id") @Positive long boardId) {
+        InfoBoard infoBoard = infoBoardService.findVerifiedInfoBoard(boardId);
+
+        return new ResponseEntity<>(mapper.InfoBoardToInfoBoardResponseDto(infoBoard), HttpStatus.OK);
+    }
     //정보게시판 전체 검색
     @GetMapping
     public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search,
                                           @RequestParam @Positive int page,
                                           @RequestParam @Positive int size) {
-        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page, size);
+        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page-1, size);
         List<InfoBoard> infoBoardList = infoBoardPage.getContent();
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), infoBoardPage),
@@ -75,7 +81,7 @@ public class InfoBoardController {
                                                @RequestParam(name = "search", required = false) String search,
                                                @RequestParam @Positive int page,
                                                @RequestParam @Positive int size) {
-        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(category, search, page, size);
+        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(category, search, page-1, size);
         List<InfoBoard> infoBoardList = infoBoardPage.getContent();
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), infoBoardPage),

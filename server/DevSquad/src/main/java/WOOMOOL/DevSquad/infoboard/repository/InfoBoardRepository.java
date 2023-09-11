@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 //정보게시판은 필터가 적기때문에 필터메소드를 다 만듬
 public interface InfoBoardRepository extends JpaRepository<InfoBoard, Long> {
@@ -40,8 +41,8 @@ public interface InfoBoardRepository extends JpaRepository<InfoBoard, Long> {
     Page<InfoBoard> findByCategoryKeyword(InfoBoard.Category category, String search, Pageable pageable);
     //좋아요 갯수가 10개 이상인 정보게시판 목록
     @Query("SELECT i FROM  InfoBoard i WHERE SIZE(i.likesList) >= 10 " +
-            "AND i.infoBoardStatus = 'INFOBOARD_POSTED' " +
+            "AND i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.createdAt >= :oneWeekMinus " +
             "ORDER BY SIZE(i.likesList) DESC ")
-    List<InfoBoard> findHottestInfoBoard();
+    List<InfoBoard> findHottestInfoBoard(LocalDateTime oneWeekMinus);
 
 }
