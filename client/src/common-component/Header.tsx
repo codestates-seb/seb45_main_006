@@ -86,8 +86,6 @@ const BtnsWithoutAuth = () => {
 };
 
 function Header() {
-    const navigate = useNavigate();
-
     const isSignPage = useRecoilValue(isSignPageAtom);
     const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
@@ -108,10 +106,10 @@ function Header() {
 
     return (
         <header className="flex h-60 w-full items-center justify-between px-10 lg:p-0">
-            <button onClick={() => navigate("/")} className="flex items-center justify-between">
+            <Link to="/" className="flex items-center justify-between">
                 <img src={IconLogo} alt="DevSquad 로고" width={40} />
                 <img src={IconLogoText} width={160} alt="DevSquad" className="hidden sm:block" />
-            </button>
+            </Link>
 
             {!isSignPage && (
                 <>{isLoggedIn ? <BtnsWithAuth onLogoutHandler={onLogoutHandler} /> : <BtnsWithoutAuth />}</>
