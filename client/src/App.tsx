@@ -18,7 +18,6 @@ import ProjectRegister from "@container/project/Register";
 import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
-
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
@@ -28,8 +27,10 @@ import TempProfile4 from "@container/sign/TempProfile4";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
+import UserDetail from "@container/user/UserDetail";
 import InfoBoard from "@container/info/Board";
 import InfoRegister from "@container/info/Register";
+import QuestionBoard from "@container/question/Board";
 import QuestionRegister from "@container/question/Register";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
                 element: <StudyDetails />,
             },
             {
-                path: "/members/1",
+                path: "/members/my",
                 element: <MyPage />,
             },
             {
@@ -126,6 +127,10 @@ const router = createBrowserRouter([
                 element: <UserList />,
             },
             {
+                path: "/members/:memberId",
+                element: <UserDetail />,
+            },
+            {
                 path: "/infos",
                 element: <InfoBoard />,
             },
@@ -134,7 +139,19 @@ const router = createBrowserRouter([
                 element: <InfoRegister />,
             },
             {
+                path: "/infos/:infoId/edit",
+                element: <InfoRegister />,
+            },
+            {
+                path: "/questions",
+                element: <QuestionBoard />,
+            },
+            {
                 path: "/questions/add",
+                element: <QuestionRegister />,
+            },
+            {
+                path: "/questions/:questionId/edit",
                 element: <QuestionRegister />,
             },
         ],

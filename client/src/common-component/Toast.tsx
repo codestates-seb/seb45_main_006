@@ -11,7 +11,7 @@ function Toast({ toast }: { toast: IToast }) {
     const [isShow, setIsShow] = useState(true);
     const { removeToast } = useToast();
 
-    const defaultCss = "flex justify-between min-w-500 w-max px-18 py-12 mb-6 rounded-xl shadow-md";
+    const defaultCss = "flex justify-between min-w-500 w-max px-18 py-12 mb-6 rounded-xl shadow-md z-50";
 
     const handleCloseToast = () => {
         setIsShow(false);
@@ -19,7 +19,6 @@ function Toast({ toast }: { toast: IToast }) {
     };
 
     const handleConfirmToast = () => {
-        console.log(toast.callback);
         if (toast.callback) {
             toast.callback();
         }

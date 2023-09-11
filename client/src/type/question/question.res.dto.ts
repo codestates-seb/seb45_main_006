@@ -1,6 +1,6 @@
-import { CommentDefaultType } from "@type/comment/comment.res.dto";
+import { AnswerDefaultType } from "@type/answer/answer.res.dto";
 
-interface QuestionDefaultType {
+export interface QuestionDefaultType {
     boardId: number;
     title: string;
     content: string;
@@ -8,9 +8,10 @@ interface QuestionDefaultType {
     nickname: string;
     viewCount: number;
     QuestionBoardStatus: string;
-    commentList: Array<CommentDefaultType>;
+    answered: boolean;
     createdAt: string;
-    unpdatedAt: string;
+    modifiedAt: string;
+    answerList: Array<AnswerDefaultType>;
 }
 
 // 질문 게시판 - 리스트 조회

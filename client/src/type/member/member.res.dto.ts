@@ -43,5 +43,11 @@ export type PatchResMemberPw = Record<string, never>; // empty object
 // 마이페이지 - 정보 수정하기
 export type PatchResMember = GetResMemberDetail;
 
+// 유저리스트 - 차단하기
+export type PostResBlockMember = Record<string, never>; // empty object
+
+// 마이페이지 - 차단 해제
+export type DeleteResBlockMember = Record<string, never>; // empty object
+
 // 헤더 - 로그아웃 - status code: 204
 export type DeleteResMember = Record<string, never>; // empty object

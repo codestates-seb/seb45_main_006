@@ -1,12 +1,12 @@
 import { useState } from "react";
-
 import Button from "@component/Button";
 import Typography from "@component/Typography";
 import { useNavigate } from "react-router-dom";
 import BoardList from "@container/project/component/BoardList";
-import Toggle from "@container/project/component/Toggle";
+import Toggle from "@component/project-study/Toggle";
 import CommonSearchFilters from "@component/board/SearchFilters";
 import SearchInput from "@component/board/SearchInput";
+import { useGetAllProjects } from "@api/project/hook";
 
 const Board = () => {
     const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Board = () => {
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
+    const { data: projectsList } = useGetAllProjects();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
@@ -52,8 +53,7 @@ const Board = () => {
                 </div>
                 <Toggle />
             </div>
-            <BoardList />
-            <BoardList />
+            <> {Array.isArray(projectsList) && projectsList.map((v) => <BoardList project={v} />)}</>
         </div>
     );
 };

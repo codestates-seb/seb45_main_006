@@ -1,9 +1,23 @@
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { GetReqAllMembers, PatchReqMember, GetReqMemberDetail } from "@type/member/member.req.dto";
+import {
+    GetReqAllMembers,
+    PatchReqMember,
+    GetReqMemberDetail,
+    PostReqBlockMember,
+    DeleteReqBlockMember,
+} from "@type/member/member.req.dto";
+
+// 유저 리스트 - 멤버 리스트 조회하기 & 차단 유저 제외
+export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
+    const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
+    const url = `${COMMON_API_PATH.MEMBER.MY_LIST}?${query}`;
+    const { data } = await withAuthApi.get(url);
+    return data;
+};
 
 // 유저 리스트 - 멤버 리스트 조회하기
-export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
+export const getAllMembersWithoutBlock = async ({ page, stacks, posiions }: GetReqAllMembers) => {
     const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
     const url = `${COMMON_API_PATH.MEMBER.LIST}?${query}`;
     const { data } = await withAuthApi.get(url);
@@ -35,6 +49,20 @@ export const patchMemberPw = async (requstObj: PatchReqMember) => {
 export const patchMember = async (requestObj: PatchReqMember) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
     const { data } = await withAuthApi.patch(url, requestObj);
+    return data;
+};
+
+// 유저리스트 - 차단하기
+export const postBlockMember = async (requstObj: PostReqBlockMember) => {
+    const url = `${COMMON_API_PATH.MEMBER.BLOCK}`;
+    const { data } = await withAuthApi.post(url, requstObj);
+    return data;
+};
+
+// 마이페이지 - 차단 해제
+export const deleteBlockMember = async ({ memberId }: DeleteReqBlockMember) => {
+    const url = `${COMMON_API_PATH.MEMBER.BLOCK}/${memberId}`;
+    const { data } = await withAuthApi.delete(url);
     return data;
 };
 
