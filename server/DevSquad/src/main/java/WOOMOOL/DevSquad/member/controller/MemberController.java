@@ -86,7 +86,7 @@ public class MemberController {
     public ResponseEntity getMemberProjectBoard(@PathVariable("member-id") Long memberId,
                                                 @RequestParam int page){
 
-        Page<Project> projectListPage = memberService.getMyProjectBoardList(memberId,page-1);
+        Page<Project> projectListPage = memberService.getProjectBoardList(memberId,page-1);
         List<Project> projectList = projectListPage.getContent();
         List<ProjectDto.previewResponseDto> response = projectMapper.entityToPreviewResponseDto(projectList);
 
@@ -98,7 +98,7 @@ public class MemberController {
     public ResponseEntity getMemberStudyBoard(@PathVariable("member-id") Long memberId,
                                               @RequestParam int page){
 
-        Page<Study> studyListPage = memberService.getMyStudyBoardList(memberId,page-1);
+        Page<Study> studyListPage = memberService.getStudyBoardList(memberId,page-1);
         List<Study> studytList = studyListPage.getContent();
         List<StudyDto.previewResponseDto> response = studyMapper.entityToPreviewResponseDto(studytList);
 
@@ -110,7 +110,7 @@ public class MemberController {
     public ResponseEntity getMemberInfoBoard(@PathVariable("member-id") Long memberId,
                                              @RequestParam int page){
 
-        Page<InfoBoard> infoBoardListPage = memberService.getMyInfoBoardList(memberId,page-1);
+        Page<InfoBoard> infoBoardListPage = memberService.getInfoBoardList(memberId,page-1);
         List<InfoBoard> infoBoardList = infoBoardListPage.getContent();
         List<InfoBoardDto.Response> response = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList);
 
@@ -123,16 +123,36 @@ public class MemberController {
     public ResponseEntity getMemberQuestionBoard(@PathVariable("member-id") Long memberId,
                                                  @RequestParam int page){
 
-        Page<QuestionBoard> questionBoardListPage = memberService.getMyQuestionBoardList(memberId,page-1);
+        Page<QuestionBoard> questionBoardListPage = memberService.getQuestionBoardList(memberId,page-1);
         List<QuestionBoard> questionBoardList = questionBoardListPage.getContent();
         List<QuestionBoardDto.Response> response = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
 
         return new ResponseEntity(new PageResponseDto(response,questionBoardListPage),HttpStatus.OK);
     }
 
+    // 좋아요한 정보게시판
+    @GetMapping("/likes/info")
+    public ResponseEntity getMemberLikeInfoBoard(@RequestParam int page){
 
-    // todo: 북마크, 좋아요 조회 추가하기?
+        Page<InfoBoard> infoBoardPage = memberService.getLikeInfoBoardList(page-1);
+        List<InfoBoard> infoBoardList = infoBoardPage.getContent();
+        List<InfoBoardDto.Response> response = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList);
 
+        return new ResponseEntity(new PageResponseDto<>(response,infoBoardPage),HttpStatus.OK);
+    }
+    // 좋아요한 질문게시판
+    @GetMapping("/likes/question")
+    public ResponseEntity getMemberLikeQuestionBoard(@RequestParam int page){
+
+        Page<QuestionBoard> questionBoardPage = memberService.getLikeQuestionBoard(page-1);
+        List<QuestionBoard> questionBoardList = questionBoardPage.getContent();
+        List<QuestionBoardDto.Response> response = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,questionBoardPage),HttpStatus.OK);
+
+    }
+
+    // todo: 북마크
 
     // 유저리스트의 유저 정보 조회
     @GetMapping("/{member-id}")
@@ -152,6 +172,7 @@ public class MemberController {
     // 나의 유저 리스트 조회 8명 까지 + 포지션, 스택 별로 필터링 (차단한 회원은 안보이게)
     @GetMapping("/myList")
     public ResponseEntity getMyMemberProfiles(@RequestParam int page,
+                                            @RequestParam(required = false) String nickname,
                                             @RequestParam(required = false) List<String> positions,
                                             @RequestParam(required = false) List<String> stacks) {
 
@@ -165,7 +186,10 @@ public class MemberController {
 
             memberProfilePage = memberService.getMemberProfilesByStack(page - 1, stacks);
         // 필터링 X
-        } else {
+        } else if ( nickname != null ){
+            memberProfilePage = memberService.getMemberProfileByNickname(page-1, nickname);
+        }
+        else {
 
             memberProfilePage = memberService.getMemberProfilePage(page - 1);
 
@@ -180,6 +204,7 @@ public class MemberController {
     // 로그인하지 않고도 볼 수 있는 회원 리스트
     @GetMapping("/list")
     public ResponseEntity getMemberProfiles(@RequestParam int page,
+                                            @RequestParam(required = false) String nickname,
                                             @RequestParam(required = false) List<String> positions,
                                             @RequestParam(required = false) List<String> stacks) {
 
@@ -193,7 +218,11 @@ public class MemberController {
 
             memberProfilePage = memberService.getMemberProfilesByStack(page - 1, stacks);
             // 필터링 X
-        } else {
+        } else if (nickname != null){
+
+            memberProfilePage = memberService.getMemberProfileByNickname(page-1, nickname);
+        }
+        else {
 
             memberProfilePage = memberService.getMemberProfilePage(page - 1);
 
