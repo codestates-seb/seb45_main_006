@@ -80,7 +80,8 @@ public class InfoBoardService {
     }
 
     public List<InfoBoard> findHottestInfoBoard() {
-        return infoBoardRepository.findHottestInfoBoard().stream().limit(10).collect(Collectors.toList());
+        LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
+        return infoBoardRepository.findHottestInfoBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(long boardId) {

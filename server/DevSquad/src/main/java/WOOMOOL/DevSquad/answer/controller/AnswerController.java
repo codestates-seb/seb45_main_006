@@ -62,7 +62,7 @@ public class AnswerController {
     public ResponseEntity getAnswer(@PathVariable("board-id") @Positive long boarId,
                                     @RequestParam @Positive int page,
                                     @RequestParam @Positive int size) {
-        Page<Answer> answerPage = answerService.selectAnswerByBoardId(boarId, page, size);
+        Page<Answer> answerPage = answerService.selectAnswerByBoardId(boarId, page-1, size);
         List<Answer> answerList = answerPage.getContent();
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.answerListToAnswerResponseDtoList(answerList), answerPage),

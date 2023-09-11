@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.questionboard.service;
 
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -71,6 +73,10 @@ public class QuestionBoardService {
         QuestionBoard findQuestionBoard = QuestionBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         return findQuestionBoard;
+    }
+    public List<QuestionBoard> findHottestQuestionBoard() {
+        LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
+        return questionBoardRepository.findHottestQuestionBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(Long boardId) {

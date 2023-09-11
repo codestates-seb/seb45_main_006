@@ -139,7 +139,7 @@ public class CommentController {
     public ResponseEntity getAllComment(@PathVariable("board-id") @Positive long boardId,
                                         @RequestParam @Positive int page,
                                         @RequestParam @Positive int size) {
-        Page<Comment> commentPage = commentService.selectCommentByBoardId(boardId, page, size);
+        Page<Comment> commentPage = commentService.selectCommentByBoardId(boardId, page-1, size);
         List<Comment> commentList = commentPage.getContent();
         return new ResponseEntity(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
@@ -147,10 +147,11 @@ public class CommentController {
     public ResponseEntity getAnswerAllComment(@PathVariable("answer-id") @Positive long answerId,
                                               @RequestParam @Positive int page,
                                               @RequestParam @Positive int size) {
-        Page<Comment> commentPage = commentService.selectCommentByAnswerId(answerId, page, size);
+        Page<Comment> commentPage = commentService.selectCommentByAnswerId(answerId, page-1, size);
         List<Comment> commentList = commentPage.getContent();
         return new ResponseEntity<>(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
+    //단일댓글보기
 //    @GetMapping("/comment/{comment-id}")
 //    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId) {
 //        return new ResponseEntity<>(mapper.commentToCommentResponseDto(commentService.findVerifiedComment(commentId)), HttpStatus.OK);
