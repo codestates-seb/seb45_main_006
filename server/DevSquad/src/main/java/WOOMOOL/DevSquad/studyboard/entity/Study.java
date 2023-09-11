@@ -1,5 +1,7 @@
 package WOOMOOL.DevSquad.studyboard.entity;
 
+import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
+import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.board.entity.Board;
 import lombok.Getter;
@@ -7,10 +9,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+//@DiscriminatorValue("STUDY")
 public class Study extends Board {
 
     @Column(nullable = false)
@@ -29,9 +34,6 @@ public class Study extends Board {
     private Integer recruitNum;
 
     @Column(nullable = false)
-    private boolean recruitStatus = false;
-
-    @Column(nullable = false)
     private int viewCount = 0;
 
     // Soft Delete
@@ -42,6 +44,12 @@ public class Study extends Board {
     @ManyToOne  // N : 1
     @JoinColumn(name = "MEMBER_PROFILE_ID")
     private MemberProfile memberProfile;
+
+    @OneToMany(mappedBy = "board")
+    private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> commentList = new ArrayList<>();
 
     public enum StudyStatus {
         STUDY_POSTED("게시 중"),

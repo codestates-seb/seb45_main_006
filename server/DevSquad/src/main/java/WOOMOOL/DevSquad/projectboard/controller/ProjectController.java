@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.projectboard.controller;
 
+import WOOMOOL.DevSquad.bookmark.service.BookmarkService;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
@@ -21,14 +22,17 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    public ProjectController(ProjectService projectService, ProjectMapper mapper) {
+    private final BookmarkService bookmarkService;
+
+    public ProjectController(ProjectService projectService, ProjectMapper mapper, BookmarkService bookmarkService) {
         this.projectService = projectService;
         this.mapper = mapper;
+        this.bookmarkService = bookmarkService;
     }
 
     @PostMapping
     public ResponseEntity postProject(@Valid @RequestBody ProjectDto.PostDto postDto) {
-        Project project = projectService.createStudy(mapper.postDtoToEntity(postDto));
+        Project project = projectService.createProject(mapper.postDtoToEntity(postDto));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -55,10 +59,7 @@ public class ProjectController {
     public ResponseEntity getProjectsForMember(@PathVariable("memberProfileId") Long memberProfileId) {
         List<Project> projects = projectService.getProjectsForMember(memberProfileId);
 
-        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
+    // 프로젝트 수정
     @PatchMapping("/{boardId}")
     public ResponseEntity updateProject(@PathVariable("boardId") @Positive Long boardId,
                                         @Valid @RequestBody ProjectDto.PatchDto patchDto) {
@@ -66,6 +67,17 @@ public class ProjectController {
         Project project = projectService.updateProject(mapper.patchDtoToEntity(patchDto));
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
+    }
+
+    // 모집 마감
+    @PatchMapping("/{boardId}/close")
+    public ResponseEntity closeProject(@PathVariable("boardId") @Positive Long boardId) {
+
+        Project project = projectService.getProject(boardId);
+
+        projectService.closeProject(project);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")
