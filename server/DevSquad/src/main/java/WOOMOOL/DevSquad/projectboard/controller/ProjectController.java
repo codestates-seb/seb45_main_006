@@ -55,9 +55,6 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{memberProfileId}")
-    public ResponseEntity getProjectsForMember(@PathVariable("memberProfileId") Long memberProfileId) {
-        List<Project> projects = projectService.getProjectsForMember(memberProfileId);
 
     // 프로젝트 수정
     @PatchMapping("/{boardId}")

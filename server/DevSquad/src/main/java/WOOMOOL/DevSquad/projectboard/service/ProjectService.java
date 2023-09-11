@@ -51,10 +51,6 @@ public class ProjectService {
         return  projectPage.getContent();
     }
 
-    // 특정 멤버가 작성한 프로젝트 리스트 조회
-    public List<Project> getProjectsForMember(Long memberProfileId) {
-        List<Project> projects = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
-
     // 프로젝트 수정
     public Project updateProject(Project project) {
 
