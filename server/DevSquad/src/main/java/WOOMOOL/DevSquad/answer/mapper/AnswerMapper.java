@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.ArrayList;
 import java.util.List;
 @Mapper(componentModel = "spring",uses = {CommentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnswerMapper {
@@ -18,5 +19,18 @@ public interface AnswerMapper {
     @Mapping(source = "questionBoard.boardId", target = "boardId")
     @Mapping(source = "memberProfile.nickname", target = "nickname")
     AnswerDto.Response answerToAnswerResponseDto(Answer answer);
-    List<AnswerDto.Response> answerListToAnswerResponseDtoList(List<Answer> answerList);
+
+    default List<AnswerDto.Response> answerListToAnswerResponseDtoList(List<Answer> answerList) {
+        if ( answerList == null ) {
+            return null;
+        }
+
+        List<AnswerDto.Response> list = new ArrayList<>( answerList.size() );
+        for ( Answer answer : answerList ) {
+            if(answer.getAnswerStatus().name().equals("ANSWER_POSTED"))
+                list.add( answerToAnswerResponseDto( answer ) );
+        }
+
+        return list;
+    }
 }

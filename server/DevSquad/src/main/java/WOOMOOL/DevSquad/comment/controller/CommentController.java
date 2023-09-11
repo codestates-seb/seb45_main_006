@@ -5,6 +5,8 @@ import WOOMOOL.DevSquad.comment.dto.CommentDto;
 import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.comment.service.CommentService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @Validated
@@ -133,15 +136,24 @@ public class CommentController {
     }
 
     @GetMapping("/comment")
-    public ResponseEntity getAllComment() {
-        return new ResponseEntity(mapper.commentListToCommentResponseDtoList(commentService.findCommentList()), HttpStatus.OK);
+    public ResponseEntity getAllComment(@PathVariable("board-id") @Positive long boardId,
+                                        @RequestParam @Positive int page,
+                                        @RequestParam @Positive int size) {
+        Page<Comment> commentPage = commentService.selectCommentByBoardId(boardId, page, size);
+        List<Comment> commentList = commentPage.getContent();
+        return new ResponseEntity(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
-    @GetMapping("/comment/{comment-id}")
-    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId) {
-        return new ResponseEntity<>(mapper.commentToCommentResponseDto(commentService.findVerifiedComment(commentId)), HttpStatus.OK);
+    @GetMapping("/answer/{answer-id}/comment")
+    public ResponseEntity getAnswerAllComment(@PathVariable("answer-id") @Positive long answerId,
+                                              @RequestParam @Positive int page,
+                                              @RequestParam @Positive int size) {
+        Page<Comment> commentPage = commentService.selectCommentByAnswerId(answerId, page, size);
+        List<Comment> commentList = commentPage.getContent();
+        return new ResponseEntity<>(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
-    @GetMapping("/answer/{answer-id}/comment/{comment-id}")
-    public ResponseEntity getAnswerComment(@PathVariable("comment-id") @Positive long commentId) {
-        return new ResponseEntity<>(mapper.commentToCommentResponseDto(commentService.findVerifiedComment(commentId)), HttpStatus.OK);
-    }
+//    @GetMapping("/comment/{comment-id}")
+//    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId) {
+//        return new ResponseEntity<>(mapper.commentToCommentResponseDto(commentService.findVerifiedComment(commentId)), HttpStatus.OK);
+//    }
+
 }

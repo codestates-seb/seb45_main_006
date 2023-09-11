@@ -5,6 +5,8 @@ import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,12 +45,12 @@ public class QuestionBoardService {
         return questionBoardRepository.save(findQuestionBoard);
     }
     //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
-    public List<QuestionBoard> findAllQuestionBoard(String search) {
-        List<QuestionBoard> result = new ArrayList<>();
+    public Page<QuestionBoard> findAllQuestionBoard(String search, int page, int size) {
+        Page<QuestionBoard> result;
         if(search==null)
-            result = questionBoardRepository.findAllPosted();
+            result = questionBoardRepository.findAllPosted(PageRequest.of(page, size));
         else
-            result = questionBoardRepository.findByKeyword(search);
+            result = questionBoardRepository.findByKeyword(search, PageRequest.of(page, size));
 
 
         return result;

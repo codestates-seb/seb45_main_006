@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.questionboard.entity;
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.comment.entity.Comment;
+import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 
 import lombok.Getter;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @NoArgsConstructor
 public class QuestionBoard extends Board {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberProfile memberProfile;
 
@@ -34,8 +35,11 @@ public class QuestionBoard extends Board {
 
     private boolean isAnswered = false;
 
-    @OneToMany(mappedBy = "questionBoard")
+    @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY)
     private List<Answer> answerList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Likes> likesList = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
