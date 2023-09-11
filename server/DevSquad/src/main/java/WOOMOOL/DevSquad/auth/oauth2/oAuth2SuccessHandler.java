@@ -50,7 +50,8 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if(optionalMember.isPresent()) return;
 
-        // 멤버 정보 생성해서 넣어주기
+
+        // 멤버프로필 정보 생성해서 넣어주기
         Member member = new Member(email);
         MemberProfile memberProfile = new MemberProfile(email);
         memberProfile.setOAuth2Member(true);

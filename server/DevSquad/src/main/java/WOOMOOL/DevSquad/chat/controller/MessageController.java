@@ -19,16 +19,14 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/message")
 public class MessageController {
 
     private final MessageMapper messageMapper;
     private final MessageService messageService;
 
-//    @MessageMapping("/chat/{chatRoom-id}")
-//    @SendTo("/topic/chat/{chatRoom-id}")
-    @PostMapping("/{chatRoom-id}")
-    public ResponseEntity sendMessage(@PathVariable("chatRoom-id") Long chatRoomId,
+    @MessageMapping("/chat/{chatRoom-id}") // 여기로 메시지가오면 메서드 실행
+    @SendTo("/topic/chat/{chatRoom-id}") // topic/chat/{chatRoom-id} 를 구독하고 있는 사람들에게 response
+    public ResponseEntity sendMessage(@DestinationVariable("chatRoom-id") Long chatRoomId,
                                       @RequestBody MessageDto.Post postDto) {
 
         Message message = messageMapper.postDtoToEntity(postDto);
@@ -41,4 +39,12 @@ public class MessageController {
         return new ResponseEntity(response, HttpStatus.OK);
 
     }
+
+    @MessageMapping("chat/exit/{chatRoom-id}")
+    @SendTo("/topic/chat/{chatRoom-id}")
+    public ResponseEntity sendExitMessage(@DestinationVariable("chatRoom-id")Long chatRoomId){
+
+        return null;
+    }
+
 }

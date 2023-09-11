@@ -25,7 +25,7 @@ public class ChatRoomController {
     @PostMapping
     public ResponseEntity postChatRoom(@RequestBody ChatRoomDto.Post postDto){
 
-        chatRoomService.createChatRoom(postDto.getReceiverId());
+        chatRoomService.createChatRoom(postDto.getMemberId());
 
         return new ResponseEntity(HttpStatus.OK);
     }

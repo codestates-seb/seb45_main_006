@@ -47,16 +47,12 @@ public class ChatRoomService {
         if(chatRoomRepository.findByMembers(membersId, (long) membersId.size()).isPresent()){
            throw new BusinessLogicException(DUPLICATE_CHAT_ROOM);
         } else {
-
-
+          
             ChatRoom chatRoom = new ChatRoom();
             // 유저와 채팅방 정보 서로 저장
             chatRoom.joinChatRoom(sender, receiver);
             sender.addChatRoom(chatRoom);
             receiver.addChatRoom(chatRoom);
-
-            // 1->2 채팅방을 만들었는데 2->1 채팅방 만들었을 때 어떻게 할지?
-
 
             return chatRoomRepository.save(chatRoom);
         }

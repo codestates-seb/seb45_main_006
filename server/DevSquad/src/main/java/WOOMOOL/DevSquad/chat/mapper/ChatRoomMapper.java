@@ -19,10 +19,11 @@ public interface ChatRoomMapper {
         return new ChatRoomDto.detailResponse(
                 chatRoom.getCharRoomId(),
                 chatRoom.getMemberProfileList().stream()
-                        .map(memberProfile -> memberProfile.getNickname()).collect(Collectors.toList()),
+
+                        .map(memberProfile -> memberProfile.getMemberProfileId()).collect(Collectors.toList()),
                 chatRoom.getMessageList().stream().map(message ->
                         new MessageDto.Response(
-                                message.getNickname(),
+                                message.getSenderId(),
                                 message.getContent(),
                                 message.getCreateAt())
                 ).collect(Collectors.toList())
@@ -36,7 +37,7 @@ public interface ChatRoomMapper {
                 .map(chatRoom -> new ChatRoomDto.listResponse(
                         chatRoom.getCharRoomId(),
                         chatRoom.getMemberProfileList().stream()
-                                .map(memberProfile -> memberProfile.getNickname())
+                                .map(memberProfile -> memberProfile.getMemberProfileId())
                                 .collect(Collectors.toList())
                 )).collect(Collectors.toList());
     }
