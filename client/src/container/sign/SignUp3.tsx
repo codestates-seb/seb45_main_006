@@ -1,18 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import {Link} from "react-router-dom";
 import SignLayout from "@container/sign/component/SignLayout";
 import Typography from "@component/Typography";
 import progress from "@assets/sign/progress_bar3.png";
 
 function SignUp3() {
     //컴포넌트 내부에 useState, handleInput 넣기
-
-    const navigate = useNavigate();
-    const handleClickMain = () => {
-        navigate("/");
-    };
-    const handleClickSetPro = () => {
-        navigate("/setpro");
-    };
     return (
         <SignLayout title="설희님의 회원가입을" subTitle="축하합니다 🎉" progressImage={progress}>
             <div className="flex-col justify-center pb-50">
@@ -36,19 +28,17 @@ function SignUp3() {
             </div>
 
             <div className="flex flex-col items-center">
-                <button
-                    onClick={handleClickSetPro}
-                    className="m-auto flex w-230 justify-center rounded bg-button-next p-9"
-                >
-                    <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
-                </button>
+                <Link to = {'/setpro/1'}>
+                    <a className="m-auto flex w-230 justify-center rounded bg-button-next p-9">
+                        <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
+                    </a>
+                </Link>
                 <div className="pb-50">
-                    <button
-                        className="m-auto mt-25 flex w-230 justify-center rounded border-1 border-solid border-black p-9"
-                        onClick={handleClickMain}
-                    >
-                        <Typography type="Highlight" text="다음에 만들어 볼래요" />
-                    </button>
+                    <Link to = {'/'}>
+                        <a className="m-auto mt-25 flex w-230 justify-center rounded border-1 border-solid border-black p-9">
+                            <Typography type="Highlight" text="다음에 만들어 볼래요" />
+                        </a>
+                    </Link>
                 </div>
             </div>
         </SignLayout>

@@ -4,19 +4,18 @@ import githubImg from "@assets/sign/github.png";
 import fontImg from "@assets/sign/font.png";
 import Typography from "@component/Typography";
 import SignLayout from "@container/sign/component/SignLayout";
-import { useNavigate } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function SignUpContent1({ handleGoogleClick }: { handleGoogleClick: () => void }) {
-    const navigate = useNavigate();
-    const handleClickSignup = () => {
-        navigate("/signup/2");
-    };
+
     return (
         <div className="mb-70">
             <img className="absolute -top-32 left-96 w-100" src={fontImg} />
-            <button onClick={handleClickSignup} className="m-auto flex w-320 justify-center rounded bg-black p-8">
-                <Typography type="Highlight" text="DevSquad로 가입하기" color="text-white" />
-            </button>
+            <Link to={"/signup/2"}>
+                <a className="m-auto flex w-320 justify-center rounded bg-black p-8">
+                    <Typography type="Highlight" text="DevSquad로 가입하기" color="text-white" />
+                </a>
+            </Link>
             <button
                 className="m-auto mt-25 flex w-320 justify-center rounded border-2 border-solid border-black p-6"
                 onClick={handleGoogleClick}
