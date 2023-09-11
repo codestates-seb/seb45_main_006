@@ -26,7 +26,7 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, Lo
     List<MemberProfile> findAllByPositions(List<String> positionNames,Long positionCount );
 
     // 스택에 따라서 필터링하기
-    @Query("SELECT DISTINCT mp FROM MemberProfile mp JOIN mp.stackTags st " +
+    @Query("SELECT mp FROM MemberProfile mp JOIN mp.stackTags st " +
             "WHERE st.tagName IN :tagNames " +
             "AND mp.memberStatus = 'MEMBER_ACTIVE' AND mp.listEnroll = true " +
             "GROUP BY mp HAVING COUNT(st) IN :tagCount")

@@ -11,7 +11,7 @@ function Toast({ toast }: { toast: IToast }) {
     const [isShow, setIsShow] = useState(true);
     const { removeToast } = useToast();
 
-    const defaultCss = "flex justify-between min-w-500 w-max px-18 py-12 mb-6 bg-toast rounded-xl shadow-md";
+    const defaultCss = "flex justify-between min-w-500 w-max px-18 py-12 mb-6 rounded-xl shadow-md z-50";
 
     const handleCloseToast = () => {
         setIsShow(false);
@@ -19,7 +19,6 @@ function Toast({ toast }: { toast: IToast }) {
     };
 
     const handleConfirmToast = () => {
-        console.log(toast.callback);
         if (toast.callback) {
             toast.callback();
         }
@@ -29,8 +28,18 @@ function Toast({ toast }: { toast: IToast }) {
     return (
         <>
             {isShow ? (
-                <div className={defaultCss}>
-                    <div className="mr-64">{toast.content}</div>
+                <div className={`${defaultCss} ${toast.isWarning ? "bg-warn" : "bg-toast"}`}>
+                    <div className="mr-64">
+                        {typeof toast.content === "string" ? (
+                            <Typography
+                                type="Highlight"
+                                text={toast.content}
+                                color={toast.isWarning ? "text-white" : ""}
+                            />
+                        ) : (
+                            toast.content
+                        )}
+                    </div>
                     {toast.isConfirm ? (
                         <div className="flex w-80 justify-between">
                             <button onClick={handleConfirmToast}>

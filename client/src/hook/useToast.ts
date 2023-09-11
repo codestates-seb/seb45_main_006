@@ -16,6 +16,8 @@ export const useToast = () => {
                 id: id,
                 content: toast.content || "",
                 isConfirm: false,
+                isWarning: toast.isWarning || false,
+                callback: toast.callback,
             },
         ]);
 
@@ -25,6 +27,8 @@ export const useToast = () => {
                     id: id,
                     content: toast.content || "",
                     isConfirm: false,
+                    isWarning: toast.isWarning || false,
+                    callback: toast.callback,
                 },
             ]);
         }, 2500);
@@ -36,6 +40,7 @@ export const useToast = () => {
                 id: id,
                 content: toast.content || "",
                 isConfirm: toast.isConfirm || false,
+                isWarning: toast.isWarning || false,
                 callback: toast.callback,
             },
         ]);
@@ -47,10 +52,34 @@ export const useToast = () => {
                 id: toast.id,
                 content: toast.content || "",
                 isConfirm: toast.isConfirm || false,
+                isWarning: toast.isWarning || false,
                 callback: toast.callback,
             },
         ]);
     };
 
-    return { toasts, createToast, removeToast, fireToast };
+    const reqLoginToUserToast = () => {
+        addToastItemFn([
+            {
+                id: id,
+                content: "로그인이 필요한 서비스입니다. 로그인 화면으로 이동하시겠습니까?",
+                isConfirm: true,
+                isWarning: false,
+                callback: () => (location.href = "/login"),
+            },
+        ]);
+    };
+
+    const errorToast = () => {
+        addToastItemFn([
+            {
+                id: id,
+                content: "요청 처리 중 에러가 발생하였습니다. 새로고침 후 다시 시도부탁드려요!🥹",
+                isConfirm: false,
+                isWarning: true,
+            },
+        ]);
+    };
+
+    return { toasts, createToast, removeToast, fireToast, reqLoginToUserToast, errorToast };
 };

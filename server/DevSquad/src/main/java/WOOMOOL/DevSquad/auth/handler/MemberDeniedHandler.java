@@ -21,6 +21,8 @@ public class MemberDeniedHandler implements AccessDeniedHandler {
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("접근 권한이 없습니다.");
 
         log.warn("Forbidden Error : {} ", accessDeniedException.getMessage());
     }

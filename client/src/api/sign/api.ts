@@ -1,6 +1,6 @@
 import { commonApi } from "@api/common/commonApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { GetReqNicknameDuplicated, PostReqMember } from "@type/sign/sign.req.dto";
+import { GetReqNicknameDuplicated, PostReqMember, PostReqLogin, DeleteReqLogout } from "@type/sign/sign.req.dto";
 
 // 회원가입 =  유저 생성하기
 export const postMember = async (requestObj: PostReqMember) => {
@@ -13,5 +13,26 @@ export const postMember = async (requestObj: PostReqMember) => {
 export const getNicknameDuplicated = async (requestObj: GetReqNicknameDuplicated) => {
     const url = `${COMMON_API_PATH.SIGN.NICKNAME}`;
     const { data } = await commonApi.get(url, { data: requestObj });
+    return data;
+};
+
+// 로그인
+export const postLogin = async (requestObj: PostReqLogin) => {
+    const url = `${COMMON_API_PATH.SIGN.LOGIN}`;
+    const { data } = await commonApi.post(url, requestObj);
+    return data;
+};
+
+// 로그아웃
+export const deleteLogout = async (requestObj: DeleteReqLogout) => {
+    const url = `${COMMON_API_PATH.SIGN.LOGOUT}`;
+    const { data } = await commonApi.delete(url, { data: requestObj });
+    return data;
+};
+
+// 새로운 access token 요청
+export const postNewAccessToken = async () => {
+    const url = `${COMMON_API_PATH.SIGN.NEW_ACCESS_TOKEN}`;
+    const { data } = await commonApi.post(url);
     return data;
 };

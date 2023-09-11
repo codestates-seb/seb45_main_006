@@ -12,6 +12,9 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
     //사용자 id로 검색
     @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' AND q.memberProfile.memberProfileId = :memberProfileId ORDER BY q.createdAt DESC")
     List<QuestionBoard> findAllByMemberProfile(Long memberProfileId);
+    // 페이지네이션
+    @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' AND q.memberProfile.memberProfileId = :memberProfileId ORDER BY q.createdAt DESC")
+    Page<QuestionBoard> findAllByMemberProfile(Long memberProfileId, Pageable pageable);
     //정보게시판 전체를 최신순으로 정렬
     @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' ORDER BY q.createdAt DESC ")
     Page<QuestionBoard> findAllPosted(Pageable pageable);

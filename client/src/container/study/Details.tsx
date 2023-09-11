@@ -1,9 +1,18 @@
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import bookmark from "@assets/bookmark.svg";
-import siren from "@assets/siren.png";
+import bookmark_unfill from "@assets/bookmark_unfill.svg";
+import bookmark_fill from "@assets/bookmark_fill.svg";
+import { useState } from "react";
+import Report from "@component/project-study/Report";
 
 const Details = () => {
+    const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
+
+    // Function to toggle bookmark
+    const toggleBookmark = () => {
+        setIsBookmarked((prevState) => !prevState);
+    };
+
     return (
         <div>
             <div className="m-20 flex gap-20">
@@ -39,8 +48,12 @@ const Details = () => {
                         </ul>
                     </div>
                     <div>
-                        <img src={bookmark} className="m-10 h-28 w-28" />
-                        <img src={siren} className="m-10 h-24 w-24" />
+                        <img
+                            src={isBookmarked ? bookmark_fill : bookmark_unfill}
+                            className="m-10 h-28 w-28 cursor-pointer"
+                            onClick={toggleBookmark}
+                        />
+                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">

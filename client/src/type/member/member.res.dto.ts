@@ -1,4 +1,7 @@
 import { PageInfo } from "@type/common";
+import { CommonResProjects } from "@type/project/project.res.dto";
+import { CommonResStudies } from "@type/study/study.res.dto";
+import { InfoDefaultType } from "@type/info/info.res.dto";
 
 // 멤버 리스트 중 하나의 객체
 export type OneMember = {
@@ -29,9 +32,9 @@ export type GetResMemberDetail = {
     modifiedAt: string; // 날짜 string 형식으로 도착
     oauthUser: boolean;
     blockMemberList: Array<string>;
-    projectList: Array<unknown>;
-    studyList: Array<unknown>;
-    infoBoardList: Array<unknown>;
+    projectList: Array<CommonResProjects>;
+    studyList: Array<CommonResStudies>;
+    infoBoardList: Array<InfoDefaultType>;
 };
 
 // 마이페이지 - 비밀번호 수정 - status code: 200
@@ -39,6 +42,12 @@ export type PatchResMemberPw = Record<string, never>; // empty object
 
 // 마이페이지 - 정보 수정하기
 export type PatchResMember = GetResMemberDetail;
+
+// 유저리스트 - 차단하기
+export type PostResBlockMember = Record<string, never>; // empty object
+
+// 마이페이지 - 차단 해제
+export type DeleteResBlockMember = Record<string, never>; // empty object
 
 // 헤더 - 로그아웃 - status code: 204
 export type DeleteResMember = Record<string, never>; // empty object

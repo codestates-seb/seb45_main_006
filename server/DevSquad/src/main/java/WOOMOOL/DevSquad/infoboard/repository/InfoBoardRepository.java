@@ -10,8 +10,13 @@ import java.util.List;
 //정보게시판은 필터가 적기때문에 필터메소드를 다 만듬
 public interface InfoBoardRepository extends JpaRepository<InfoBoard, Long> {
     //사용자 id로 검색
-    @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.memberProfile.memberProfileId = :memberProfileId ORDER BY i.createdAt DESC")
+    @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.memberProfile.memberProfileId = :memberProfileId")
     List<InfoBoard> findAllByMemberProfile(Long memberProfileId);
+
+    // 페이지네이션
+    @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.memberProfile.memberProfileId = :memberProfileId")
+    Page<InfoBoard> findAllByMemberProfile(Long memberProfileId, Pageable pageable);
+
     //정보게시판 전체를 최신순으로 정렬
     @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' ORDER BY i.createdAt DESC ")
     Page<InfoBoard> findAllPosted(Pageable pageable);

@@ -1,99 +1,128 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
+import { usePostStudy } from "@api/study/hook";
+import { useToast } from "@hook/useToast";
 
 export default function Register() {
     const navigate = useNavigate();
+    const { fireToast } = useToast();
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    const validateForm = () => {
+        const { title, content, recruitNum } = inputs;
+        const isTitleValid = title.trim() !== "";
+        const isContentValid = content.trim() !== "";
+        const isRecruitNumValid = recruitNum > 0;
+
+        const isValid = isTitleValid && isContentValid && isRecruitNumValid;
+        setIsFormValid(isValid);
+    };
 
     const [inputs, setInputs] = useState({
-        studyName: "",
-        detail: "",
-        stack: "",
-        date: "",
-        group: 0,
+        title: "",
+        content: "",
+        // stack: "",
+        recruitNum: 0,
+        recruitStatus: false,
     });
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
-
         setInputs({ ...inputs, [name]: value });
+        validateForm();
     }
 
-    // async function handleSubmit() {
-    //     const path = "/studies";
-    //     const body = {
-    //         ...inputs,
-    //     };
-    //     const { code, message, data } = await axios.post(path, body); //hook으로 바꾸기
+    const { mutate: postStudy } = usePostStudy();
 
-    //     if (code !== 200) {
-    //         alert(message);
-    //         return;
-    //     }
+    const handleSubmit = async () => {
+        try {
+            postStudy(inputs, {
+                onSuccess: () => {
+                    navigate("/studies/:studyBoardId");
+                    fireToast({
+                        content: "게시글이 등록되었습니다!",
+                        isConfirm: false,
+                    });
+                },
+                // TODO: 에러 분기
+                onError: (err) => {
+                    console.log(err);
+                    fireToast({
+                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                        isConfirm: false,
+                        // isWarning: true,
+                    });
+                },
+            });
+        } catch (error) {
+            console.log("errorMessage", error);
+        }
+    };
 
-    //     navigate("/todos/register");
-    // }
     return (
-        <div className="m-80 flex items-center justify-center">
-            <div className="flex w-11/12 flex-col items-center justify-center rounded-lg bg-study">
-                <Typography type="Heading" text="어떤 스터디인가요?" styles="pt-60 pb-30 pl-60 self-baseline" />
-                <BoardInput
-                    name="studyName"
-                    label="스터디명"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.studyName}
-                    onChange={handleInput}
-                    maxlength={20}
-                />
-                <BoardTextarea
-                    type="FIELD"
-                    name="detail"
-                    label="스터디 상세내용"
-                    required={true}
-                    placeholder="ex) 카메라 서비스 개발"
-                    value={inputs.detail}
-                    onChange={handleInput}
-                />
-                <BoardInput
-                    name="stack"
-                    label="요구스택"
-                    required={true}
-                    placeholder="ex) java, javascript"
-                    value={inputs.stack}
-                    onChange={handleInput}
-                />
-                <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
-                <BoardInput
-                    name="date"
-                    label="스터디 기간"
-                    required={true}
-                    placeholder="ex) 2023-09-22"
-                    value={inputs.date}
-                    onChange={handleInput}
-                />
-                <BoardInput
-                    name="group"
-                    label="모집인원"
-                    required={true}
-                    placeholder="ex) 6명"
-                    value={inputs.group}
-                    onChange={handleInput}
-                />
-                <Button
-                    type="STUDY_POINT"
-                    styles="mb-20"
-                    isFullBtn={false}
-                    onClickHandler={() => {
-                        navigate("/studies/:studyBoardId");
-                    }}
-                >
-                    <Typography text="등록하기" type="Label" color="text-white" />
-                </Button>
+        <div className="m-80 flex justify-center">
+            <div className="flex w-11/12 justify-center rounded-lg bg-study">
+                <div className="flex w-11/12 flex-col">
+                    <Typography type="Heading" text="어떤 스터디인가요?" styles="pt-60 pb-30 self-baseline" />
+                    <BoardInput
+                        name="title"
+                        label="스터디명"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.title}
+                        onChange={handleInput}
+                        maxlength={20}
+                    />
+                    <BoardTextarea
+                        name="content"
+                        label="스터디 상세내용"
+                        required={true}
+                        placeholder="ex) 카메라 서비스 개발"
+                        value={inputs.content}
+                        onChange={handleInput}
+                        borderStyle={""}
+                    />
+                    {/* <BoardInput
+                        name="stack"
+                        label="요구스택"
+                        required={true}
+                        placeholder="ex) java, javascript"
+                        value={inputs.stack}
+                        onChange={handleInput}
+                    /> */}
+                    <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                    <BoardInput
+                        name="recruitNum"
+                        label="모집인원"
+                        required={true}
+                        placeholder="ex) 6명"
+                        value={inputs.recruitNum}
+                        onChange={handleInput}
+                    />
+                    <div className="flex w-full justify-center">
+                        <Button
+                            type="STUDY_POINT"
+                            styles="mb-20 shadow-md hover:bg-green-400"
+                            isFullBtn={false}
+                            onClickHandler={() => {
+                                if (isFormValid) {
+                                    handleSubmit();
+                                } else {
+                                    fireToast({
+                                        content: "빈 칸을 채워주세요!",
+                                        isConfirm: false,
+                                    });
+                                }
+                            }}
+                        >
+                            <Typography text="등록하기" type="Label" color="text-white" />
+                        </Button>
+                    </div>
+                </div>
             </div>
         </div>
     );
