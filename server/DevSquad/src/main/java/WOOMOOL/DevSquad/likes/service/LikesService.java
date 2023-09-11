@@ -39,10 +39,4 @@ public class LikesService {
             return HttpStatus.CREATED;
         }
     }
-    public List<InfoBoard> findLikedInfoBoard(long memberId) {
-        return likesRepository.findInfoBoardByLikedMemberId(memberId);
-    }
-    public List<QuestionBoard> findLikedQuestionBoard(long memberId) {
-        return likesRepository.findQuestionBoardByLikedMemberId(memberId);
-    }
 }

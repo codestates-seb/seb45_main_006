@@ -15,9 +15,6 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor
 public class LikesController {
     private final LikesService likesService;
-    private final MemberService memberService;
-    private final InfoBoardMapper infoBoardMapper;
-    private final QuestionBoardMapper questionBoardMapper;
 
     @PostMapping("/{board}/{board-id}/likes")
     public ResponseEntity postAndDeleteLikes(@PathVariable("board-id") @Positive long boardId) {
@@ -25,16 +22,5 @@ public class LikesController {
 
         return new ResponseEntity<>(httpStatus);
     }
-    //매핑주소 아직 안정함
-    @GetMapping("/test1")
-    public ResponseEntity getLikedInfoBoard() {
-        long memberId = memberService.findMemberFromToken().getMemberId();
-        return new ResponseEntity<>(infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(likesService.findLikedInfoBoard(memberId)),HttpStatus.OK);
-    }
-    //매핑주소 아직 안정함
-    @GetMapping("/test2")
-    public ResponseEntity getLikedQuestionBoard() {
-        long memberId = memberService.findMemberFromToken().getMemberId();
-        return new ResponseEntity<>(questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(likesService.findLikedQuestionBoard(memberId)),HttpStatus.OK);
-    }
+
 }
