@@ -8,6 +8,8 @@ import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +83,12 @@ public class CommentService {
         commentRepository.save(findComment);
     }
 
+    public Page<Comment> selectCommentByBoardId(long boardId, int page, int size) {
+        return commentRepository.findByBoardId(boardId, PageRequest.of(page, size));
+    }
+    public Page<Comment> selectCommentByAnswerId(long answerId, int page, int size) {
+        return commentRepository.findByAnswerId(answerId, PageRequest.of(page, size));
+    }
 
     public Comment findVerifiedComment(Long commentId) {
         Optional<Comment> comment = commentRepository.findById(commentId);

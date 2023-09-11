@@ -4,6 +4,8 @@ import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.mapper.QuestionBoardMapper;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -56,10 +59,14 @@ public class QuestionBoardController {
     }
     //정보게시판 전체 검색
     @GetMapping
-    public ResponseEntity getAllQuestionBoard(@RequestParam(name = "search", required = false) String search) {
-        List<QuestionBoard> questionBoardList = questionBoardService.findAllQuestionBoard(search);
+    public ResponseEntity getAllQuestionBoard(@RequestParam(name = "search", required = false) String search,
+                                              @RequestParam @Positive int page,
+                                              @RequestParam @Positive int size) {
+        Page<QuestionBoard> questionBoardPage = questionBoardService.findAllQuestionBoard(search, page, size);
+        List<QuestionBoard> questionBoardList = questionBoardPage.getContent();
 
-        return new ResponseEntity<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), HttpStatus.OK);
+        return new ResponseEntity<>(new PageResponseDto<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), questionBoardPage),
+                HttpStatus.OK);
     }
     //뷰카운트 올리기 (정보게시판을 펼쳐서 보기때문에 상세페이지가 따로 없어서 펼치기를 누르면 조회수가 올라감
     @PostMapping("/{board-id}")

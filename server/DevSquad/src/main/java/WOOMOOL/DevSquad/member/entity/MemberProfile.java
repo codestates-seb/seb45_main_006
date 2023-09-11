@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.chat.entity.ChatRoom;
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
@@ -111,6 +112,9 @@ public class MemberProfile {
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Bookmark> bookmarkList;
+
+    @OneToMany(mappedBy = "memberProfile")
+    private List<Likes> likesList;
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
