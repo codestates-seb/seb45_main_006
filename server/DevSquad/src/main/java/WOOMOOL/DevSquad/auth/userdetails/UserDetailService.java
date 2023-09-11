@@ -37,7 +37,7 @@ public class UserDetailService implements UserDetailsService {
         log.info(username);
 
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        //todo:예외처리하기
+
         Member findMember = optionalMember.orElseThrow(()-> new BusinessLogicException(MEMBER_NOT_FOUND));
         if (findMember.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
             throw new BusinessLogicException(QUITED_MEMBER);

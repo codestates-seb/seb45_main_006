@@ -21,6 +21,9 @@ public class ChatRoomDto {
 
         private Long chatRoomId;
         private List<Long> membersId;
+        private List<String> nicknames;
+        private String lastMessageNickname;
+        private String lastMessage;
     }
 
     @Getter
@@ -30,6 +33,7 @@ public class ChatRoomDto {
 
         private Long chatRoomId;
         private List<Long> membersId;
+        private List<String> nicknames;
         private List<MessageDto.Response> messageList;
 
     }

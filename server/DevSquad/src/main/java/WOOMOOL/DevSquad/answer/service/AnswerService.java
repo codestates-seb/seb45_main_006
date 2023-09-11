@@ -7,6 +7,8 @@ import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,10 @@ public class AnswerService {
         findAnswer.setAnswerStatus(Answer.AnswerStatus.ANSWER_DELETED);
 
         answerRepository.save(findAnswer);
+    }
+
+    public Page<Answer> selectAnswerByBoardId(Long boardId, int page, int size) {
+        return answerRepository.findByBoardId(boardId, PageRequest.of(page, size));
     }
 
     public void acceptAnswer(long answerId) {

@@ -49,6 +49,7 @@ public class InfoBoardDto {
         private int viewCount;
         private String category;
         private String infoBoardStatus;
+        private boolean liked;
         private List<CommentDto.Response> commentList;
     }
 }

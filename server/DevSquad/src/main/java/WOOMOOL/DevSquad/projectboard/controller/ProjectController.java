@@ -55,9 +55,6 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{memberProfileId}")
-    public ResponseEntity getProjectsForMember(@PathVariable("memberProfileId") Long memberProfileId) {
-        List<Project> projects = projectService.getProjectsForMember(memberProfileId);
 
     // 프로젝트 수정
     @PatchMapping("/{boardId}")
@@ -68,6 +65,7 @@ public class ProjectController {
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
     }
+
 
     // 모집 마감
     @PatchMapping("/{boardId}/close")
@@ -86,5 +84,5 @@ public class ProjectController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
+

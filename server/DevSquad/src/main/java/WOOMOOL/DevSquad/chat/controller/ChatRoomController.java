@@ -50,9 +50,7 @@ public class ChatRoomController {
         return new ResponseEntity(response,HttpStatus.OK);
 
     }
-
-    // 채팅방 나가기
-    @DeleteMapping ("/{chatRoom-id}")
+    @DeleteMapping("/{chatRoom-id}")
     public ResponseEntity leaveChatRoom(@PathVariable("chatRoom-id") Long chatRoomId){
 
         chatRoomService.leaveChatRoom(chatRoomId);

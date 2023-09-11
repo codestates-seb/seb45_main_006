@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.chat.controller;
 import WOOMOOL.DevSquad.chat.dto.MessageDto;
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
 import WOOMOOL.DevSquad.chat.entity.Message;
+import WOOMOOL.DevSquad.chat.mapper.ChatRoomMapper;
 import WOOMOOL.DevSquad.chat.mapper.MessageMapper;
 import WOOMOOL.DevSquad.chat.service.ChatRoomService;
 import WOOMOOL.DevSquad.chat.service.MessageService;
@@ -31,18 +32,12 @@ public class MessageController {
 
         Message message = messageMapper.postDtoToEntity(postDto);
 
-        Message saveMessage = messageService.saveMessage(message, chatRoomId);
+        Message saveMessage = messageService.saveMessage(message,chatRoomId,postDto.getAccessToken());
 
         MessageDto.Response response = messageMapper.entityToResponse(saveMessage);
 
 
         return new ResponseEntity(response, HttpStatus.OK);
 
-    }
-    @MessageMapping("chat/exit/{chatRoom-id}")
-    @SendTo("/topic/chat/{chatRoom-id}")
-    public ResponseEntity sendExitMessage(@DestinationVariable("chatRoom-id")Long chatRoomId){
-
-        return null;
     }
 }

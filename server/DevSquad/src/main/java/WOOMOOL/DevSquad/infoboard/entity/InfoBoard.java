@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.infoboard.entity;
 
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.comment.entity.Comment;
+import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 
 import lombok.Getter;
@@ -25,19 +26,22 @@ public class InfoBoard extends Board {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private int viewCount;
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberProfile memberProfile;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Likes> likesList = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
-    private int viewCount;
 
     @Enumerated(EnumType.STRING)
     private Category category;

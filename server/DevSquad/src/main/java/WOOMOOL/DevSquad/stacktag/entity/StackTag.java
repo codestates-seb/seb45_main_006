@@ -1,13 +1,16 @@
 package WOOMOOL.DevSquad.stacktag.entity;
 
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,5 +28,5 @@ public class StackTag {
 //    @ManyToMany(mappedBy = "stackTags")
 //    private List<> studyboardList = new ArrayList<>();
 //    @ManyToMany(mappedBy = "stackTags")
-//    private List<> projectboardList = new ArrayList<>();
+//    private Set<Project> projectBoardList = new HashSet<>();
 }

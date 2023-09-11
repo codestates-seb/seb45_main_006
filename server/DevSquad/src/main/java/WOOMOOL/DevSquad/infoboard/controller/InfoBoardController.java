@@ -6,6 +6,8 @@ import WOOMOOL.DevSquad.infoboard.mapper.InfoBoardMapper;
 import WOOMOOL.DevSquad.infoboard.service.InfoBoardService;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -58,16 +60,31 @@ public class InfoBoardController {
     }
     //정보게시판 전체 검색
     @GetMapping
-    public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search) {
-        List<InfoBoard> infoBoardList = infoBoardService.findAllInfoBoard(null, search);
+    public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search,
+                                          @RequestParam @Positive int page,
+                                          @RequestParam @Positive int size) {
+        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page, size);
+        List<InfoBoard> infoBoardList = infoBoardPage.getContent();
 
-        return new ResponseEntity<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), HttpStatus.OK);
+        return new ResponseEntity<>(new PageResponseDto<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), infoBoardPage),
+                HttpStatus.OK);
     }
     //정보게시판 카테고리별로 검색
     @GetMapping("/{category}")
     public ResponseEntity getCategoryInfoBoard(@PathVariable("category") String category,
-                                               @RequestParam(name = "search", required = false) String search) {
-        List<InfoBoard> infoBoardList = infoBoardService.findAllInfoBoard(category, search);
+                                               @RequestParam(name = "search", required = false) String search,
+                                               @RequestParam @Positive int page,
+                                               @RequestParam @Positive int size) {
+        Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(category, search, page, size);
+        List<InfoBoard> infoBoardList = infoBoardPage.getContent();
+
+        return new ResponseEntity<>(new PageResponseDto<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), infoBoardPage),
+                HttpStatus.OK);
+    }
+    //HottestList
+    @GetMapping("/hottest")
+    public ResponseEntity getHottestInfoBoard() {
+        List<InfoBoard> infoBoardList = infoBoardService.findHottestInfoBoard();
 
         return new ResponseEntity<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), HttpStatus.OK);
     }

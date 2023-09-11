@@ -22,11 +22,11 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberProfile memberProfile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "board_id")
     private QuestionBoard questionBoard;
 
@@ -34,7 +34,7 @@ public class Answer {
 
     private boolean isAccepted = false;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY)
     List<Comment> commentList = new ArrayList<>();
 
     @Column(updatable = false)
