@@ -47,14 +47,14 @@ export const UserInfo = ({ user, type }: { user: GetResMemberDetail; type: "stac
 
     return (
         <li className="my-6 flex w-full items-center">
-            {type === "stack" ? <TbDeviceDesktopCode size={"1.5rem"} /> : <PiUserFocus size={"1.5rem"} />}
-            <div className="ml-4 min-w-50">
-                <Typography type="Highlight" text={type === "stack" ? "스택" : "포지션"} styles="font-bold" />
+            {type === "stack" ? <TbDeviceDesktopCode size={"1.2rem"} /> : <PiUserFocus size={"1.2rem"} />}
+            <div className="ml-4 mr-10 min-w-50">
+                <Typography type="SmallLabel" text={type === "stack" ? "스택" : "포지션"} styles="font-bold" />
             </div>
             <div className="flex flex-wrap items-center">
                 {arr.map((v) => (
                     <div key={v} className={`m-4 h-fit rounded-md p-4 ${background}`}>
-                        <Typography type="Highlight" text={v} styles="font-bold" />
+                        <Typography type="SmallLabel" text={v} styles="font-bold" />
                     </div>
                 ))}
             </div>
