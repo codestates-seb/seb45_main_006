@@ -35,4 +35,11 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
             "And i.infoBoardStatus = 'INFOBOARD_POSTED' " +
             "ORDER BY i.createdAt DESC")
     List<Project> findInfoByBookmarkedMemberId(Long memberProfileId);
+
+    // 멤버 아이디로 북마크한 질문 게시판 조회
+    @Query("SELECT q FROM QuestionBoard q JOIN Bookmark b ON q.boardId = b.board.boardId " +
+            "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
+            "And q.questionBoardStatus = 'QUESTIONBOARD_POSTED' " +
+            "ORDER BY q.createdAt DESC")
+    List<Project> findQuestionByBookmarkedMemberId(Long memberProfileId);
 }
