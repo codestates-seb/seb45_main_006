@@ -69,7 +69,7 @@ public class MemberProfileDto {
     @AllArgsConstructor
     public static class listResponse{
 
-        private Long memberProfileId;
+        private Long memberId;
 
         private String profilePicture;
 
@@ -88,7 +88,7 @@ public class MemberProfileDto {
     @AllArgsConstructor
     public static class detailResponse{
 
-        private Long memberProfileId;
+        private Long memberId;
 
         private String profilePicture;
 

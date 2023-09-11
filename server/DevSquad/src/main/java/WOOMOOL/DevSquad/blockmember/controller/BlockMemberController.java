@@ -18,7 +18,7 @@ public class BlockMemberController {
     @PostMapping()
     public ResponseEntity createBlockMember(@RequestBody BlockMemberDto blockMemberDto){
 
-        blockMemberService.setBlockMember(blockMemberDto.getBlockId(),blockMemberDto.getReportContent());
+        blockMemberService.setBlockMember(blockMemberDto.getBlockMemberId(),blockMemberDto.getReportContent());
 
         return new ResponseEntity(HttpStatus.OK);
     }

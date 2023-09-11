@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.member.entity;
 
 import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
+import WOOMOOL.DevSquad.chat.entity.ChatRoom;
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;
@@ -69,7 +70,7 @@ public class MemberProfile {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToOne(mappedBy = "memberProfile",cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "memberProfile", cascade = CascadeType.PERSIST)
     private Level level;
 
     @ManyToMany
@@ -85,6 +86,14 @@ public class MemberProfile {
             inverseJoinColumns = @JoinColumn(name = "stackTagId")
     )
     private Set<StackTag> stackTags;
+
+    @ManyToMany
+    @JoinTable(name = "memberProfileChatRoom",
+            joinColumns = @JoinColumn(name = "memberProfileId"),
+            inverseJoinColumns = @JoinColumn(name = "chatRoomId")
+    )
+    private List<ChatRoom> chatRoomList;
+
 
     @OneToMany(mappedBy = "memberProfile")
     private List<BlockMember> blockMemberList;
@@ -125,6 +134,8 @@ public class MemberProfile {
         if (level.getMemberProfile() != this) {
             level.setMemberProfile(this);
         }
-
+    }
+    public void addChatRoom(ChatRoom chatRoom){
+        this.chatRoomList.add(chatRoom);
     }
 }
