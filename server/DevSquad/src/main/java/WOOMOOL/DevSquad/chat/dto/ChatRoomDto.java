@@ -13,6 +13,7 @@ public class ChatRoomDto {
     public static class Post{
 
         private Long memberId;
+
     }
     @Getter
     @Setter
@@ -21,6 +22,7 @@ public class ChatRoomDto {
 
         private Long chatRoomId;
         private List<Long> membersId;
+
     }
 
     @Getter
@@ -29,7 +31,9 @@ public class ChatRoomDto {
     public static class detailResponse{
 
         private Long chatRoomId;
+
         private List<Long> membersId;
+      
         private List<MessageDto.Response> messageList;
 
     }

@@ -34,6 +34,7 @@ public class BlockMemberService {
         // 자신을 차단할 수 는 없음
         if (loginMemberProfile.getMemberProfileId() == blockMemberId)
             throw new BusinessLogicException(CANT_SELF_BLOCKING);
+
         // 블랙 리스트 확인하고 중복 차단이 되지 않게
         List<Long> blockMemberLIdList = loginMemberProfile.getBlockMemberList().stream()
                 .map(blockMember -> blockMember.getBlockId())
