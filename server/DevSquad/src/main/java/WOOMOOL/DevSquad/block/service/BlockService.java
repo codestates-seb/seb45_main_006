@@ -1,15 +1,12 @@
-package WOOMOOL.DevSquad.blockmember.service;
+package WOOMOOL.DevSquad.block.service;
 
-import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
-import WOOMOOL.DevSquad.blockmember.repository.BlockMemberRepository;
+import WOOMOOL.DevSquad.block.entity.Block;
+import WOOMOOL.DevSquad.block.repository.BlockRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
-import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Block;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +17,10 @@ import static WOOMOOL.DevSquad.exception.ExceptionCode.*;
 
 @Service
 @RequiredArgsConstructor
-public class BlockMemberService {
+public class BlockService {
 
     private final MemberService memberService;
-    private final BlockMemberRepository blockMemberRepository;
+    private final BlockRepository blockRepository;
 
 
     public void setBlockMember(long blockMemberId, String reportContent) {
@@ -34,10 +31,9 @@ public class BlockMemberService {
         // 자신을 차단할 수 는 없음
         if (loginMemberProfile.getMemberProfileId() == blockMemberId)
             throw new BusinessLogicException(CANT_SELF_BLOCKING);
-
         // 블랙 리스트 확인하고 중복 차단이 되지 않게
-        List<Long> blockMemberLIdList = loginMemberProfile.getBlockMemberList().stream()
-                .map(blockMember -> blockMember.getBlockId())
+        List<Long> blockMemberLIdList = loginMemberProfile.getBlockList().stream()
+                .map(block -> block.getBlockId())
                 .collect(Collectors.toList());
         // Id로 변환한 블랙리스트에 같은 id 값 있으면 exception
         if (blockMemberLIdList.contains(blockMemberId))
@@ -46,13 +42,13 @@ public class BlockMemberService {
         // 차단할 멤버 닉네임 값을 얻기 위해 멤버 객체 생성..
         Member findMember = memberService.findMember(blockMemberId);
         // 차단 멤버 객체 생성
-        BlockMember blockMember = new BlockMember(blockMemberId, reportContent, findMember.getNickname());
+        Block block = new Block(blockMemberId, reportContent, findMember.getNickname());
         // 현재 로그인한 회원 정보에 차단 멤버 객체 넣고
-        loginMemberProfile.addBlockMember(blockMember);
+        loginMemberProfile.addBlockMember(block);
         // 차단 멤버 객체에도 현재 로그인 회원 정보 넣어주기
-        blockMember.setMemberProfile(loginMemberProfile);
+        block.setMemberProfile(loginMemberProfile);
 
-        blockMemberRepository.save(blockMember);
+        blockRepository.save(block);
     }
 
     public void deleteBlockMember(Long blockMemberId) {
@@ -60,16 +56,14 @@ public class BlockMemberService {
         // 현재 로그인한 회원의 프로필
         MemberProfile loginMemberProfile = findloginMemberProfile();
 
-//        Long memberProfileId = loginMemberProfile.getMemberProfileId();
-
         // 삭제할 차단 멤버 객체 찾기
-        Optional<BlockMember> optionalBlockMember = blockMemberRepository.findByBlockId(blockMemberId);
-        BlockMember findBlockMember = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
+        Optional<Block> optionalBlockMember = blockRepository.findByBlockMemberId(blockMemberId);
+        Block findBlock = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
 
-        loginMemberProfile.getBlockMemberList().remove(findBlockMember);
+        loginMemberProfile.getBlockList().remove(findBlock);
 
         // DB 에 차단 멤버 객체 삭제
-        blockMemberRepository.delete(findBlockMember);
+        blockRepository.delete(findBlock);
 
     }
 

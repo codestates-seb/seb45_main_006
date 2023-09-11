@@ -1,7 +1,8 @@
 package WOOMOOL.DevSquad.member.entity;
 
-import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
+import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;
@@ -12,7 +13,6 @@ import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 
 import lombok.*;
-import org.springframework.cglib.core.Block;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -96,7 +96,7 @@ public class MemberProfile {
 
 
     @OneToMany(mappedBy = "memberProfile")
-    private List<BlockMember> blockMemberList;
+    private List<Block> blockList;
 
     @OneToMany(mappedBy = "memberProfile")
     private List<Project> projectlist;
@@ -125,8 +125,8 @@ public class MemberProfile {
         }
     }
 
-    public void addBlockMember(BlockMember blockMember) {
-        this.getBlockMemberList().add(blockMember);
+    public void addBlockMember(Block block) {
+        this.getBlockList().add(block);
     }
 
     public void addLevel(Level level) {

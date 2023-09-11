@@ -1,4 +1,3 @@
-
 package WOOMOOL.DevSquad.chat.config;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .addEndpoint("/ws") // 웹소켓 연결 Endpoint 설정 ws://{host}/ws/websocket
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
+
+
 
     }
 }

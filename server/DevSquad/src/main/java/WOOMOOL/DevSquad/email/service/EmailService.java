@@ -43,7 +43,7 @@ public class EmailService {
         String authCode = generateRandomCode();
         String receiver = email.getEmail();
 
-        // 요청으로 들어온 email 이 만약 있으면 Exception
+        // 요청으로 들어온 email 을 가진 회원이 있으면 Exception
         memberService.verifyExistEmail(receiver);
 
         String title = "DevSquad 개울가에 합류하실래요?";
@@ -125,15 +125,13 @@ public class EmailService {
 
         String message = templateEngine.process(templates, context);
 
-        String sender = "DevSquad";
-
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
 
         mimeMessageHelper.setSubject(title);
         mimeMessageHelper.setTo(receiver);
-        mimeMessageHelper.setFrom(sender);
+        mimeMessageHelper.setFrom("DevSquad");
         mimeMessageHelper.setText(message, true);
 
 

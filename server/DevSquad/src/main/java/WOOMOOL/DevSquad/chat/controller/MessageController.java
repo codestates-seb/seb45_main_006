@@ -39,12 +39,10 @@ public class MessageController {
         return new ResponseEntity(response, HttpStatus.OK);
 
     }
-
     @MessageMapping("chat/exit/{chatRoom-id}")
     @SendTo("/topic/chat/{chatRoom-id}")
     public ResponseEntity sendExitMessage(@DestinationVariable("chatRoom-id")Long chatRoomId){
 
         return null;
     }
-
 }

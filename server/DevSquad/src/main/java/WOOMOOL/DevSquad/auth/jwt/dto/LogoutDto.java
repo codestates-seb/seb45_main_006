@@ -1,4 +1,4 @@
-package WOOMOOL.DevSquad.auth.dto;
+package WOOMOOL.DevSquad.auth.jwt.dto;
 
 import lombok.Getter;
 

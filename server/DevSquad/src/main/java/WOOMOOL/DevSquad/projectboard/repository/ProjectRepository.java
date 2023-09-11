@@ -18,4 +18,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE p.projectStatus = 'PROJECT_POSTED' and p.memberProfile.memberProfileId = :memberProfileId")
     Page<Project> findByProjectStatusAndMemberProfile(@Param("memberProfileId") Long memberProfileId,Pageable pageable);
+
 }

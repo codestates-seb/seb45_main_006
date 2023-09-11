@@ -26,7 +26,11 @@ public enum ExceptionCode {
     CANT_SELF_BLOCKING(400, "자신을 차단할 수 없습니다."),
     CHAT_ROOM_NOT_FOUND(404, "채팅방을 찾을 수 없습니다"),
     DUPLICATE_CHAT_ROOM(400, "이미 서로 채팅중인 채팅방이 있습니다."),
-    CHAT_ROOM_CLOSED(404, "닫힌 채팅방 입니다.");
+    CHAT_ROOM_CLOSED(404, "닫힌 채팅방 입니다."),
+
+    TOKEN_EXPIRED(400, "만료된 토큰입니다."),
+    INVALID_TOKEN(400, "유효하지 않은 토큰입니다"),
+    BAD_REQUEST(400, "잘못된 요청입니다.");
 
 
 

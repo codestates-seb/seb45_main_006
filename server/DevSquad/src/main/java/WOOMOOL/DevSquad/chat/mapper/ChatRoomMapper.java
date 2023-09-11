@@ -19,7 +19,6 @@ public interface ChatRoomMapper {
         return new ChatRoomDto.detailResponse(
                 chatRoom.getCharRoomId(),
                 chatRoom.getMemberProfileList().stream()
-
                         .map(memberProfile -> memberProfile.getMemberProfileId()).collect(Collectors.toList()),
                 chatRoom.getMessageList().stream().map(message ->
                         new MessageDto.Response(

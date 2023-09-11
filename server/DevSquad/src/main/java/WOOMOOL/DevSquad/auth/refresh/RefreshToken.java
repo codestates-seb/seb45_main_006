@@ -19,5 +19,5 @@ public class RefreshToken {
     private String username;
 
     @Column(nullable = false)
-    private String jws;
+    private String refreshToken;
 }
