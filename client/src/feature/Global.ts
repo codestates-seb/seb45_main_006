@@ -12,6 +12,31 @@ export const isLoggedInAtom = atom<boolean>({
     default: false,
 });
 
+export const authNicknameAtom = atom<string>({
+    key: "authNicknameAtom",
+    default: "",
+});
+
+export const authEmailAtom = atom<string>({
+    key: "authEmailAtom",
+    default: "",
+});
+
+export const authCodeAtom = atom<string>({
+    key: "authCodeAtom",
+    default: "",
+});
+
+export const rawPasswordAtom = atom<string>({
+    key: "rawPasswordAtom",
+    default: "",
+});
+
+export const randomIdAtom = atom<string>({
+    key: "randomIdAtom",
+    default: "",
+});
+
 export const toastState = atom<IToast[]>({
     key: "toastState",
     default: [],
