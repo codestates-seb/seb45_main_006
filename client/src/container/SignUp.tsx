@@ -10,10 +10,9 @@ function SignUp() {
 
     return (
         <>
-            <div className="w-1180 flex h-screen justify-center bg-background">
-                <div className="flex-cal h-614 w-501 justify-items-center rounded bg-white">
+            <div className="flex h-screen w-1120 justify-center bg-background">
+                <div className="h-614 w-501 flex-col justify-items-center rounded bg-white">
                     <div className="h-300 flex-col justify-center pt-25">
-                        <div className="flex-col justify-between"></div>
                         <div className="flex justify-center">
                             <img className="flex w-210 justify-center" src={progress} />
                         </div>

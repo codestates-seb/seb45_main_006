@@ -13,7 +13,8 @@ type IButton = {
         | "QUESTION_POINT"
         | "MAIN"
         | "SUB"
-        | "WARN";
+        | "WARN"
+        | "DISABLED";
     children: ReactNode;
     isFullBtn?: boolean;
     styles?: string;
@@ -27,7 +28,7 @@ function Button({ children, type, styles, isFullBtn = false, onClickHandler }: I
         if (type === "BLACK") setBackground("bg-black");
         if (type === "PROJECT") setBackground("bg-project");
         if (type === "PROJECT_POINT") setBackground("bg-project_point");
-        if (type === "STUDY") setBackground("bg-study");
+        if (type === "STUDY") setBackground("bg-study hover:bg-[#cae9d1]");
         if (type === "STUDY_POINT") setBackground("bg-study_point");
         if (type === "INFO") setBackground("bg-info");
         if (type === "INFO_POINT") setBackground("bg-info_point");
@@ -39,16 +40,29 @@ function Button({ children, type, styles, isFullBtn = false, onClickHandler }: I
     }, [type]);
 
     return (
-        <button
-            onClick={() => {
-                if (onClickHandler) onClickHandler();
-            }}
-            className={`mb-2 mr-4 flex h-fit justify-center rounded px-30 py-6 ${
-                isFullBtn ? "w-full" : "w-fit"
-            } ${background} ${styles ? styles : ""}`}
-        >
-            {children}
-        </button>
+        <>
+            {type === "DISABLED" ? (
+                <button
+                    disabled={true}
+                    className={`mb-2 mr-4 flex h-fit justify-center rounded px-30 py-6 ${
+                        isFullBtn ? "w-full" : "w-fit"
+                    } bg-background ${styles ? styles : ""}`}
+                >
+                    {children}
+                </button>
+            ) : (
+                <button
+                    onClick={() => {
+                        if (onClickHandler) onClickHandler();
+                    }}
+                    className={`mb-2 mr-4 flex h-fit justify-center rounded px-30 py-6 ${
+                        isFullBtn ? "w-full" : "w-fit"
+                    } ${background} ${styles ? styles : ""}`}
+                >
+                    {children}
+                </button>
+            )}
+        </>
     );
 }
 
