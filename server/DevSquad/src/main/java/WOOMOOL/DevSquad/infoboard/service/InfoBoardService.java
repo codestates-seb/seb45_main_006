@@ -5,6 +5,8 @@ import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,17 +47,17 @@ public class InfoBoardService {
         return infoBoardRepository.save(findInfoBoard);
     }
     //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
-    public List<InfoBoard> findAllInfoBoard(String categoryName, String search) {
-        List<InfoBoard> result = new ArrayList<>();
+    public Page<InfoBoard> findAllInfoBoard(String categoryName, String search, int page, int size) {
+        Page<InfoBoard> result;
         InfoBoard.Category category = InfoBoard.stringToCategory(categoryName);
         if(category==null && search==null)
-            result = infoBoardRepository.findAllPosted();
+            result = infoBoardRepository.findAllPosted(PageRequest.of(page, size));
         else if(category==null)
-            result = infoBoardRepository.findByKeyword(search);
+            result = infoBoardRepository.findByKeyword(search, PageRequest.of(page, size));
         else if(search==null)
-            result = infoBoardRepository.findByCategory(category);
+            result = infoBoardRepository.findByCategory(category, PageRequest.of(page, size));
         else
-            result = infoBoardRepository.findByCategoryKeyword(category, search);
+            result = infoBoardRepository.findByCategoryKeyword(category, search, PageRequest.of(page, size));
 
         return result;
     }
@@ -74,6 +77,10 @@ public class InfoBoardService {
         InfoBoard findInfoBoard = infoBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
 
         return findInfoBoard;
+    }
+
+    public List<InfoBoard> findHottestInfoBoard() {
+        return infoBoardRepository.findHottestInfoBoard().stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(long boardId) {

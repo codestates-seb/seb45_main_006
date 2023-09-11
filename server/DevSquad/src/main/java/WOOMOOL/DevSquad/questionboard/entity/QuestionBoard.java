@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.questionboard.entity;
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.comment.entity.Comment;
+import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 
 import lombok.Getter;
@@ -36,6 +37,9 @@ public class QuestionBoard extends Board {
 
     @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY)
     private List<Answer> answerList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Likes> likesList = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

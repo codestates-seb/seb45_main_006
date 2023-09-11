@@ -45,6 +45,7 @@ public class QuestionBoardDto {
         private int viewCount;
         private String questionBoardStatus;
         private boolean answered;
+        private boolean liked;
         private List<AnswerDto.Response> answerList;
     }
 }
