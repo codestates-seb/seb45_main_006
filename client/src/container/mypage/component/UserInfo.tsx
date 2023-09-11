@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
 
 import { useRecoilValue } from "recoil";
 import { authNicknameAtom } from "@feature/Global";
@@ -6,7 +7,7 @@ import { authNicknameAtom } from "@feature/Global";
 import { useToast } from "@hook/useToast";
 import { useCheckAuth } from "@hook/useCheckAuth";
 
-import { usePatchMember } from "@api/member/hook";
+import { usePatchMember, useDeleteMember } from "@api/member/hook";
 
 import SignInput from "@container/sign/component/SignInput";
 import Textarea from "@component/Textarea";
@@ -21,6 +22,7 @@ import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
 
 function UserInfo({ user }: { user: GetResMemberDetail }) {
+    const navigate = useNavigate();
     const checkboxRef = useRef(null);
 
     const authNickname = useRecoilValue(authNicknameAtom);
@@ -36,13 +38,14 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
 
     const [isEdit, setIsEdit] = useState(false);
 
-    const { fireToast, errorToast } = useToast();
+    const { fireToast, errorToast, createToast } = useToast();
     const { getCheckNickname } = useCheckAuth();
 
     const onHandleCheckNickname = () => {
         getCheckNickname({ nickname });
     };
     const { mutate: patchMember } = usePatchMember();
+    const { mutate: deleteMember } = useDeleteMember();
 
     const onHandleEditUser = () => {
         if (authNickname !== nickname) {
@@ -80,6 +83,32 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                 },
             },
         );
+    };
+
+    const onHandleDeleteUser = () => {
+        createToast({
+            content: "탈퇴하시면 DevSquad에서 기록이 삭제됩니다. 정말 탈퇴하시겠습니까?🥺",
+            isWarning: false,
+            isConfirm: true,
+            callback: () =>
+                deleteMember(
+                    { memberId: user.memberId },
+                    {
+                        onSuccess: () => {
+                            // TODO: 로그아웃
+                            fireToast({
+                                content: "탈퇴 처리되었습니다.",
+                                isConfirm: false,
+                            });
+                            navigate("/");
+                        },
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
+                        },
+                    },
+                ),
+        });
     };
 
     const linkCss = "bg-tertiary px-8 py-4 hover:bg-light hover:font-bold";
@@ -213,7 +242,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                     <Typography type="SmallLabel" text="회원 탈퇴" styles="font-bold mb-8" />
                     <Typography type="Description" text="회원 탈퇴 시 작성된 글과 프로젝트는 모두 삭제처리됩니다🥺" />
                 </div>
-                <button className={linkCss} onClick={() => setIsEdit(true)}>
+                <button className={linkCss} onClick={onHandleDeleteUser}>
                     <Typography type="SmallLabel" text="탈퇴하기" />
                 </button>
             </div>
