@@ -2,10 +2,7 @@ package WOOMOOL.DevSquad.member.dto;
 
 import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
-import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
-import WOOMOOL.DevSquad.studyboard.entity.Study;
-import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -69,7 +66,7 @@ public class MemberProfileDto {
     @AllArgsConstructor
     public static class listResponse{
 
-        private Long memberProfileId;
+        private Long memberId;
 
         private String profilePicture;
 
@@ -86,9 +83,9 @@ public class MemberProfileDto {
     //유저 프로필 response
     @Getter
     @AllArgsConstructor
-    public static class detailResponse{
+    public static class myProfileResponse {
 
-        private Long memberProfileId;
+        private Long memberId;
 
         private String profilePicture;
 
@@ -106,17 +103,37 @@ public class MemberProfileDto {
 
         private Set<String> stack;
 
+        private List<String> blockMemberList;
+
+        private LocalDateTime modifiedAt;
+
+    }
+    @Getter
+    @AllArgsConstructor
+    public static class memberProfileResponse{
+
+        private Long memberId;
+
+        private String profilePicture;
+
+        private String nickname;
+
+        private String githubId;
+
+        private String introduction;
+
+        private Set<String> position;
+
+        private Set<String> stack;
+
         private List<ProjectDto.previewResponseDto> projectList;
 
         private List<StudyDto.previewResponseDto> studyList;
 
         private List<InfoBoardDto.Response> infoBoardList;
 
-        private List<String> blockMemberList;
-
         private LocalDateTime modifiedAt;
 
     }
-    // todo:리스트를 눌렀을 때 나올 응답도 필요하면 추가해야 될 듯
 
 }

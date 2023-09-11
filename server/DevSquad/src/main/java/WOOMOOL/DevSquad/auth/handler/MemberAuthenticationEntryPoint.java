@@ -44,32 +44,33 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
         Exception exception = (Exception) request.getAttribute("exception");
 
         // 토큰 만료 exception 시 refresh 토큰 검증 후 자동으로 accessToken 발급
-        if(exception instanceof ExpiredJwtException){
+        if (exception instanceof ExpiredJwtException) {
             // request Header로 받은 refresh 토큰으로 토큰의 username을 통해 토큰 재발급을 위한 Member 객체 찾기
             String jws = request.getHeader("Refresh");
             RefreshToken refreshToken = refreshTokenRepository.findByJws(jws);
             String username = refreshToken.getUsername();
 
             Optional<Member> optionalMember = memberRepository.findByEmail(username);
-            Member findMember = optionalMember.orElseThrow(()->new RuntimeException());
+            Member findMember = optionalMember.orElseThrow(() -> new RuntimeException());
 
-            // refresh 토큰이 유효하지 않으면 다시 로그인 ㄱㄱ
+            // refresh 토큰이 유효하지 않으면 다시 로그인
             // refresh 토큰이 유효하면 새로운 accessToken 생성 후 반환
             jwtTokenizer.verifySignature(jws, jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey()));
 
             String newAccessToken = delegateAccessToken(findMember);
             response.setHeader("Authorization", "Bearer " + newAccessToken);
 
-            return; // 새로 발급받았을 때 HttpStatus가 뭐가 좋을까..
+           // 새로 발급받았을 때 HttpStatus가 뭐가 좋을까..
+        } else {
+
+            // 다른 예외면 에러 처리
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            String message = exception != null ? exception.getMessage() : authException.getMessage();
+            log.warn("Authorization Error: {}", message);
+
         }
-
-        // 다른 예외면 에러 처리
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        String message = exception != null ? exception.getMessage() : authException.getMessage();
-        log.warn("Authorization Error: {}", message);
-
     }
     private String delegateAccessToken(Member member) {
 

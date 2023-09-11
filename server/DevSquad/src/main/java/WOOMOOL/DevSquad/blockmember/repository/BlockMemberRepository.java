@@ -12,7 +12,4 @@ import java.util.Optional;
 public interface BlockMemberRepository extends JpaRepository<BlockMember, Long>{
 
     Optional<BlockMember> findByBlockId(Long blockId);
-
-    @Query("SELECT bm FROM BlockMember bm WHERE bm.memberProfile.memberProfileId = :memberProfileId")
-    List<BlockMember> findByMemberProfileId(@Param("memberProfileId") Long memberProfileId);
 }

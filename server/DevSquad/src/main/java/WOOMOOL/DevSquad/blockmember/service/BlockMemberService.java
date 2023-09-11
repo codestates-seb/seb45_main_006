@@ -8,6 +8,7 @@ import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Block;
 import org.springframework.stereotype.Service;
 
@@ -18,30 +19,29 @@ import java.util.stream.Collectors;
 import static WOOMOOL.DevSquad.exception.ExceptionCode.*;
 
 @Service
+@RequiredArgsConstructor
 public class BlockMemberService {
 
     private final MemberService memberService;
     private final BlockMemberRepository blockMemberRepository;
 
-    public BlockMemberService(MemberService memberService, BlockMemberRepository blockMemberRepository) {
-        this.memberService = memberService;
-        this.blockMemberRepository = blockMemberRepository;
-    }
 
     public void setBlockMember(long blockMemberId, String reportContent) {
 
         // 현재 로그인한 회원의 프로필
         MemberProfile loginMemberProfile = findloginMemberProfile();
 
-        // 자신을 차단할 수 는 없음 혹시 모르니 추가
-        if (loginMemberProfile.getMemberProfileId() == blockMemberId) throw new BusinessLogicException(CANT_SELF_BLOCKING);
-        // 중복 차단은 ... 추가를 할지? 프론트에서 어쩌피 안보여서 차단 못하긴해도 일단 추가
-        // 블랙 리스트 확인하고 중복 차단이 되지 않게..
+        // 자신을 차단할 수 는 없음
+        if (loginMemberProfile.getMemberProfileId() == blockMemberId)
+            throw new BusinessLogicException(CANT_SELF_BLOCKING);
+
+        // 블랙 리스트 확인하고 중복 차단이 되지 않게
         List<Long> blockMemberLIdList = loginMemberProfile.getBlockMemberList().stream()
                 .map(blockMember -> blockMember.getBlockId())
                 .collect(Collectors.toList());
         // Id로 변환한 블랙리스트에 같은 id 값 있으면 exception
-        if (blockMemberLIdList.contains(blockMemberId)) throw new BusinessLogicException(DUPLICATE_BLOCKING);
+        if (blockMemberLIdList.contains(blockMemberId))
+            throw new BusinessLogicException(DUPLICATE_BLOCKING);
 
         // 차단할 멤버 닉네임 값을 얻기 위해 멤버 객체 생성..
         Member findMember = memberService.findMember(blockMemberId);
@@ -60,26 +60,16 @@ public class BlockMemberService {
         // 현재 로그인한 회원의 프로필
         MemberProfile loginMemberProfile = findloginMemberProfile();
 
-        Long memberProfileId = loginMemberProfile.getMemberProfileId();
+//        Long memberProfileId = loginMemberProfile.getMemberProfileId();
 
         // 삭제할 차단 멤버 객체 찾기
         Optional<BlockMember> optionalBlockMember = blockMemberRepository.findByBlockId(blockMemberId);
         BlockMember findBlockMember = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
 
+        loginMemberProfile.getBlockMemberList().remove(findBlockMember);
+
         // DB 에 차단 멤버 객체 삭제
         blockMemberRepository.delete(findBlockMember);
-
-        // 현재 로그인한 회원의 블랙리스트 필터링
-        List<BlockMember> blockMemberList = blockMemberRepository.findByMemberProfileId(memberProfileId)
-                .stream().filter(blockMember -> !(blockMember.getBlockMemberId() == blockMemberId))
-                        .collect(Collectors.toList());
-
-//        List<BlockMember> blockMemberList = loginMemberProfile.getBlockMemberList().stream()
-//                .filter(blockMember -> !(blockMember.getBlockMemberId() == blockMemberId))
-//                .collect(Collectors.toList());
-        // 다시 할당
-        loginMemberProfile.setBlockMemberList(blockMemberList);
-
 
     }
 

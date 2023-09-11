@@ -8,13 +8,8 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "Spring")
@@ -25,7 +20,7 @@ public interface MemberMapper {
     MemberProfile patchDtoToEntity(MemberProfileDto.Patch patchDto);
 
     // 프로필 수정 응답
-    default MemberProfileDto.patchResponse entityToResponseDto(MemberProfile memberProfile) {
+    default MemberProfileDto.patchResponse entityToPatchResponseDto(MemberProfile memberProfile) {
         return new MemberProfileDto.patchResponse(
                 memberProfile.getMemberProfileId(),
                 memberProfile.getNickname(),
@@ -40,13 +35,10 @@ public interface MemberMapper {
         );
     }
 
-    // MemberProfile 상세 정보 Mapping
-    default MemberProfileDto.detailResponse entityToResponseDto(MemberProfile memberProfile,
-                                                                List<ProjectDto.previewResponseDto> projectResponseDto,
-                                                                List<StudyDto.previewResponseDto> studyResponseDto,
-                                                                List<InfoBoardDto.Response> infoBoardResponseDto) {
+    // 내 프로필 상세 정보 Mapping
+    default MemberProfileDto.myProfileResponse entityToResponseDto(MemberProfile memberProfile) {
 
-        return new MemberProfileDto.detailResponse(
+        return new MemberProfileDto.myProfileResponse(
                 memberProfile.getMemberProfileId(),
                 memberProfile.getProfilePicture(),
                 memberProfile.getNickname(),
@@ -58,9 +50,6 @@ public interface MemberMapper {
                         .map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 memberProfile.getStackTags().stream()
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
-                projectResponseDto,
-                studyResponseDto,
-                infoBoardResponseDto,
                 memberProfile.getBlockMemberList().stream()
                         .map(blockMember -> blockMember.getBlockNickname()).collect(Collectors.toList()),
                 memberProfile.getModifiedAt()
@@ -78,6 +67,29 @@ public interface MemberMapper {
                         memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
                         memberProfile.getStackTags().stream().map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())))
                 .collect(Collectors.toList());
+
+    }
+    // 유저리스트 유저 정보 상세보기 Mapping
+    default MemberProfileDto.memberProfileResponse entityToResponseDto(MemberProfile memberProfile,
+                                                                             List<ProjectDto.previewResponseDto> projectResponseDto,
+                                                                             List<StudyDto.previewResponseDto> studyResponseDto,
+                                                                             List<InfoBoardDto.Response> infoBoardResponseDto){
+
+        return new MemberProfileDto.memberProfileResponse(
+                memberProfile.getMemberProfileId(),
+                memberProfile.getProfilePicture(),
+                memberProfile.getNickname(),
+                memberProfile.getGithubId(),
+                memberProfile.getIntroduction(),
+                memberProfile.getPositions().stream()
+                        .map(position -> position.getPositionName()).collect(Collectors.toSet()),
+                memberProfile.getStackTags().stream()
+                        .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
+                projectResponseDto,
+                studyResponseDto,
+                infoBoardResponseDto,
+                memberProfile.getModifiedAt()
+        );
 
     }
 }
