@@ -6,6 +6,8 @@ import {
     GetReqMemberDetail,
     PostReqBlockMember,
     DeleteReqBlockMember,
+    GetReqMyDetail,
+    PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 
 // 유저 리스트 - 멤버 리스트 조회하기 & 차단 유저 제외
@@ -32,14 +34,14 @@ export const getMemberDetail = async ({ memberId }: GetReqMemberDetail) => {
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const getMyDetail = async () => {
+export const getMyDetail = async ({ rawPassword }: GetReqMyDetail) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
-    const { data } = await withAuthApi.get(url);
+    const { data } = await withAuthApi.get(url, { data: rawPassword });
     return data;
 };
 
 // 마이페이지 - 비밀번호 수정
-export const patchMemberPw = async (requstObj: PatchReqMember) => {
+export const patchMemberPw = async (requstObj: PatchReqMemberPw) => {
     const url = `${COMMON_API_PATH.MEMBER.CHANGE_PASSWORD}`;
     const { data } = await withAuthApi.patch(url, requstObj);
     return data;

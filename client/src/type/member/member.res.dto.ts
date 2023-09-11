@@ -32,7 +32,7 @@ export type GetResMemberDetail = {
     stack: Array<string>;
     modifiedAt: string; // 날짜 string 형식으로 도착
     oauthUser: boolean;
-    blockMemberList: Array<string>;
+    blockMemberList: Array<number>;
     projectList: Array<CommonResProjects>;
     studyList: Array<CommonResStudies>;
     infoBoardList: Array<InfoDefaultType>;
