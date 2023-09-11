@@ -13,7 +13,7 @@ function SignUpContent1({ handleGoogleClick }: { handleGoogleClick: () => void }
     };
     return (
         <div className="mb-70">
-            <img className="absolute w-100 -top-32 left-96" src={fontImg} />
+            <img className="absolute -top-32 left-96 w-100" src={fontImg} />
             <button onClick={handleClickSignup} className="m-auto flex w-320 justify-center rounded bg-black p-8">
                 <Typography type="Highlight" text="DevSquad로 가입하기" color="text-white" />
             </button>

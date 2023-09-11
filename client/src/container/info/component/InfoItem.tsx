@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import MDEditor from "@uiw/react-md-editor";
@@ -7,9 +8,15 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePostViewCount } from "@api/info/hook";
+import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
+import { usePostComment } from "@api/comment/hook";
+
+import { useCheckUser } from "@hook/useCheckUser";
+import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
+import Button from "@component/Button";
 import { EditComment, ShowComment } from "@component/board/Comment";
 
 import { CATEGORY_TO_NAME } from "@api/info/constant";
@@ -30,16 +37,63 @@ const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
 };
 
 const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
+    const navigate = useNavigate();
     const { category, title, viewCount, modifiedAt } = info;
     const { data: user } = useGetMemberDetail({ memberId: info.memberId });
+    const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
+
+    const { fireToast, createToast, errorToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
+    const { mutate: deleteInfo } = useDeleteInfo();
+
+    const onClickDeleteHandler = () => {
+        createToast({
+            content: "해당 게시글을 삭제하시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                deleteInfo(
+                    { infoId: info.boardId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "게시글이 삭제되었습니다!",
+                                isConfirm: false,
+                            });
+                            navigate("/infos");
+                        },
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
+                        },
+                    },
+                );
+            },
+        });
+    };
+
     return (
         <div className="flex border-b-1 border-borderline">
-            <div className="flex-1">
-                <CategoryTag category={category} />
+            <div className="flex-1 p-8">
+                <div className="flex items-center justify-between">
+                    <CategoryTag category={category} />
+                    {isMine && (
+                        <div className="flex">
+                            <Button
+                                type="PROJECT_POINT"
+                                styles="px-4 py-2 rounded-sm"
+                                onClickHandler={() => navigate(`/infos/${info.boardId}/edit`, { state: info })}
+                            >
+                                <Typography text="수정" type="Description" color="text-white" />
+                            </Button>
+                            <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
+                                <Typography text="삭제" type="Description" color="text-white" />
+                            </Button>
+                        </div>
+                    )}
+                </div>
                 <div className="my-8 flex items-center justify-between">
                     <Typography text={title} type="Label" />
                     {user && (
@@ -62,13 +116,17 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
-            <div className="mb-8 flex w-100 flex-col items-center justify-end">
-                <button onClick={() => setIsLiked(!isLiked)}>
-                    <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                </button>
-                <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                    <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
-                </button>
+            <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">
+                {isLoggedIn && (
+                    <>
+                        <button onClick={() => setIsLiked(!isLiked)}>
+                            <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
+                        </button>
+                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
+                            <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
+                        </button>
+                    </>
+                )}
                 <button>
                     <BsFillShareFill />
                 </button>
@@ -79,23 +137,50 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
 
 function InfoItem({ info }: { info: InfoDefaultType }) {
     const { commentList } = info;
+
+    const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
+    const { fireToast, errorToast } = useToast();
+
     const [isOpened, setIsOpened] = useState(false);
     const [comment, setComment] = useState<string>("");
-    // TODO: 내 아이디와 info member 아이디가 같은지 확인
-    // const [isMine, setIsMine] = useState(true);
 
     const { mutate: postViewCount } = usePostViewCount();
+    const { mutate: postComment } = usePostComment();
+
+    const { alertWhenEmptyFn } = useCheckEmptyInput();
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setComment(e.currentTarget.value);
     };
 
-    // TODO: 댓글 등록 api
-    const onSubmitHanlder = () => {};
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "댓글", content: comment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postComment(
+                { board: "information", boardId: info.boardId, content: comment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setComment("");
+                        // TODO: 댓글 리스트 조회
+                    },
+                    // TODO: 에러 분기
+                    onError: (err) => {
+                        console.log(err);
+                        errorToast();
+                    },
+                },
+            );
+        }
+    };
 
     const onAddViewCount = () => {
         if (!isOpened) {
-            setIsOpened(false);
             // 열기 버튼 클릭 시 - 조회수 증가 api 요청 -> 요청 성공/실패 처리 X
             postViewCount({ infoId: info.boardId });
         }
@@ -103,29 +188,32 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
     };
 
     return (
-        <div className="border-1 border-borderline p-8">
+        <div className="mb-32 border-1 border-borderline p-8">
             <InfoTitle info={info} />
             <div
                 data-color-mode="light"
-                className={`relative overflow-hidden border-b-1 border-borderline py-8 ${isOpened ? "" : "max-h-300"}`}
+                className={`relative overflow-hidden border-b-1 border-borderline pb-32 pt-12 ${
+                    isOpened ? "" : "max-h-300"
+                }`}
             >
                 <MDEditor.Markdown source={info.content} style={{ whiteSpace: "pre-wrap" }} />
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : "열기"}`}
-                        color="text-blue-500 hover:text-blue-700"
+                        text={`${isOpened ? "닫기" : info.content.length < 300 ? "댓글 열기" : "열기"}`}
+                        color="text-blue-500 hover:text-blue-800"
                     />
                 </button>
             </div>
             {isOpened && (
                 <div className="p-8">
                     <Typography type="Highlight" text={`댓글 ${commentList.length}개`} />
-                    {/* TODO: 로그인한 유저에게만 보이도록 */}
-                    <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
+                    {isLoggedIn && (
+                        <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
+                    )}
                     <div className="my-16">
                         {commentList.map((v) => (
-                            <ShowComment key={v.commentId} comment={v} />
+                            <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
                         ))}
                     </div>
                 </div>

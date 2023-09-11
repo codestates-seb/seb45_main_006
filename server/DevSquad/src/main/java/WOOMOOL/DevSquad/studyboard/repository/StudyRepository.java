@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface StudyRepository extends JpaRepository<Study, Long> {
-    @Query("SELECT s FROM Study s WHERE s.studyStatus = 'STUDY_POSTED' ORDER BY s.createdAt DESC ")
+    @Query("SELECT s FROM Study s WHERE s.studyStatus != 'STUDY_DELETED' ORDER BY s.createdAt DESC ")
     Page<Study> findByStudyStatus(Pageable pageable);
 
     @Query("SELECT p FROM Study p WHERE p.studyStatus = 'STUDY_POSTED' and p.memberProfile.memberProfileId = :memberProfileId")

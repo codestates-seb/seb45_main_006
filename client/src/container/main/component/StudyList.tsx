@@ -1,19 +1,19 @@
 import Typography from "@component/Typography";
-import Tag from "@container/project/component/Tag";
+import Tag from "@component/project-study/Tag";
+import { CommonResStudies } from "@type/study/study.res.dto";
 
-const StudyList = () => {
+const StudyList = ({ study }: { study: CommonResStudies }) => {
     return (
         <div className="m-10 flex h-300 w-1/4 flex-col justify-between rounded-lg border-2 border-solid border-study p-20 shadow-lg">
             <div>
                 <div className="flex w-48 items-center justify-center rounded bg-deadline ">
                     <Typography type="SmallLabel" text="모집중" styles="text-white" />
                 </div>
-                <h1 className="my-20 cursor-pointer text-24 font-bold">여기가 스터디 제목입니다~!</h1>
+                <h1 className="my-20 cursor-pointer text-24 font-bold">{study.title}</h1>
                 <div className="my-20 flex">
                     <Tag type="STUDY" text="Java"></Tag>
                     <Tag type="STUDY" text="JavaScript"></Tag>
                 </div>
-                <div className="my-20 text-14 text-gray-600">2023-08-24 ~ 2023-09-22</div>
             </div>
             <hr />
             <div className="flex cursor-pointer items-center">

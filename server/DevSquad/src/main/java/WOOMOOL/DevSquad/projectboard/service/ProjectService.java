@@ -8,15 +8,19 @@ import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @Transactional
+@EnableScheduling
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
@@ -26,7 +30,7 @@ public class ProjectService {
         this.memberService = memberService;
     }
 
-    public Project createStudy(Project project) {
+    public Project createProject(Project project) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
         return projectRepository.save(project);
@@ -51,9 +55,7 @@ public class ProjectService {
     public List<Project> getProjectsForMember(Long memberProfileId) {
         List<Project> projects = projectRepository.findByProjectStatusAndMemberProfile(memberProfileId);
 
-        return projects;
-    }
-
+    // 프로젝트 수정
     public Project updateProject(Project project) {
 
         // 작성자, 로그인 멤버 일치 여부 확인
@@ -73,6 +75,24 @@ public class ProjectService {
         findProject.setModifiedAt(LocalDateTime.now());
 
         return findProject;
+    }
+
+    // 모집 마감 : 상태가 마감으로 바뀌고, 일정 시간 지나면 삭제( 목록에서 안 보이게 됨)
+    public void closeProject(Project project) {
+        Project findProject = checkLoginMemberHasAuth(project);
+
+        findProject.setProjectStatus(Project.ProjectStatus.PROJECT_CLOSED);
+
+        Timer timer = new Timer();
+        long delayInMillis = 60000;    // 일단 1분
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                findProject.setProjectStatus(Project.ProjectStatus.PROJECT_DELETED);
+                projectRepository.save(findProject);
+            }
+        }, delayInMillis);
     }
 
     public void deleteProject(Long boardId) {

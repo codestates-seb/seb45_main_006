@@ -1,24 +1,23 @@
-import { CommentDefaultType, CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
+import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 export interface AnswerDefaultType {
     answerId: number;
     memberId: number;
     nickname: string;
     boardId: number;
+    accepted: false;
+    content: string;
+    answerStatus: "ANSWER_POSTED" | "ANSER_DELETED";
     createdAt: string;
     modifiedAt: string;
-    accepted: boolean;
-}
-
-export interface AnswerDefaultTypeWithComment extends AnswerDefaultType {
-    commentList: Array<CommentDefaultType>;
+    commentList: Array<CommentDefaultTypeWithRe>;
 }
 
 // 질문 게시판 - 답변 등록 - status code: 201
 export interface PostResAnswer {}
 
 // 질문 게시판 - 답변 수정
-export interface PatchResAnswer extends AnswerDefaultTypeWithComment {}
+export interface PatchResAnswer extends AnswerDefaultType {}
 
 // 질문 게시판 - 답변 삭제 - status code: 204
 export interface DeleteResAnswer {}
