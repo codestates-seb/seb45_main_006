@@ -3,9 +3,12 @@ package WOOMOOL.DevSquad.chat.mapper;
 import WOOMOOL.DevSquad.chat.dto.ChatRoomDto;
 import WOOMOOL.DevSquad.chat.dto.MessageDto;
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
+import WOOMOOL.DevSquad.chat.entity.Message;
 import org.mapstruct.Mapper;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "Spring")
@@ -20,11 +23,16 @@ public interface ChatRoomMapper {
                 chatRoom.getCharRoomId(),
                 chatRoom.getMemberProfileList().stream()
                         .map(memberProfile -> memberProfile.getMemberProfileId()).collect(Collectors.toList()),
+                chatRoom.getMemberProfileList().stream()
+                        .map(memberProfile -> memberProfile.getNickname()).collect(Collectors.toList()),
                 chatRoom.getMessageList().stream().map(message ->
                         new MessageDto.Response(
                                 message.getSenderId(),
+                                message.getNickname(),
                                 message.getContent(),
-                                message.getCreateAt())
+                                message.getCreateAt(),
+                                message.getType()
+                        )
                 ).collect(Collectors.toList())
         );
     }
@@ -37,7 +45,22 @@ public interface ChatRoomMapper {
                         chatRoom.getCharRoomId(),
                         chatRoom.getMemberProfileList().stream()
                                 .map(memberProfile -> memberProfile.getMemberProfileId())
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        chatRoom.getMemberProfileList().stream()
+                                .map(memberProfile -> memberProfile.getNickname()).collect(Collectors.toList()),
+                        lastMessage(chatRoom.getMessageList()).getNickname(),
+                        lastMessage(chatRoom.getMessageList()).getContent()
                 )).collect(Collectors.toList());
+    }
+
+    // 메시지 리스트에서 가장 최근 메시지 찾기
+    private Message lastMessage(List<Message> messageList){
+
+        Optional<Message> optionalMessage = messageList.stream()
+                .max(Comparator.comparingLong(Message::getMessageId));
+
+        Message lastMessage = optionalMessage.orElseThrow();
+
+        return lastMessage;
     }
 }

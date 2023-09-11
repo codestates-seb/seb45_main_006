@@ -2,7 +2,6 @@ package WOOMOOL.DevSquad.member.entity;
 
 import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
-import WOOMOOL.DevSquad.blockmember.entity.BlockMember;
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;

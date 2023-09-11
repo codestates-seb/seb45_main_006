@@ -95,6 +95,7 @@ public class MemberService {
 
         // 기타 정보 수정
         Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.setNickname(nickname));
+        Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.getMember().setNickname(nickname));
         Optional.ofNullable(memberProfile.getProfilePicture()).ifPresent(profilePicture -> findMemberProfile.setProfilePicture(profilePicture));
         Optional.ofNullable(memberProfile.getGithubId()).ifPresent(githubId -> findMemberProfile.setGithubId(githubId));
         Optional.ofNullable(memberProfile.getIntroduction()).ifPresent(introduction -> findMemberProfile.setIntroduction(introduction));

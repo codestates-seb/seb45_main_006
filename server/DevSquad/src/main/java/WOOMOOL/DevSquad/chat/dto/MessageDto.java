@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.chat.dto;
 
+import WOOMOOL.DevSquad.chat.entity.Message;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,10 @@ public class MessageDto {
     @AllArgsConstructor
     public static class Response{
 
-        private Long memberId;
+        private Long senderId;
+        private String nickname;
         private String content;
         private LocalDateTime createAt;
+        private Message.Type type;
     }
 }
