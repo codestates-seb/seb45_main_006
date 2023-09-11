@@ -7,6 +7,7 @@ import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,14 @@ public class InfoBoardService {
         infoBoard.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
         return infoBoardRepository.save(infoBoard);
+    }
+
+    //정보게시판 페이징
+    public Page<InfoBoard> getInfoBoardList(Long memberId, int page){
+
+        Page<InfoBoard> infoBoardPage = infoBoardRepository.findAllByMemberProfile(memberId,PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return infoBoardPage;
     }
 
     public InfoBoard updateInfoBoard(InfoBoard infoBoard) {

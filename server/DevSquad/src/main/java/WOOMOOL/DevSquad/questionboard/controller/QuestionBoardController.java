@@ -75,6 +75,18 @@ public class QuestionBoardController {
         return new ResponseEntity<>(new PageResponseDto<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), questionBoardPage),
                 HttpStatus.OK);
     }
+
+    // 회원이 쓴 질문게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberQuestionBoard(@PathVariable("member-id") Long memberId,
+                                                 @RequestParam int page){
+
+        Page<QuestionBoard> questionBoardListPage = questionBoardService.getQuestionBoardList(memberId,page-1);
+        List<QuestionBoard> questionBoardList = questionBoardListPage.getContent();
+        List<QuestionBoardDto.Response> response = mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
+
+        return new ResponseEntity(new PageResponseDto(response,questionBoardListPage),HttpStatus.OK);
+    }
     @GetMapping("/hottest")
     public ResponseEntity getHottestQuestionBoard() {
         List<QuestionBoard> questionBoardList = questionBoardService.findHottestQuestionBoard();

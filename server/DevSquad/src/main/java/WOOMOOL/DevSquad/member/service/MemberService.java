@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.member.service;
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.bookmark.repository.BookmarkRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
@@ -57,7 +58,7 @@ public class MemberService {
     private final InfoBoardRepository infoBoardRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final LikesRepository likesRepository;
-    private final AnswerRepository answerRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -269,7 +270,6 @@ public class MemberService {
         return blockMemberList;
     }
 
-
     // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
     private void isDeletedMember(Member member) {
         if (member.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
@@ -316,37 +316,6 @@ public class MemberService {
         return infoBoardList;
     }
 
-    //프로젝트 페이징
-    public Page<Project> getProjectBoardList(Long memberId,int page){
-
-        Page<Project> projectPage = projectRepository.findByProjectStatusAndMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
-
-        return projectPage;
-    }
-    //스터디 페이징
-    public Page<Study> getStudyBoardList(Long memberId, int page){
-
-        Page<Study> studyPage = studyRepository.findByStudyStatusAndMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
-
-        return studyPage;
-
-    }
-    //정보게시판 페이징
-    public Page<InfoBoard> getInfoBoardList(Long memberId, int page){
-
-        Page<InfoBoard> infoBoardPage = infoBoardRepository.findAllByMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
-
-        return infoBoardPage;
-    }
-    //질문게시판 페이징
-    public Page<QuestionBoard> getQuestionBoardList(Long memberId, int page){
-
-        Page<QuestionBoard> questionBoardPage = questionBoardRepository
-                .findAllByMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
-
-        return questionBoardPage;
-    }
-
     //좋아요한 정보 게시판
     public Page<InfoBoard> getLikeInfoBoardList(int page){
 
@@ -368,12 +337,49 @@ public class MemberService {
                 .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
 
         return questionBoardPage;
-
-
     }
 
 
     // 북마크한 게시판들
+    public Page<QuestionBoard> getBooMarkedQuestionBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<QuestionBoard> questionBoardPage = bookmarkRepository
+                .findQuestionByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return questionBoardPage;
+    }
+
+    public Page<InfoBoard> getBooMarkedInfoBoardBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<InfoBoard> infoBoardPage= bookmarkRepository
+                .findInfoByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return infoBoardPage;
+    }
+
+    public Page<Project> getBooMarkedProjectBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<Project> projectBoardPage = bookmarkRepository
+                .findProjectByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return projectBoardPage;
+    }
+
+    public Page<Study> getBooMarkedStudyBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<Study> studyBoardPage = bookmarkRepository
+                .findStudyByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return studyBoardPage;
+    }
 }
 
 
