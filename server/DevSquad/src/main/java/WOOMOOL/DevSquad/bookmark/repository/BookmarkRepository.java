@@ -10,15 +10,29 @@ import java.util.List;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
-    @Query("SELECT b FROM Bookmark b WHERE b.memberProfile.memberProfileId = :memberProfileId and b.board.boardId = :boardId")
+    @Query("SELECT b FROM Bookmark b " +
+            "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
+            "and b.board.boardId = :boardId")
     Bookmark findByMemberProfileAndBoard(Long memberProfileId, Long boardId);
 
-//    @Query("SELECT b FROM Bookmark b WHERE b.memberProfile.memberProfileId = :memberProfileId")
-//    List<Bookmark> findByMemberProfileId(Long memberProfileId);
+    // 멤버 아이디로 북마크한 프로젝트 조회
+    @Query("SELECT p FROM Project p JOIN Bookmark b ON p.boardId = b.board.boardId " +
+            "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
+            "And p.projectStatus != 'PROJECT_DELETED' " +
+            "ORDER BY p.createdAt DESC")
+    List<Project> findProjectByBookmarkedMemberId(Long memberProfileId);
 
-//    @Query(value = "SELECT * FROM PROJECT JOIN BOOKMARK ON PROJECT.BOARD_ID = BOOKMARK.BOARD_ID WHERE BOOKMARK.MEMBER_PROFILE_ID = :memberProfileId", nativeQuery = true)
-//    List<Project> findProjectByBoardId(Long memberProfileId);
+    // 멤버 아이디로 북마크한 스터디 조회
+    @Query("SELECT s FROM Study s JOIN Bookmark b ON s.boardId = b.board.boardId " +
+            "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
+            "And s.studyStatus != 'STUDY_DELETED' " +
+            "ORDER BY s.createdAt DESC")
+    List<Project> findStudyByBookmarkedMemberId(Long memberProfileId);
 
-//    @Query("SELECT Project FROM Bookmark b JOIN Project p ON b.board.boardId = p.boardId WHERE b.memberProfile.memberProfileId = :memberProfileId" /*, nativeQuery = true*/)
-//    List<Project> findProjectByBoardId(@Param("memberProfileId") Long memberProfileId);
+    // 멤버 아이디로 북마크한 정보 게시판 조회
+    @Query("SELECT i FROM InfoBoard i JOIN Bookmark b ON i.boardId = b.board.boardId " +
+            "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
+            "And i.infoBoardStatus = 'INFOBOARD_POSTED' " +
+            "ORDER BY i.createdAt DESC")
+    List<Project> findInfoByBookmarkedMemberId(Long memberProfileId);
 }
