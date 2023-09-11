@@ -66,6 +66,7 @@ public class ProjectController {
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
     }
 
+
     // 모집 마감
     @PatchMapping("/{boardId}/close")
     public ResponseEntity closeProject(@PathVariable("boardId") @Positive Long boardId) {
@@ -83,5 +84,5 @@ public class ProjectController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
+

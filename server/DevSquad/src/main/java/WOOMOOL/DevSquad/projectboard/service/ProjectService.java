@@ -48,9 +48,8 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<Project> getProjects(Pageable pageable) {
         Page<Project> projectPage = projectRepository.findByProjectStatus(pageable);
-        return  projectPage.getContent();
+        return projectPage.getContent();
     }
-
     // 프로젝트 수정
     public Project updateProject(Project project) {
 
@@ -91,6 +90,7 @@ public class ProjectService {
         }, delayInMillis);
     }
 
+
     public void deleteProject(Long boardId) {
         Project project = findVerifiedProject(boardId);
 
@@ -102,20 +102,22 @@ public class ProjectService {
 
     private Project findVerifiedProject(Long boardId) {
         Optional<Project> optionalProject = projectRepository.findById(boardId);
-        if( optionalProject.isPresent() && optionalProject.get().getProjectStatus() == Project.ProjectStatus.PROJECT_POSTED )
+        if (optionalProject.isPresent() && optionalProject.get().getProjectStatus() == Project.ProjectStatus.PROJECT_POSTED)
             return optionalProject.get();
         else throw new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND);
     }
+
 
     // 작성자, 로그인 멤버 일치 여부 확인
     public Project checkLoginMemberHasAuth(Project project) {
         Project findProject = findVerifiedProject(project.getBoardId());
         MemberProfile loginMember = memberService.findMemberFromToken().getMemberProfile();
 
-        if( findProject.getMemberProfile() != loginMember ) {
+        if (findProject.getMemberProfile() != loginMember) {
             throw new BusinessLogicException(ExceptionCode.NO_AUTHORIZATION);
         }
 
         return findProject;
     }
 }
+
