@@ -42,6 +42,7 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_Q
 @Slf4j
 @AllArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PositionService positionService;
