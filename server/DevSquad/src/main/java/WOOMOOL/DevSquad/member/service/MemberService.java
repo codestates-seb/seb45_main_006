@@ -1,10 +1,13 @@
 package WOOMOOL.DevSquad.member.service;
 
+import WOOMOOL.DevSquad.answer.entity.Answer;
+import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.likes.repository.LikesRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
@@ -53,6 +56,8 @@ public class MemberService {
     private final StudyRepository studyRepository;
     private final InfoBoardRepository infoBoardRepository;
     private final QuestionBoardRepository questionBoardRepository;
+    private final LikesRepository likesRepository;
+    private final AnswerRepository answerRepository;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -95,6 +100,7 @@ public class MemberService {
 
         // 기타 정보 수정
         Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.setNickname(nickname));
+        Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.getMember().setNickname(nickname));
         Optional.ofNullable(memberProfile.getProfilePicture()).ifPresent(profilePicture -> findMemberProfile.setProfilePicture(profilePicture));
         Optional.ofNullable(memberProfile.getGithubId()).ifPresent(githubId -> findMemberProfile.setGithubId(githubId));
         Optional.ofNullable(memberProfile.getIntroduction()).ifPresent(introduction -> findMemberProfile.setIntroduction(introduction));
@@ -151,6 +157,13 @@ public class MemberService {
         Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8,Sort.by("modifiedAt")), memberProfileList.size());
 
         return memberProfilePage;
+    }
+    @Transactional(readOnly = true)
+    public Page<MemberProfile> getMemberProfileByNickname(int page, String nickname) {
+
+        Page<MemberProfile> memberProfileList = memberProfileRepository.findAllByNickname(PageRequest.of(page,8,Sort.by("modifiedAt")),nickname);
+
+        return memberProfileList;
     }
 
     // 활동중, 등록 허가한 회원, 블랙리스트에 없는 유저리스트 조회
@@ -303,34 +316,60 @@ public class MemberService {
         return infoBoardList;
     }
 
-    // 내 프로젝트 페이징
-    public Page<Project> getMyProjectBoardList(Long memberId,int page){
+    //프로젝트 페이징
+    public Page<Project> getProjectBoardList(Long memberId,int page){
 
         Page<Project> projectPage = projectRepository.findByProjectStatusAndMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
 
         return projectPage;
     }
-    // 내 스터디 페이징
-    public Page<Study> getMyStudyBoardList(Long memberId, int page){
+    //스터디 페이징
+    public Page<Study> getStudyBoardList(Long memberId, int page){
 
         Page<Study> studyPage = studyRepository.findByStudyStatusAndMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
 
         return studyPage;
 
     }
-    // 내 정보게시판 페이징
-    public Page<InfoBoard> getMyInfoBoardList(Long memberId, int page){
+    //정보게시판 페이징
+    public Page<InfoBoard> getInfoBoardList(Long memberId, int page){
 
         Page<InfoBoard> infoBoardPage = infoBoardRepository.findAllByMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
 
         return infoBoardPage;
     }
-    // 내 질문게시판 페이징
-    public Page<QuestionBoard> getMyQuestionBoardList(Long memberId, int page){
+    //질문게시판 페이징
+    public Page<QuestionBoard> getQuestionBoardList(Long memberId, int page){
 
-        Page<QuestionBoard> questionBoardPage = questionBoardRepository.findAllByMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
+        Page<QuestionBoard> questionBoardPage = questionBoardRepository
+                .findAllByMemberProfile(memberId,PageRequest.of(page,4,Sort.by("createdAt")));
 
         return questionBoardPage;
+    }
+
+    //좋아요한 정보 게시판
+    public Page<InfoBoard> getLikeInfoBoardList(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<InfoBoard> infoBoardPage = likesRepository
+                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+
+        return infoBoardPage;
+
+    }
+
+    //좋아요한 질문 게시판
+    public Page<QuestionBoard> getLikeQuestionBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<QuestionBoard> questionBoardPage = likesRepository
+                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+
+        return questionBoardPage;
+
+
     }
 
 

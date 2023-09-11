@@ -75,7 +75,7 @@ public class ChatRoomService {
     // 채팅방 나가기
     public void leaveChatRoom(Long chatRoomId) {
         // 로그인 중인 멤버 찾기
-        MemberProfile loginMember = findLoginMemberProfile();
+        MemberProfile loginMember= findLoginMemberProfile();
         // 채팅방 찾기
         ChatRoom findChatRoom = findChatRoomById(chatRoomId);
 
@@ -89,7 +89,8 @@ public class ChatRoomService {
 
             findChatRoom.setChatRoomStatus(ChatRoom.ChatRoomStatus.CHAT_ROOM_CLOSED);
         // 멤버가 남아있으면 퇴장했다는 메시지 남기기
-        } else messageService.leaveMessage(findChatRoom);
+
+        } else messageService.leaveMessage(findChatRoom, loginMember);
     }
 
     // 현재 로그인한 회원 찾기

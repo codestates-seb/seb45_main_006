@@ -4,6 +4,7 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.position.entity.Position;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.stacktag.repository.StackTagRepository;
 import org.springframework.data.domain.Sort;
@@ -22,13 +23,13 @@ public class StackTagService {
     public StackTagService(StackTagRepository stackTagRepository) {
         this.stackTagRepository = stackTagRepository;
     }
-    public void createStackTag(Set<String> stackTaglist, MemberProfile memberProfile){
+    public void createStackTag(Set<String> stackTagList, MemberProfile memberProfile) {
 
         // 수정시 스택 객체 초기화
         memberProfile.getStackTags().clear();
 
-        if(stackTaglist.size() > 0) {
-            for (String stackTags : stackTaglist) {
+        if (stackTagList.size() > 0) {
+            for (String stackTags : stackTagList) {
                 StackTag stackTag = stackTagRepository.findByTagName(stackTags);
                 stackTag.getMemberProfiles().add(memberProfile);
                 memberProfile.getStackTags().add(stackTag);

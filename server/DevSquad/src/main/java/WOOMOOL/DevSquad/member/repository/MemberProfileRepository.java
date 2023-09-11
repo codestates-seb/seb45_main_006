@@ -32,5 +32,12 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, Lo
             "GROUP BY mp HAVING COUNT(st) IN :tagCount")
     List<MemberProfile> findAllByStackTags(List<String> tagNames,Long tagCount);
 
+    // 이름으로 필터링
+
+    @Query("SELECT mp FROM MemberProfile mp " +
+            "WHERE LOWER(mp.nickname) LIKE CONCAT('%',LOWER(:nickname) ,'%') " +
+            "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+            "AND mp.listEnroll = true")
+    Page<MemberProfile> findAllByNickname(Pageable pageable,String nickname);
 
 }
