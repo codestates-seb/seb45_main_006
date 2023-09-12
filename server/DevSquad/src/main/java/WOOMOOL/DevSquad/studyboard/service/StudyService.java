@@ -7,7 +7,9 @@ import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,15 @@ public class StudyService {
     public List<Study> getStudies(Pageable pageable) {
         Page<Study> studyPage = studyRepository.findByStudyStatus(pageable);
         return studyPage.getContent();
+    }
+
+    //스터디 페이징
+    public Page<Study> getStudyBoardList(Long memberId, int page){
+
+        Page<Study> studyPage = studyRepository.findByStudyStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return studyPage;
+
     }
 
     // 스터디 수정

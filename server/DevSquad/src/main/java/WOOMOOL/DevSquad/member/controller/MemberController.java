@@ -81,54 +81,6 @@ public class MemberController {
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
-    // 회원이 쓴 프로젝트 게시판 조회
-    @GetMapping("/{member-id}/project")
-    public ResponseEntity getMemberProjectBoard(@PathVariable("member-id") Long memberId,
-                                                @RequestParam int page){
-
-        Page<Project> projectListPage = memberService.getProjectBoardList(memberId,page-1);
-        List<Project> projectList = projectListPage.getContent();
-        List<ProjectDto.previewResponseDto> response = projectMapper.entityToPreviewResponseDto(projectList);
-
-        return new ResponseEntity(new PageResponseDto(response,projectListPage),HttpStatus.OK);
-
-    }
-    // 회원이 쓴 스터디 게시판 조회
-    @GetMapping("/{member-id}/study")
-    public ResponseEntity getMemberStudyBoard(@PathVariable("member-id") Long memberId,
-                                              @RequestParam int page){
-
-        Page<Study> studyListPage = memberService.getStudyBoardList(memberId,page-1);
-        List<Study> studytList = studyListPage.getContent();
-        List<StudyDto.previewResponseDto> response = studyMapper.entityToPreviewResponseDto(studytList);
-
-        return new ResponseEntity(new PageResponseDto(response,studyListPage),HttpStatus.OK);
-
-    }
-    // 회원이 쓴 정보게시판 조회
-    @GetMapping("/{member-id}/info")
-    public ResponseEntity getMemberInfoBoard(@PathVariable("member-id") Long memberId,
-                                             @RequestParam int page){
-
-        Page<InfoBoard> infoBoardListPage = memberService.getInfoBoardList(memberId,page-1);
-        List<InfoBoard> infoBoardList = infoBoardListPage.getContent();
-        List<InfoBoardDto.Response> response = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList);
-
-        return new ResponseEntity(new PageResponseDto(response,infoBoardListPage),HttpStatus.OK);
-
-    }
-
-    // 회원이 쓴 질문게시판 조회
-    @GetMapping("/{member-id}/question")
-    public ResponseEntity getMemberQuestionBoard(@PathVariable("member-id") Long memberId,
-                                                 @RequestParam int page){
-
-        Page<QuestionBoard> questionBoardListPage = memberService.getQuestionBoardList(memberId,page-1);
-        List<QuestionBoard> questionBoardList = questionBoardListPage.getContent();
-        List<QuestionBoardDto.Response> response = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
-
-        return new ResponseEntity(new PageResponseDto(response,questionBoardListPage),HttpStatus.OK);
-    }
 
     // 좋아요한 정보게시판
     @GetMapping("/likes/info")
@@ -140,6 +92,7 @@ public class MemberController {
 
         return new ResponseEntity(new PageResponseDto<>(response,infoBoardPage),HttpStatus.OK);
     }
+
     // 좋아요한 질문게시판
     @GetMapping("/likes/question")
     public ResponseEntity getMemberLikeQuestionBoard(@RequestParam int page){
@@ -149,10 +102,50 @@ public class MemberController {
         List<QuestionBoardDto.Response> response = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
 
         return new ResponseEntity(new PageResponseDto<>(response,questionBoardPage),HttpStatus.OK);
+    }
+    // 북마크한 프로젝트
+    @GetMapping("/bookmark/project")
+    public ResponseEntity getMemberBookMarkedProjectBoard(@RequestParam int page){
 
+        Page<Project> projectPage = memberService.getBooMarkedProjectBoard(page-1);
+        List<Project> projectList = projectPage.getContent();
+        List<ProjectDto.previewResponseDto> response = projectMapper.entityToPreviewResponseDto(projectList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,projectPage),HttpStatus.OK);
     }
 
-    // todo: 북마크
+    // 북마크한 스터디
+    @GetMapping("/bookmark/study")
+    public ResponseEntity getMemberBookMarkedStudyBoard(@RequestParam int page){
+
+        Page<Study> studyPage = memberService.getBooMarkedStudyBoard(page-1);
+        List<Study> studyList = studyPage.getContent();
+        List<StudyDto.previewResponseDto> response = studyMapper.entityToPreviewResponseDto(studyList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,studyPage),HttpStatus.OK);
+    }
+
+    // 북마크한 정보 게시판
+    @GetMapping("/bookmark/info")
+    public ResponseEntity getMemberBookMarkedInfoBoard(@RequestParam int page){
+
+        Page<InfoBoard> infoBoardPage = memberService.getBooMarkedInfoBoardBoard(page-1);
+        List<InfoBoard> infoBoardList = infoBoardPage.getContent();
+        List<InfoBoardDto.Response> response = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,infoBoardPage),HttpStatus.OK);
+    }
+
+    // 북마크한 질문 게시판
+    @GetMapping("/bookmark/question")
+    public ResponseEntity getMemberBookMarkedQuestionBoard(@RequestParam int page){
+
+        Page<QuestionBoard> questionBoardPage = memberService.getBooMarkedQuestionBoard(page-1);
+        List<QuestionBoard> questionBoardList = questionBoardPage.getContent();
+        List<QuestionBoardDto.Response> response = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
+
+        return new ResponseEntity(new PageResponseDto<>(response,questionBoardPage),HttpStatus.OK);
+    }
 
     // 유저리스트의 유저 정보 조회
     @GetMapping("/{member-id}")
@@ -162,7 +155,6 @@ public class MemberController {
         List<ProjectDto.previewResponseDto> projectResponses = projectMapper.entityToPreviewResponseDto(memberProfile.getProjectlist());
         List<StudyDto.previewResponseDto> studyResponse = studyMapper.entityToPreviewResponseDto(memberProfile.getStudyList());
         List<InfoBoardDto.Response> infoBoardResponse = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(memberProfile.getInfoBoardList());
-
         MemberProfileDto.memberProfileResponse response = memberMapper.entityToResponseDto(memberProfile,projectResponses,studyResponse,infoBoardResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);

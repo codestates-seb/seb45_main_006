@@ -4,6 +4,8 @@ import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.mapper.StudyMapper;
 import WOOMOOL.DevSquad.studyboard.service.StudyService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +50,19 @@ public class StudyController {
         StudyDto.AllResponseDto study = mapper.entityToAllResponseDto(studyService.getStudy(boardId));
 
         return new ResponseEntity<>(study, HttpStatus.OK);
+    }
+
+    // 회원이 쓴 스터디 게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberStudyBoard(@PathVariable("member-id") Long memberId,
+                                              @RequestParam int page){
+
+        Page<Study> studyListPage = studyService.getStudyBoardList(memberId,page-1);
+        List<Study> studytList = studyListPage.getContent();
+        List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studytList);
+
+        return new ResponseEntity(new PageResponseDto(response,studyListPage),HttpStatus.OK);
+
     }
 
     // 스터디 수정
