@@ -2,10 +2,14 @@ package WOOMOOL.DevSquad.questionboard.mapper;
 
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.mapper.AnswerMapper;
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
+import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.likes.entity.Likes;
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -29,21 +33,21 @@ public interface QuestionBoardMapper {
     QuestionBoardDto.Response QuestionBoardToQuestionBoardResponseDto(QuestionBoard questionBoard);
     List<QuestionBoardDto.Response> QuestionBoardListToQuestionBoardResponseDtoList(List<QuestionBoard> questionBoardList);
 
+
+
     default boolean hasUserLikedBoard(List<Likes> likesList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if(securityContext==null)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser"))
             return false;
         else {
-            String userEmail = securityContext.getAuthentication().getName();
             return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
     }
     default boolean markedOrNot(List<Bookmark> BookmarkList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if( securityContext == null ) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser")) {
             return false;
         } else {
-            String userEmail = securityContext.getAuthentication().getName();
             return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
     }

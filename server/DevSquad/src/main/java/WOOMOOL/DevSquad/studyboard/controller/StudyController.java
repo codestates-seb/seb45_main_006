@@ -39,7 +39,7 @@ public class StudyController {
     @GetMapping("/list")
     public ResponseEntity getStudies(Pageable pageable) {
         List<Study> studies = studyService.getStudies(pageable);
-
+        studies = studyService.removeBlockUserBoard(studies);
         List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

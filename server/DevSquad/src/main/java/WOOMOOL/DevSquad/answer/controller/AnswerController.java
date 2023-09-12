@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.mapper.AnswerMapper;
 import WOOMOOL.DevSquad.answer.service.AnswerService;
 import WOOMOOL.DevSquad.utils.PageResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,13 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/question/{board-id}/answer")
+@RequiredArgsConstructor
 public class AnswerController {
     private final static String ANSWER_DEFAULT_URL = "/question/{board-id}/answer";
     private final AnswerService answerService;
     private final AnswerMapper mapper;
 
-    public AnswerController(AnswerService answerService,
-                            AnswerMapper mapper) {
-        this.answerService = answerService;
-        this.mapper = mapper;
-    }
+
 
     @PostMapping
     public ResponseEntity postAnswer(@Valid @RequestBody  AnswerDto.Post requestBody,

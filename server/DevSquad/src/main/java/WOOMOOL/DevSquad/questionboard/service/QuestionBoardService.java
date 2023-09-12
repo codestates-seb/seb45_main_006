@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.questionboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
@@ -9,6 +10,9 @@ import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +105,15 @@ public class QuestionBoardService {
         long writerId = questionBoard.getMemberProfile().getMemberProfileId();
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+    public List<QuestionBoard> removeBlockUserBoard(List<QuestionBoard> questionBoardList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return questionBoardList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<QuestionBoard> result = questionBoardList.stream()
+                .filter(questionBoard -> !blockList.stream()
+                        .anyMatch(block -> block.getBlockMemberId()== questionBoard.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }

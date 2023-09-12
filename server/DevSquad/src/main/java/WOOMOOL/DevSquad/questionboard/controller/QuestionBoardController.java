@@ -70,7 +70,7 @@ public class QuestionBoardController {
                                               @RequestParam @Positive int page,
                                               @RequestParam @Positive int size) {
         Page<QuestionBoard> questionBoardPage = questionBoardService.findAllQuestionBoard(search, page-1, size);
-        List<QuestionBoard> questionBoardList = questionBoardPage.getContent();
+        List<QuestionBoard> questionBoardList = questionBoardService.removeBlockUserBoard(questionBoardPage.getContent());
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), questionBoardPage),
                 HttpStatus.OK);

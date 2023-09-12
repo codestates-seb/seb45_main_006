@@ -13,4 +13,5 @@ public abstract class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long boardId;
+
 }

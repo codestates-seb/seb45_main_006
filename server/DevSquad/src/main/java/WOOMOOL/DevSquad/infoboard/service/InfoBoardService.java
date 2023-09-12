@@ -1,13 +1,16 @@
 package WOOMOOL.DevSquad.infoboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +104,14 @@ public class InfoBoardService {
     public void verifiedIsWriter(Long currentId ,Long writerId) {
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+    public List<InfoBoard> removeBlockUserBoard(List<InfoBoard> infoBoardList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return infoBoardList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<InfoBoard> result = infoBoardList.stream()
+                .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== infoBoard.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }
