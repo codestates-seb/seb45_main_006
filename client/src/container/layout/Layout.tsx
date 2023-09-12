@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 
 import { useRecoilValue } from "recoil";
 import { isSignPageAtom } from "@feature/Global";

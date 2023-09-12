@@ -20,7 +20,7 @@ export const useGetAuthForSignUp = ({ email, authCode }: GetReqAuthForSignUp) =>
     return useQuery<AxiosResponse<AuthCommonRes>, AxiosError, AuthCommonRes, [string, GetReqAuthForSignUp]>({
         queryKey: ["auth", { email, authCode }],
         queryFn: () => getAuthForSignUp({ email, authCode }),
-        enabled: false,
+        enabled: !!authCode,
     });
 };
 
@@ -34,6 +34,6 @@ export const useGetAuthForFindPw = ({ email, authCode, changePassword }: GetReqA
     return useQuery<AxiosResponse<AuthCommonRes>, AxiosError, AuthCommonRes, [string, GetReqAuthForFindPw]>({
         queryKey: ["auth", { email, authCode, changePassword }],
         queryFn: () => getAuthForFindPw({ email, authCode, changePassword }),
-        enabled: false,
+        enabled: !!authCode,
     });
 };

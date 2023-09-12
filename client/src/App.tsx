@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import Layout from "@container/layout/Layout";
 import ErrorPage from "@container/ErrorPage";
 import Main from "@container/main/Main";
+import AuthUser from "@container/mypage/AuthUser";
 import MyPage from "@container/mypage/MyPage";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
             {
                 path: "/studies/:studyBoardId",
                 element: <StudyDetails />,
+            },
+            {
+                path: "/members/auth",
+                element: <AuthUser />,
             },
             {
                 path: "/members/my",

@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { useRecoilState } from "recoil";
+import { authCodeAtom, authEmailAtom, authNicknameAtom } from "@feature/Global";
+
 import { useToast } from "@hook/useToast";
 import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckAuth } from "@hook/useCheckAuth";
 
-import { usePostMember, useGetNicknameDuplicated } from "@api/sign/hook";
-import { usePostAuthForSignUp, useGetAuthForSignUp } from "@api/auth/hook";
+import { usePostMember } from "@api/sign/hook";
+import { usePostAuthForSignUp } from "@api/auth/hook";
 
 import Typography from "@component/Typography";
 import Button from "@component/Button";
@@ -24,16 +28,14 @@ function SignUp2() {
     useEffect(() => {
         if (redirectedEmail) {
             setIsRequestAuthenticate(true);
-            setAuthenticatedEmail(redirectedEmail);
         }
-    }, [redirectedEmail])
+    }, [redirectedEmail]);
 
     const { errorToast, fireToast, createToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
     const { mutate: postAuthForSignUp } = usePostAuthForSignUp();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
 
-    // 컴포넌트 내부에 useState, handleInput 넣기
     const [inputs, setInputs] = useState({
         email: "",
         nickname: "",
@@ -50,20 +52,20 @@ function SignUp2() {
     };
 
     const [isRequestAuthenticate, setIsRequestAuthenticate] = useState(false);
-    const [authenticatedEmail, setAuthenticatedEmail] = useState("");
-    const [authenticatedNickname, setAuthenticatedNickname] = useState("");
 
-    const {
-        refetch: getAuthForSignUp,
-        isFetched: isSuccessGetAuthForSignUp,
-        isError: isErrorGetAuthForSignUp,
-    } = useGetAuthForSignUp({ email: inputs.email, authCode: inputs.authCode });
+    const [authEmail, setAuthEmail] = useRecoilState(authEmailAtom);
+    const [authCode, setAuthCode] = useRecoilState(authCodeAtom);
+    const [authNickname, setAuthNickname] = useRecoilState(authNicknameAtom);
 
-    const {
-        refetch: getNicknameDuplicated,
-        isFetched: isSuccessGetNicknameDuplicated,
-        isError: isErrorGetNicknameDuplicated,
-    } = useGetNicknameDuplicated({ nickname: inputs.nickname });
+    const { getCheckNickname, getCheckAuthCode } = useCheckAuth();
+
+    const onHandleCheckNickname = () => {
+        getCheckNickname({ nickname: inputs.nickname });
+    };
+
+    const onHandleAuthCode = () => {
+        getCheckAuthCode({ email: redirectedEmail || "", authCode: inputs.authCode })
+    }
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -80,7 +82,7 @@ function SignUp2() {
             return;
         }
 
-        if (!authenticatedEmail) {
+        if (!authCode) {
             fireToast({
                 content: "이메일 인증코드를 입력해주세요.",
                 isConfirm: false,
@@ -89,7 +91,7 @@ function SignUp2() {
             return;
         }
 
-        if (!authenticatedNickname) {
+        if (!authNickname) {
             fireToast({
                 content: "닉네임 중복 검사를 입력해주세요.",
                 isConfirm: false,
@@ -126,6 +128,9 @@ function SignUp2() {
                 { email: inputs.email, nickname: inputs.nickname, password: inputs.password },
                 {
                     onSuccess: () => {
+                        setAuthCode("");
+                        setAuthEmail("");
+                        setAuthNickname("");
                         navigate("/signup/3");
                     },
                     onError: (err) => {
@@ -153,6 +158,7 @@ function SignUp2() {
             {
                 onSuccess: () => {
                     setIsRequestAuthenticate(true);
+                    setAuthEmail(inputs.email);
                     fireToast({
                         content: `${inputs.email}로 인증코드를 보냈습니다.`,
                         isConfirm: false,
@@ -168,68 +174,6 @@ function SignUp2() {
                 },
             },
         );
-    };
-
-    const onHandleAuthCode = () => {
-        if (!inputs.authCode) {
-            fireToast({
-                content: "인증코드를 입력해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        getAuthForSignUp();
-
-        if (isSuccessGetAuthForSignUp) {
-            setAuthenticatedEmail(inputs.email);
-            fireToast({
-                content: `인증에 성공하였습니다!`,
-                isConfirm: false,
-            });
-        }
-
-        if (isErrorGetAuthForSignUp) {
-            setAuthenticatedEmail("");
-            fireToast({
-                content: `인증에 실패하였습니다. 다시 입력해주세요!`,
-                isConfirm: false,
-                isWarning: true,
-            });
-        }
-    };
-
-    const onHandleNicknameDuplicated = () => {
-        const isNicknameVaid = new RegExp(inputsRegex.nickname).test(inputs.nickname);
-
-        if (!inputs.nickname || !isNicknameVaid) {
-            fireToast({
-                content: "닉네임을 입력해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        getNicknameDuplicated();
-
-        if (isSuccessGetNicknameDuplicated) {
-            setAuthenticatedNickname(inputs.email);
-            fireToast({
-                content: `사용 가능한 닉네임입니다!`,
-                isConfirm: false,
-            });
-        }
-
-        if (isErrorGetNicknameDuplicated) {
-            setAuthenticatedNickname("");
-            fireToast({
-                content: `이미 사용하고 있는 닉네임입니다🥹`,
-                isConfirm: false,
-                isWarning: true,
-            });
-        }
     };
 
     return (
@@ -251,7 +195,7 @@ function SignUp2() {
                 <Button
                     type={isRequestAuthenticate ? "DISABLED" : "STUDY"}
                     styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                        authenticatedEmail.length > 0 ? "" : "hover:font-bold"
+                        isRequestAuthenticate ? "" : "hover:font-bold"
                     }`}
                     onClickHandler={onHandleReqAuthForSignUp}
                 >
@@ -270,7 +214,7 @@ function SignUp2() {
                         <button
                             onClick={() => {
                                 setIsRequestAuthenticate(false);
-                                setAuthenticatedEmail("");
+                                setAuthEmail("");
                             }}
                         >
                             <Typography
@@ -289,12 +233,12 @@ function SignUp2() {
                             value={inputs.authCode}
                             onChange={handleInput}
                             placeholder="인증코드를 입력해주세요."
-                            disabled={authenticatedEmail.length > 0}
+                            disabled={authEmail.length > 0}
                         />
                         <Button
-                            type={authenticatedEmail.length > 0 ? "DISABLED" : "STUDY"}
+                            type={authEmail.length > 0 ? "DISABLED" : "STUDY"}
                             styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                                authenticatedEmail.length > 0 ? "" : "hover:font-bold"
+                                authEmail.length > 0 ? "" : "hover:font-bold"
                             }`}
                             onClickHandler={onHandleAuthCode}
                         >
@@ -311,16 +255,16 @@ function SignUp2() {
                     value={inputs.nickname}
                     onChange={handleInput}
                     placeholder="닉네임 (공백없이 2자 ~ 8자)"
-                    disabled={authenticatedNickname.length > 0}
+                    disabled={authNickname.length > 0}
                     regex={new RegExp(inputsRegex.nickname)}
                     description="닉네임 형식이 맞지 않습니다."
                 />
                 <Button
-                    type={authenticatedNickname.length > 0 ? "DISABLED" : "STUDY"}
+                    type={authNickname.length > 0 ? "DISABLED" : "STUDY"}
                     styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                        authenticatedEmail.length > 0 ? "" : "hover:font-bold"
+                        authEmail.length > 0 ? "" : "hover:font-bold"
                     }`}
-                    onClickHandler={onHandleNicknameDuplicated}
+                    onClickHandler={onHandleCheckNickname}
                 >
                     <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
                 </Button>
@@ -349,7 +293,6 @@ function SignUp2() {
                 <SignButton type="OUTLINED" onClickHandler={() => navigate("/signup/1")} styles="mr-20">
                     <Typography type="SmallLabel" text="이전" styles="font-bold" />
                 </SignButton>
-                {/* 다음 페이지로 이동할 수 있게 설정하기*/}
                 <SignButton type="FILLED" onClickHandler={onHandleSignUp}>
                     <Typography type="SmallLabel" text="다음" color="text-white" styles="font-bold" />
                 </SignButton>
