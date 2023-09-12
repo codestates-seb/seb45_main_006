@@ -1,5 +1,6 @@
 import { SpecifyBoard, SpecifyComment } from "@type/comment/comment.req.dto";
 import { SpecifyAnswer, SpecifyQuestion, SpecifyAnswerComment } from "@type/answer/answer.req.dto";
+import { DeleteReqExitChatRoom, GetReqEnrollChatRoom } from "@type/chat/chat.req.dto";
 
 export const COMMON_API_PATH = {
     USER: {
@@ -63,5 +64,11 @@ export const MAKE_API_PATH = {
             `/question/${questionId}/answer/${answerId}/comment/${commentId}`,
         deleteComment: ({ questionId, answerId, commentId }: SpecifyAnswerComment) =>
             `/question/${questionId}/answer/${answerId}/comment/${commentId}`,
+    },
+    CHAT: {
+        create: () => `/chat`,
+        enroll: ({ chatRoomId }: GetReqEnrollChatRoom) => `/chat/${chatRoomId}`,
+        list: () => `/chat`,
+        exit: ({ chatRoomId }: DeleteReqExitChatRoom) => `/chat/${chatRoomId}`,
     },
 };
