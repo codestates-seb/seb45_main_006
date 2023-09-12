@@ -40,15 +40,39 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // 프로젝트 페이지 조회
     @GetMapping("/list")
-    public ResponseEntity getProjects(Pageable pageable) {
-        List<Project> projects = projectService.getProjects(pageable);
-        projects = projectService.removeBlockUserBoard(projects);
+    public ResponseEntity getProjects(Pageable pageable,
+                                      @RequestParam int page,
+                                      @RequestParam(required = false) List<String> stacks) {
+        // 스택 필터링
+        if (stacks != null) {
 
-        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+//            Page<Project> projectPage;
+            List<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
+
+            return new ResponseEntity(projects, HttpStatus.OK);
+
+        } else {
+
+            List<Project> projects = projectService.getProjects(pageable);
+            projects = projectService.removeBlockUserBoard(projects);
+
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }
+
     }
+
+    // 프로젝트 페이지 조회
+//    @GetMapping("/list")
+//    public ResponseEntity getProjects(Pageable pageable) {
+//        List<Project> projects = projectService.getProjects(pageable);
+//        projects = projectService.removeBlockUserBoard(projects);
+//
+//        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
     // 프로젝트 상세 조회
     @GetMapping("/{boardId}")

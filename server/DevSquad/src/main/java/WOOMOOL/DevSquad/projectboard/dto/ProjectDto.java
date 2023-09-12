@@ -95,7 +95,6 @@ public class ProjectDto {
         private Project.ProjectStatus projectStatus;
         private boolean bookmarked;
         private int viewCount;
-        //        private List<CommentDto.Response> commentList;
         private MemberProfileDto.listResponse memberProfile;
     }
 }
