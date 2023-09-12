@@ -68,6 +68,7 @@ public class ProjectDto {
     public static class previewResponseDto {
         private Long boardId;
         private String title;
+        private Set<String> stack;
         private String startDate;
         private String deadline;
         private LocalDateTime createdAt;
@@ -76,7 +77,7 @@ public class ProjectDto {
         private Project.ProjectStatus projectStatus;
         private int viewCount;
         private MemberProfileDto.listResponse memberProfile;
-        private Set<String> stack;
+
     }
 
     @Getter

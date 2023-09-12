@@ -48,9 +48,10 @@ public class ProjectController {
         if (stacks != null) {
 
 //            Page<Project> projectPage;
-            List<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
+            List<Project> projects = projectService.getProjectsByStack(page, stacks);
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
 
-            return new ResponseEntity(projects, HttpStatus.OK);
+            return new ResponseEntity(response, HttpStatus.OK);
 
         } else {
 
@@ -63,16 +64,6 @@ public class ProjectController {
         }
 
     }
-
-    // 프로젝트 페이지 조회
-//    @GetMapping("/list")
-//    public ResponseEntity getProjects(Pageable pageable) {
-//        List<Project> projects = projectService.getProjects(pageable);
-//        projects = projectService.removeBlockUserBoard(projects);
-//
-//        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 
     // 프로젝트 상세 조회
     @GetMapping("/{boardId}")
