@@ -20,10 +20,10 @@ import { getAllQuestion, postQuestion, patchQuestion, deleteQuestion, postViewCo
 import { questionKeyFactory } from "./questionKeyFactory";
 
 // 질문 게시판 - 리스트 조회
-export const useGetAllQuestion = ({ search }: GetReqAllQuestion) => {
+export const useGetAllQuestion = ({ page, size, search }: GetReqAllQuestion) => {
     return useQuery<GetResAllQuestion, AxiosError, GetResAllQuestion>({
-        queryKey: questionKeyFactory.all({ search }),
-        queryFn: () => getAllQuestion({ search }),
+        queryKey: questionKeyFactory.all({ page, size, search }),
+        queryFn: () => getAllQuestion({ page, size, search }),
     });
 };
 

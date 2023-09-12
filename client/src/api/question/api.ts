@@ -1,3 +1,4 @@
+import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import {
@@ -9,11 +10,11 @@ import {
 } from "@type/question/question.req.dto";
 
 // 질문 게시판 - 리스트 조회
-export const getAllQuestion = async ({ search }: GetReqAllQuestion) => {
-    let url = `${COMMON_API_PATH.QUESTION.PATH}`;
-    if (search) url += `?search=${search}`;
+export const getAllQuestion = async ({ search, page, size }: GetReqAllQuestion) => {
+    let url = `${COMMON_API_PATH.QUESTION.PATH}?page=${page}&size=${size}`;
+    if (search) url += `&search=${search}`;
 
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 

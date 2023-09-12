@@ -37,7 +37,7 @@ function SignUp2() {
     const { alertWhenEmptyFn } = useCheckEmptyInput();
 
     const [inputs, setInputs] = useState({
-        email: "",
+        email: redirectedEmail || "",
         nickname: "",
         authCode: "",
         password: "",
