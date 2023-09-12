@@ -39,10 +39,10 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const [isEdit, setIsEdit] = useState(false);
 
     const { fireToast, errorToast, createToast } = useToast();
-    const { getCheckNickname } = useCheckAuth();
+    const { postCheckNickname } = useCheckAuth();
 
     const onHandleCheckNickname = () => {
-        getCheckNickname({ nickname });
+        postCheckNickname({ nickname });
     };
     const { mutate: patchMember } = usePatchMember();
     const { mutate: deleteMember } = useDeleteMember();

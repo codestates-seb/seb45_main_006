@@ -7,7 +7,6 @@ import {
     GetReqMemberDetail,
     PostReqBlockMember,
     DeleteReqBlockMember,
-    GetReqMyDetail,
     PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 
@@ -26,9 +25,9 @@ export const getMemberDetail = async ({ memberId }: GetReqMemberDetail) => {
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const getMyDetail = async ({ rawPassword }: GetReqMyDetail) => {
+export const getMyDetail = async () => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
-    const { data } = await withAuthApi.get(url, { data: rawPassword });
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 

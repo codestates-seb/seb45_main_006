@@ -1,6 +1,6 @@
 import { commonApi } from "@api/common/commonApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { GetReqNicknameDuplicated, PostReqMember, PostReqLogin, DeleteReqLogout } from "@type/sign/sign.req.dto";
+import { PostReqNickname, PostReqMember, PostReqLogin, DeleteReqLogout } from "@type/sign/sign.req.dto";
 
 // 회원가입 =  유저 생성하기
 export const postMember = async (requestObj: PostReqMember) => {
@@ -10,9 +10,9 @@ export const postMember = async (requestObj: PostReqMember) => {
 };
 
 // 닉네임 중복 체크
-export const getNicknameDuplicated = async (requestObj: GetReqNicknameDuplicated) => {
+export const postNickname = async (requestObj: PostReqNickname) => {
     const url = `${COMMON_API_PATH.SIGN.NICKNAME}`;
-    const { data } = await commonApi.get(url, { data: requestObj });
+    const { data } = await commonApi.post(url, requestObj);
     return data;
 };
 

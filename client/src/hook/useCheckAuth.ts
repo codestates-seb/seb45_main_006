@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
-
 import { useSetRecoilState } from "recoil";
-import { authNicknameAtom, authCodeAtom, authCodeForPwAtom } from "@feature/Global";
+import { authNicknameAtom, authCodeAtom, authCodeForPwAtom, authEmailAtom, authEmailForPwAtom } from "@feature/Global";
 
-import { useGetNicknameDuplicated } from "@api/sign/hook";
+import { usePostNickname } from "@api/sign/hook";
 import { usePostAuthForFindPw, usePostAuthForSignUp } from "@api/auth/hook";
 
 import { useToast } from "@hook/useToast";
@@ -11,41 +9,16 @@ import { useToast } from "@hook/useToast";
 export const useCheckAuth = () => {
     const { fireToast } = useToast();
 
+    const setAuthEmail = useSetRecoilState(authEmailAtom);
+    const setAuthEmailForPw = useSetRecoilState(authEmailForPwAtom);
     const setAuthNickname = useSetRecoilState(authNicknameAtom);
     const setAuthCode = useSetRecoilState(authCodeAtom);
     const setAuthCodeForPw = useSetRecoilState(authCodeForPwAtom);
 
-    const [authenticatedNickname, setAuthenticatedNickname] = useState("");
-    const [authenticatedCode, setAuthenticatedCode] = useState("");
-
-    const { isError: isNicknameError, isSuccess: isNicknameVaid } = useGetNicknameDuplicated({
-        nickname: authenticatedNickname,
-    });
-
-    // 닉네임 중복 결과 - useEffect
-    useEffect(() => {
-        if (isNicknameVaid) {
-            fireToast({
-                content: `사용 가능한 닉네임입니다!`,
-                isConfirm: false,
-            });
-            setAuthNickname(authenticatedNickname);
-        }
-
-        if (isNicknameError) {
-            fireToast({
-                content: `이미 사용하고 있는 닉네임입니다🥹`,
-                isConfirm: false,
-                isWarning: true,
-            });
-            setAuthenticatedNickname("");
-            setAuthNickname("");
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isNicknameError, isNicknameVaid]);
+    const { mutate: postNickname } = usePostNickname();
 
     // 닉네임 중복 검사 GET 요청 api
-    const getCheckNickname = ({ nickname }: { nickname: string }) => {
+    const postCheckNickname = ({ nickname }: { nickname: string }) => {
         const isNicknameVaid = new RegExp("^[^s]{2,8}$").test(nickname);
 
         if (!nickname || !isNicknameVaid) {
@@ -57,8 +30,27 @@ export const useCheckAuth = () => {
             setAuthNickname("");
             return;
         }
+        postNickname(
+            { nickname },
+            {
+                onSuccess: () => {
+                    fireToast({
+                        content: `사용 가능한 닉네임입니다!`,
+                        isConfirm: false,
+                    });
+                    setAuthNickname(nickname);
+                },
+                onError: () => {
+                    fireToast({
+                        content: `이미 사용하고 있는 닉네임입니다🥹`,
+                        isConfirm: false,
+                        isWarning: true,
+                    });
 
-        setAuthenticatedNickname(nickname);
+                    setAuthNickname("");
+                },
+            },
+        );
     };
 
     const { mutate: postAuthForSignUp } = usePostAuthForSignUp();
@@ -71,7 +63,7 @@ export const useCheckAuth = () => {
                 isConfirm: false,
                 isWarning: true,
             });
-            setAuthenticatedCode("");
+
             return;
         }
 
@@ -81,11 +73,9 @@ export const useCheckAuth = () => {
                 isConfirm: false,
                 isWarning: true,
             });
-            setAuthenticatedCode("");
+
             return;
         }
-
-        setAuthenticatedCode(authCode);
 
         postAuthForSignUp(
             { email, authCode },
@@ -95,7 +85,8 @@ export const useCheckAuth = () => {
                         content: `이메일 인증에 성공하셨습니다!`,
                         isConfirm: false,
                     });
-                    setAuthCode(authenticatedCode);
+                    setAuthEmail(email);
+                    setAuthCode(authCode);
                 },
                 onError: () => {
                     fireToast({
@@ -103,7 +94,7 @@ export const useCheckAuth = () => {
                         isConfirm: false,
                         isWarning: true,
                     });
-                    setAuthenticatedCode("");
+
                     setAuthCode("");
                 },
             },
@@ -128,7 +119,7 @@ export const useCheckAuth = () => {
                 isConfirm: false,
                 isWarning: true,
             });
-            setAuthenticatedCode("");
+
             return;
         }
 
@@ -138,7 +129,7 @@ export const useCheckAuth = () => {
                 isConfirm: false,
                 isWarning: true,
             });
-            setAuthenticatedCode("");
+
             return;
         }
 
@@ -162,7 +153,8 @@ export const useCheckAuth = () => {
                         content: `비밀번호 재설정에 성공하셨습니다! 다시 로그인해주세요!`,
                         isConfirm: false,
                     });
-                    setAuthCodeForPw(authenticatedCode);
+                    setAuthEmailForPw(email);
+                    setAuthCodeForPw(authCode);
                     window.location.href = "/";
                 },
                 onError: () => {
@@ -171,12 +163,12 @@ export const useCheckAuth = () => {
                         isConfirm: false,
                         isWarning: true,
                     });
-                    setAuthenticatedCode("");
+
                     setAuthCodeForPw("");
                 },
             },
         );
     };
 
-    return { getCheckNickname, postCheckAuthCode, postCheckAuthPw };
+    return { postCheckNickname, postCheckAuthCode, postCheckAuthPw };
 };

@@ -57,10 +57,10 @@ function SignUp2() {
     const [authCode, setAuthCode] = useRecoilState(authCodeAtom);
     const [authNickname, setAuthNickname] = useRecoilState(authNicknameAtom);
 
-    const { getCheckNickname, postCheckAuthCode } = useCheckAuth();
+    const { postCheckNickname, postCheckAuthCode } = useCheckAuth();
 
     const onHandleCheckNickname = () => {
-        getCheckNickname({ nickname: inputs.nickname });
+        postCheckNickname({ nickname: inputs.nickname });
     };
 
     const onHandleAuthCode = () => {
