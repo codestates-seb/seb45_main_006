@@ -25,7 +25,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         registry
                 .addEndpoint("/ws") // 웹소켓 연결 Endpoint 설정 ws://{host}/ws/websocket
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins("*");
+
+        registry
+                .addEndpoint("/ws")
+                .setAllowedOrigins("http://localhost:8080")
                 .withSockJS();
 
 
