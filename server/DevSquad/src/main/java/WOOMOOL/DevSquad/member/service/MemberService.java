@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.member.service;
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.bookmark.repository.BookmarkRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
@@ -137,7 +138,11 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilePage(int page) {
         // 최근 활동으로 정렬
-        return memberProfileRepository.findAll(PageRequest.of(page, 8, Sort.by("modifiedAt")));
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page,memberProfileList);
+
+        return memberProfilePage;
+
     }
 
     // 포지션 별로 필터링
@@ -145,7 +150,8 @@ public class MemberService {
     public Page<MemberProfile> getMemberProfilesByPosition(int page, List<String> positions) {
 
         List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions, positions.stream().count());
-        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8,Sort.by("modifiedAt")), memberProfileList.size());
+
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 
         return memberProfilePage;
     }
@@ -155,36 +161,43 @@ public class MemberService {
     public Page<MemberProfile> getMemberProfilesByStack(int page, List<String> stacks) {
 
         List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks, stacks.stream().count());
-        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8,Sort.by("modifiedAt")), memberProfileList.size());
+
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 
         return memberProfilePage;
     }
+
+    // 닉네임 필터링
     @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfileByNickname(int page, String nickname) {
 
-        Page<MemberProfile> memberProfileList = memberProfileRepository.findAllByNickname(PageRequest.of(page,8,Sort.by("modifiedAt")),nickname);
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByNickname(nickname);
 
-        return memberProfileList;
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
+
+        return memberProfilePage;
     }
 
-    // 활동중, 등록 허가한 회원, 블랙리스트에 없는 유저리스트 조회
-    @Transactional(readOnly = true)
-    public List<MemberProfile> getMyMemberProfiles(Page<MemberProfile> memberProfilePage) {
+    // 비로그인 회원은 모든 유저 리스트 , 로그인한 유저는 리스트에서 차단한 멤버 정보 삭제
+    public List<MemberProfile> removeBloackMemberProfileList(List<MemberProfile> memberProfileList) {
 
-        // 블랙리스트 멤버에 있는 memberId를 List로 추출
-        List<Long> blockMemberList = getBlockMemberId();
 
-        // list에 등록되어 있고 활동중인 회원, 추출한 차단 memberId와 memberProfile 의 id가 같으면 필터링
-        return memberProfilePage.getContent().stream()
-                .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
-                .collect(Collectors.toList());
+        // 비로그인은 바로 리스트 반환
+        if (SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+
+            return memberProfileList;
+
+        else {
+            // 로그인한 유저면 필터링
+
+            // 차단 유저 아이디 정보 조회
+            List<Long> blockMemberList = getBlockMemberId();
+
+            return memberProfileList.stream()
+                    .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
+                    .collect(Collectors.toList());
+        }
     }
-
-    public List<MemberProfile> getMemberProfile(Page<MemberProfile> memberProfilePage){
-
-        return memberProfilePage.getContent();
-    }
-
 
     // 회원 탈퇴 soft delete
     public void deleteMember() {
@@ -316,67 +329,78 @@ public class MemberService {
         return infoBoardList;
     }
 
+    // 프로필 페이징
+    private Page<MemberProfile> getMemberProfilePage(int page, List<MemberProfile> memberProfileList){
+
+        // 차단한 회원 걸러낸 리스트
+        List<MemberProfile> filteringMemberProfileList = removeBloackMemberProfileList(memberProfileList);
+
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(filteringMemberProfileList, PageRequest.of(page, 8, Sort.by("modifiedAt")), filteringMemberProfileList.size());
+
+        return memberProfilePage;
+    }
+
     //좋아요한 정보 게시판
-    public Page<InfoBoard> getLikeInfoBoardList(int page){
+    public Page<InfoBoard> getLikeInfoBoardList(int page) {
 
         Member findMember = findMemberFromToken();
 
         Page<InfoBoard> infoBoardPage = likesRepository
-                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return infoBoardPage;
 
     }
 
     //좋아요한 질문 게시판
-    public Page<QuestionBoard> getLikeQuestionBoard(int page){
+    public Page<QuestionBoard> getLikeQuestionBoard(int page) {
 
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = likesRepository
-                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return questionBoardPage;
     }
 
 
     // 북마크한 게시판들
-    public Page<QuestionBoard> getBooMarkedQuestionBoard(int page){
+    public Page<QuestionBoard> getBooMarkedQuestionBoard(int page) {
 
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = bookmarkRepository
-                .findQuestionByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+                .findQuestionByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return questionBoardPage;
     }
 
-    public Page<InfoBoard> getBooMarkedInfoBoardBoard(int page){
+    public Page<InfoBoard> getBooMarkedInfoBoardBoard(int page) {
 
         Member findMember = findMemberFromToken();
 
-        Page<InfoBoard> infoBoardPage= bookmarkRepository
-                .findInfoByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+        Page<InfoBoard> infoBoardPage = bookmarkRepository
+                .findInfoByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return infoBoardPage;
     }
 
-    public Page<Project> getBooMarkedProjectBoard(int page){
+    public Page<Project> getBooMarkedProjectBoard(int page) {
 
         Member findMember = findMemberFromToken();
 
         Page<Project> projectBoardPage = bookmarkRepository
-                .findProjectByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+                .findProjectByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return projectBoardPage;
     }
 
-    public Page<Study> getBooMarkedStudyBoard(int page){
+    public Page<Study> getBooMarkedStudyBoard(int page) {
 
         Member findMember = findMemberFromToken();
 
         Page<Study> studyBoardPage = bookmarkRepository
-                .findStudyByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+                .findStudyByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
 
         return studyBoardPage;
     }
