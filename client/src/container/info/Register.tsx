@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import { usePostInfo, usePatchInfo } from "@api/info/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 
 import Typography from "@component/Typography";
@@ -24,7 +24,7 @@ function Register() {
 
     const { mutate: postInfo } = usePostInfo();
     const { mutate: patchInfo } = usePatchInfo();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
     const [isDropDownShow, setIsDropDownShow] = useState<boolean>(false);

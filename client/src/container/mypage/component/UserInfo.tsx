@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { authNicknameAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
-import { useCheckAuth } from "@hook/useCheckAuth";
+import { useAuthHelper } from "@hook/useCheckAuth";
 
 import { usePatchMember, useDeleteMember } from "@api/member/hook";
 
@@ -39,7 +39,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const [isEdit, setIsEdit] = useState(false);
 
     const { fireToast, errorToast, createToast } = useToast();
-    const { postCheckNickname } = useCheckAuth();
+    const { postCheckNickname } = useAuthHelper();
 
     const onHandleCheckNickname = () => {
         postCheckNickname({ nickname });

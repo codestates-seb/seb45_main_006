@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -6,287 +5,177 @@ import { useRecoilState } from "recoil";
 import { authCodeAtom, authEmailAtom, authNicknameAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
-import { useCheckAuth } from "@hook/useCheckAuth";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
+import { useAuthHelper } from "@hook/useCheckAuth";
 
 import { usePostMember } from "@api/sign/hook";
-import { usePostAuthForSignUpAuth } from "@api/auth/hook";
 
 import Typography from "@component/Typography";
 import Button from "@component/Button";
 import SignLayout from "@container/sign/component/SignLayout";
 import SignInput from "@container/sign/component/SignInput";
 import SignButton from "@container/sign/component/SignButton";
+import EmailGuide from "./component/EmailGuide";
 
 import progress from "@assets/sign/progress_bar2.png";
+
+import { REGEX } from "@hook/useCheckValidValue";
 
 function SignUp2() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirectedEmail = searchParams.get("email");
 
-    useEffect(() => {
-        if (redirectedEmail) {
-            setIsRequestAuthenticate(true);
-        }
-    }, [redirectedEmail]);
-
-    const { errorToast, fireToast, createToast } = useToast();
+    const { errorToast, fireToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
-    const { mutate: postAuthForSignUpAuth } = usePostAuthForSignUpAuth();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
 
-    const [inputs, setInputs] = useState({
-        email: redirectedEmail || "",
-        nickname: "",
-        authCode: "",
-        password: "",
-        passwordRe: "",
-    });
+    const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();
 
-    const inputsRegex = {
-        email: "[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$",
-        nickname: "^[^s]{2,8}$",
-        password: "^(?=.*[0-9])(?=.*[a-z])(?=.*[$@!%*#?&])[a-z0-9$@!%*#?&]{8,20}$",
-        passwordRe: inputs.password,
-    };
-
-    const [isRequestAuthenticate, setIsRequestAuthenticate] = useState(false);
+    const [email, setEmail] = useState(redirectedEmail || "");
+    const [nickname, setNickname] = useState("");
+    const [authCodeValue, setAuthCodeValue] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordRe, setPasswordRe] = useState("");
 
     const [authEmail, setAuthEmail] = useRecoilState(authEmailAtom);
     const [authCode, setAuthCode] = useRecoilState(authCodeAtom);
     const [authNickname, setAuthNickname] = useRecoilState(authNicknameAtom);
 
-    const { postCheckNickname, postCheckAuthCode } = useCheckAuth();
+    useEffect(() => {
+        if (redirectedEmail) {
+            setAuthEmail(redirectedEmail);
+        }
+    }, [redirectedEmail]);
 
-    const onHandleCheckNickname = () => {
-        postCheckNickname({ nickname: inputs.nickname });
-    };
-
-    const onHandleAuthCode = () => {
-        postCheckAuthCode({ email: redirectedEmail || "", authCode: inputs.authCode })
-    }
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setInputs({ ...inputs, [name]: value });
-    };
+    const { postCheckNickname, postCheckAuthCode, reqAuthenticateEmail } = useAuthHelper();
 
     const onHandleSignUp = () => {
-        if (!isRequestAuthenticate) {
-            fireToast({
-                content: "이메일 인증을 진행해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        if (!authCode) {
-            fireToast({
-                content: "이메일 인증코드를 입력해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
+        if (!authEmail || !authCode) {
+            fireToast({ content: "이메일 인증을 진행해주세요.", isConfirm: false, isWarning: true });
             return;
         }
 
         if (!authNickname) {
-            fireToast({
-                content: "닉네임 중복 검사를 입력해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        const isEmailVaid = new RegExp(inputsRegex.email).test(inputs.email);
-        const isNicknameVaid = new RegExp(inputsRegex.nickname).test(inputs.nickname);
-        const isPasswordVaid = new RegExp(inputsRegex.password).test(inputs.password);
-        const isPasswordReVaid = new RegExp(inputsRegex.passwordRe).test(inputs.passwordRe);
-
-        if (!isEmailVaid || !isNicknameVaid || !isPasswordVaid || !isPasswordReVaid) {
-            fireToast({
-                content: "형식에 맞지 않는 입력값이 존재합니다.",
-                isConfirm: false,
-                isWarning: true,
-            });
+            fireToast({ content: "닉네임 중복 검사를 입력해주세요.", isConfirm: false, isWarning: true });
             return;
         }
 
         const signUpInputs = [
-            { name: "이메일", content: inputs.email },
-            { name: "인증코드", content: inputs.authCode },
-            { name: "닉네임", content: inputs.nickname },
-            { name: "비밀번호", content: inputs.password },
-            { name: "비밀번호 확인", content: inputs.passwordRe },
+            { name: "비밀번호", content: password },
+            { name: "비밀번호 확인", content: passwordRe },
         ];
         const emptyNames = alertWhenEmptyFn(signUpInputs);
+        if (emptyNames.length > 0) return;
 
-        if (emptyNames.length === 0) {
-            postSignUp(
-                { email: inputs.email, nickname: inputs.nickname, password: inputs.password },
-                {
-                    onSuccess: () => {
-                        setAuthCode("");
-                        setAuthEmail("");
-                        setAuthNickname("");
-                        navigate("/signup/3");
-                    },
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
-                },
-            );
-        }
-    };
-
-    const onHandleReqAuthForSignUp = () => {
-        const isEmailVaid = new RegExp(inputsRegex.email).test(inputs.email);
-        if (!inputs.email || !isEmailVaid) {
+        if (!isPasswordVaid({ password, passwordRe })) {
             fireToast({
-                content: "이메일 형식이 옳지 않습니다.",
+                content: "비밀번호는 영문, 숫자, 특수문자 포함 8 ~ 20자입니다.",
                 isConfirm: false,
                 isWarning: true,
             });
             return;
         }
 
-        postAuthForSignUpAuth(
-            { email: inputs.email },
+        postSignUp(
+            { email: email, nickname: nickname, password: password },
             {
                 onSuccess: () => {
-                    setIsRequestAuthenticate(true);
-                    setAuthEmail(inputs.email);
-                    fireToast({
-                        content: `${inputs.email}로 인증코드를 보냈습니다.`,
-                        isConfirm: false,
-                    });
+                    setAuthCode("");
+                    setAuthEmail("");
+                    setAuthNickname("");
+                    navigate("/signup/3");
                 },
-                onError: () => {
-                    setIsRequestAuthenticate(false);
-                    createToast({
-                        content: "해당 이메일을 가진 유저가 존재합니다. 로그인 화면으로 이동할까요?",
-                        isConfirm: true,
-                        callback: () => navigate("/login"),
-                    });
+                onError: (err) => {
+                    console.log(err);
+                    errorToast();
                 },
             },
         );
     };
+
+    if (authEmail && !redirectedEmail) {
+        return <EmailGuide />;
+    }
 
     return (
         <SignLayout title="회원가입" subTitle="" progressImage={progress}>
             <Typography type="Highlight" text="계정정보" styles="ml-4 mb-24" />
             <div className="flex items-center justify-between">
                 <SignInput
-                    name="email"
                     label="이메일"
-                    type="text"
-                    value={inputs.email}
-                    onChange={handleInput}
+                    value={email}
+                    onChange={(e) => setEmail(e.currentTarget.value)}
                     placeholder="이메일을 입력해주세요."
-                    disabled={isRequestAuthenticate}
-                    regex={new RegExp(inputsRegex.email)}
+                    disabled={authEmail.length > 0}
+                    regex={REGEX.EMAIL}
                     description="이메일 형식이 맞지 않습니다."
                 />
 
-                <Button
-                    type={isRequestAuthenticate ? "DISABLED" : "STUDY"}
-                    styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                        isRequestAuthenticate ? "" : "hover:font-bold"
-                    }`}
-                    onClickHandler={onHandleReqAuthForSignUp}
-                >
-                    <Typography type="Description" text="인증 요청" styles="min-w-max" color="text-gray-700" />
-                </Button>
+                {!authEmail && (
+                    <Button
+                        type="STUDY"
+                        styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
+                        onClickHandler={() => reqAuthenticateEmail({ email })}
+                    >
+                        <Typography type="Description" text="인증 요청" styles="min-w-max" color="text-gray-700" />
+                    </Button>
+                )}
             </div>
-            {isRequestAuthenticate && (
-                <>
-                    <div className="mb-4 ml-90 flex items-center justify-between">
-                        <Typography
-                            type="Description"
-                            text="혹시 이메일을 잘못 입력하셨다면?"
-                            styles="min-w-max"
-                            color="text-gray-700"
-                        />
-                        <button
-                            onClick={() => {
-                                setIsRequestAuthenticate(false);
-                                setAuthEmail("");
-                            }}
-                        >
-                            <Typography
-                                type="Description"
-                                text="이메일 재입력"
-                                styles="min-w-max"
-                                color="text-blue-500 hover:text-blue-700"
-                            />
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <SignInput
-                            name="authCode"
-                            label="인증코드"
-                            type="text"
-                            value={inputs.authCode}
-                            onChange={handleInput}
-                            placeholder="인증코드를 입력해주세요."
-                            disabled={authEmail.length > 0}
-                        />
+            {authEmail && (
+                <div className="flex items-center justify-between">
+                    <SignInput
+                        label="인증코드"
+                        value={authCodeValue}
+                        onChange={(e) => setAuthCodeValue(e.currentTarget.value)}
+                        placeholder="인증코드를 입력해주세요."
+                        disabled={authCode.length > 0}
+                    />
+                    {!authCode && (
                         <Button
-                            type={authEmail.length > 0 ? "DISABLED" : "STUDY"}
-                            styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                                authEmail.length > 0 ? "" : "hover:font-bold"
-                            }`}
-                            onClickHandler={onHandleAuthCode}
+                            type="STUDY"
+                            styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
+                            onClickHandler={() =>
+                                postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue })
+                            }
                         >
                             <Typography type="Description" text="인증 확인" styles="min-w-max" color="text-gray-700" />
                         </Button>
-                    </div>
-                </>
+                    )}
+                </div>
             )}
             <div className="flex items-center justify-between">
                 <SignInput
-                    name="nickname"
                     label="닉네임"
-                    type="text"
-                    value={inputs.nickname}
-                    onChange={handleInput}
+                    value={nickname}
                     placeholder="닉네임 (공백없이 2자 ~ 8자)"
                     disabled={authNickname.length > 0}
-                    regex={new RegExp(inputsRegex.nickname)}
+                    onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
                 />
                 <Button
                     type={authNickname.length > 0 ? "DISABLED" : "STUDY"}
-                    styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${
-                        authEmail.length > 0 ? "" : "hover:font-bold"
-                    }`}
-                    onClickHandler={onHandleCheckNickname}
+                    styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${authEmail.length > 0 ? "" : "hover:font-bold"}`}
+                    onClickHandler={() => postCheckNickname({ nickname })}
                 >
                     <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
                 </Button>
             </div>
             <SignInput
-                name="password"
                 label="비밀번호"
                 type="password"
-                value={inputs.password}
-                onChange={handleInput}
+                value={password}
+                onChange={(e) => setPassword(e.currentTarget.value)}
                 placeholder="비밀번호 (영문, 숫자, 특수문자 포함 8 ~ 20자)"
-                regex={new RegExp(inputsRegex.password)}
+                regex={REGEX.PASSWORD}
                 description="비밀번호 형식이 맞지 않습니다."
             />
             <SignInput
-                name="passwordRe"
                 label="비밀번호 확인"
                 type="password"
-                value={inputs.passwordRe}
+                value={passwordRe}
                 placeholder="비밀번호를 다시 입력해주세요."
-                regex={new RegExp(inputsRegex.passwordRe)}
-                onChange={handleInput}
+                regex={new RegExp(passwordRe)}
+                onChange={(e) => setPasswordRe(e.currentTarget.value)}
                 description="입력된 비밀번호와 다릅니다."
             />
             <div className="flex justify-center pt-20">

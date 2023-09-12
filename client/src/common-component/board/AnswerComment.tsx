@@ -5,7 +5,7 @@ import { usePatchAnswerComment, useDeleteAnswerComment, usePostAnswerCommentRe }
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 import dayjs from "dayjs";
 import MDEditor from "@uiw/react-md-editor";
@@ -53,7 +53,7 @@ export const OneCommentAnswer = ({
     const [nextComment, setNextComment] = useState("");
 
     const { fireToast, createToast, errorToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { mutate: patchAnswerComment } = usePatchAnswerComment();
     const { mutate: deleteAnswerComment } = useDeleteAnswerComment();
     const { mutate: postAnswerCommentRe } = usePostAnswerCommentRe();

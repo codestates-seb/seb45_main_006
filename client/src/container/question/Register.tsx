@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import { usePostQuestion, usePatchQuestion } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 
 import Typography from "@component/Typography";
@@ -20,7 +20,7 @@ function Register() {
 
     const { mutate: postQuestion } = usePostQuestion();
     const { mutate: patchQuestion } = usePatchQuestion();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
     const [title, setTitle] = useState("");

@@ -5,7 +5,7 @@ import { usePatchComment, useDeleteComment, usePostCommentRe } from "@api/commen
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 import dayjs from "dayjs";
 
@@ -79,7 +79,7 @@ export const OneComment = ({
     const [nextComment, setNextComment] = useState("");
 
     const { fireToast, createToast, errorToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { mutate: patchComment } = usePatchComment();
     const { mutate: deleteComment } = useDeleteComment();
     const { mutate: postCommentRe } = usePostCommentRe();

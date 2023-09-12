@@ -12,7 +12,7 @@ import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
 import { usePostComment } from "@api/comment/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
@@ -144,7 +144,7 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
     const { mutate: postViewCount } = usePostViewCount();
     const { mutate: postComment } = usePostComment();
 
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
 
     const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setComment(e.currentTarget.value);

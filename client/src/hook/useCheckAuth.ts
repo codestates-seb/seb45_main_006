@@ -1,13 +1,15 @@
 import { useSetRecoilState } from "recoil";
 import { authNicknameAtom, authCodeAtom, authCodeForPwAtom, authEmailAtom, authEmailForPwAtom } from "@feature/Global";
 
-import { usePostNickname } from "@api/sign/hook";
-import { usePostAuthForFindPw, usePostAuthForSignUp } from "@api/auth/hook";
-
 import { useToast } from "@hook/useToast";
 
-export const useCheckAuth = () => {
-    const { fireToast } = useToast();
+import { usePostNickname } from "@api/sign/hook";
+import { usePostAuthForFindPw, usePostAuthForSignUp, usePostAuthForSignUpAuth } from "@api/auth/hook";
+import { useCheckValidValue } from "./useCheckValidValue";
+
+export const useAuthHelper = () => {
+    const { fireToast, createToast } = useToast();
+    const { isNicknameVaid, isEmailValid } = useCheckValidValue();
 
     const setAuthEmail = useSetRecoilState(authEmailAtom);
     const setAuthEmailForPw = useSetRecoilState(authEmailForPwAtom);
@@ -19,11 +21,9 @@ export const useCheckAuth = () => {
 
     // 닉네임 중복 검사 GET 요청 api
     const postCheckNickname = ({ nickname }: { nickname: string }) => {
-        const isNicknameVaid = new RegExp("^[^s]{2,8}$").test(nickname);
-
-        if (!nickname || !isNicknameVaid) {
+        if (!nickname || !isNicknameVaid({ nickname })) {
             fireToast({
-                content: "닉네임을 입력해주세요.",
+                content: "닉네임은 2자 이상 8자 이하 공백없는 문자입니다.",
                 isConfirm: false,
                 isWarning: true,
             });
@@ -48,6 +48,40 @@ export const useCheckAuth = () => {
                     });
 
                     setAuthNickname("");
+                },
+            },
+        );
+    };
+
+    const { mutate: postAuthForSignUpAuth } = usePostAuthForSignUpAuth();
+
+    // 이메일 인증 POST 요청 api
+    const reqAuthenticateEmail = ({ email }: { email: string }) => {
+        if (!email || !isEmailValid({ email })) {
+            fireToast({
+                content: "이메일 형식이 옳지 않습니다.",
+                isConfirm: false,
+                isWarning: true,
+            });
+            return;
+        }
+
+        postAuthForSignUpAuth(
+            { email: email },
+            {
+                onSuccess: () => {
+                    setAuthEmail(email);
+                    fireToast({
+                        content: `${email}로 인증코드를 보냈습니다.`,
+                        isConfirm: false,
+                    });
+                },
+                onError: () => {
+                    createToast({
+                        content: "해당 이메일을 가진 유저가 존재합니다. 로그인 화면으로 이동할까요?",
+                        isConfirm: true,
+                        callback: () => (window.location.href = "/login"),
+                    });
                 },
             },
         );
@@ -170,5 +204,5 @@ export const useCheckAuth = () => {
         );
     };
 
-    return { postCheckNickname, postCheckAuthCode, postCheckAuthPw };
+    return { postCheckNickname, reqAuthenticateEmail, postCheckAuthCode, postCheckAuthPw };
 };
