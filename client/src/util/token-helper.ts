@@ -17,6 +17,7 @@ type ACCESS_TOKEN = {
  * @returns {ACCESS_TOKEN} 토큰을 파싱한 객체
  */
 export const parseJwt = (token: string): ACCESS_TOKEN => {
+    console.log("???");
     if (!token) {
         throw Error("jwt 토큰이 유효하지 않습니다.");
     }
@@ -30,6 +31,7 @@ export const parseJwt = (token: string): ACCESS_TOKEN => {
  * @returns {boolean} 토큰 유효 여부
  */
 export const isValidToken = (token: string): boolean | undefined => {
+    console.log("???");
     if (!token) {
         console.log("jwt 토큰이 유효하지 않습니다.", token);
         return;

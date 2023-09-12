@@ -14,6 +14,8 @@ interface SpecifyInfoId {
 export interface GetReqAllInfo {
     category?: CATEGORY_TYPE;
     search?: string;
+    page: number;
+    size: number;
 }
 
 // 정보 게시판 - 등록

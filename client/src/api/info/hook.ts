@@ -8,10 +8,10 @@ import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount } from "./ap
 import { infoKeyFactory } from "./infoKeyFactory";
 
 // 정보 게시판 - 리스트 조회
-export const useGetAllInfo = ({ category, search }: GetReqAllInfo) => {
+export const useGetAllInfo = ({ category, search, page, size }: GetReqAllInfo) => {
     return useQuery<GetResAllInfo, AxiosError, GetResAllInfo>({
-        queryKey: infoKeyFactory.all({ category, search }),
-        queryFn: () => getAllInfo({ category, search }),
+        queryKey: infoKeyFactory.all({ category, search, page, size }),
+        queryFn: () => getAllInfo({ category, search, page, size }),
     });
 };
 
