@@ -22,13 +22,13 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
     List<QuestionBoard> findAllBy10MoreLikedByMemberProfile(Long memberProfileId);
     //정보게시판 전체를 최신순으로 정렬
     @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' ORDER BY q.createdAt DESC ")
-    Page<QuestionBoard> findAllPosted(Pageable pageable);
+    List<QuestionBoard> findAllPosted();
     //정보게시판 글의 제목과 내용 한곳이라도 검색어가 포함되어 있으면 최신순으로 정렬
     @Query("SELECT q FROM QuestionBoard q WHERE " +
             "(LOWER(q.title) LIKE CONCAT('%',LOWER(:search),'%') " +
             "OR LOWER(q.content) LIKE CONCAT('%',LOWER(:search),'%')) " +
             "AND q.questionBoardStatus = 'QUESTIONBOARD_POSTED' ORDER BY q.createdAt DESC ")
-    Page<QuestionBoard> findByKeyword(String search, Pageable pageable);
+    List<QuestionBoard> findByKeyword(String search);
     //좋아요 갯수가 10개 이상인 정보게시판 목록
     @Query("SELECT q FROM  QuestionBoard q WHERE SIZE(q.likesList) >= 10 " +
             "AND q.questionBoardStatus = 'QUESTIONBOARD_POSTED' AND q.createdAt >= :oneWeekMinus " +
