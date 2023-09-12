@@ -28,26 +28,28 @@ public interface InfoBoardMapper {
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     @Mapping(source = "memberProfile.nickname", target = "nickname")
     @Mapping(source = "memberProfile.profilePicture", target = "profilePicture")
-    @Mapping(target = "liked", expression = "java(hasUserLikedBoard(infoBoard.getLikesList()))")
-    @Mapping(target = "bookmarked", expression = "java(markedOrNot(infoBoard.getBookmarkList()))")
+//    @Mapping(target = "liked", expression = "java(hasUserLikedBoard(infoBoard.getLikesList()))")
+//    @Mapping(target = "bookmarked", expression = "java(markedOrNot(infoBoard.getBookmarkList()))")
     @Mapping(target = "likeCount", expression = "java(infoBoard.getLikesList().size())")
     InfoBoardDto.Response InfoBoardToInfoBoardResponseDto(InfoBoard infoBoard);
     List<InfoBoardDto.Response> InfoBoardListToInfoBoardResponseDtoList(List<InfoBoard> infoBoardList);
 
-    default boolean hasUserLikedBoard(List<Likes> likesList) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(userEmail.equals("anonymousUser"))
-            return false;
-        else {
-             return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
-        }
-    }
-    default boolean markedOrNot(List<Bookmark> BookmarkList) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(userEmail.equals("anonymousUser")) {
-            return false;
-        } else {
-            return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
-        }
-    }
+//    default boolean hasUserLikedBoard(List<Likes> likesList) {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//        if(securityContext==null)
+//            return false;
+//        else {
+//            String userEmail = securityContext.getAuthentication().getName();
+//             return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
+//        }
+//    }
+//    default boolean markedOrNot(List<Bookmark> BookmarkList) {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//        if( securityContext == null ) {
+//            return false;
+//        } else {
+//            String userEmail = securityContext.getAuthentication().getName();
+//            return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
+//        }
+//    }
 }

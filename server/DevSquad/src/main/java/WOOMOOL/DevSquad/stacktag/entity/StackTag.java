@@ -28,8 +28,8 @@ public class StackTag {
     private List<MemberProfile> memberProfiles = new ArrayList<>();
 
     @ManyToMany(mappedBy = "stackTags")
-    private Set<Study> studyBoardList = new HashSet<>();
+    private List<Study> studyBoardList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "stackTags")
-    private Set<Project> projectBoardList = new HashSet<>();
+    private List<Project> projectBoardList = new ArrayList<>();
 }

@@ -11,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class StackTagService {
@@ -37,18 +34,15 @@ public class StackTagService {
         }
     }
 
-    public void createProjectStackTag(Project project, Set<String> stackTaglist){
-
-        // 수정시 스택 객체 초기화
-        project.getStackTags().clear();
-
-        if(stackTaglist.size() > 0) {
-            for (String stackTags : stackTaglist) {
-                StackTag stackTag = stackTagRepository.findByTagName(stackTags);
-                stackTag.getProjectBoardList().add(project);
-                project.getStackTags().add(stackTag);
-            }
+    public Set<StackTag> createProjectStackTag(Set<String> stackTaglist){
+        if(stackTaglist.isEmpty())
+            return null;
+        Set<StackTag> stackTags = new HashSet<>();
+        for(String name : stackTaglist) {
+            StackTag stackTag = stackTagRepository.findByTagName(name);
+            stackTags.add(stackTag);
         }
+        return stackTags;
     }
 
     //검색어가 있을시 스택태그검색과 없을시 검색

@@ -38,7 +38,7 @@ public class ProjectService {
     public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
-        stackTagService.createProjectStackTag(project, stackTag);
+        project.setStackTags(stackTagService.createProjectStackTag(stackTag));
 
         return projectRepository.save(project);
     }
@@ -71,7 +71,7 @@ public class ProjectService {
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
 
-        stackTagService.createProjectStackTag(project, stackTag);
+        project.setStackTags(stackTagService.createProjectStackTag(stackTag));
 
         Optional.ofNullable(project.getTitle())
                 .ifPresent(title -> findProject.setTitle(title));

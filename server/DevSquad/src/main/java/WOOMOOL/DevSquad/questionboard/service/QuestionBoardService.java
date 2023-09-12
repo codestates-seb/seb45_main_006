@@ -8,6 +8,7 @@ import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -64,12 +65,13 @@ public class QuestionBoardService {
 
     //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
     public Page<QuestionBoard> findAllQuestionBoard(String search, int page, int size) {
-        Page<QuestionBoard> result;
+        List<QuestionBoard> questionBoardList;
         if(search==null)
-            result = questionBoardRepository.findAllPosted(PageRequest.of(page, size));
+            questionBoardList = questionBoardRepository.findAllPosted();
         else
-            result = questionBoardRepository.findByKeyword(search, PageRequest.of(page, size));
-
+            questionBoardList = questionBoardRepository.findByKeyword(search);
+        questionBoardList = removeBlockUserBoard(questionBoardList);
+        Page<QuestionBoard> result = new PageImpl<>(questionBoardList, PageRequest.of(page, size), questionBoardList.size());
 
         return result;
     }
@@ -92,7 +94,9 @@ public class QuestionBoardService {
     }
     public List<QuestionBoard> findHottestQuestionBoard() {
         LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
-        return questionBoardRepository.findHottestQuestionBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
+        List<QuestionBoard> result = questionBoardRepository.findHottestQuestionBoard(oneWeekMinus);
+        result = removeBlockUserBoard(result);
+        return result.stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(Long boardId) {
