@@ -7,7 +7,7 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
-import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +27,18 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
+    private final StackTagService stackTagService;
 
-    public ProjectService(ProjectRepository projectRepository, MemberService memberService) {
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService) {
         this.projectRepository = projectRepository;
         this.memberService = memberService;
+        this.stackTagService = stackTagService;
     }
 
-    public Project createProject(Project project) {
+    public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+
+        stackTagService.createProjectStackTag(project, stackTag);
 
         return projectRepository.save(project);
     }
@@ -65,10 +66,12 @@ public class ProjectService {
         return projectPage;
     }
     // 프로젝트 수정
-    public Project updateProject(Project project) {
+    public Project updateProject(Project project, Set<String> stackTag) {
 
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
+
+        stackTagService.createProjectStackTag(project, stackTag);
 
         Optional.ofNullable(project.getTitle())
                 .ifPresent(title -> findProject.setTitle(title));

@@ -37,6 +37,20 @@ public class StackTagService {
         }
     }
 
+    public void createProjectStackTag(Project project, Set<String> stackTaglist){
+
+        // 수정시 스택 객체 초기화
+        project.getStackTags().clear();
+
+        if(stackTaglist.size() > 0) {
+            for (String stackTags : stackTaglist) {
+                StackTag stackTag = stackTagRepository.findByTagName(stackTags);
+                stackTag.getProjectBoardList().add(project);
+                project.getStackTags().add(stackTag);
+            }
+        }
+    }
+
     //검색어가 있을시 스택태그검색과 없을시 검색
     public List<StackTag> getStackTags(String keyword) {
         List<StackTag> result = new ArrayList<>();
