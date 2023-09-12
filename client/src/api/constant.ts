@@ -1,5 +1,5 @@
 import { SpecifyBoard, SpecifyComment } from "@type/comment/comment.req.dto";
-import { SpecifyAnswer, SpecifyQuestion, SpecifyAnswerComment } from "@type/answer/answer.req.dto";
+import { SpecifyAnswer, SpecifyQuestion, SpecifyAnswerComment, GetReqAnswer } from "@type/answer/answer.req.dto";
 import { DeleteReqExitChatRoom, GetReqEnrollChatRoom } from "@type/chat/chat.req.dto";
 
 export const COMMON_API_PATH = {
@@ -19,6 +19,7 @@ export const COMMON_API_PATH = {
     },
     AUTH: {
         FOR_SIGNUP: "/email/auth",
+        FOR_SIGNUP_AUTH: "/email/authEmail",
         FOR_FIND_PW: "/email/findPassword",
         FOR_FIND_PW_AUTH: "/email/authPassword",
     },
@@ -53,6 +54,7 @@ export const MAKE_API_PATH = {
         delete: ({ board, boardId, commentId }: SpecifyComment) => `/${board}/${boardId}/comment/${commentId}`,
     },
     ANSWER: {
+        list: ({ questionId, page, size }: GetReqAnswer) => `/question/${questionId}/answer?page=${page}&size=${size}`,
         add: ({ questionId }: SpecifyQuestion) => `/question/${questionId}/answer`,
         update: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
         delete: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,

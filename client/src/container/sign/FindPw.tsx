@@ -5,7 +5,7 @@ import { useSetRecoilState } from "recoil";
 import { authEmailAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
-import { usePostAuthForFindPw } from "@api/auth/hook";
+import { usePostAuthForFindPwAuth } from "@api/auth/hook";
 import { useCheckAuth } from "@hook/useCheckAuth";
 
 import SignLayout from "@container/sign/component/SignLayout";
@@ -28,7 +28,7 @@ const FindPwContent = ({ email }: { email: string }) => {
         passwordRe: inputs.password,
     };
 
-    const { getCheckAuthPw } = useCheckAuth();
+    const { postCheckAuthPw } = useCheckAuth();
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -37,7 +37,7 @@ const FindPwContent = ({ email }: { email: string }) => {
     };
 
     const onHandleAuthCode = () => {
-        getCheckAuthPw({ email: email, authCode: inputs.authCode, changePassword: inputs.password });
+        postCheckAuthPw({ email: email, authCode: inputs.authCode, changePassword: inputs.password });
     };
 
     return (
@@ -167,7 +167,7 @@ function FindPw() {
     const setAuthEmail = useSetRecoilState(authEmailAtom);
 
     const { fireToast, createToast } = useToast();
-    const { mutate: postAuthForFindPw } = usePostAuthForFindPw();
+    const { mutate: postAuthForFindPwAuth } = usePostAuthForFindPwAuth();
 
     const onHandleReqAuthForFindPw = () => {
         const isEmailVaid = new RegExp("[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$").test(email);
@@ -180,7 +180,7 @@ function FindPw() {
             return;
         }
 
-        postAuthForFindPw(
+        postAuthForFindPwAuth(
             { email: email },
             {
                 onSuccess: () => {

@@ -10,7 +10,7 @@ import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
 import { useCheckAuth } from "@hook/useCheckAuth";
 
 import { usePostMember } from "@api/sign/hook";
-import { usePostAuthForSignUp } from "@api/auth/hook";
+import { usePostAuthForSignUpAuth } from "@api/auth/hook";
 
 import Typography from "@component/Typography";
 import Button from "@component/Button";
@@ -33,7 +33,7 @@ function SignUp2() {
 
     const { errorToast, fireToast, createToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
-    const { mutate: postAuthForSignUp } = usePostAuthForSignUp();
+    const { mutate: postAuthForSignUpAuth } = usePostAuthForSignUpAuth();
     const { alertWhenEmptyFn } = useCheckEmptyInput();
 
     const [inputs, setInputs] = useState({
@@ -57,14 +57,14 @@ function SignUp2() {
     const [authCode, setAuthCode] = useRecoilState(authCodeAtom);
     const [authNickname, setAuthNickname] = useRecoilState(authNicknameAtom);
 
-    const { getCheckNickname, getCheckAuthCode } = useCheckAuth();
+    const { getCheckNickname, postCheckAuthCode } = useCheckAuth();
 
     const onHandleCheckNickname = () => {
         getCheckNickname({ nickname: inputs.nickname });
     };
 
     const onHandleAuthCode = () => {
-        getCheckAuthCode({ email: redirectedEmail || "", authCode: inputs.authCode })
+        postCheckAuthCode({ email: redirectedEmail || "", authCode: inputs.authCode })
     }
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -153,7 +153,7 @@ function SignUp2() {
             return;
         }
 
-        postAuthForSignUp(
+        postAuthForSignUpAuth(
             { email: inputs.email },
             {
                 onSuccess: () => {

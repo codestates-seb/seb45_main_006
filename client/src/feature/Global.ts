@@ -22,8 +22,18 @@ export const authEmailAtom = atom<string>({
     default: "",
 });
 
+export const authEmailForPwAtom = atom<string>({
+    key: "authEmailForPwAtom",
+    default: "",
+});
+
 export const authCodeAtom = atom<string>({
     key: "authCodeAtom",
+    default: "",
+});
+
+export const authCodeForPwAtom = atom<string>({
+    key: "authCodeForPwAtom",
     default: "",
 });
 
