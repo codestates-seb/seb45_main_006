@@ -15,7 +15,7 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, Lo
 
     // list에 등록하고 활동 중인 회원만
     @Query("SELECT mp FROM MemberProfile mp WHERE mp.memberStatus = 'MEMBER_ACTIVE' AND mp.listEnroll = true")
-    Page<MemberProfile> findAll(Pageable pageable);
+    List<MemberProfile> findAll();
 
 
     // 포지션에 따라서 핕터링 하기
@@ -38,6 +38,6 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, Lo
             "WHERE LOWER(mp.nickname) LIKE CONCAT('%',LOWER(:nickname) ,'%') " +
             "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
             "AND mp.listEnroll = true")
-    Page<MemberProfile> findAllByNickname(Pageable pageable,String nickname);
+    List<MemberProfile> findAllByNickname(String nickname);
 
 }

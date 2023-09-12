@@ -18,6 +18,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+//@DiscriminatorValue("PROJECT")
 public class Project extends Board {
 
     @Column(nullable = false)
