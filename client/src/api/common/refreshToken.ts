@@ -1,6 +1,5 @@
 import { commonApi } from "./commonApi";
-import { getItemFromStorage } from "@util/localstorage-helper";
-import { setTokenToLocalStorage } from "@util/token-helper";
+import { setItemToStorage } from "@util/localstorage-helper";
 
 let apiEndpoint = "";
 if (import.meta.env.VITE_APP_API_ENDPOINT && typeof import.meta.env.VITE_APP_API_ENDPOINT === "string") {
@@ -15,7 +14,7 @@ export const getRefreshToken = async (token: string) => {
         baseURL,
         url: "/accessToken",
         method: "post",
-        headers: { Refresh: `Bearer ${token}` },
+        headers: { Refresh: token },
         data: {},
         timeout: 1000 * 10,
         validateStatus: () => {
@@ -29,17 +28,14 @@ export const getRefreshToken = async (token: string) => {
         return null;
     }
 
-    const { authorization, Refresh } = response.headers;
+    const { authorization } = response.headers;
 
-    if (!authorization || !Refresh) {
-        return Promise.reject("로그인 세션 유지에 실패하였습니다.");
-    }
+    console.log(authorization);
 
-    setTokenToLocalStorage({
-        accessToken: authorization || "",
-        refreshToken: Refresh || "",
-        memberId: getItemFromStorage("memberId"),
-    });
+    // if (!authorization || !refresh) {
+    //     return Promise.reject("로그인 세션 유지에 실패하였습니다.");
+    // }
 
+    setItemToStorage("accessToken", authorization);
     return authorization;
 };
