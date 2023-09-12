@@ -119,7 +119,7 @@ function Register() {
                     placeholder="질문 제목을 적어주세요."
                     value={title}
                     onChange={titleChangHandler}
-                    maxlength={20}
+                    maxlength={100}
                 />
                 <BoardContent label="질문 상세내용" required={true} content={content} setContent={setContent} />
                 <div className="flex w-full justify-center">

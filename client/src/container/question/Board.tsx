@@ -69,7 +69,7 @@ function Board() {
                     />
                 </div>
                 <Button type="QUESTION_POINT" onClickHandler={onClickRegisterHandler}>
-                    <Typography type="Highlight" text="자유게시글 등록" />
+                    <Typography type="Highlight" text="질문게시글 등록" />
                 </Button>
             </div>
             <div className="mt-58 flex">
