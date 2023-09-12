@@ -4,7 +4,7 @@ import { useMatches, useSearchParams } from "react-router-dom";
 import Typography from "@component/Typography";
 import { GetResMemberDetail } from "@type/member/member.res.dto";
 
-export type INav = "grade" | "edit" | "editPw" | "management" | "bookmarks" | "likes" | "block";
+export type INav = "grade" | "edit" | "editPw" | "chat" | "management" | "bookmarks" | "likes" | "block";
 
 type INavItem = {
     oauth: boolean;
@@ -18,6 +18,7 @@ const defaultNavItems: INavItems = [
     { oauth: true, label: "나의 등급", nav: "grade", selected: false },
     { oauth: true, label: "회원정보 수정", nav: "edit", selected: true },
     { oauth: false, label: "비밀번호 수정", nav: "editPw", selected: true },
+    { oauth: true, label: "채팅 관리", nav: "chat", selected: false },
     { oauth: true, label: "게시글 관리", nav: "management", selected: false },
     { oauth: true, label: "북마크 관리", nav: "bookmarks", selected: false },
     { oauth: true, label: "좋아요 관리", nav: "likes", selected: false },

@@ -12,6 +12,7 @@ import TabItems, { ITab } from "./component/TabItems";
 import UserBlock from "./component/UserBlock";
 import UserPw from "./component/UserPw";
 import UserInfo from "./component/UserInfo";
+import ChatRooms from "./component/ChatRooms";
 import UserActivity from "@container/user/component/UserActivity";
 import Typography from "@component/Typography";
 
@@ -79,6 +80,7 @@ function MyPage() {
                                 {curNav === "bookmarks" && <UserActivity memberId={myId} tab={checkValidTab(curTab)} />}
                                 {curNav === "likes" && <UserActivity memberId={myId} tab={checkValidTab(curTab)} />}
                                 {curNav === "block" && <UserBlock blockList={user.blockMemberList} />}
+                                {curNav === "chat" && <ChatRooms />}
                             </div>
                         </div>
                     </>
