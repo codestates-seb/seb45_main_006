@@ -40,8 +40,10 @@ const ChangeComponent = () => {
             </div>
             <div className="flex">
                 {selectedComponent === "project"
-                    ? Array.isArray(projectsList) && projectsList.map((v) => <ProjectList project={v} />)
-                    : Array.isArray(studiesList) && studiesList.map((v) => <StudyList study={v} />)}
+                    ? Array.isArray(projectsList) &&
+                      projectsList.map((v) => <ProjectList project={v} key={`project-${v.boardId}`} />)
+                    : Array.isArray(studiesList) &&
+                      studiesList.map((v) => <StudyList study={v} key={`study-${v.boardId}`} />)}
             </div>
         </>
     );

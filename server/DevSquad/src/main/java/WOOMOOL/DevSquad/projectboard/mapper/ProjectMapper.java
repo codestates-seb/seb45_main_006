@@ -21,11 +21,10 @@ public interface ProjectMapper {
     ProjectDto.AllResponseDto entityToAllResponseDto(Project project);
 
     default boolean markedOrNot(List<Bookmark> BookmarkList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if( securityContext == null ) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser")) {
             return false;
         } else {
-            String userEmail = securityContext.getAuthentication().getName();
             return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
 

@@ -1,11 +1,13 @@
 package WOOMOOL.DevSquad.comment.controller;
 
 import WOOMOOL.DevSquad.board.entity.Board;
+import WOOMOOL.DevSquad.board.service.BoardService;
 import WOOMOOL.DevSquad.comment.dto.CommentDto;
 import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.comment.service.CommentService;
 import WOOMOOL.DevSquad.utils.PageResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +23,14 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/{board}/{board-id}")
+@RequiredArgsConstructor
 public class CommentController {
     private final static String COMMENT_DEFAULT_URL = "/{board}/{board-id}";
     private final CommentService commentService;
+    private final BoardService boardService;
     private final CommentMapper mapper;
 
-    public CommentController(CommentService commentService,
-                             CommentMapper mapper) {
-        this.commentService = commentService;
-        this.mapper = mapper;
-    }
+
     @PostMapping("/comment")
     public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post requestBody,
                                       @PathVariable("board") String board,
@@ -139,7 +139,7 @@ public class CommentController {
     public ResponseEntity getAllComment(@PathVariable("board-id") @Positive long boardId,
                                         @RequestParam @Positive int page,
                                         @RequestParam @Positive int size) {
-        Page<Comment> commentPage = commentService.selectCommentByBoardId(boardId, page, size);
+        Page<Comment> commentPage = commentService.selectCommentByBoardId(boardId, page-1, size);
         List<Comment> commentList = commentPage.getContent();
         return new ResponseEntity(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
@@ -147,10 +147,11 @@ public class CommentController {
     public ResponseEntity getAnswerAllComment(@PathVariable("answer-id") @Positive long answerId,
                                               @RequestParam @Positive int page,
                                               @RequestParam @Positive int size) {
-        Page<Comment> commentPage = commentService.selectCommentByAnswerId(answerId, page, size);
+        Page<Comment> commentPage = commentService.selectCommentByAnswerId(answerId, page-1, size);
         List<Comment> commentList = commentPage.getContent();
         return new ResponseEntity<>(new PageResponseDto<>(mapper.commentListToCommentResponseDtoList(commentList), commentPage), HttpStatus.OK);
     }
+    //단일댓글보기
 //    @GetMapping("/comment/{comment-id}")
 //    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId) {
 //        return new ResponseEntity<>(mapper.commentToCommentResponseDto(commentService.findVerifiedComment(commentId)), HttpStatus.OK);

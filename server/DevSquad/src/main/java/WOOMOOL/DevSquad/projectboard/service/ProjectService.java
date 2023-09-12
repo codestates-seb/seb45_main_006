@@ -1,14 +1,19 @@
 package WOOMOOL.DevSquad.projectboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -49,6 +55,14 @@ public class ProjectService {
     public List<Project> getProjects(Pageable pageable) {
         Page<Project> projectPage = projectRepository.findByProjectStatus(pageable);
         return projectPage.getContent();
+    }
+
+    //프로젝트 페이징
+    public Page<Project> getProjectBoardList(Long memberId,int page){
+
+        Page<Project> projectPage = projectRepository.findByProjectStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return projectPage;
     }
     // 프로젝트 수정
     public Project updateProject(Project project) {
@@ -118,6 +132,16 @@ public class ProjectService {
         }
 
         return findProject;
+    }
+
+    public List<Project> removeBlockUserBoard(List<Project> projectList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return projectList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<Project> result = projectList.stream()
+                .filter(proejct -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== proejct.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }
 

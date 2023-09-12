@@ -6,6 +6,8 @@ import {
     useGetQuestionOfMember,
 } from "@api/member-activity/hook";
 import { TempProject, TempStudy } from "./UserCardModal";
+// import ProjectItem from "@container/project/component/BoardList";
+// import StudyItem from "@container/study/component/BoardList";
 import InfoItem from "@container/info/component/InfoItem";
 import QuestionItem from "@container/question/component/QuestionItem";
 import Pagination from "@component/Pagination";
@@ -27,8 +29,8 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
         <>
             <div className="w-full">
                 {Array.isArray(project?.data) &&
-                    project?.data.map((_, i) => {
-                        return <TempProject key={`member-${memberId}-project-${i}`} />;
+                    project?.data.map((v, i) => {
+                        return <TempProject key={`member-${memberId}-project-${i}`} project={v} />;
                     })}
             </div>
             <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
@@ -53,7 +55,7 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
         <>
             <div className="w-full">
                 {Array.isArray(study?.data) &&
-                    study?.data.map((_, i) => <TempStudy key={`member-${memberId}-study-${i}`} />)}
+                    study?.data.map((v, i) => <TempStudy key={`member-${memberId}-study-${i}`} study={v} />)}
             </div>
             <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
         </>

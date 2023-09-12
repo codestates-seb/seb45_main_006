@@ -27,7 +27,7 @@ import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
 
-const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
+export const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
     const tag = CATEGORY_TO_NAME[category];
     return (
         <div className="w-fit rounded-sm border-1 border-gray-400 px-12 py-4">
@@ -106,14 +106,11 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     )}
                 </div>
                 <div className="flex">
-                    <Typography
-                        text={dayjs(modifiedAt).format("YYYY-MM-DD")}
-                        type="SmallLabel"
-                        color="text-gray-600"
-                        styles="mr-8"
-                    />
-                    <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mr-8" />
+                    <Typography text={dayjs(modifiedAt).format("YYYY-MM-DD")} type="SmallLabel" color="text-gray-600" />
+                    <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
+                    <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
+                    <Typography text={`댓글 수 ${info.commentList.length}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">

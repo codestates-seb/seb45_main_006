@@ -1,10 +1,14 @@
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router-dom";
 
-import { useRecoilValue } from "recoil";
-import { isSignPageAtom } from "@feature/Global";
+import { useRecoilState } from "recoil";
+import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
 
 import Header from "@component/Header";
+import Navigation from "@component/Navigation";
+import ChatBot from "@container/chat/ChatBot";
+
+import { isExistToken } from "@util/token-helper";
 
 const HEIGHT = {
     SIGN_HEADER: 60,
@@ -13,22 +17,37 @@ const HEIGHT = {
 
 function Layout() {
     const headerRef = useRef(null);
-    const isSignPage = useRecoilValue(isSignPageAtom);
+    const { pathname } = useLocation();
+
+    const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
+    const [isLoggedIn, setIsLoggined] = useRecoilState(isLoggedInAtom);
 
     const [marginTop, setMarginTop] = useState<number>(HEIGHT.MAIN_HEADER);
 
     useEffect(() => {
+        if (pathname.includes("/signup") || pathname.includes("/login")) {
+            setIsSignPage(true);
+        } else {
+            setIsSignPage(false);
+            if (isExistToken()) {
+                setIsLoggined(true);
+            } else {
+                setIsLoggined(false);
+            }
+        }
         if (isSignPage) {
             setMarginTop(HEIGHT.SIGN_HEADER);
         } else {
             setMarginTop(HEIGHT.MAIN_HEADER);
         }
-    }, [isSignPage]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSignPage, pathname]);
 
     return (
         <>
             <div className="fixed z-10 flex w-full max-w-screen-xl flex-col bg-white" ref={headerRef}>
                 <Header />
+                {!isSignPage && <Navigation />}
             </div>
             <main
                 className={`w-full max-w-screen-xl`}
@@ -37,6 +56,7 @@ function Layout() {
                 <Suspense fallback={<div>Loading...</div>}>
                     <Outlet />
                 </Suspense>
+                {isLoggedIn && <ChatBot />}
             </main>
         </>
     );

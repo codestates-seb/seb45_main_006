@@ -17,10 +17,13 @@ export interface GetResAllProjects {
 
 export interface GetResDetailProject extends CommonResProjects {
     content: string;
+    memberId: number;
 }
 
 export interface PatchResProject extends GetResDetailProject {}
 
 // 응답 바디가 없음
-export interface PostResProject {}
+export interface PostResProject {
+    boardId: number;
+}
 export interface DeleteResProject {}

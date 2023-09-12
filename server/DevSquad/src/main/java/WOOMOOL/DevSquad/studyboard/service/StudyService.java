@@ -1,14 +1,19 @@
 package WOOMOOL.DevSquad.studyboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -49,6 +55,15 @@ public class StudyService {
     public List<Study> getStudies(Pageable pageable) {
         Page<Study> studyPage = studyRepository.findByStudyStatus(pageable);
         return studyPage.getContent();
+    }
+
+    //스터디 페이징
+    public Page<Study> getStudyBoardList(Long memberId, int page){
+
+        Page<Study> studyPage = studyRepository.findByStudyStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return studyPage;
+
     }
 
     // 스터디 수정
@@ -113,5 +128,15 @@ public class StudyService {
         }
 
         return findStudy;
+    }
+
+    public List<Study> removeBlockUserBoard(List<Study> studyList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return studyList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<Study> result = studyList.stream()
+                .filter(study -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== study.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }

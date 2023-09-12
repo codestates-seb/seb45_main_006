@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
     DeleteResProject,
@@ -19,27 +19,27 @@ import { deleteProject, getAllProjects, getDetailProject, patchProject, postProj
 
 // 프로젝트 - 전체 조회하기
 export const useGetAllProjects = () => {
-    return useQuery<AxiosResponse<GetResAllProjects>, AxiosError, GetResAllProjects>({
+    return useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
         queryKey: projectKeyFactory.all(),
         queryFn: () => getAllProjects(),
     });
 };
 // 프로젝트 - 상세 조회하기
 export const useGetDetailProject = ({ boardId }: GetReqDetailProject) => {
-    return useQuery<AxiosResponse<GetResDetailProject>, AxiosError, GetResDetailProject>({
+    return useQuery<GetResDetailProject, AxiosError, GetResDetailProject>({
         queryKey: projectKeyFactory.detail({ boardId }),
         queryFn: () => getDetailProject({ boardId }),
     });
 };
 // 프로젝트 - 정보 등록하기
 export const usePostProject = () => {
-    return useMutation<AxiosResponse<PostResProject>, AxiosError, PostReqProject>(postProject);
+    return useMutation<PostResProject, AxiosError, PostReqProject>(postProject);
 };
 // 프로젝트 - 정보 수정하기
 export const usePatchProject = () => {
-    return useMutation<AxiosResponse<PatchResProject>, AxiosError, PatchReqProject>(patchProject);
+    return useMutation<PatchResProject, AxiosError, PatchReqProject>(patchProject);
 };
 // 프로젝트 - 정보 삭제하기
 export const useDeleteProject = () => {
-    return useMutation<AxiosResponse<DeleteResProject>, AxiosError, DeleteReqProject>(deleteProject);
+    return useMutation<DeleteResProject, AxiosError, DeleteReqProject>(deleteProject);
 };

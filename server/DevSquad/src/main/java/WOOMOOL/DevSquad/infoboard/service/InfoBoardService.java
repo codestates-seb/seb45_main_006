@@ -1,12 +1,16 @@
 package WOOMOOL.DevSquad.infoboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,14 @@ public class InfoBoardService {
         infoBoard.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
         return infoBoardRepository.save(infoBoard);
+    }
+
+    //정보게시판 페이징
+    public Page<InfoBoard> getInfoBoardList(Long memberId, int page){
+
+        Page<InfoBoard> infoBoardPage = infoBoardRepository.findAllByMemberProfile(memberId,PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return infoBoardPage;
     }
 
     public InfoBoard updateInfoBoard(InfoBoard infoBoard) {
@@ -80,7 +92,8 @@ public class InfoBoardService {
     }
 
     public List<InfoBoard> findHottestInfoBoard() {
-        return infoBoardRepository.findHottestInfoBoard().stream().limit(10).collect(Collectors.toList());
+        LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
+        return infoBoardRepository.findHottestInfoBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(long boardId) {
@@ -91,5 +104,14 @@ public class InfoBoardService {
     public void verifiedIsWriter(Long currentId ,Long writerId) {
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+    public List<InfoBoard> removeBlockUserBoard(List<InfoBoard> infoBoardList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return infoBoardList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<InfoBoard> result = infoBoardList.stream()
+                .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== infoBoard.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }

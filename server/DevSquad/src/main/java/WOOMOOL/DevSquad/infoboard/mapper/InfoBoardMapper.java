@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.infoboard.mapper;
 
+import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
@@ -17,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CommentMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface InfoBoardMapper {
 
     @Mapping(source = "memberId", target = "memberProfile.memberProfileId")
@@ -26,17 +27,27 @@ public interface InfoBoardMapper {
     InfoBoard InfoBoardPatchDtoToInfoBoard(InfoBoardDto.Patch request);
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     @Mapping(source = "memberProfile.nickname", target = "nickname")
+    @Mapping(source = "memberProfile.profilePicture", target = "profilePicture")
     @Mapping(target = "liked", expression = "java(hasUserLikedBoard(infoBoard.getLikesList()))")
+    @Mapping(target = "bookmarked", expression = "java(markedOrNot(infoBoard.getBookmarkList()))")
+    @Mapping(target = "likeCount", expression = "java(infoBoard.getLikesList().size())")
     InfoBoardDto.Response InfoBoardToInfoBoardResponseDto(InfoBoard infoBoard);
     List<InfoBoardDto.Response> InfoBoardListToInfoBoardResponseDtoList(List<InfoBoard> infoBoardList);
 
     default boolean hasUserLikedBoard(List<Likes> likesList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if(securityContext==null)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser"))
             return false;
         else {
-            String userEmail = securityContext.getAuthentication().getName();
              return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
+        }
+    }
+    default boolean markedOrNot(List<Bookmark> BookmarkList) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser")) {
+            return false;
+        } else {
+            return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
     }
 }

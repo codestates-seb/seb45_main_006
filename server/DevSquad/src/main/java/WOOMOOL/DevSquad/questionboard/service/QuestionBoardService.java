@@ -1,12 +1,18 @@
 package WOOMOOL.DevSquad.questionboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,6 +51,17 @@ public class QuestionBoardService {
 
         return questionBoardRepository.save(findQuestionBoard);
     }
+
+    //질문게시판 페이징
+    public Page<QuestionBoard> getQuestionBoardList(Long memberId, int page){
+
+        Page<QuestionBoard> questionBoardPage = questionBoardRepository
+                .findAllByMemberProfile(memberId,PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return questionBoardPage;
+    }
+
+
     //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
     public Page<QuestionBoard> findAllQuestionBoard(String search, int page, int size) {
         Page<QuestionBoard> result;
@@ -72,6 +90,10 @@ public class QuestionBoardService {
 
         return findQuestionBoard;
     }
+    public List<QuestionBoard> findHottestQuestionBoard() {
+        LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
+        return questionBoardRepository.findHottestQuestionBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
+    }
 
     public void increaseViewCount(Long boardId) {
         QuestionBoard questionBoard = findVerifiedQuestionBoard(boardId);
@@ -83,5 +105,15 @@ public class QuestionBoardService {
         long writerId = questionBoard.getMemberProfile().getMemberProfileId();
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+    public List<QuestionBoard> removeBlockUserBoard(List<QuestionBoard> questionBoardList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return questionBoardList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<QuestionBoard> result = questionBoardList.stream()
+                .filter(questionBoard -> !blockList.stream()
+                        .anyMatch(block -> block.getBlockMemberId()== questionBoard.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }
