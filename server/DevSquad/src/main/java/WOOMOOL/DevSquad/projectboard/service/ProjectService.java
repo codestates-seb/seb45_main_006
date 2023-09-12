@@ -9,7 +9,6 @@ import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class ProjectService {
     public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
-        project.setStackTags(stackTagService.createProjectStackTag(stackTag));
+        project.setStackTags(stackTagService.createBoardStackTag(stackTag));
 
         return projectRepository.save(project);
     }
@@ -61,13 +60,12 @@ public class ProjectService {
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public Page<Project> getProjectsByStack(int page, List<String> stacks) {
+    public List<Project> getProjectsByStack(int page, List<String> stacks) {
 
-        List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
-        projectList = removeBlockUserBoard(projectList);
-        Page<Project> projectPage = new PageImpl<>(projectList, PageRequest.of(page, 5,Sort.by("createdAt")), projectList.size());
+        Page<Project> projectPage = projectRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
+        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
 
-        return projectPage;
+        return projectList;
     }
 
     //프로젝트 페이징
@@ -94,7 +92,7 @@ public class ProjectService {
         Optional.ofNullable(project.getRecruitNum())
                 .ifPresent(recruitNum -> findProject.setRecruitNum(recruitNum));
 
-        findProject.setStackTags(stackTagService.createProjectStackTag(stackTag));
+        findProject.setStackTags(stackTagService.createBoardStackTag(stackTag));
         findProject.setModifiedAt(LocalDateTime.now());
 
         return findProject;
