@@ -30,6 +30,7 @@ public class Answer {
     @JoinColumn(name = "board_id")
     private QuestionBoard questionBoard;
 
+    @Column(length = 700)
     private String content;
 
     private boolean isAccepted = false;

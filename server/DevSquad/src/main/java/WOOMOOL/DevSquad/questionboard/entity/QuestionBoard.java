@@ -29,7 +29,7 @@ public class QuestionBoard extends Board {
     private MemberProfile memberProfile;
 
     private String title;
-
+    @Column(length = 700)
     private String content;
 
     private int viewCount;

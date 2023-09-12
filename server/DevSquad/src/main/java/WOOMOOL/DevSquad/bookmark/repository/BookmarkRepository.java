@@ -1,7 +1,10 @@
 package WOOMOOL.DevSquad.bookmark.repository;
 
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.studyboard.entity.Study;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,19 +30,19 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
             "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
             "And s.studyStatus != 'STUDY_DELETED' " +
             "ORDER BY s.createdAt DESC")
-    List<Project> findStudyByBookmarkedMemberId(Long memberProfileId);
+    List<Study> findStudyByBookmarkedMemberId(Long memberProfileId);
 
     // 멤버 아이디로 북마크한 정보 게시판 조회
     @Query("SELECT i FROM InfoBoard i JOIN Bookmark b ON i.boardId = b.board.boardId " +
             "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
             "And i.infoBoardStatus = 'INFOBOARD_POSTED' " +
             "ORDER BY i.createdAt DESC")
-    List<Project> findInfoByBookmarkedMemberId(Long memberProfileId);
+    List<InfoBoard> findInfoByBookmarkedMemberId(Long memberProfileId);
 
     // 멤버 아이디로 북마크한 질문 게시판 조회
     @Query("SELECT q FROM QuestionBoard q JOIN Bookmark b ON q.boardId = b.board.boardId " +
             "WHERE b.memberProfile.memberProfileId = :memberProfileId " +
             "And q.questionBoardStatus = 'QUESTIONBOARD_POSTED' " +
             "ORDER BY q.createdAt DESC")
-    List<Project> findQuestionByBookmarkedMemberId(Long memberProfileId);
+    List<QuestionBoard> findQuestionByBookmarkedMemberId(Long memberProfileId);
 }

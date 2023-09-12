@@ -24,7 +24,7 @@ import java.util.Optional;
 public class InfoBoard extends Board {
 
     private String title;
-
+    @Column(length = 700)
     private String content;
 
     private int viewCount;
