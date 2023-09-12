@@ -12,7 +12,7 @@ export default function BoardInput({
     required = false,
     placeholder,
     disabled = false,
-    minlength = 2,
+    minlength = 0,
     maxlength = 20,
     name,
     value = "",

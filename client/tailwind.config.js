@@ -8,6 +8,9 @@ const px0_100 = Object.fromEntries(pixels.slice(0, 100 + 1));
 const px0_500 = Object.fromEntries(pixels.slice(0, 500 + 1));
 const px0_1000 = Object.fromEntries(pixels);
 const customColor = {
+    tertiary: "#C0E5C8",
+    light: "#cae9d1",
+    // 메인 컬러 통일하기 - 수정 예정
     primary: "#191A20",
     "button-next": "#888888",
     "button-border": "#847D7D",

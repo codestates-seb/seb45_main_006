@@ -12,9 +12,9 @@ const BoardList = ({ study }: { study: CommonResStudies }) => {
         setIsBookmarked((prevState) => !prevState);
     };
     return (
-        <div className="my-10 flex w-full justify-between rounded-lg border-2 border-solid border-borderline p-20 shadow-lg">
+        <div className="my-10 flex w-full justify-between rounded-lg border-2 border-solid border-borderline p-20 shadow-lg hover:bg-gray-100">
             <div>
-                <div className="flex w-48 items-center justify-center rounded bg-deadline ">
+                <div className="flex w-48 items-center justify-center rounded bg-deadline">
                     <Typography type="SmallLabel" text="모집중" styles="text-white" />
                 </div>
                 <h1 className="my-4 cursor-pointer text-24 font-bold">{study.title}</h1>

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { useSetRecoilState } from "recoil";
+import { authEmailAtom } from "@feature/Global";
+
 import { useToast } from "@hook/useToast";
-import { usePostAuthForFindPw, useGetAuthForFindPw } from "@api/auth/hook";
+import { usePostAuthForFindPw } from "@api/auth/hook";
+import { useCheckAuth } from "@hook/useCheckAuth";
 
 import SignLayout from "@container/sign/component/SignLayout";
 import SignInput from "@container/sign/component/SignInput";
@@ -13,10 +17,6 @@ import Typography from "@component/Typography";
 // import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 const FindPwContent = ({ email }: { email: string }) => {
-    const navigate = useNavigate();
-
-    const { fireToast } = useToast();
-
     const [inputs, setInputs] = useState({
         authCode: "",
         password: "",
@@ -28,56 +28,16 @@ const FindPwContent = ({ email }: { email: string }) => {
         passwordRe: inputs.password,
     };
 
-    const {
-        refetch: getAuth,
-        isFetched,
-        isError,
-    } = useGetAuthForFindPw({ email: email, authCode: inputs.authCode, changePassword: inputs.password });
-
-    const onHandleAuthCode = () => {
-        const isPasswordVaid = new RegExp(inputsRegex.password).test(inputs.password);
-        const isPasswordReVaid = new RegExp(inputsRegex.passwordRe).test(inputs.passwordRe);
-        if (!inputs.authCode) {
-            fireToast({
-                content: "인증코드를 입력해주세요.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        if (!isPasswordVaid || !isPasswordReVaid) {
-            fireToast({
-                content: "형식에 맞지 않는 입력값이 존재합니다.",
-                isConfirm: false,
-                isWarning: true,
-            });
-            return;
-        }
-
-        getAuth();
-
-        if (isFetched) {
-            fireToast({
-                content: `인증에 성공하였습니다! 로그인 페이지로 이동하여 다시 로그인해주세요!`,
-                isConfirm: false,
-            });
-            navigate("/login");
-        }
-
-        if (isError) {
-            fireToast({
-                content: `인증에 실패하였습니다. 다시 입력해주세요!`,
-                isConfirm: false,
-                isWarning: true,
-            });
-        }
-    };
+    const { getCheckAuthPw } = useCheckAuth();
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
         setInputs({ ...inputs, [name]: value });
+    };
+
+    const onHandleAuthCode = () => {
+        getCheckAuthPw({ email: email, authCode: inputs.authCode, changePassword: inputs.password });
     };
 
     return (
@@ -125,7 +85,6 @@ const FindPwContent = ({ email }: { email: string }) => {
                         //    ex) /login/find-pw?randomId=1694008589246
                         // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
                         //    비밀번호 재설정 가능
-                        // console.log(randomId);
                         onHandleAuthCode();
                     }}
                 >
@@ -184,7 +143,6 @@ const RequestEmailAuthenticate = ({
                         //    ex) /login/find-pw?randomId=1694008589246
                         // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
                         //    비밀번호 재설정 가능
-                        // console.log(randomId);
                         onHandleReqAuthForFindPw();
                     }}
                 >
@@ -206,6 +164,7 @@ function FindPw() {
 
     const [email, setEmail] = useState("");
     const [isRequestAuthenticate, setIsRequestAuthenticate] = useState(false);
+    const setAuthEmail = useSetRecoilState(authEmailAtom);
 
     const { fireToast, createToast } = useToast();
     const { mutate: postAuthForFindPw } = usePostAuthForFindPw();
@@ -230,6 +189,7 @@ function FindPw() {
                         content: `${email}로 인증코드를 보냈습니다.`,
                         isConfirm: false,
                     });
+                    setAuthEmail(email);
                 },
                 onError: () => {
                     setIsRequestAuthenticate(false);
@@ -238,6 +198,7 @@ function FindPw() {
                         isConfirm: true,
                         callback: () => navigate("/signup/1"),
                     });
+                    setAuthEmail("");
                 },
             },
         );

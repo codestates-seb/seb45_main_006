@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 import {
@@ -20,6 +20,8 @@ import {
     PatchReqMember,
     PostReqBlockMember,
     DeleteReqBlockMember,
+    GetReqMyDetail,
+    PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 import {
     DeleteResMember,
@@ -41,41 +43,41 @@ export const useGetAllMembers = ({ page, stacks, posiions, blockedMemberId }: Ge
 
 // 유저 - 멤버 상세 조회하기
 export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
-    return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
+    return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.detail({ memberId }),
         queryFn: () => getMemberDetail({ memberId }),
     });
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const useGetMyDetail = () => {
-    return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
+export const useGetMyDetail = ({ rawPassword }: GetReqMyDetail) => {
+    return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
-        queryFn: getMyDetail,
+        queryFn: () => getMyDetail({ rawPassword }),
     });
 };
 
 // 마이페이지 - 비밀번호 수정
 export const usePatchMemberPw = () => {
-    return useMutation<AxiosResponse<PatchResMemberPw>, AxiosError, PatchReqMember>(patchMemberPw);
+    return useMutation<PatchResMemberPw, AxiosError, PatchReqMemberPw>(patchMemberPw);
 };
 
 // 마이페이지 - 정보 수정하기
 export const usePatchMember = () => {
-    return useMutation<AxiosResponse<PatchResMember>, AxiosError, PatchReqMember>(patchMember);
+    return useMutation<PatchResMember, AxiosError, PatchReqMember>(patchMember);
 };
 
 // 유저리스트 - 차단하기
 export const usePostBlockMember = () => {
-    return useMutation<AxiosResponse<PostResBlockMember>, AxiosError, PostReqBlockMember>(postBlockMember);
+    return useMutation<PostResBlockMember, AxiosError, PostReqBlockMember>(postBlockMember);
 };
 
 // 마이페이지 - 차단 해제
 export const useDeleteBlockMember = () => {
-    return useMutation<AxiosResponse<DeleteResBlockMember>, AxiosError, DeleteReqBlockMember>(deleteBlockMember);
+    return useMutation<DeleteResBlockMember, AxiosError, DeleteReqBlockMember>(deleteBlockMember);
 };
 
 // 헤더 - 로그아웃
 export const useDeleteMember = () => {
-    return useMutation<AxiosResponse<DeleteResMember>, AxiosError, DeleteReqMember>(deleteMember);
+    return useMutation<DeleteResMember, AxiosError, DeleteReqMember>(deleteMember);
 };
