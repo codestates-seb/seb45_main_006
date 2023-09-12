@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useGetMemberDetail } from "@api/member/hook";
+
 import { useToast } from "@hook/useToast";
+import { useCheckChat } from "@hook/useCheckChat";
 
 import dayjs from "dayjs";
 
@@ -28,10 +31,10 @@ import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
 
-const UserBtns = ({ setIsOpen }: { setIsOpen: (v: boolean) => void }) => {
+const UserBtns = ({ setIsOpen, onClickChatBtn }: { setIsOpen: (v: boolean) => void; onClickChatBtn: () => void }) => {
     return (
         <div className="mb-20 flex w-full justify-end">
-            <Button type="PROJECT_POINT">
+            <Button type="PROJECT_POINT" onClickHandler={onClickChatBtn}>
                 <Typography type="Highlight" text="채팅하기" color="text-white" />
             </Button>
             <Button type="WARN" onClickHandler={() => setIsOpen(true)}>
@@ -208,8 +211,15 @@ function UserCardModal({
     setBlockedMemberId: (v: number) => void;
 }) {
     const navigate = useNavigate();
+
     const { data: user, isError } = useGetMemberDetail({ memberId });
+
     const { fireToast } = useToast();
+    const { createOrEnrollChatRoom } = useCheckChat({ memberId });
+
+    const onClickChatBtn = () => {
+        createOrEnrollChatRoom({ nickname: user?.nickname || "", closeModal });
+    };
 
     if (isError) {
         closeModal();
@@ -230,7 +240,7 @@ function UserCardModal({
                             <UserInfo type="stack" user={user} />
                             <UserInfo type="position" user={user} />
                         </div>
-                        <UserBtns setIsOpen={setIsUpperOpen} />
+                        <UserBtns setIsOpen={setIsUpperOpen} onClickChatBtn={onClickChatBtn} />
                     </div>
                     <div className="flex flex-1 items-center justify-center p-20">
                         <div className="max-w-300 flex-1 overflow-hidden rounded-xl border-1 border-borderline">
