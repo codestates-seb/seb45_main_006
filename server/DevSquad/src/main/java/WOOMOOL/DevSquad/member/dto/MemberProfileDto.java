@@ -106,7 +106,6 @@ public class MemberProfileDto {
         private List<Long> blockMemberList;
 
         private LocalDateTime modifiedAt;
-
     }
     @Getter
     @AllArgsConstructor

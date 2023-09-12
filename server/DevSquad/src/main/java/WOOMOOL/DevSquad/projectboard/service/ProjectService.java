@@ -7,7 +7,9 @@ import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,14 @@ public class ProjectService {
     public List<Project> getProjects(Pageable pageable) {
         Page<Project> projectPage = projectRepository.findByProjectStatus(pageable);
         return projectPage.getContent();
+    }
+
+    //프로젝트 페이징
+    public Page<Project> getProjectBoardList(Long memberId,int page){
+
+        Page<Project> projectPage = projectRepository.findByProjectStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return projectPage;
     }
     // 프로젝트 수정
     public Project updateProject(Project project) {

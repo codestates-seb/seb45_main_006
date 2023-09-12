@@ -28,8 +28,6 @@ public class AnswerService {
         this.answerRepository = answerRepository;
         this.memberService = memberService;
         this.questionBoardService = questionBoardService;
-
-
     }
 
     public Answer createAnswer(Answer answer) {

@@ -5,6 +5,8 @@ import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.mapper.ProjectMapper;
 import WOOMOOL.DevSquad.projectboard.service.ProjectService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +57,19 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 회원이 쓴 프로젝트 게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberProjectBoard(@PathVariable("member-id") Long memberId,
+                                                @RequestParam int page){
+
+        Page<Project> projectListPage = projectService.getProjectBoardList(memberId,page-1);
+        List<Project> projectList = projectListPage.getContent();
+        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+
+        return new ResponseEntity(new PageResponseDto(response,projectListPage),HttpStatus.OK);
+
+    }
+
 
     // 프로젝트 수정
     @PatchMapping("/{boardId}")
@@ -65,6 +80,7 @@ public class ProjectController {
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
     }
+
 
 
     // 모집 마감
