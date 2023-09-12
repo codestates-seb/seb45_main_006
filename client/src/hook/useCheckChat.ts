@@ -39,7 +39,6 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
                 content: `오른쪽 하단에 채팅방이 열렸습니다! ${nickname}님과 대화를 이어가보세요!`,
                 isConfirm: false,
             });
-            console.log("동작하니?");
         };
 
         const onCreateChatHanlder = () => {
@@ -58,7 +57,6 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
         };
 
         if (closeModal) closeModal();
-        console.log("???", isChatRoomExisted);
         if (isChatRoomExisted) {
             onClickChatRoomHandler();
         } else {

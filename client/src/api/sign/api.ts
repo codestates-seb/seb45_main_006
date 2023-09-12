@@ -33,6 +33,6 @@ export const deleteLogout = async (requestObj: DeleteReqLogout) => {
 // 새로운 access token 요청
 export const postNewAccessToken = async () => {
     const url = `${COMMON_API_PATH.SIGN.NEW_ACCESS_TOKEN}`;
-    const { data } = await commonApi.post(url);
+    const data = await commonApi.post(url);
     return data;
 };

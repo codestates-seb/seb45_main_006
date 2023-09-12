@@ -19,12 +19,12 @@ import {
 
 // 회원가입 =  유저 생성하기
 export const usePostMember = () => {
-    return useMutation<AxiosResponse<PostResMember>, AxiosError, PostReqMember>(postMember);
+    return useMutation<PostResMember, AxiosError, PostReqMember>(postMember);
 };
 
 // 닉네임 중복 체크
 export const useGetNicknameDuplicated = ({ nickname }: GetReqNickname) => {
-    return useQuery<AxiosResponse<GetResNickname>, AxiosError, GetResNickname, [string, GetReqNickname]>({
+    return useQuery<GetResNickname, AxiosError, GetResNickname, [string, GetReqNickname]>({
         queryKey: signKeyFactory.nicknameDuplicated({ nickname }),
         queryFn: () => getNicknameDuplicated({ nickname }),
         enabled: !!nickname,
@@ -38,7 +38,7 @@ export const usePostLogin = () => {
 
 // 로그아웃
 export const useDeleteLogout = () => {
-    return useMutation<AxiosResponse<DeleteResLogout>, AxiosError, DeleteReqLogout>(deleteLogout);
+    return useMutation<DeleteResLogout, AxiosError, DeleteReqLogout>(deleteLogout);
 };
 
 // 새로운 access token 요청

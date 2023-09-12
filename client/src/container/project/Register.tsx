@@ -81,8 +81,7 @@ export default function Register() {
             postProject(inputs, {
                 //아이디가 있어야 상세조회 가능하므로 boardId 전달
                 onSuccess: (res) => {
-                    console.log("1111111", res.data);
-                    navigate("/projects/:projectBoardId", { state: res.data.boardId });
+                    navigate("/projects/:projectBoardId", { state: res.boardId });
                     fireToast({
                         content: "게시글이 등록되었습니다!",
                         isConfirm: false,
@@ -108,8 +107,7 @@ export default function Register() {
             { boardId: location.state.boardId, content: inputs.content },
             {
                 onSuccess: (res) => {
-                    console.log("2222", res.data.boardId);
-                    navigate("/projects/:projectBoardId", { state: res.data.boardId });
+                    navigate("/projects/:projectBoardId", { state: res.boardId });
                     fireToast({
                         content: "게시글이 수정되었습니다!",
                         isConfirm: false,
