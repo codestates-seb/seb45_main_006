@@ -71,7 +71,7 @@ public class InfoBoardService {
             infoBoardList = infoBoardRepository.findByCategory(category);
         else
             infoBoardList = infoBoardRepository.findByCategoryKeyword(category, search);
-//        infoBoardList = removeBlockUserBoard(infoBoardList);
+        infoBoardList = removeBlockUserBoard(infoBoardList);
         Page<InfoBoard> result = new PageImpl<>(infoBoardList, PageRequest.of(page, size), infoBoardList.size());
 
         return result;
@@ -97,7 +97,7 @@ public class InfoBoardService {
     public List<InfoBoard> findHottestInfoBoard() {
         LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
         List<InfoBoard> result = infoBoardRepository.findHottestInfoBoard(oneWeekMinus);
-//        result = removeBlockUserBoard(result);
+        result = removeBlockUserBoard(result);
         return result.stream().limit(10).collect(Collectors.toList());
     }
 
@@ -110,14 +110,14 @@ public class InfoBoardService {
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
     }
-//    public List<InfoBoard> removeBlockUserBoard(List<InfoBoard> infoBoardList) {
-//        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-//            return infoBoardList;
-//        }
-//            List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
-//            List<InfoBoard> result = infoBoardList.stream()
-//                    .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId() == infoBoard.getMemberProfile().getMemberProfileId()))
-//                    .collect(Collectors.toList());
-//        return result;
-//    }
+    public List<InfoBoard> removeBlockUserBoard(List<InfoBoard> infoBoardList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+            return infoBoardList;
+        }
+            List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+            List<InfoBoard> result = infoBoardList.stream()
+                    .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId() == infoBoard.getMemberProfile().getMemberProfileId()))
+                    .collect(Collectors.toList());
+        return result;
+    }
 }
