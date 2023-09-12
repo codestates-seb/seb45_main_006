@@ -85,7 +85,6 @@ const FindPwContent = ({ email }: { email: string }) => {
                         //    ex) /login/find-pw?randomId=1694008589246
                         // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
                         //    비밀번호 재설정 가능
-                        // console.log(randomId);
                         onHandleAuthCode();
                     }}
                 >
@@ -144,7 +143,6 @@ const RequestEmailAuthenticate = ({
                         //    ex) /login/find-pw?randomId=1694008589246
                         // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
                         //    비밀번호 재설정 가능
-                        // console.log(randomId);
                         onHandleReqAuthForFindPw();
                     }}
                 >

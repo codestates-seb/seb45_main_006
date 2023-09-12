@@ -53,7 +53,10 @@ const Board = () => {
                 </div>
                 <Toggle />
             </div>
-            <> {Array.isArray(studiesList) && studiesList.map((v) => <BoardList study={v} />)}</>
+            <>
+                {Array.isArray(studiesList) &&
+                    studiesList.map((v) => <BoardList study={v} key={`study-${v.boardId}`} />)}
+            </>
         </div>
     );
 };

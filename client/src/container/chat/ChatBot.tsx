@@ -19,7 +19,7 @@ function ChatBot() {
 
     const [chatBotStatus, setChatBotStatus] = useRecoilState(chatBotStatusAtom);
     const [isChatBotShow, setIsChatBotShow] = useRecoilState(isChatBotShowAtom);
-    console.log("chatBotStatus", chatBotStatus, isChatBotShow);
+    // TODO: 채팅방 생성 후 채팅방 입장이 되지 않는 이슈 수정 필요
 
     const [isDescriptionShow, setIsDescriptionShow] = useState(true);
 

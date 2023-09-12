@@ -40,7 +40,7 @@ const BtnsWithoutAuth = () => {
 
     const onHandleLogin = () => {
         postLogin(
-            { email: "test@test.com", password: "abc123!!" },
+            { email: "test1@test.com", password: "abc123!!" },
             {
                 onSuccess: (res) => {
                     const { authorization, Refresh } = res.headers;
