@@ -28,7 +28,8 @@ export default function Report() {
             />
             {isModalOpen && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                     onClick={handleModalClick}
                 >
                     <div className="w-full max-w-xl rounded-lg bg-project p-6 shadow-lg">
