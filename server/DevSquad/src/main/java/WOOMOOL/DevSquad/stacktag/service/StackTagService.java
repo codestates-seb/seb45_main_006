@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 @Service
 public class StackTagService {
     private final StackTagRepository stackTagRepository;
@@ -24,7 +23,6 @@ public class StackTagService {
     public StackTagService(StackTagRepository stackTagRepository) {
         this.stackTagRepository = stackTagRepository;
     }
-
     public void createStackTag(Set<String> stackTagList, MemberProfile memberProfile) {
 
         // 수정시 스택 객체 초기화
@@ -39,31 +37,16 @@ public class StackTagService {
         }
     }
 
-        public void createStackTag (Set<String> stackTagList, Project project){
+    //검색어가 있을시 스택태그검색과 없을시 검색
+    public List<StackTag> getStackTags(String keyword) {
+        List<StackTag> result = new ArrayList<>();
+        if(keyword==null)
+            result = stackTagRepository.findAll(Sort.by(Sort.Direction.ASC,"tagName"));
+        else
+            result = stackTagRepository.findByKeyword(keyword);
 
-            // 수정시 스택 객체 초기화
-            project.getStackTags().clear();
-
-            if (stackTagList.size() > 0) {
-                for (String stackTags : stackTagList) {
-                    StackTag stackTag = stackTagRepository.findByTagName(stackTags);
-                    stackTag.getProjectBoardList().add(project);
-                    project.getStackTags().add(stackTag);
-                }
-            }
-        }
-
-
-        //검색어가 있을시 스택태그검색과 없을시 검색
-        public List<StackTag> getStackTags (String keyword){
-            List<StackTag> result = new ArrayList<>();
-            if (keyword == null)
-                result = stackTagRepository.findAll(Sort.by(Sort.Direction.ASC, "tagName"));
-            else
-                result = stackTagRepository.findByKeyword(keyword);
-
-            return result;
-        }
+        return result;
+    }
 //    //DB에 있는 스택인지 검사(필요하면 쓰고 필요하지않으면 나중에 삭제 예정)
 //    public StackTag findverifiedStackTag(String stack) {
 //        Optional<StackTag> stackTag = stackTagRepository.findByTagName(stack);
@@ -71,4 +54,4 @@ public class StackTagService {
 //
 //        return findStackTag;
 //    }
-    }
+}
