@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 import { getItemFromStorage, setItemToStorage } from "./localstorage-helper";
 
@@ -9,7 +8,7 @@ type ACCESS_TOKEN = {
     username: string;
     memberId: number;
     sub: string;
-    exp: Date;
+    exp: number;
 };
 
 /**
@@ -36,10 +35,8 @@ export const isValidToken = (token: string): boolean | undefined => {
         return;
     }
     const tokenJwtData = parseJwt(token);
-    return dayjs(tokenJwtData.exp) > dayjs();
-
-    // TODO: 로그인 api 연동 후에 삭제할 코드
-    // return true;
+    // dayjs.unix(tokenJwtData.exp): unix -> 시간
+    return tokenJwtData.exp > Date.now();
 };
 
 export const isExistToken = (): boolean => {

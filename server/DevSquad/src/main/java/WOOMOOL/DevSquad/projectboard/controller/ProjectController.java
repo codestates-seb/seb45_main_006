@@ -34,9 +34,10 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity postProject(@Valid @RequestBody ProjectDto.PostDto postDto) {
-        Project project = projectService.createProject(mapper.postDtoToEntity(postDto));
+        Project project = projectService.createProject(mapper.postDtoToEntity(postDto), postDto.getStack());
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        ProjectDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(project);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     // 프로젝트 페이지 조회
@@ -77,7 +78,7 @@ public class ProjectController {
     public ResponseEntity updateProject(@PathVariable("boardId") @Positive Long boardId,
                                         @Valid @RequestBody ProjectDto.PatchDto patchDto) {
         patchDto.setBoardId(boardId);
-        Project project = projectService.updateProject(mapper.patchDtoToEntity(patchDto));
+        Project project = projectService.updateProject(mapper.patchDtoToEntity(patchDto), patchDto.getStack());
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(project), HttpStatus.OK);
     }

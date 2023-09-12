@@ -4,6 +4,7 @@ import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.board.entity.Board;
+import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,11 +12,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-//@DiscriminatorValue("STUDY")
 public class Study extends Board {
 
     @Column(nullable = false)
@@ -50,6 +51,14 @@ public class Study extends Board {
 
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "studyStackTag",
+            joinColumns = @JoinColumn(name = "boardId"),
+            inverseJoinColumns = @JoinColumn(name = "stackTagId")
+    )
+    private Set<StackTag> stackTags;
+
 
     public enum StudyStatus {
         STUDY_POSTED("게시 중"),
