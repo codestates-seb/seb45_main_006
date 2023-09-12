@@ -18,6 +18,10 @@ public interface InfoBoardRepository extends JpaRepository<InfoBoard, Long> {
     @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.memberProfile.memberProfileId = :memberProfileId")
     Page<InfoBoard> findAllByMemberProfile(Long memberProfileId, Pageable pageable);
 
+    // 특정 회원이 쓴 글 중 좋아요 10개가 넘는 게시판 찾기
+    @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' AND i.memberProfile.memberProfileId = :memberProfileId AND i.likesList.size >= 10")
+    List<InfoBoard> findAllBy10MoreLikeByMemberProfile(Long memberProfileId);
+
     //정보게시판 전체를 최신순으로 정렬
     @Query("SELECT i FROM InfoBoard i WHERE i.infoBoardStatus = 'INFOBOARD_POSTED' ORDER BY i.createdAt DESC ")
     Page<InfoBoard> findAllPosted(Pageable pageable);
