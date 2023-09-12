@@ -1,16 +1,24 @@
 import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
+import { PageInfo } from "@type/common";
 
 export interface AnswerDefaultType {
     answerId: number;
     memberId: number;
     nickname: string;
+    profilePicture: string;
     boardId: number;
-    accepted: false;
+    accepted: boolean;
     content: string;
     answerStatus: "ANSWER_POSTED" | "ANSER_DELETED";
     createdAt: string;
     modifiedAt: string;
     commentList: Array<CommentDefaultTypeWithRe>;
+}
+
+// 질문 게시판 - 답변 리스트
+export interface GetResAnswer {
+    data: Array<AnswerDefaultType>;
+    pageInfo: PageInfo;
 }
 
 // 질문 게시판 - 답변 등록 - status code: 201

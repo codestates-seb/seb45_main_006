@@ -22,27 +22,18 @@ import { AnswerDefaultType } from "@type/answer/answer.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
-
-const dummyUser = {
-    memberId: 5,
-    profilePicture:
-        "https://dszw1qtcnsa5e.cloudfront.net/community/20220519/453159ca-e328-429c-9b3f-460fc592d963/%EA%B7%80%EC%97%AC%EC%9A%B4%EB%AA%B0%EB%9D%BC%EB%AA%A8%EC%BD%94%EC%BD%94.png",
-    nickname: "모코코",
-    githubId: "mococo~",
-    introduction: "update",
-    listEnroll: true,
-    position: ["Front", "Back"],
-    stack: ["Javascript", "Typescript", "React.js", "Node.js", "Next.js", "BootStrap", "tailwindcss"],
-};
+import Temp from "@assets/temp.png";
 
 export const EditAnswer = ({
     questionId,
     content,
     setContent,
+    profilePicture,
 }: {
     questionId: number;
     content: string;
     setContent: (v: string) => void;
+    profilePicture: string;
 }) => {
     const { mutate: postAnswer } = usePostAnswer();
 
@@ -79,7 +70,7 @@ export const EditAnswer = ({
         <div className="flex flex-col border-b-1 border-borderline py-12">
             <div className="mb-8 flex">
                 <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                    <img src={dummyUser.profilePicture} alt="" />
+                    <img src={profilePicture || Temp} alt="" />
                 </div>
                 <div className="flex-1">
                     <MarkdownEditor content={content} setContent={setContent} height={200} maxlength={1000} />
@@ -94,7 +85,19 @@ export const EditAnswer = ({
     );
 };
 
-export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writerId: number; boardId: number }) => {
+export const OneAnswer = ({
+    v,
+    writerId,
+    boardId,
+    profilePicture,
+    nickname,
+}: {
+    v: AnswerDefaultType;
+    writerId: number;
+    boardId: number;
+    profilePicture: string;
+    nickname: string;
+}) => {
     const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
@@ -185,6 +188,8 @@ export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writ
         }
     };
 
+    const onViewCommentsHandler = () => {};
+
     return (
         <>
             <div className="relative flex items-center justify-between">
@@ -215,20 +220,22 @@ export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writ
                     />
                 )}
                 {isLoggedIn && !isEdit && (
-                    <div className={`absolute right-0 top-32 flex w-70 ${isMine ? "justify-between" : "justify-end"}`}>
-                        {isMine && (
-                            <>
-                                <button onClick={() => setIsEdit(true)}>
-                                    <BiPencil size={"1.2rem"} />
-                                </button>
-                                <button onClick={onDeleteHanlder}>
-                                    <RiDeleteBin5Line size={"1.2rem"} />
-                                </button>
-                            </>
-                        )}
-                        <button onClick={() => setAnswerId(v.answerId)}>
-                            <RiReplyLine size={"1.2rem"} />
-                        </button>
+                    <div className="absolute right-0 top-32">
+                        <div className={`flex w-70 ${isMine ? "justify-between" : "justify-end"}`}>
+                            {isMine && (
+                                <>
+                                    <button onClick={() => setIsEdit(true)}>
+                                        <BiPencil size={"1.2rem"} />
+                                    </button>
+                                    <button onClick={onDeleteHanlder}>
+                                        <RiDeleteBin5Line size={"1.2rem"} />
+                                    </button>
+                                </>
+                            )}
+                            <button onClick={() => setAnswerId(v.answerId)}>
+                                <RiReplyLine size={"1.2rem"} />
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -247,6 +254,9 @@ export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writ
                     )}
                 </div>
             )}
+            <button className="my-8 w-fit border-1 border-borderline px-8 py-4" onClick={onViewCommentsHandler}>
+                <Typography text="답글" type="Description" />
+            </button>
             {answerId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">
@@ -255,9 +265,9 @@ export const OneAnswer = ({ v, writerId, boardId }: { v: AnswerDefaultType; writ
                                 <BiReply />
                             </div>
                             <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                                <img src={dummyUser.profilePicture} alt="" />
+                                <img src={profilePicture || Temp} alt="" />
                             </div>
-                            <Typography type="Highlight" text={dummyUser.nickname} />
+                            <Typography type="Highlight" text={nickname} />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>
@@ -308,6 +318,8 @@ export const ShowAnswer = ({ answer, writerId }: { answer: AnswerDefaultType; wr
                 writerId={writerId}
                 boardId={answer.boardId}
                 key={`${answer.answerId}-${answer.memberId}`}
+                nickname={answer.nickname}
+                profilePicture={answer.profilePicture}
             />
         </div>
     );

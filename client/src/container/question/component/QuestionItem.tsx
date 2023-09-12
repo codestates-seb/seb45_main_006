@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
 import { usePostViewCount, useDeleteQuestion } from "@api/question/hook";
+import { useGetAnswer } from "@api/answer/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useToast } from "@hook/useToast";
@@ -16,6 +17,7 @@ import { useToast } from "@hook/useToast";
 import Typography from "@component/Typography";
 import Button from "@component/Button";
 import { EditAnswer, ShowAnswer } from "@component/board/Answer";
+import Pagination from "@component/Pagination";
 
 import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
@@ -120,7 +122,21 @@ const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
 };
 
 function QuestionItem({ question }: { question: QuestionDefaultType }) {
-    const { answerList } = question;
+    // 페이지 필터
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+
+    const { data: answerList } = useGetAnswer({
+        page: curPage,
+        size: 10,
+        questionId: question.boardId,
+    });
+
+    useEffect(() => {
+        if (answerList && answerList?.pageInfo.totalElements) {
+            setTotalItems(answerList?.pageInfo.totalElements);
+        }
+    }, [answerList]);
 
     const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
 
@@ -157,12 +173,22 @@ function QuestionItem({ question }: { question: QuestionDefaultType }) {
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`답변 ${answerList.length}개`} />
-                    {isLoggedIn && <EditAnswer questionId={question.boardId} content={answer} setContent={setAnswer} />}
+                    <Typography type="Highlight" text={`답변 ${answerList?.data.length || 0}개`} />
+                    {isLoggedIn && (
+                        <EditAnswer
+                            questionId={question.boardId}
+                            content={answer}
+                            setContent={setAnswer}
+                            profilePicture={question.profilePicture}
+                        />
+                    )}
                     <div className="my-16">
-                        {answerList.map((v) => (
-                            <ShowAnswer key={v.answerId} answer={v} writerId={question.memberId} />
-                        ))}
+                        {answerList?.data &&
+                            Array.isArray(answerList?.data) &&
+                            answerList?.data.map((v) => (
+                                <ShowAnswer key={v.answerId} answer={v} writerId={question.memberId} />
+                            ))}
+                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
                     </div>
                 </div>
             )}
