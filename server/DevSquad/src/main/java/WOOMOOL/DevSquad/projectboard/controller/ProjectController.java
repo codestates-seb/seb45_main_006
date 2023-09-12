@@ -44,9 +44,10 @@ public class ProjectController {
         // 스택 필터링
         if (stacks != null) {
 
-            Page<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects.getContent());
+            List<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
+            projects = projectService.removeBlockUserBoard(projects);
 
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
             return new ResponseEntity(response, HttpStatus.OK);
 
         } else {

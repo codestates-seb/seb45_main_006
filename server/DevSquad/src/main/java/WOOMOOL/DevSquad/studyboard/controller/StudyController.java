@@ -45,9 +45,10 @@ public class StudyController {
         // 스택 필터링
         if (stacks != null) {
 
-            Page<Study> studies = studyService.getStudiesByStack(page - 1, stacks);
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies.getContent());
+            List<Study> studies = studyService.getStudiesByStack(page - 1, stacks);
+            studies = studyService.removeBlockUserBoard(studies);
 
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
             return new ResponseEntity(response, HttpStatus.OK);
 
         } else {

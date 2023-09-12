@@ -25,6 +25,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "AND p.projectStatus != 'PROJECT_DELETED' " +
             "GROUP BY p HAVING COUNT(st) IN :tagCount " +
             "ORDER BY p.createdAt DESC")
-    List<Project> findAllByStackTags(List<String> tagNames, Long tagCount);
+    Page<Project> findAllByStackTags(Pageable pageable, List<String> tagNames, Long tagCount);
 
 }

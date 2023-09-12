@@ -60,13 +60,12 @@ public class ProjectService {
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public Page<Project> getProjectsByStack(int page, List<String> stacks) {
+    public List<Project> getProjectsByStack(int page, List<String> stacks) {
 
-        List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
-        projectList = removeBlockUserBoard(projectList);
-        Page<Project> projectPage = new PageImpl<>(projectList, PageRequest.of(page, 5,Sort.by("createdAt")), projectList.size());
+        Page<Project> projectPage = projectRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
+        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
 
-        return projectPage;
+        return projectList;
     }
 
     //프로젝트 페이징

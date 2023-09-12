@@ -26,5 +26,5 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             "AND s.studyStatus != 'STUDY_DELETED' " +
             "GROUP BY s HAVING COUNT(st) IN :tagCount " +
             "ORDER BY s.createdAt DESC")
-    List<Study> findAllByStackTags(List<String> tagNames, Long tagCount);
+    Page<Study> findAllByStackTags(Pageable pageable, List<String> tagNames, Long tagCount);
 }

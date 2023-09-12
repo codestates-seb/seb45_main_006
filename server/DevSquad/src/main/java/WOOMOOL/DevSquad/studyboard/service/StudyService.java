@@ -61,13 +61,12 @@ public class StudyService {
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public Page<Study> getStudiesByStack(int page, List<String> stacks) {
+    public List<Study> getStudiesByStack(int page, List<String> stacks) {
 
-        List<Study> studyList = studyRepository.findAllByStackTags(stacks, stacks.stream().count());
-        studyList = removeBlockUserBoard(studyList);
-        Page<Study> studyPage = new PageImpl<>(studyList, PageRequest.of(page, 5,Sort.by("createdAt")), studyList.size());
+        Page<Study> studyPage = studyRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
+        List<Study> studyList = removeBlockUserBoard(studyPage.getContent());
 
-        return studyPage;
+        return studyList;
     }
 
     //스터디 페이징
