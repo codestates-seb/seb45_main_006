@@ -1,9 +1,12 @@
 package WOOMOOL.DevSquad.questionboard.controller;
 
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.mapper.QuestionBoardMapper;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +18,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -54,10 +58,38 @@ public class QuestionBoardController {
 
         return new ResponseEntity<>(mapper.QuestionBoardToQuestionBoardResponseDto(updatedQuestionBoard), HttpStatus.OK);
     }
-    //정보게시판 전체 검색
+    @GetMapping("/{board-id}")
+    public ResponseEntity getQuestionBoard(@PathVariable("board-id") @Positive long boardId) {
+        QuestionBoard questionBoard = questionBoardService.findVerifiedQuestionBoard(boardId);
+
+        return new ResponseEntity<>(mapper.QuestionBoardToQuestionBoardResponseDto(questionBoard), HttpStatus.OK);
+    }
+    //질문게시판 전체 검색
     @GetMapping
-    public ResponseEntity getAllQuestionBoard(@RequestParam(name = "search", required = false) String search) {
-        List<QuestionBoard> questionBoardList = questionBoardService.findAllQuestionBoard(search);
+    public ResponseEntity getAllQuestionBoard(@RequestParam(name = "search", required = false) String search,
+                                              @RequestParam @Positive int page,
+                                              @RequestParam @Positive int size) {
+        Page<QuestionBoard> questionBoardPage = questionBoardService.findAllQuestionBoard(search, page-1, size);
+        List<QuestionBoard> questionBoardList = questionBoardService.removeBlockUserBoard(questionBoardPage.getContent());
+
+        return new ResponseEntity<>(new PageResponseDto<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), questionBoardPage),
+                HttpStatus.OK);
+    }
+
+    // 회원이 쓴 질문게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberQuestionBoard(@PathVariable("member-id") Long memberId,
+                                                 @RequestParam int page){
+
+        Page<QuestionBoard> questionBoardListPage = questionBoardService.getQuestionBoardList(memberId,page-1);
+        List<QuestionBoard> questionBoardList = questionBoardListPage.getContent();
+        List<QuestionBoardDto.Response> response = mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
+
+        return new ResponseEntity(new PageResponseDto(response,questionBoardListPage),HttpStatus.OK);
+    }
+    @GetMapping("/hottest")
+    public ResponseEntity getHottestQuestionBoard() {
+        List<QuestionBoard> questionBoardList = questionBoardService.findHottestQuestionBoard();
 
         return new ResponseEntity<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), HttpStatus.OK);
     }

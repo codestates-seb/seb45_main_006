@@ -1,11 +1,14 @@
 package WOOMOOL.DevSquad.member.service;
 
+import WOOMOOL.DevSquad.answer.entity.Answer;
+import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.bookmark.repository.BookmarkRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
-import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.likes.repository.LikesRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
@@ -13,13 +16,13 @@ import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.position.service.PositionService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
-import WOOMOOL.DevSquad.projectboard.service.ProjectService;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
-import WOOMOOL.DevSquad.studyboard.service.StudyService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -41,30 +44,21 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_Q
 @Service
 @Transactional
 @Slf4j
+@AllArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PositionService positionService;
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
     private final StackTagService stackTagService;
-
     private final ProjectRepository projectRepository;
     private final StudyRepository studyRepository;
-
     private final InfoBoardRepository infoBoardRepository;
-
-    public MemberService(MemberRepository memberRepository, MemberProfileRepository memberProfileRepository, PositionService positionService, PasswordEncoder passwordEncoder, MemberAuthority memberAuthority, StackTagService stackTagService, ProjectRepository projectRepository, StudyRepository studyRepository, InfoBoardRepository infoBoardRepository) {
-        this.memberRepository = memberRepository;
-        this.memberProfileRepository = memberProfileRepository;
-        this.positionService = positionService;
-        this.passwordEncoder = passwordEncoder;
-        this.memberAuthority = memberAuthority;
-        this.stackTagService = stackTagService;
-        this.projectRepository = projectRepository;
-        this.studyRepository = studyRepository;
-        this.infoBoardRepository = infoBoardRepository;
-    }
+    private final QuestionBoardRepository questionBoardRepository;
+    private final LikesRepository likesRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -107,6 +101,7 @@ public class MemberService {
 
         // 기타 정보 수정
         Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.setNickname(nickname));
+        Optional.ofNullable(memberProfile.getNickname()).ifPresent(nickname -> findMemberProfile.getMember().setNickname(nickname));
         Optional.ofNullable(memberProfile.getProfilePicture()).ifPresent(profilePicture -> findMemberProfile.setProfilePicture(profilePicture));
         Optional.ofNullable(memberProfile.getGithubId()).ifPresent(githubId -> findMemberProfile.setGithubId(githubId));
         Optional.ofNullable(memberProfile.getIntroduction()).ifPresent(introduction -> findMemberProfile.setIntroduction(introduction));
@@ -117,50 +112,64 @@ public class MemberService {
 
     // 프로필 조회
     @Transactional(readOnly = true)
-    public MemberProfile getMemberProfile() {
+    public MemberProfile getMyProfile() {
 
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
 
-        // 프로젝트 리스트 정보
-        List<Project> projectList = getMemberProjectList(findMember.getMemberId());
-        findMemberProfile.setProjectlist(projectList);
-        // 스터디 리스트 정보
-        List<Study> studyList = getMemberStudyList(findMember.getMemberId());
-        findMemberProfile.setStudyList(studyList);
-        // 정보 게시판 리스트 정보
-        List<InfoBoard> infoBoardList = getMemberInfoBoardList(findMember.getMemberId());
-        findMemberProfile.setInfoBoardList(infoBoardList);
-        // 북마크 정보
+        return findMemberProfile;
+    }
+
+    // 유저 리스트 유저 정보
+    @Transactional(readOnly = true)
+    public MemberProfile getMemberProfile(Long memberId) {
+
+        Member findMember = findMember(memberId);
+        MemberProfile findMemberProfile = findMember.getMemberProfile();
+
+        // 멤버가 가지고 있는 게시판 정보 넣어주기
+        setBoardList(findMemberProfile, findMember.getMemberId());
 
         return findMemberProfile;
     }
 
-    //    필터없는 유저 리스트 페이지
+    //필터없는 활동중이고 리스트 등록되어있는 유저 리스트 페이지
+    @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilePage(int page) {
-        // 정렬기준 뭐로할지?
-        return memberProfileRepository.findAll(PageRequest.of(page, 8));
+        // 최근 활동으로 정렬
+        return memberProfileRepository.findAll(PageRequest.of(page, 8, Sort.by("modifiedAt")));
     }
+
     // 포지션 별로 필터링
+    @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilesByPosition(int page, List<String> positions) {
 
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions,positions.stream().count());
-        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8), memberProfileList.size());
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions, positions.stream().count());
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8,Sort.by("modifiedAt")), memberProfileList.size());
 
         return memberProfilePage;
     }
 
     // 스택 별로 필터링
+    @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilesByStack(int page, List<String> stacks) {
 
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks,stacks.stream().count());
-        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8), memberProfileList.size());
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks, stacks.stream().count());
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(memberProfileList, PageRequest.of(page, 8,Sort.by("modifiedAt")), memberProfileList.size());
 
         return memberProfilePage;
     }
+    @Transactional(readOnly = true)
+    public Page<MemberProfile> getMemberProfileByNickname(int page, String nickname) {
+
+        Page<MemberProfile> memberProfileList = memberProfileRepository.findAllByNickname(PageRequest.of(page,8,Sort.by("modifiedAt")),nickname);
+
+        return memberProfileList;
+    }
 
     // 활동중, 등록 허가한 회원, 블랙리스트에 없는 유저리스트 조회
-    public List<MemberProfile> getMemberProfiles(Page<MemberProfile> memberProfilePage) {
+    @Transactional(readOnly = true)
+    public List<MemberProfile> getMyMemberProfiles(Page<MemberProfile> memberProfilePage) {
 
         // 블랙리스트 멤버에 있는 memberId를 List로 추출
         List<Long> blockMemberList = getBlockMemberId();
@@ -169,6 +178,11 @@ public class MemberService {
         return memberProfilePage.getContent().stream()
                 .filter(memberProfile -> !blockMemberList.contains(memberProfile.getMemberProfileId()))
                 .collect(Collectors.toList());
+    }
+
+    public List<MemberProfile> getMemberProfile(Page<MemberProfile> memberProfilePage){
+
+        return memberProfilePage.getContent();
     }
 
 
@@ -190,10 +204,11 @@ public class MemberService {
 
     // 토큰으로 멤버객체 찾기
     public Member findMemberFromToken() {
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
 
-        // 토큰으로 멤버를 못찾으면 토큰이 잘못된거니까 NO AUTH가 좀 더 어울릴 듯?
+        // 토큰에서 걸러져서 굳이 필요 없을 듯..?
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(NO_AUTHORIZATION));
         isDeletedMember(findMember);
 
@@ -201,6 +216,7 @@ public class MemberService {
 
     }
 
+    // 멤버객체 찾기
     public Member findMember(long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(MEMBER_NOT_FOUND));
@@ -247,13 +263,12 @@ public class MemberService {
 
     private List<Long> getBlockMemberId() {
         // 블랙리스트 멤버에 있는 memberId를 List로 추출
-        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockMemberList().stream()
+        List<Long> blockMemberList = findMemberFromToken().getMemberProfile().getBlockList().stream()
                 .map(blockMember -> blockMember.getBlockMemberId())
                 .collect(Collectors.toList());
 
         return blockMemberList;
     }
-
 
     // 탈퇴한 회원인지 확인 - 토큰쓰면 필요 없을 듯?
     private void isDeletedMember(Member member) {
@@ -261,6 +276,20 @@ public class MemberService {
 
             throw new BusinessLogicException(QUITED_MEMBER);
         }
+    }
+
+    // 유저 리스트 유저 정보에 해당 유저가 작성한 게시글 정보 넣기
+    private void setBoardList(MemberProfile memberProfile, Long memberProfileId) {
+
+        // 프로젝트 리스트 정보
+        List<Project> projectList = getMemberProjectList(memberProfileId);
+        memberProfile.setProjectlist(projectList);
+        // 스터디 리스트 정보
+        List<Study> studyList = getMemberStudyList(memberProfileId);
+        memberProfile.setStudyList(studyList);
+        // 정보 게시판 리스트 정보
+        List<InfoBoard> infoBoardList = getMemberInfoBoardList(memberProfileId);
+        memberProfile.setInfoBoardList(infoBoardList);
     }
 
     // 특정 멤버가 가지고 있는 프로젝트 리스트
@@ -287,7 +316,70 @@ public class MemberService {
         return infoBoardList;
     }
 
+    //좋아요한 정보 게시판
+    public Page<InfoBoard> getLikeInfoBoardList(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<InfoBoard> infoBoardPage = likesRepository
+                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+
+        return infoBoardPage;
+
+    }
+
+    //좋아요한 질문 게시판
+    public Page<QuestionBoard> getLikeQuestionBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<QuestionBoard> questionBoardPage = likesRepository
+                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page,8,Sort.by("createAt")));
+
+        return questionBoardPage;
+    }
+
+
     // 북마크한 게시판들
+    public Page<QuestionBoard> getBooMarkedQuestionBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<QuestionBoard> questionBoardPage = bookmarkRepository
+                .findQuestionByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return questionBoardPage;
+    }
+
+    public Page<InfoBoard> getBooMarkedInfoBoardBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<InfoBoard> infoBoardPage= bookmarkRepository
+                .findInfoByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return infoBoardPage;
+    }
+
+    public Page<Project> getBooMarkedProjectBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<Project> projectBoardPage = bookmarkRepository
+                .findProjectByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return projectBoardPage;
+    }
+
+    public Page<Study> getBooMarkedStudyBoard(int page){
+
+        Member findMember = findMemberFromToken();
+
+        Page<Study> studyBoardPage = bookmarkRepository
+                .findStudyByBookmarkedMemberId(findMember.getMemberId(),PageRequest.of(page,8,Sort.by("createAt")));
+
+        return studyBoardPage;
+    }
 }
 
 

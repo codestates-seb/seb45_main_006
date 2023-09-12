@@ -20,6 +20,8 @@ import {
     PatchReqMember,
     PostReqBlockMember,
     DeleteReqBlockMember,
+    GetReqMyDetail,
+    PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 import {
     DeleteResMember,
@@ -48,16 +50,16 @@ export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const useGetMyDetail = () => {
+export const useGetMyDetail = ({ rawPassword }: GetReqMyDetail) => {
     return useQuery<AxiosResponse<GetResMemberDetail>, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
-        queryFn: getMyDetail,
+        queryFn: () => getMyDetail({ rawPassword }),
     });
 };
 
 // 마이페이지 - 비밀번호 수정
 export const usePatchMemberPw = () => {
-    return useMutation<AxiosResponse<PatchResMemberPw>, AxiosError, PatchReqMember>(patchMemberPw);
+    return useMutation<AxiosResponse<PatchResMemberPw>, AxiosError, PatchReqMemberPw>(patchMemberPw);
 };
 
 // 마이페이지 - 정보 수정하기

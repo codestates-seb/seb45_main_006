@@ -21,13 +21,11 @@ public class Level {
     @Column
     private String grade = "개구리알";
     @Column
-    private int currentExp;
+    private int currentExp = 0;
     @Column
-    private int maxExp;
-    @Column
-    private String levelExplain = "좋아요 3번과 댓글 1회 작성 시 다음 단계로 올라갈 수 있어요!";
+    private int maxExp = 0;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "memberProfileId")
     private MemberProfile memberProfile;
 }

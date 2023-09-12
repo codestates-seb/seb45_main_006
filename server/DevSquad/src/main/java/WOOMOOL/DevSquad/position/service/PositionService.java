@@ -19,13 +19,13 @@ public class PositionService {
 
     // DB에 설정해놓은 Position 객체를 찾아서 프로필에 넣어줌
     // 유저 프로필 수정시 Position 생성 메서드
-    public void createPosition(Set<String> positionlist, MemberProfile memberProfile){
+    public void createPosition(Set<String> positionList, MemberProfile memberProfile){
 
         // 수정시 포지션 객체 초기화
         memberProfile.getPositions().clear();
 
-        if(positionlist.size() > 0) {
-            for (String positions : positionlist) {
+        if(positionList.size() > 0) {
+            for (String positions : positionList) {
                 Position position = positionRepository.findByPositionName(positions);
                 position.getMemberProfiles().add(memberProfile);
                 memberProfile.getPositions().add(position);

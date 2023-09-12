@@ -54,8 +54,8 @@ function AutoCompletionTags({
     return (
         <div className="flex w-full flex-col py-10">
             <div
-                className={`flex flex-col border-primary px-4 py-6 ${
-                    type === "OUTLINED" ? "rounded-2xl border-1" : "border-b-1"
+                className={`flex flex-col border-borderline px-4 py-6 shadow-sm ${
+                    type === "OUTLINED" ? "rounded-md border-1" : "border-b-1"
                 }`}
                 ref={dropdownRef}
                 onClick={() => setIsDropDownShow(true)}

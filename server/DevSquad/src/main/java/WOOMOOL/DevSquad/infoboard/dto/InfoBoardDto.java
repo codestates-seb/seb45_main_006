@@ -44,11 +44,14 @@ public class InfoBoardDto {
         private String content;
         private Long memberId;
         private String nickname;
+        private String profilePicture;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;
         private String category;
         private String infoBoardStatus;
-        private List<CommentDto.Response> commentList;
+        private boolean liked;
+        private int likeCount;
+        private boolean bookmarked;
     }
 }

@@ -1,4 +1,4 @@
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 import { getItemFromStorage, setItemToStorage } from "./localstorage-helper";
 
@@ -35,36 +35,38 @@ export const isValidToken = (token: string): boolean | undefined => {
         console.log("jwt 토큰이 유효하지 않습니다.", token);
         return;
     }
-    // const tokenJwtData = parseJwt(token);
-    // return dayjs(tokenJwtData.exp) > dayjs();
+    const tokenJwtData = parseJwt(token);
+    return dayjs(tokenJwtData.exp) > dayjs();
 
     // TODO: 로그인 api 연동 후에 삭제할 코드
-    return true;
+    // return true;
 };
 
 export const isExistToken = (): boolean => {
     const accessToken = getItemFromStorage("accessToken");
+    const refreshToken = getItemFromStorage("refreshToken");
+    const memberId = getItemFromStorage("memberId");
+    const email = getItemFromStorage("email");
     if (!accessToken) {
         return false;
     }
 
-    // const tokenJwtData = parseJwt(accessToken);
-    // TODO: 로그인 api 연동 후에 1 대신 tokenJwtData.memberId 넣기
-    //       - 타입 확인 후 == 를 === 로 바꾸기
-    return accessToken && getItemFromStorage("memberId") && getItemFromStorage("memberId") == 1;
+    const tokenJwtData = parseJwt(accessToken);
+    return accessToken && refreshToken && memberId && email && tokenJwtData.username === email;
 };
 
-export const setTokenToLocalStorage = (token: string): void => {
-    if (!token) {
-        console.log("jwt 토큰이 유효하지 않습니다.", token);
-        return;
-    }
-    const parsedToken = parseJwt(token);
-    // TODO: 로그인 api 연동 후에 삭제할 코드
-    setItemToStorage("isLoggedIn", true);
-    setItemToStorage("accessToken", token);
+export const setTokenToLocalStorage = ({
+    accessToken,
+    refreshToken,
+    memberId,
+}: {
+    accessToken: string;
+    refreshToken: string;
+    memberId: number;
+}): void => {
+    const parsedToken = parseJwt(accessToken);
+    setItemToStorage("accessToken", accessToken);
+    setItemToStorage("refreshToken", refreshToken);
+    setItemToStorage("memberId", memberId);
     setItemToStorage("email", parsedToken.username);
-    setItemToStorage("role", parsedToken.roles);
-    // TODO: 로그인 api 연동 후에 삭제할 코드 (|| 1)
-    setItemToStorage("memberId", parsedToken.memberId || 1);
 };

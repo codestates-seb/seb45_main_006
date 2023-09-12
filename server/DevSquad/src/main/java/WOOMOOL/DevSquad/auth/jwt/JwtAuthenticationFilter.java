@@ -1,6 +1,6 @@
 package WOOMOOL.DevSquad.auth.jwt;
 
-import WOOMOOL.DevSquad.auth.dto.LoginDto;
+import WOOMOOL.DevSquad.auth.jwt.dto.LoginDto;
 import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -64,7 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 리프레시 토큰 DB에 저장
         RefreshToken token = RefreshToken.builder()
                 .username(username)
-                .jws(refreshToken)
+                .refreshToken(refreshToken)
                 .build();
 
         refreshTokenRepository.save(token);

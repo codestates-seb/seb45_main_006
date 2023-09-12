@@ -27,7 +27,7 @@ export const useGetNicknameDuplicated = ({ nickname }: GetReqNickname) => {
     return useQuery<AxiosResponse<GetResNickname>, AxiosError, GetResNickname, [string, GetReqNickname]>({
         queryKey: signKeyFactory.nicknameDuplicated({ nickname }),
         queryFn: () => getNicknameDuplicated({ nickname }),
-        enabled: false,
+        enabled: !!nickname,
     });
 };
 

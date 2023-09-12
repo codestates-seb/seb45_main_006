@@ -1,5 +1,7 @@
 package WOOMOOL.DevSquad.auth.userdetails;
 
+import WOOMOOL.DevSquad.exception.BusinessLogicException;
+import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.Optional;
 
+import static WOOMOOL.DevSquad.exception.ExceptionCode.MEMBER_NOT_FOUND;
+import static WOOMOOL.DevSquad.exception.ExceptionCode.QUITED_MEMBER;
 import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_QUIT;
 
 @Component
@@ -33,10 +37,10 @@ public class UserDetailService implements UserDetailsService {
         log.info(username);
 
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        //todo:예외처리하기
-        Member findMember = optionalMember.orElseThrow(()->new RuntimeException());
+
+        Member findMember = optionalMember.orElseThrow(()-> new BusinessLogicException(MEMBER_NOT_FOUND));
         if (findMember.getMemberProfile().getMemberStatus().equals(MEMBER_QUIT)) {
-            throw new RuntimeException("Member has quit");
+            throw new BusinessLogicException(QUITED_MEMBER);
         }
             return new MemberDetail(findMember);
         }

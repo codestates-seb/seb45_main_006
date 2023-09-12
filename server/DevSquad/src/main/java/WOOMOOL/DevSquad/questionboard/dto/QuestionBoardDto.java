@@ -40,11 +40,14 @@ public class QuestionBoardDto {
         private String content;
         private Long memberId;
         private String nickname;
+        private String profilePicture;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private int viewCount;
         private String questionBoardStatus;
         private boolean answered;
-        private List<AnswerDto.Response> answerList;
+        private boolean liked;
+        private int likeCount;
+        private boolean bookmarked;
     }
 }
