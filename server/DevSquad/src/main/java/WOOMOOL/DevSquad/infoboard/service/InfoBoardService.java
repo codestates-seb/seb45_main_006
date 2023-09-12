@@ -8,6 +8,7 @@ import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,16 +61,18 @@ public class InfoBoardService {
     }
     //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
     public Page<InfoBoard> findAllInfoBoard(String categoryName, String search, int page, int size) {
-        Page<InfoBoard> result;
+        List<InfoBoard> infoBoardList;
         InfoBoard.Category category = InfoBoard.stringToCategory(categoryName);
         if(category==null && search==null)
-            result = infoBoardRepository.findAllPosted(PageRequest.of(page, size));
+            infoBoardList = infoBoardRepository.findAllPosted();
         else if(category==null)
-            result = infoBoardRepository.findByKeyword(search, PageRequest.of(page, size));
+            infoBoardList = infoBoardRepository.findByKeyword(search);
         else if(search==null)
-            result = infoBoardRepository.findByCategory(category, PageRequest.of(page, size));
+            infoBoardList = infoBoardRepository.findByCategory(category);
         else
-            result = infoBoardRepository.findByCategoryKeyword(category, search, PageRequest.of(page, size));
+            infoBoardList = infoBoardRepository.findByCategoryKeyword(category, search);
+        infoBoardList = removeBlockUserBoard(infoBoardList);
+        Page<InfoBoard> result = new PageImpl<>(infoBoardList, PageRequest.of(page, size), infoBoardList.size());
 
         return result;
     }
@@ -93,7 +96,9 @@ public class InfoBoardService {
 
     public List<InfoBoard> findHottestInfoBoard() {
         LocalDateTime oneWeekMinus = LocalDateTime.now().minusWeeks(1);
-        return infoBoardRepository.findHottestInfoBoard(oneWeekMinus).stream().limit(10).collect(Collectors.toList());
+        List<InfoBoard> result = infoBoardRepository.findHottestInfoBoard(oneWeekMinus);
+        result = removeBlockUserBoard(result);
+        return result.stream().limit(10).collect(Collectors.toList());
     }
 
     public void increaseViewCount(long boardId) {
@@ -106,12 +111,13 @@ public class InfoBoardService {
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
     }
     public List<InfoBoard> removeBlockUserBoard(List<InfoBoard> infoBoardList) {
-        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
             return infoBoardList;
-        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
-        List<InfoBoard> result = infoBoardList.stream()
-                .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== infoBoard.getMemberProfile().getMemberProfileId()))
-                .collect(Collectors.toList());
+        }
+            List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+            List<InfoBoard> result = infoBoardList.stream()
+                    .filter(infoBoard -> !blockList.stream().anyMatch(block -> block.getBlockMemberId() == infoBoard.getMemberProfile().getMemberProfileId()))
+                    .collect(Collectors.toList());
         return result;
     }
 }
