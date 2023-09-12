@@ -1,3 +1,4 @@
+import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import {
@@ -10,6 +11,7 @@ import {
     PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 
+// TODO: 에러나는지 보고 withAuth와 common으로 구분하여 요청
 // 유저 리스트 - 멤버 리스트 조회하기 & 차단 유저 제외
 export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
     const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
@@ -22,7 +24,7 @@ export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers
 export const getAllMembersWithoutBlock = async ({ page, stacks, posiions }: GetReqAllMembers) => {
     const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
     const url = `${COMMON_API_PATH.MEMBER.LIST}?${query}`;
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 

@@ -129,9 +129,11 @@ public class EmailService {
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
 
+        String sender = "DevSquad";
+
         mimeMessageHelper.setSubject(title);
         mimeMessageHelper.setTo(receiver);
-        mimeMessageHelper.setFrom("DevSquad");
+        mimeMessageHelper.setFrom(sender);
         mimeMessageHelper.setText(message, true);
 
 

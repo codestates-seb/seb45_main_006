@@ -35,13 +35,15 @@ public class StackTagService {
     }
 
     public Set<StackTag> createProjectStackTag(Set<String> stackTaglist){
-        if(stackTaglist.isEmpty())
-            return null;
+        if( stackTaglist.isEmpty() ) return null;
+
         Set<StackTag> stackTags = new HashSet<>();
-        for(String name : stackTaglist) {
-            StackTag stackTag = stackTagRepository.findByTagName(name);
+
+        for(String stack : stackTaglist) {
+            StackTag stackTag = stackTagRepository.findByTagName(stack);
             stackTags.add(stackTag);
         }
+
         return stackTags;
     }
 

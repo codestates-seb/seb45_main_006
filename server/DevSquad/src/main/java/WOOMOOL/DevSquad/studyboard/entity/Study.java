@@ -17,7 +17,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-//@DiscriminatorValue("STUDY")
 public class Study extends Board {
 
     @Column(nullable = false)
@@ -59,6 +58,7 @@ public class Study extends Board {
             inverseJoinColumns = @JoinColumn(name = "stackTagId")
     )
     private Set<StackTag> stackTags;
+
 
     public enum StudyStatus {
         STUDY_POSTED("게시 중"),

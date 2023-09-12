@@ -32,4 +32,8 @@ public class PositionService {
             }
         }
     }
+    public List<Position> getAllPosition(){
+
+        return positionRepository.findAll();
+    }
 }

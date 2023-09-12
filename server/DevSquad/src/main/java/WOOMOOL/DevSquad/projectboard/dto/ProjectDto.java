@@ -27,7 +27,7 @@ public class ProjectDto {
         @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-//        @NotNull
+        //        @NotNull
         private Set<String> stack;
 
         private String startDate;
@@ -44,19 +44,19 @@ public class ProjectDto {
     public static class PatchDto {
         private Long boardId;
 
-//        @NotBlank(message = "제목을 작성해 주세요.")
+        //        @NotBlank(message = "제목을 작성해 주세요.")
         private String title;
 
-//        @NotBlank(message = "내용을 작성해 주세요.")
+        //        @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-//        @NotNull
+        //        @NotNull
         private Set<String> stack;
 
         private String startDate;
         private String deadline;
 
-//        @Positive(message = "모집 인원을 작성해 주세요.")
+        //        @Positive(message = "모집 인원을 작성해 주세요.")
         private Integer recruitNum;
 
         private Project.ProjectStatus projectStatus;
@@ -95,7 +95,6 @@ public class ProjectDto {
         private Project.ProjectStatus projectStatus;
         private boolean bookmarked;
         private int viewCount;
-//        private List<CommentDto.Response> commentList;
         private MemberProfileDto.listResponse memberProfile;
     }
 }

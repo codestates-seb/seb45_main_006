@@ -54,8 +54,21 @@ public class ProjectService {
     // 프로젝트 리스트 조회
     @Transactional(readOnly = true)
     public List<Project> getProjects(Pageable pageable) {
-        Page<Project> projectPage = projectRepository.findByProjectStatus(pageable);
-        return projectPage.getContent();
+        List<Project> projectList = projectRepository.findByProjectStatus(pageable);
+        projectList = removeBlockUserBoard(projectList);
+
+        return projectList;
+    }
+
+    // 스택 별로 필터링
+    @Transactional(readOnly = true)
+    public List<Project> getProjectsByStack(int page, List<String> stacks) {
+
+        List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
+        projectList = removeBlockUserBoard(projectList);
+//        Page<Project> projectPage = new PageImpl<>(projectList, PageRequest.of(page, 8,Sort.by("createdAt")), projectList.size());
+
+        return projectList;
     }
 
     //프로젝트 페이징
@@ -71,8 +84,6 @@ public class ProjectService {
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
 
-        project.setStackTags(stackTagService.createProjectStackTag(stackTag));
-
         Optional.ofNullable(project.getTitle())
                 .ifPresent(title -> findProject.setTitle(title));
         Optional.ofNullable(project.getContent())
@@ -84,6 +95,7 @@ public class ProjectService {
         Optional.ofNullable(project.getRecruitNum())
                 .ifPresent(recruitNum -> findProject.setRecruitNum(recruitNum));
 
+        findProject.setStackTags(stackTagService.createProjectStackTag(stackTag));
         findProject.setModifiedAt(LocalDateTime.now());
 
         return findProject;

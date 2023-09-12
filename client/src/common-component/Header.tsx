@@ -40,17 +40,18 @@ const BtnsWithoutAuth = () => {
 
     const onHandleLogin = () => {
         postLogin(
-            { email: "test1@test.com", password: "abc123!!" },
+            { email: "test1@test.com", password: "abcdef123!" },
             {
                 onSuccess: (res) => {
-                    const { authorization, Refresh } = res.headers;
-                    if (!authorization || !Refresh) {
+                    const { authorization, refresh } = res.headers;
+                    console.log(res.headers);
+                    if (!authorization || !refresh) {
                         return Promise.reject("로그인에 실패하였습니다.");
                     }
 
                     setTokenToLocalStorage({
-                        accessToken: authorization || "",
-                        refreshToken: Refresh || "",
+                        accessToken: authorization.split(" ")[1],
+                        refreshToken: refresh || "",
                         memberId: res.data.memberId,
                     });
 

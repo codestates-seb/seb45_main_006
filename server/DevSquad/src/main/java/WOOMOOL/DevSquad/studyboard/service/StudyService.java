@@ -91,7 +91,7 @@ public class StudyService {
         findStudy.setStudyStatus(Study.StudyStatus.STUDY_CLOSED);
 
         Timer timer = new Timer();
-        long delayInMillis = 6 * 3600000;    // 6시간
+        long delayInMillis = 60000;    // 일단 1분
 
         timer.schedule(new TimerTask() {
             @Override

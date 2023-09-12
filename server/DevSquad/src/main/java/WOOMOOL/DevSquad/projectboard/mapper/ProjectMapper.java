@@ -27,23 +27,8 @@ public interface ProjectMapper {
         project.setDeadline( postDto.getDeadline() );
         project.setRecruitNum( postDto.getRecruitNum() );
 
-//        if (postDto.getStack() != null) {
-//            Set<StackTag> stackTags = postDto.getStack().stream()
-//                    .map(stackName -> {
-//                        StackTag stackTag = new StackTag();
-//                        stackTag.setTagName(stackName);
-//                        return stackTag;
-//                    })
-//                    .collect(Collectors.toSet());
-//            project.setStackTags(stackTags);
-//        }
-
-        System.out.println("🚨🚨🚨mapper : " + postDto.getStack());
-
         return project;
     }
-
-//    Project patchDtoToEntity(ProjectDto.PatchDto patchDto);
 
     default Project patchDtoToEntity(ProjectDto.PatchDto patchDto) {
         Project project = new Project();
@@ -57,16 +42,6 @@ public interface ProjectMapper {
         project.setDeadline(patchDto.getDeadline());
         project.setRecruitNum(patchDto.getRecruitNum());
         project.setProjectStatus(patchDto.getProjectStatus());
-
-
-        Set<StackTag> stackTags = patchDto.getStack().stream()
-                .map(stackName -> {
-                    StackTag stackTag = new StackTag();
-                    stackTag.setTagName(stackName);
-                    return stackTag;
-                })
-                .collect(Collectors.toSet());
-        project.setStackTags(stackTags);
 
         return project;
     }

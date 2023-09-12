@@ -2,7 +2,6 @@ package WOOMOOL.DevSquad.stacktag.entity;
 
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
-import WOOMOOL.DevSquad.studyboard.entity.Study;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +25,8 @@ public class StackTag {
 
     @ManyToMany(mappedBy = "stackTags")
     private List<MemberProfile> memberProfiles = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "stackTags")
-    private List<Study> studyBoardList = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "stackTags")
-    private List<Project> projectBoardList = new ArrayList<>();
+//    @ManyToMany(mappedBy = "stackTags")
+//    private List<> studyboardList = new ArrayList<>();
+//    @ManyToMany(mappedBy = "stackTags")
+//    private Set<Project> projectBoardList = new HashSet<>();
 }
