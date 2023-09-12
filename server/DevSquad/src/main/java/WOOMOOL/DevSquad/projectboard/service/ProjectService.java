@@ -9,7 +9,6 @@ import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class ProjectService {
     public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
-        project.setStackTags(stackTagService.createProjectStackTag(stackTag));
+        project.setStackTags(stackTagService.createBoardStackTag(stackTag));
 
         return projectRepository.save(project);
     }
@@ -94,7 +93,7 @@ public class ProjectService {
         Optional.ofNullable(project.getRecruitNum())
                 .ifPresent(recruitNum -> findProject.setRecruitNum(recruitNum));
 
-        findProject.setStackTags(stackTagService.createProjectStackTag(stackTag));
+        findProject.setStackTags(stackTagService.createBoardStackTag(stackTag));
         findProject.setModifiedAt(LocalDateTime.now());
 
         return findProject;

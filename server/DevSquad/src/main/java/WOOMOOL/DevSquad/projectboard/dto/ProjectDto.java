@@ -27,7 +27,7 @@ public class ProjectDto {
         @NotBlank(message = "내용을 작성해 주세요.")
         private String content;
 
-        //        @NotNull
+//        @NotNull
         private Set<String> stack;
 
         private String startDate;

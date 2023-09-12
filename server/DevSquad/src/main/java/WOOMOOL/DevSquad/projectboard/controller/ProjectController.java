@@ -24,12 +24,9 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    private final BookmarkService bookmarkService;
-
-    public ProjectController(ProjectService projectService, ProjectMapper mapper, BookmarkService bookmarkService) {
+    public ProjectController(ProjectService projectService, ProjectMapper mapper) {
         this.projectService = projectService;
         this.mapper = mapper;
-        this.bookmarkService = bookmarkService;
     }
 
     @PostMapping
@@ -40,6 +37,7 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // 프로젝트 페이지 조회
     @GetMapping("/list")
     public ResponseEntity getProjects(@RequestParam int page,
                                       @RequestParam(required = false) List<String> stacks) {
