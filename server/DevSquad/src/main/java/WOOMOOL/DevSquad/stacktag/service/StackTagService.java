@@ -1,18 +1,13 @@
 package WOOMOOL.DevSquad.stacktag.service;
 
-import WOOMOOL.DevSquad.exception.BusinessLogicException;
-import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.position.entity.Position;
-import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.stacktag.repository.StackTagRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 @Service
 public class StackTagService {
     private final StackTagRepository stackTagRepository;
@@ -34,7 +29,7 @@ public class StackTagService {
         }
     }
 
-    public Set<StackTag> createProjectStackTag(Set<String> stackTaglist){
+    public Set<StackTag> createBoardStackTag(Set<String> stackTaglist){
         if( stackTaglist.isEmpty() ) return null;
 
         Set<StackTag> stackTags = new HashSet<>();

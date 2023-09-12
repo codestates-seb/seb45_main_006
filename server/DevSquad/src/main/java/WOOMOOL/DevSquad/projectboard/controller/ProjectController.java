@@ -24,12 +24,9 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
 
-    private final BookmarkService bookmarkService;
-
-    public ProjectController(ProjectService projectService, ProjectMapper mapper, BookmarkService bookmarkService) {
+    public ProjectController(ProjectService projectService, ProjectMapper mapper) {
         this.projectService = projectService;
         this.mapper = mapper;
-        this.bookmarkService = bookmarkService;
     }
 
     @PostMapping
@@ -40,15 +37,17 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // 프로젝트 페이지 조회
     @GetMapping("/list")
     public ResponseEntity getProjects(@RequestParam int page,
                                       @RequestParam(required = false) List<String> stacks) {
         // 스택 필터링
         if (stacks != null) {
 
-            Page<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects.getContent());
+            List<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
+            projects = projectService.removeBlockUserBoard(projects);
 
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
             return new ResponseEntity(response, HttpStatus.OK);
 
         } else {
