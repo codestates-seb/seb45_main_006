@@ -12,6 +12,9 @@ function CarouselCustomNavigation() {
     const handleClickStudy = () => {
         navigate("/studies");
     };
+    const handleClickBoard = () => {
+        navigate("/infos");
+    };
     return (
         <Carousel
             className="h-360 rounded-xl"
@@ -79,7 +82,11 @@ function CarouselCustomNavigation() {
                 onClick={handleClickStudy}
                 className="h-300 w-full max-w-screen-xl cursor-pointer object-contain"
             />
-            <img src={BoardImg} className="h-300 w-full max-w-screen-xl cursor-pointer object-contain" />
+            <img
+                src={BoardImg}
+                onClick={handleClickBoard}
+                className="h-300 w-full max-w-screen-xl cursor-pointer object-contain"
+            />
         </Carousel>
     );
 }
