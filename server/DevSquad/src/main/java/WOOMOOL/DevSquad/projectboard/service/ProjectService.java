@@ -8,10 +8,8 @@ import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -53,22 +51,23 @@ public class ProjectService {
 
     // 프로젝트 리스트 조회
     @Transactional(readOnly = true)
-    public List<Project> getProjects(Pageable pageable) {
-        List<Project> projectList = projectRepository.findByProjectStatus(pageable);
-        projectList = removeBlockUserBoard(projectList);
+    public List<Project> getProjects(int page) {
+
+        Page<Project> projectPage = projectRepository.findByProjectStatus(PageRequest.of(page,5, Sort.by("createdAt")));
+        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
 
         return projectList;
     }
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public List<Project> getProjectsByStack(int page, List<String> stacks) {
+    public Page<Project> getProjectsByStack(int page, List<String> stacks) {
 
         List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
         projectList = removeBlockUserBoard(projectList);
-//        Page<Project> projectPage = new PageImpl<>(projectList, PageRequest.of(page, 8,Sort.by("createdAt")), projectList.size());
+        Page<Project> projectPage = new PageImpl<>(projectList, PageRequest.of(page, 5,Sort.by("createdAt")), projectList.size());
 
-        return projectList;
+        return projectPage;
     }
 
     //프로젝트 페이징
