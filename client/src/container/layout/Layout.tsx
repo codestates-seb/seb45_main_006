@@ -1,11 +1,12 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
 
 import Header from "@component/Header";
 import Navigation from "@component/Navigation";
+import ChatBot from "@container/chat/ChatBot";
 
 import { isExistToken } from "@util/token-helper";
 
@@ -19,7 +20,7 @@ function Layout() {
     const { pathname } = useLocation();
 
     const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
-    const setIsLoggined = useSetRecoilState(isLoggedInAtom);
+    const [isLoggedIn, setIsLoggined] = useRecoilState(isLoggedInAtom);
 
     const [marginTop, setMarginTop] = useState<number>(HEIGHT.MAIN_HEADER);
 
@@ -39,7 +40,8 @@ function Layout() {
         } else {
             setMarginTop(HEIGHT.MAIN_HEADER);
         }
-    }, [isSignPage]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSignPage, pathname]);
 
     return (
         <>
@@ -54,6 +56,7 @@ function Layout() {
                 <Suspense fallback={<div>Loading...</div>}>
                     <Outlet />
                 </Suspense>
+                {isLoggedIn && <ChatBot />}
             </main>
         </>
     );
