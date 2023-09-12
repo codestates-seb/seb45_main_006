@@ -71,7 +71,7 @@ public class InfoBoardController {
                                              @RequestParam int page){
 
         Page<InfoBoard> infoBoardListPage = infoBoardService.getInfoBoardList(memberId,page-1);
-        List<InfoBoard> infoBoardList = infoBoardListPage.getContent();
+        List<InfoBoard> infoBoardList = infoBoardService.removeBlockUserBoard(infoBoardListPage.getContent());
         List<InfoBoardDto.Response> response = mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList);
 
         return new ResponseEntity(new PageResponseDto(response,infoBoardListPage),HttpStatus.OK);
@@ -84,7 +84,7 @@ public class InfoBoardController {
                                           @RequestParam @Positive int page,
                                           @RequestParam @Positive int size) {
         Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page-1, size);
-        List<InfoBoard> infoBoardList = infoBoardPage.getContent();
+        List<InfoBoard> infoBoardList = infoBoardService.removeBlockUserBoard(infoBoardPage.getContent());
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.InfoBoardListToInfoBoardResponseDtoList(infoBoardList), infoBoardPage),
                 HttpStatus.OK);

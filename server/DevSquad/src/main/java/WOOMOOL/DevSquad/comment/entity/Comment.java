@@ -41,7 +41,7 @@ public class Comment {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> commentList = new ArrayList<>();
 
-
+    @Column(length = 700)
     private String content;
 
     private LocalDateTime createdAt = LocalDateTime.now();

@@ -43,6 +43,7 @@ public class ProjectController {
     @GetMapping("/list")
     public ResponseEntity getProjects(Pageable pageable) {
         List<Project> projects = projectService.getProjects(pageable);
+        projects = projectService.removeBlockUserBoard(projects);
 
         List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
         return new ResponseEntity<>(response, HttpStatus.OK);

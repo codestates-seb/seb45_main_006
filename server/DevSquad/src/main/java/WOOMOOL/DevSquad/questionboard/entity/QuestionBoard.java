@@ -7,16 +7,14 @@ import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 
+import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Getter
@@ -29,12 +27,19 @@ public class QuestionBoard extends Board {
     private MemberProfile memberProfile;
 
     private String title;
-
+    @Column(length = 700)
     private String content;
 
     private int viewCount;
 
     private boolean isAnswered = false;
+
+    @ManyToMany
+    @JoinTable(name = "studyStackTag",
+            joinColumns = @JoinColumn(name = "boardId"),
+            inverseJoinColumns = @JoinColumn(name = "stackTagId")
+    )
+    private Set<StackTag> stackTags;
 
     @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY)
     private List<Answer> answerList = new ArrayList<>();
