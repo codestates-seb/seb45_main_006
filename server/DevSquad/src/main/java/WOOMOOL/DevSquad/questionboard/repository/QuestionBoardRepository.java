@@ -17,6 +17,9 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
     // 페이지네이션
     @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' AND q.memberProfile.memberProfileId = :memberProfileId ORDER BY q.createdAt DESC")
     Page<QuestionBoard> findAllByMemberProfile(Long memberProfileId, Pageable pageable);
+    // 특정 멤버가 좋아요 10개 넘는 질문게시글 찾기
+    @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' AND q.memberProfile.memberProfileId = :memberProfileId AND q.likesList.size >= 10")
+    List<QuestionBoard> findAllBy10MoreLikedByMemberProfile(Long memberProfileId);
     //정보게시판 전체를 최신순으로 정렬
     @Query("SELECT q FROM QuestionBoard q WHERE q.questionBoardStatus = 'QUESTIONBOARD_POSTED' ORDER BY q.createdAt DESC ")
     Page<QuestionBoard> findAllPosted(Pageable pageable);
