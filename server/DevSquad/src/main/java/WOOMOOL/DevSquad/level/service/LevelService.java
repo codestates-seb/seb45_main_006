@@ -11,6 +11,7 @@ import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +28,11 @@ public class LevelService {
 
     public void leveling() {
 
+        // 토큰 없으면 실행 안함
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return;
+
+        // 토큰 들어오면 로직 실행
         MemberProfile memberProfile = memberService.findMemberFromToken().getMemberProfile();
         Long memberProfileId = memberProfile.getMemberProfileId();
         Level level = memberProfile.getLevel();
