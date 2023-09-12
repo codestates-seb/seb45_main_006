@@ -27,13 +27,15 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
+    private final StackTagService stackTagService;
 
-    public ProjectService(ProjectRepository projectRepository, MemberService memberService) {
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService) {
         this.projectRepository = projectRepository;
         this.memberService = memberService;
+        this.stackTagService = stackTagService;
     }
 
-    public Project createProject(Project project) {
+    public Project createProject(Project project,Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
         project.setStackTags(stackTagService.createProjectStackTag(stackTag));
@@ -69,7 +71,7 @@ public class ProjectService {
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
 
-        stackTagService.createProjectStackTag(project, stackTag);
+        stackTagService.createProjectStackTag(stackTag);
 
         Optional.ofNullable(project.getTitle())
                 .ifPresent(title -> findProject.setTitle(title));
