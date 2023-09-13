@@ -63,7 +63,6 @@ function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
                 onError: (err) => {
                     console.log(err);
                     fireToast({
@@ -90,7 +89,6 @@ function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
                 onError: (err) => {
                     console.log(err);
                     fireToast({

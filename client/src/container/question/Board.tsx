@@ -7,11 +7,11 @@ import { isLoggedInAtom } from "@feature/Global";
 import { useGetAllQuestion } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
 
-import Button from "@component/Button";
 import Typography from "@component/Typography";
-import SearchInput from "@component/board/SearchInput";
 import QuestionItem from "./component/QuestionItem";
 import Pagination from "@component/Pagination";
+import SkeletonUi from "@component/board/SkeletonUi";
+import BoardHeader from "@component/board/BoardHeader";
 
 function Board() {
     const navigate = useNavigate();
@@ -27,7 +27,11 @@ function Board() {
     // 검색 인풋 value 저장하기 위한 변수
     const [searchValue, setSearchValue] = useState<string>("");
 
-    const { data: questions } = useGetAllQuestion({
+    const {
+        data: questions,
+        isLoading,
+        // refetch,
+    } = useGetAllQuestion({
         search: search,
         page: curPage,
         size: 10,
@@ -59,38 +63,45 @@ function Board() {
 
     return (
         <>
-            <div className="fixed z-10 flex w-full max-w-screen-xl justify-end bg-white p-8">
-                <div className="mr-12 w-200">
-                    <SearchInput
-                        value={searchValue}
-                        onChange={onChange}
-                        placeholder="질문게시판 검색"
-                        onClickSearchHandler={onClickSearchHandler}
-                    />
-                </div>
-                <Button type="QUESTION_POINT" onClickHandler={onClickRegisterHandler}>
-                    <Typography type="Highlight" text="질문게시글 등록" />
-                </Button>
-            </div>
+            <BoardHeader
+                label="질문"
+                searchValue={searchValue}
+                onChange={onChange}
+                onClickSearchHandler={onClickSearchHandler}
+                onClickRegisterHandler={onClickRegisterHandler}
+            />
             <div className="mt-58 flex">
                 <div className="flex flex-1 flex-col border-r-1 border-borderline">
                     <div className="p-12">
-                        {questions?.data && Array.isArray(questions?.data) && questions.data.length > 0 ? (
-                            questions.data.map((v) => <QuestionItem question={v} key={v.boardId} />)
-                        ) : (
-                            <div className="flex h-500 flex-col items-center justify-center">
-                                <Typography text="게시된 질문이 없습니다🥹" type="SmallLabel" styles="font-bold" />
-                                <Typography text="첫 질문을 작성해주세요!" type="SmallLabel" styles="font-bold" />
-                            </div>
+                        {isLoading && (
+                            <>
+                                <SkeletonUi />
+                                <SkeletonUi />
+                                <SkeletonUi />
+                            </>
                         )}
+                        {!isLoading &&
+                            questions?.data &&
+                            Array.isArray(questions?.data) &&
+                            questions.data.length > 0 &&
+                            questions.data.map((v) => <QuestionItem question={v} key={v.boardId} />)}
+                        {!isLoading &&
+                            questions?.data &&
+                            Array.isArray(questions?.data) &&
+                            questions.data.length === 0 && (
+                                <div className="flex h-500 flex-col items-center justify-center">
+                                    <Typography text="게시된 질문이 없습니다🥹" type="SmallLabel" styles="font-bold" />
+                                    <Typography text="첫 질문을 작성해주세요!" type="SmallLabel" styles="font-bold" />
+                                </div>
+                            )}
                     </div>
+                    {/* 임시 */}
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
                 </div>
                 <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                     <Typography type="Label" text="🔥 HOT 게시글" />
                 </div>
             </div>
-            {/* 임시 */}
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
         </>
     );
 }

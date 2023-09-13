@@ -15,7 +15,7 @@ import { useCheckUser } from "@hook/useCheckUser";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
-import Button from "@component/Button";
+import CommonBtn from "@component/CommonBtn";
 import { EditAnswer, ShowAnswer } from "@component/board/Answer";
 import Pagination from "@component/Pagination";
 
@@ -62,21 +62,19 @@ const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
         });
     };
 
+    const onClickEditHandler = () => navigate(`/questions/${question.boardId}/edit`, { state: question });
+
     return (
         <div className="flex border-b-1 border-borderline">
             <div className="flex-1 p-8">
                 {isMine && (
                     <div className="flex items-center justify-end">
-                        <Button
-                            type="PROJECT_POINT"
-                            styles="px-4 py-2 rounded-sm"
-                            onClickHandler={() => navigate(`/questions/${question.boardId}/edit`, { state: question })}
-                        >
-                            <Typography text="수정" type="Description" color="text-white" />
-                        </Button>
-                        <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
+                        <CommonBtn size="SM" color="GRAY" onClick={onClickEditHandler}>
+                            <Typography text="수정" type="Description" />
+                        </CommonBtn>
+                        <CommonBtn size="SM" color="GRAY" styleType="FILLED" onClick={onClickDeleteHandler}>
                             <Typography text="삭제" type="Description" color="text-white" />
-                        </Button>
+                        </CommonBtn>
                     </div>
                 )}
 
@@ -102,7 +100,7 @@ const QuestionTitle = ({ question }: { question: QuestionDefaultType }) => {
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
-            <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">
+            <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
                         <button onClick={() => setIsLiked(!isLiked)}>
