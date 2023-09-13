@@ -83,7 +83,6 @@ public class InfoBoardController {
     public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search,
                                           @RequestParam @Positive int page,
                                           @RequestParam @Positive int size) {
-        System.out.println("여기서 실행");
         Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page-1, size);
         List<InfoBoard> infoBoardList = infoBoardPage.getContent();
 
