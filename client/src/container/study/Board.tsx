@@ -15,7 +15,7 @@ const Board = () => {
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
-    const { data: studiesList } = useGetAllStudies();
+    const { studiesList } = useGetAllStudies();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
