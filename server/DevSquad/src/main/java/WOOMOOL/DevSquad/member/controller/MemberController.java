@@ -160,7 +160,7 @@ public class MemberController {
         return new ResponseEntity(response, HttpStatus.OK);
 
     }
-
+ // 유저 리스트 조회
     @GetMapping("/list")
     public ResponseEntity getMemberProfiles(@RequestParam int page,
                                             @RequestParam(required = false) String nickname,
