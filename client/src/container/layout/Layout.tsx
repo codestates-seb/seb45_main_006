@@ -22,7 +22,7 @@ function Layout() {
     const { pathname } = useLocation();
 
     const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
-    const [isLoggedIn, setIsLoggined] = useRecoilState(isLoggedInAtom);
+    const [isLoggined, setIsLoggined] = useRecoilState(isLoggedInAtom);
     const setDefaultStack = useSetRecoilState(defaultStackAtom);
     const setDefaultPosition = useSetRecoilState(defaultPostionAtom);
 
@@ -78,7 +78,7 @@ function Layout() {
                 <Suspense fallback={<div>Loading...</div>}>
                     <Outlet />
                 </Suspense>
-                {isLoggedIn && <ChatBot />}
+                {!isSignPage && isLoggined && <ChatBot />}
             </main>
         </>
     );

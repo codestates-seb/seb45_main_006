@@ -1,17 +1,15 @@
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
 
-import { useToast } from "@hook/useToast";
-import { useDeleteLogout, usePostLogin } from "@api/sign/hook";
+import { useDeleteLogout } from "@api/sign/hook";
 
 import IconLogo from "@assets/icon_logo.png";
 import IconLogoText from "@assets/icon_logo-text.png";
 
 import Typography from "@component/Typography";
 import UserProfile from "@component/user/UserProfile";
-import { setTokenToLocalStorage } from "@util/token-helper";
 import { clearStorage, getItemFromStorage } from "@util/localstorage-helper";
 
 // 임시 버튼 css
@@ -31,45 +29,6 @@ const BtnsWithAuth = ({ onLogoutHandler }: { onLogoutHandler: () => void }) => {
 };
 
 const BtnsWithoutAuth = () => {
-    // TODO: 로그인 로직 => 로그인 화면 나올 경우 이동
-    const navigate = useNavigate();
-    const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
-
-    const { createToast, errorToast } = useToast();
-    const { mutate: postLogin } = usePostLogin();
-
-    const onHandleLogin = () => {
-        postLogin(
-            { email: "test1@test.com", password: "abcdef123!" },
-            {
-                onSuccess: (res) => {
-                    const { authorization, refresh } = res.headers;
-                    if (!authorization || !refresh) {
-                        return Promise.reject("로그인에 실패하였습니다.");
-                    }
-
-                    setTokenToLocalStorage({
-                        accessToken: authorization.split(" ")[1],
-                        refreshToken: refresh || "",
-                        memberId: res.data.memberId,
-                    });
-
-                    setIsLoggedIn(true);
-                    createToast({
-                        content:
-                            "이제 임시적으로 로그인된 것처럼 화면 동작이 일어날 거에요!\nㅤ\n혹시 정말 로그인 화면으로 이동하고 싶으셨다면 예 버튼을 눌러주세요!",
-                        isConfirm: true,
-                        callback: () => navigate("/login"),
-                    });
-                },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
-            },
-        );
-    };
-
     return (
         <div className="flex w-166 justify-between text-center">
             <Link to="/login" className={outlinedCss}>
