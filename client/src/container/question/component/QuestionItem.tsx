@@ -137,6 +137,7 @@ function QuestionItem({
 
     const [isOpened, setIsOpened] = useState(false);
     const [answer, setAnswer] = useState<string>("");
+    const { isMine } = useCheckUser({ memberId: question.memberId });
 
     const { mutate: postViewCount } = usePostViewCount();
 
@@ -172,7 +173,23 @@ function QuestionItem({
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`답변 ${answerList?.data.length || 0}개`} />
+                    {isMine && (
+                        <div className="my-24 flex flex-col">
+                            <Typography
+                                type="SmallLabel"
+                                text="Tip! 도움이 된 답변의 경우 초록색 체크 표시를 눌러 채택해주세요!"
+                                styles="font-bold"
+                                color="text-blue-700"
+                            />
+                            <Typography
+                                type="SmallLabel"
+                                text="비슷한 질문을 가진 분들에게 도움이 됩니다!"
+                                color="text-blue-700"
+                                styles="ml-28"
+                            />
+                        </div>
+                    )}
+                    <Typography type="SmallLabel" text={`답변 ${answerList?.data.length || 0}개`} />
                     {isLoggedIn && (
                         <EditAnswer
                             questionId={question.boardId}
@@ -191,6 +208,7 @@ function QuestionItem({
                                     answer={v}
                                     writerId={question.memberId}
                                     refetchAnswer={refetchAnswer}
+                                    isAcceptExisted={answerList.data.filter((v) => v.accepted).length > 0}
                                 />
                             ))}
                         <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
