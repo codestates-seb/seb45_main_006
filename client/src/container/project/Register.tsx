@@ -75,7 +75,7 @@ export default function Register() {
         const emptyNames = alertWhenEmptyFn(registerInputs);
         return emptyNames.length > 0;
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const onPostClickHandler = () => {
         if (isEmpty()) return;
 

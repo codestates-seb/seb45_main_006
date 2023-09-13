@@ -1,11 +1,15 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import { useRecoilValue } from "recoil";
+import { defaultPostionAtom } from "@feature/Global";
+
 import SignLayout2 from "@container/sign/component/SignLayout2";
 import Typography from "@component/Typography";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import progress from "@assets/sign/fg_2.png";
 import AutoCompletionTags from "@component/AutoCompletionTags";
-import { defaultPosition } from "@component/mockData";
 import SignButton from "@container/sign/component/SignButton";
+
+import progress from "@assets/sign/fg_2.png";
 
 function SetPro2() {
     return (
@@ -17,6 +21,7 @@ function SetPro2() {
 
 const ProfileContent1 = () => {
     const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
+    const defaultPosition = useRecoilValue(defaultPostionAtom);
 
     return (
         <>

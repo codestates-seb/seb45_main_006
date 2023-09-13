@@ -26,14 +26,7 @@ function SignUp2() {
     const [searchParams] = useSearchParams();
     const redirectedEmail = searchParams.get("email");
 
-    useEffect(() => {
-        if (redirectedEmail) {
-            setIsRequestAuthenticate(true);
-            setAuthenticatedEmail(redirectedEmail);
-        }
-    }, [redirectedEmail]);
-
-    const { errorToast, fireToast, createToast } = useToast();
+    const { errorToast, fireToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
 
     const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();

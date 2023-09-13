@@ -18,15 +18,15 @@ import Typography from "@component/Typography";
 import CommonBtn from "@component/CommonBtn";
 import { EditComment, ShowComment } from "@component/board/Comment";
 import UserProfile from "@component/user/UserProfile";
+import Bookmark from "@component/board/Bookmark";
 
 import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_TYPE } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 
-import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
+import { BsFillShareFill } from "react-icons/bs";
 import Pagination from "@component/Pagination";
+import LikeBtn from "@component/board/LikeBtn";
 
 export const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
     const tag = CATEGORY_TO_NAME[category];
@@ -52,6 +52,7 @@ const InfoTitle = ({
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
+
     return (
         <div className="flex border-b-1 border-borderline">
             <div className="flex-1 p-8">
@@ -93,12 +94,13 @@ const InfoTitle = ({
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <button onClick={() => setIsLiked(!isLiked)}>
-                            <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                        </button>
-                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                            <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
-                        </button>
+                        <LikeBtn board="information" boardId={info.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                        <Bookmark
+                            board="information"
+                            boardId={info.boardId}
+                            isBookmarked={isBookmarked}
+                            setIsBookmarked={setIsBookmarked}
+                        />
                     </>
                 )}
                 <button>
@@ -195,7 +197,7 @@ function InfoItem({
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : info.content.length < 300 ? "댓글 열기" : "열기"}`}
+                        text={`${isOpened ? "닫기" : "내용 열기"}`}
                         color="text-blue-500 hover:text-blue-800"
                     />
                 </button>

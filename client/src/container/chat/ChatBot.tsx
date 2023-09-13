@@ -48,7 +48,7 @@ function ChatBot() {
             )}
 
             {isDescriptionShow && !isChatBotShow && (
-                <div className="fixed bottom-100 right-30 h-50 w-260 rounded-md bg-white p-10 shadow-md">
+                <div className="fixed bottom-100 right-30 h-50 w-280 rounded-md bg-white p-10 shadow-md">
                     <div className="flex justify-between">
                         <Typography text="하단 버튼을 눌러주시면" type="Description" />
                         <button onClick={() => setIsDescriptionShow(false)}>

@@ -15,7 +15,7 @@ const Board = () => {
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
-    const { data: studiesList } = useGetAllStudies();
+    const { studiesList } = useGetAllStudies();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
@@ -25,7 +25,7 @@ const Board = () => {
         <div>
             <div className="my-20 flex justify-end">
                 <div className="mr-8 w-200">
-                    <SearchInput value={searchValue} onChange={onChange} placeholder="프로젝트명 검색" />
+                    <SearchInput value={searchValue} onChange={onChange} placeholder="스터디명 검색" />
                 </div>
 
                 <Button

@@ -68,7 +68,7 @@ export const MAKE_API_PATH = {
         add: ({ questionId }: SpecifyQuestion) => `/question/${questionId}/answer`,
         update: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
         delete: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
-        accept: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}`,
+        accept: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}/accept`,
         addComment: ({ questionId, answerId }: SpecifyAnswer) => `/question/${questionId}/answer/${answerId}/comment`,
         updateComment: ({ questionId, answerId, commentId }: SpecifyAnswerComment) =>
             `/question/${questionId}/answer/${answerId}/comment/${commentId}`,

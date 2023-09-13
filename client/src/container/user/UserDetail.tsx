@@ -25,7 +25,7 @@ export const TabItem = ({ item, onClickTabItem }: { item: ITabItem; onClickTabIt
                 setSearchParams({ tab: item.tab });
             }}
         >
-            <button className="mr-16 w-max font-spoqa text-18 font-medium" onClick={() => onClickTabItem(item)}>
+            <button className="mr-16 w-max text-18 font-medium" onClick={() => onClickTabItem(item)}>
                 <Typography type="SmallLabel" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
             </button>
         </li>

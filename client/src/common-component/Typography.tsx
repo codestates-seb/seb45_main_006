@@ -52,7 +52,7 @@ function Text({
 
         if (type === "Label") {
             return (
-                <p key={key} className={`font-spoqa text-18 font-medium ${colorAndStyle}`}>
+                <p key={key} className={`text-18 font-medium ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );

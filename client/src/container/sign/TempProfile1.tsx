@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+import { useRecoilValue } from "recoil";
+import { defaultStackAtom } from "@feature/Global";
+
 import SignLayout from "@container/sign/component/SignLayout";
 import SignButton from "@container/sign/component/SignButton";
 import Typography from "@component/Typography";
@@ -7,10 +10,9 @@ import Typography from "@component/Typography";
 import progress from "@assets/sign/progress_bar1.png";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 
-import { defaultStack } from "@component/mockData";
-
 const ProfileContent1 = () => {
     const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
+    const defaultStack = useRecoilValue(defaultStackAtom);
 
     return (
         <>
