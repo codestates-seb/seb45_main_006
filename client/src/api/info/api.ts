@@ -1,7 +1,15 @@
 import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
+import {
+    GetReqAllInfo,
+    PostReqInfo,
+    PatchReqInfo,
+    DeleteReqInfo,
+    PostReqViewCount,
+    GetReqHottestBoard,
+    PostReqToggleLike,
+} from "@type/info/info.req.dto";
 
 // 정보 게시판 - 리스트 조회
 export const getAllInfo = async ({ search, category, page, size }: GetReqAllInfo) => {
@@ -38,6 +46,20 @@ export const deleteInfo = async ({ infoId }: DeleteReqInfo) => {
 // 정보 게시판 - 조회수 증가 - status code: 200
 export const postViewCount = async ({ infoId }: PostReqViewCount) => {
     const url = `${COMMON_API_PATH.INFO.PATH}/${infoId}`;
+    const { data } = await withAuthApi.post(url);
+    return data;
+};
+
+// 정보/질문 게시판 HOT 게시글 조회
+export const getHottestBoard = async ({ board }: GetReqHottestBoard) => {
+    const url = `/${board}/hottest`;
+    const { data } = await withAuthApi.get(url);
+    return data;
+};
+
+// 정보/질문 게시판 좋아요 생성-삭제
+export const postToggleLike = async ({ board, boardId }: PostReqToggleLike) => {
+    const url = `/likes/${board}/${boardId}`;
     const { data } = await withAuthApi.post(url);
     return data;
 };

@@ -35,3 +35,9 @@ export interface DeleteResInfo {}
 
 // 정보 게시판 - 조회수 증가 - status code: 200
 export interface PostResViewCount {}
+
+// 정보/질문 게시판 HOT 게시글 조회
+export type GetResHottestBoard = Array<InfoDefaultType>;
+
+// 정보/질문 게시판 좋아요 생성-삭제
+export interface PostResToggleLike {}
