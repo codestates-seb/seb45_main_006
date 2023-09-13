@@ -158,13 +158,15 @@ function SignUp2() {
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
                 />
-                <Button
-                    type={authNickname.length > 0 ? "DISABLED" : "STUDY"}
-                    styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${authEmail.length > 0 ? "" : "hover:font-bold"}`}
-                    onClickHandler={() => postCheckNickname({ nickname })}
-                >
-                    <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
-                </Button>
+                {authNickname.length === 0 && (
+                    <Button
+                        type="STUDY"
+                        styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
+                        onClickHandler={() => postCheckNickname({ nickname })}
+                    >
+                        <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
+                    </Button>
+                )}
             </div>
             <SignInput
                 label="비밀번호"

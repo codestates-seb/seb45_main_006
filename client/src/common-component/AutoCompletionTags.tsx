@@ -54,7 +54,7 @@ function AutoCompletionTags({
     return (
         <div className="flex w-full flex-col py-10">
             <div
-                className={`flex flex-col border-borderline px-4 py-6 shadow-sm ${
+                className={`flex flex-col justify-start border-borderline px-4 py-6 shadow-sm ${
                     type === "OUTLINED" ? "rounded-md border-1" : "border-b-1"
                 }`}
                 ref={dropdownRef}
@@ -82,7 +82,7 @@ function AutoCompletionTags({
 
             <div className="relative flex-1">
                 {isDropDownShow ? (
-                    <ol className="absolute top-8 z-10 flex h-180 w-full flex-wrap overflow-y-scroll rounded-2xl border-1 border-primary bg-white p-8">
+                    <ol className="absolute top-8 z-10 flex min-h-100 w-full flex-wrap overflow-auto rounded-2xl border-1 border-primary bg-white p-8">
                         {suggestions.map((v) => (
                             <li
                                 key={v}

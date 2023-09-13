@@ -46,7 +46,7 @@ function SignUp3() {
             </div>
 
             <div className="flex flex-col items-center">
-                <Link to={"/setpro/1"} className="mt-25 flex w-230 justify-center rounded bg-[#888888] p-9">
+                <Link to={"/setpro"} className="mt-25 flex w-230 justify-center rounded bg-[#888888] p-9">
                     <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
                 </Link>
                 <div className="pb-50">
