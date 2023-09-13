@@ -13,6 +13,7 @@ import InfoItem from "./component/InfoItem";
 import Pagination from "@component/Pagination";
 import SkeletonUi from "@component/board/SkeletonUi";
 import BoardHeader from "@component/board/BoardHeader";
+import HotBoard from "@component/board/HotBoard";
 
 import { CATEGORY_NAME } from "@type/info/common";
 import { CATEGORY_TO_ENUM } from "@api/info/constant";
@@ -142,6 +143,7 @@ function Board() {
                 </div>
                 <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                     <Typography type="Label" text="🔥 HOT 게시글" />
+                    <HotBoard board="information" />
                 </div>
             </div>
         </>

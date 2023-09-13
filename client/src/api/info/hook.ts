@@ -22,6 +22,7 @@ import {
 
 import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount, getHottestBoard, postToggleLike } from "./api";
 import { infoKeyFactory } from "./infoKeyFactory";
+import dayjs from "dayjs";
 
 // 정보 게시판 - 리스트 조회
 export const useGetAllInfo = ({ category, search, page, size }: GetReqAllInfo) => {
@@ -54,7 +55,7 @@ export const usePostViewCount = () => {
 // 정보/질문 게시판 HOT 게시글 조회
 export const useGetHottestBoard = ({ board }: GetReqHottestBoard) => {
     return useQuery<GetResHottestBoard, AxiosError, GetResHottestBoard>({
-        queryKey: ["hottest", { board }],
+        queryKey: ["hottest", { board, date: dayjs().format("YYYY-MM-DD") }],
         queryFn: () => getHottestBoard({ board }),
     });
 };
