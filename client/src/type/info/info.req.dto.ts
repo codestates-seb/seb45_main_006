@@ -1,9 +1,9 @@
-import { CATEGORY_TYPE } from "./common";
+import { CATEGORY_NAME, CATEGORY_TYPE } from "./common";
 
 interface InfoDefaultType {
     title: string;
     content: string;
-    category: CATEGORY_TYPE;
+    category: CATEGORY_NAME;
 }
 
 interface SpecifyInfoId {
@@ -14,6 +14,8 @@ interface SpecifyInfoId {
 export interface GetReqAllInfo {
     category?: CATEGORY_TYPE;
     search?: string;
+    page: number;
+    size: number;
 }
 
 // 정보 게시판 - 등록

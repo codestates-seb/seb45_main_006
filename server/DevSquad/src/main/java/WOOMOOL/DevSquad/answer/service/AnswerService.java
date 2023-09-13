@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
@@ -66,6 +67,7 @@ public class AnswerService {
     public Page<Answer> selectAnswerByBoardId(Long boardId, int page, int size) {
         List<Answer> answerList = answerRepository.findByBoardId(boardId);
         answerList = removeBlockUserBoard(answerList);
+        List<Answer> pagingList = answerList.subList(page * size, Math.min(page * size + size, answerList.size()));
         Page<Answer> result = new PageImpl<>(answerList, PageRequest.of(page, size), answerList.size());
         return result;
     }

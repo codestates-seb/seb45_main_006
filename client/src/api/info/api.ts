@@ -1,15 +1,16 @@
-// import { commonApi } from "@api/common/commonApi";
+import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
 
 // 정보 게시판 - 리스트 조회
-export const getAllInfo = async ({ search, category }: GetReqAllInfo) => {
+export const getAllInfo = async ({ search, category, page, size }: GetReqAllInfo) => {
     let url = `${COMMON_API_PATH.INFO.PATH}`;
-    if (category) url += `/${category}`;
-    if (search) url += `?search=${search}`;
+    if (category) url += `/category/${category.toLowerCase()}`;
+    url += `?page=${page}&size=${size}`;
+    if (search) url += `&search=${search}`;
 
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 

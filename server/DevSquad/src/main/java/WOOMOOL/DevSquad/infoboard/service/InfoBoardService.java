@@ -72,7 +72,8 @@ public class InfoBoardService {
         else
             infoBoardList = infoBoardRepository.findByCategoryKeyword(category, search);
         infoBoardList = removeBlockUserBoard(infoBoardList);
-        Page<InfoBoard> result = new PageImpl<>(infoBoardList, PageRequest.of(page, size), infoBoardList.size());
+        List<InfoBoard> pagingList = infoBoardList.subList(page * size, Math.min(page * size + size, infoBoardList.size()));
+        Page<InfoBoard> result = new PageImpl<>(pagingList, PageRequest.of(page, size), infoBoardList.size());
 
         return result;
     }

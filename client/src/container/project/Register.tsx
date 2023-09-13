@@ -9,7 +9,7 @@ import DateChoice from "@container/project/component/DateChoice";
 
 import { usePatchProject, usePostProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 import { GetResDetailProject } from "@type/project/project.res.dto";
 
@@ -20,16 +20,18 @@ export default function Register() {
 
     const { mutate: postProject } = usePostProject();
     const { mutate: patchProject } = usePatchProject();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
+        stack: [""],
         startDate: "",
         deadline: "",
         recruitNum: 0,
-        recruitStatus: false,
+        projectStatus: "",
+        // recruitStatus: false,
     });
 
     useEffect(() => {
@@ -104,7 +106,7 @@ export default function Register() {
         if (isEmpty()) return;
 
         patchProject(
-            { boardId: location.state.boardId, content: inputs.content },
+            { boardId: location.state.boardId, ...inputs },
             {
                 onSuccess: (res) => {
                     navigate("/projects/:projectBoardId", { state: res.boardId });

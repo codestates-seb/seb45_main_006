@@ -9,6 +9,7 @@ import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -91,12 +92,14 @@ public class CommentService {
     public Page<Comment> selectCommentByBoardId(long boardId, int page, int size) {
         List<Comment> commentList = commentRepository.findByBoardId(boardId);
         commentList = removeBlockUserBoard(commentList);
+        List<Comment> pagingList = commentList.subList(page * size, Math.min(page * size + size, commentList.size()));
         Page<Comment> result = new PageImpl<>(commentList, PageRequest.of(page, size), commentList.size());
         return result;
     }
     public Page<Comment> selectCommentByAnswerId(long answerId, int page, int size) {
         List<Comment> commentList = commentRepository.findByAnswerId(answerId);
         commentList = removeBlockUserBoard(commentList);
+        List<Comment> pagingList = commentList.subList(page * size, Math.min(page * size + size, commentList.size()));
         Page<Comment> result = new PageImpl<>(commentList, PageRequest.of(page, size), commentList.size());
         return result;
     }

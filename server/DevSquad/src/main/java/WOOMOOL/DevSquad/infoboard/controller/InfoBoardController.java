@@ -83,7 +83,6 @@ public class InfoBoardController {
     public ResponseEntity getAllInfoBoard(@RequestParam(name = "search", required = false) String search,
                                           @RequestParam @Positive int page,
                                           @RequestParam @Positive int size) {
-        System.out.println("여기서 실행");
         Page<InfoBoard> infoBoardPage = infoBoardService.findAllInfoBoard(null, search, page-1, size);
         List<InfoBoard> infoBoardList = infoBoardPage.getContent();
 
@@ -91,7 +90,7 @@ public class InfoBoardController {
                 HttpStatus.OK);
     }
     //정보게시판 카테고리별로 검색
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity getCategoryInfoBoard(@PathVariable("category") String category,
                                                @RequestParam(name = "search", required = false) String search,
                                                @RequestParam @Positive int page,

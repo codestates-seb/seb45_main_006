@@ -11,10 +11,6 @@ export type GetReqMemberDetail = {
     memberId: number;
 };
 
-export type GetReqMyDetail = {
-    rawPassword: string;
-};
-
 // 마이페이지 - 비밀번호 수정
 export type PatchReqMemberPw = {
     rawPassword: string;

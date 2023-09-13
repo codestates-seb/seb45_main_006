@@ -5,7 +5,7 @@ import { isLoggedInAtom } from "@feature/Global";
 
 import { getItemFromStorage } from "@util/localstorage-helper";
 
-export const useCheckUser = ({ memberId, comparedMemberId }: { memberId: number; comparedMemberId?: number }) => {
+export const useCheckUser = ({ memberId, comparedMemberId }: { memberId?: number; comparedMemberId?: number }) => {
     const isLoggedIn = useRecoilValue(isLoggedInAtom);
 
     const [isMine, setIsMine] = useState(false);

@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { useGetMemberDetail } from "@api/member/hook";
 import { usePatchAnswerComment, useDeleteAnswerComment, usePostAnswerCommentRe } from "@api/answer/hook";
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 import dayjs from "dayjs";
 import MDEditor from "@uiw/react-md-editor";
@@ -15,36 +14,26 @@ import "@uiw/react-markdown-preview/markdown.css";
 
 import MarkdownEditor from "@component/MarkdownEditor";
 import Typography from "@component/Typography";
+import UserProfile from "@component/user/UserProfile";
 
 import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
 
-const dummyUser = {
-    memberId: 5,
-    profilePicture:
-        "https://dszw1qtcnsa5e.cloudfront.net/community/20220519/453159ca-e328-429c-9b3f-460fc592d963/%EA%B7%80%EC%97%AC%EC%9A%B4%EB%AA%B0%EB%9D%BC%EB%AA%A8%EC%BD%94%EC%BD%94.png",
-    nickname: "모코코",
-    githubId: "mococo~",
-    introduction: "update",
-    listEnroll: true,
-    position: ["Front", "Back"],
-    stack: ["Javascript", "Typescript", "React.js", "Node.js", "Next.js", "BootStrap", "tailwindcss"],
-};
-
 export const OneCommentAnswer = ({
     v,
     writerId,
     questionId,
     answerId,
+    refecthAnswerComments,
 }: {
     v: CommentDefaultTypeWithRe;
     writerId: number;
     questionId: number;
     answerId: number;
+    refecthAnswerComments: () => void;
 }) => {
-    const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
     const [isEdit, setIsEdit] = useState(false);
@@ -53,7 +42,7 @@ export const OneCommentAnswer = ({
     const [nextComment, setNextComment] = useState("");
 
     const { fireToast, createToast, errorToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { mutate: patchAnswerComment } = usePatchAnswerComment();
     const { mutate: deleteAnswerComment } = useDeleteAnswerComment();
     const { mutate: postAnswerCommentRe } = usePostAnswerCommentRe();
@@ -96,7 +85,7 @@ export const OneCommentAnswer = ({
                                 content: "댓글이 삭제되었습니다!",
                                 isConfirm: false,
                             });
-                            // TODO: 댓글 리스트 조회
+                            refecthAnswerComments();
                         },
                         onError: (err) => {
                             console.log(err);
@@ -121,6 +110,8 @@ export const OneCommentAnswer = ({
                             content: "댓글이 등록되었습니다!",
                             isConfirm: false,
                         });
+                        setNextComment("");
+                        refecthAnswerComments();
                     },
                     // TODO: 에러 분기
                     onError: (err) => {
@@ -136,9 +127,7 @@ export const OneCommentAnswer = ({
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
-                    <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                        {user && <img src={user.profilePicture} alt="" />}
-                    </div>
+                    <UserProfile size="sm" profilePicture={v.profilePicture} />
                     <Typography type="Highlight" text={v.nickname} />
                     {isSameUser && (
                         <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
@@ -201,10 +190,7 @@ export const OneCommentAnswer = ({
                             <div className="flex rotate-180 items-end p-8">
                                 <BiReply />
                             </div>
-                            <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                                <img src={dummyUser.profilePicture} alt="" />
-                            </div>
-                            <Typography type="Highlight" text={dummyUser.nickname} />
+                            <UserProfile size="sm" mine={true} />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>
@@ -234,7 +220,13 @@ export const OneCommentAnswer = ({
                             <BiReply />
                         </div>
                         <div className="flex-1">
-                            <OneCommentAnswer v={v} writerId={writerId} questionId={questionId} answerId={answerId} />
+                            <OneCommentAnswer
+                                v={v}
+                                writerId={writerId}
+                                questionId={questionId}
+                                answerId={answerId}
+                                refecthAnswerComments={refecthAnswerComments}
+                            />
                         </div>
                     </div>
                 ))}

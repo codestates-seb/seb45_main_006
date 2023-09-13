@@ -45,7 +45,7 @@ function MarkdownEditor({
             />
             <Typography
                 type="Description"
-                text={`${content.length} / ${maxlength}`}
+                text={`${content?.length || 0} / ${maxlength}`}
                 styles="absolute bottom-10 right-10"
             />
         </div>

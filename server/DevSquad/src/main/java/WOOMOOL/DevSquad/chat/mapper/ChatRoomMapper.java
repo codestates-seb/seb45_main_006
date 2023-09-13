@@ -56,6 +56,7 @@ public interface ChatRoomMapper {
     // 메시지 리스트에서 가장 최근 메시지 찾기
     private Message lastMessage(List<Message> messageList){
 
+
         Optional<Message> optionalMessage = messageList.stream()
                 .max(Comparator.comparingLong(Message::getMessageId));
 

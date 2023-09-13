@@ -1,5 +1,5 @@
 import { CATEGORY_TYPE } from "./common";
-import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
+import { PageInfo } from "@type/common";
 
 export interface InfoDefaultType {
     boardId: number;
@@ -7,17 +7,21 @@ export interface InfoDefaultType {
     content: string;
     memberId: number;
     nickname: string;
+    profilePicture: string;
     viewCount: number;
     category: CATEGORY_TYPE;
-    infoBoardStatus: string;
-    commentList: Array<CommentDefaultTypeWithRe>;
+    infoBoardStatus: "INFOBOARD_POSTED" | "INFOBOARD_DELETED";
     createdAt: string;
     modifiedAt: string;
+    liked: boolean;
+    likeCount: number;
+    bookmarked: boolean;
 }
 
 // 정보 게시판 - 리스트 조회
 export interface GetResAllInfo {
     data: Array<InfoDefaultType>;
+    pageInfo: PageInfo;
 }
 
 // 정보 게시판 - 등록  - status code: 200

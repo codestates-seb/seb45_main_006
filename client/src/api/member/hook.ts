@@ -20,7 +20,6 @@ import {
     PatchReqMember,
     PostReqBlockMember,
     DeleteReqBlockMember,
-    GetReqMyDetail,
     PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 import {
@@ -50,10 +49,10 @@ export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const useGetMyDetail = ({ rawPassword }: GetReqMyDetail) => {
+export const useGetMyDetail = () => {
     return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
-        queryFn: () => getMyDetail({ rawPassword }),
+        queryFn: getMyDetail,
     });
 };
 

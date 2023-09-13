@@ -7,21 +7,10 @@ import {
     GetReqMemberDetail,
     PostReqBlockMember,
     DeleteReqBlockMember,
-    GetReqMyDetail,
     PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 
-// TODO: 에러나는지 보고 withAuth와 common으로 구분하여 요청
-// 유저 리스트 - 멤버 리스트 조회하기 & 차단 유저 제외
 export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
-    const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
-    const url = `${COMMON_API_PATH.MEMBER.MY_LIST}?${query}`;
-    const { data } = await withAuthApi.get(url);
-    return data;
-};
-
-// 유저 리스트 - 멤버 리스트 조회하기
-export const getAllMembersWithoutBlock = async ({ page, stacks, posiions }: GetReqAllMembers) => {
     const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
     const url = `${COMMON_API_PATH.MEMBER.LIST}?${query}`;
     const { data } = await commonApi.get(url);
@@ -36,9 +25,9 @@ export const getMemberDetail = async ({ memberId }: GetReqMemberDetail) => {
 };
 
 // 마이페이지 - 내 정보 상세 조회하기
-export const getMyDetail = async ({ rawPassword }: GetReqMyDetail) => {
+export const getMyDetail = async () => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
-    const { data } = await withAuthApi.get(url, { data: rawPassword });
+    const { data } = await withAuthApi.get(url);
     return data;
 };
 

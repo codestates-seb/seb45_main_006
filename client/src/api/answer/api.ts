@@ -9,7 +9,24 @@ import {
     PatchReqAnswerComment,
     DeleteReqAnswerComment,
     PostReqAnswerCommentRe,
+    GetReqAnswer,
+    GetReqAnswerComment,
 } from "@type/answer/answer.req.dto";
+
+// 질문 게시판 - 답변 리스트
+export const getAnswer = async ({ page, size, questionId }: GetReqAnswer) => {
+    const url = MAKE_API_PATH.ANSWER.list({ questionId, page, size });
+    const { data } = await withAuthApi.get(url);
+    return data;
+};
+
+// 질문 게시판 - 대댓글 리스트
+// /question/{board-id}/answer/{answer-id}/comment?page=2&size=5
+export const getAnswerComments = async ({ page, size, questionId, answerId }: GetReqAnswerComment) => {
+    const url = MAKE_API_PATH.ANSWER.commentList({ questionId, page, size, answerId });
+    const { data } = await withAuthApi.get(url);
+    return data;
+};
 
 // 질문 게시판 - 답변 등록
 export const postAnswer = async ({ questionId, ...requstObj }: PostReqAnswer) => {

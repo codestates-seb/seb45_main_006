@@ -1,6 +1,19 @@
 import { withAuthApi } from "@api/common/withAuthApi";
 import { MAKE_API_PATH } from "@api/constant";
-import { PostReqComment, PatchReqComment, DeleteReqComment, PostReqCommentRe } from "@type/comment/comment.req.dto";
+import {
+    GetReqComment,
+    PostReqComment,
+    PatchReqComment,
+    DeleteReqComment,
+    PostReqCommentRe,
+} from "@type/comment/comment.req.dto";
+
+// 일반 게시판 - 댓글 리스트
+export const getComment = async ({ board, boardId, page, size }: GetReqComment) => {
+    const url = MAKE_API_PATH.COMMENT.list({ board, boardId, page, size });
+    const { data } = await withAuthApi.get(url);
+    return data;
+};
 
 // 게시판 - 댓글 등록
 export const postComment = async ({ board, boardId, ...requstObj }: PostReqComment) => {

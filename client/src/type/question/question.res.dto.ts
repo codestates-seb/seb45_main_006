@@ -1,4 +1,4 @@
-import { AnswerDefaultType } from "@type/answer/answer.res.dto";
+import { PageInfo } from "@type/common";
 
 export interface QuestionDefaultType {
     boardId: number;
@@ -6,17 +6,21 @@ export interface QuestionDefaultType {
     content: string;
     memberId: number;
     nickname: string;
+    profilePicture: string;
     viewCount: number;
-    QuestionBoardStatus: string;
+    QuestionBoardStatus: "QUESTIONBOARD_POSTED" | "QUESTIONBOARD_DELELTED";
     answered: boolean;
+    liked: boolean;
+    likeCount: number;
+    bookmarked: boolean;
     createdAt: string;
     modifiedAt: string;
-    answerList: Array<AnswerDefaultType>;
 }
 
 // 질문 게시판 - 리스트 조회
 export interface GetResAllQuestion {
     data: QuestionDefaultType;
+    pageInfo: PageInfo;
 }
 
 // 질문 게시판 - 등록  - status code: 200

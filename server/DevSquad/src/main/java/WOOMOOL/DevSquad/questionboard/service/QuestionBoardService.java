@@ -63,7 +63,7 @@ public class QuestionBoardService {
     }
 
 
-    //조회할때 카테고리가 있는지 없는지 검색어가 있는지 없지에 따라 구분
+    //조회할때 검색어가 있는지 없는지 검색어가 있는지 없지에 따라 구분
     public Page<QuestionBoard> findAllQuestionBoard(String search, int page, int size) {
         List<QuestionBoard> questionBoardList;
         if(search==null)
@@ -71,7 +71,8 @@ public class QuestionBoardService {
         else
             questionBoardList = questionBoardRepository.findByKeyword(search);
         questionBoardList = removeBlockUserBoard(questionBoardList);
-        Page<QuestionBoard> result = new PageImpl<>(questionBoardList, PageRequest.of(page, size), questionBoardList.size());
+        List<QuestionBoard> pagingList = questionBoardList.subList(page * size, Math.min(page * size + size, questionBoardList.size()));
+        Page<QuestionBoard> result = new PageImpl<>(pagingList, PageRequest.of(page, size), questionBoardList.size());
 
         return result;
     }
