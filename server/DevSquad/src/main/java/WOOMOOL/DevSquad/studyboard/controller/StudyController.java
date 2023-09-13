@@ -41,23 +41,24 @@ public class StudyController {
     // 스터디 페이지 조회
     @GetMapping("/list")
     public ResponseEntity getStuies(@RequestParam int page,
-                                      @RequestParam(required = false) List<String> stacks) {
+                                    @RequestParam int size,
+                                    @RequestParam(required = false) List<String> stacks) {
         // 스택 필터링
         if (stacks != null) {
 
-            List<Study> studies = studyService.getStudiesByStack(page - 1, stacks);
-            studies = studyService.removeBlockUserBoard(studies);
+            Page<Study> studyPage = studyService.getStudiesByStack(page - 1, size, stacks);
+            List<Study> studyList = studyPage.getContent();
 
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
-            return new ResponseEntity(response, HttpStatus.OK);
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
 
         } else {
 
-            List<Study> studies = studyService.getStudies(page - 1);
-            studies = studyService.removeBlockUserBoard(studies);
+            Page<Study> studyPage = studyService.getStudies(page - 1, size);
+            List<Study> studyList = studyPage.getContent();
 
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
 
         }
 

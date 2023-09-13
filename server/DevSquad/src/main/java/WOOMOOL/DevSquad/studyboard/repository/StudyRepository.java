@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("SELECT s FROM Study s WHERE s.studyStatus != 'STUDY_DELETED' ORDER BY s.createdAt DESC ")
-    Page<Study> findByStudyStatus(Pageable pageable);
+    List<Study> findByStudyStatus();
   
     @Query("SELECT s FROM Study s WHERE s.studyStatus = 'STUDY_POSTED' and s.memberProfile.memberProfileId = :memberProfileId")
     List<Study> findByStudyStatusAndMemberProfile(@Param("memberProfileId") Long memberProfileId);
@@ -26,5 +26,5 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             "AND s.studyStatus != 'STUDY_DELETED' " +
             "GROUP BY s HAVING COUNT(st) IN :tagCount " +
             "ORDER BY s.createdAt DESC")
-    Page<Study> findAllByStackTags(Pageable pageable, List<String> tagNames, Long tagCount);
+    List<Study> findAllByStackTags(List<String> tagNames, Long tagCount);
 }

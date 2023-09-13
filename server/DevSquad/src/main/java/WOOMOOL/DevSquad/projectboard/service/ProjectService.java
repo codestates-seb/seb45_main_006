@@ -7,6 +7,7 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -50,22 +51,28 @@ public class ProjectService {
 
     // 프로젝트 리스트 조회
     @Transactional(readOnly = true)
-    public List<Project> getProjects(int page) {
+    public Page<Project> getProjects(int page, int size) {
 
-        Page<Project> projectPage = projectRepository.findByProjectStatus(PageRequest.of(page,5, Sort.by("createdAt")));
-        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
+        List<Project> projectList = projectRepository.findByProjectStatus();
+        projectList = removeBlockUserBoard(projectList);
 
-        return projectList;
+        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
+        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+
+        return response;
     }
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public List<Project> getProjectsByStack(int page, List<String> stacks) {
+    public Page<Project> getProjectsByStack(int page, int size, List<String> stacks) {
 
-        Page<Project> projectPage = projectRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
-        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
+        List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
+        projectList = removeBlockUserBoard(projectList);
 
-        return projectList;
+        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
+        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+
+        return response;
     }
 
     //프로젝트 페이징

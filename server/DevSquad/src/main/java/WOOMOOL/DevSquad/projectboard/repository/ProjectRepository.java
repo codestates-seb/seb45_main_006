@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("SELECT p FROM Project p WHERE p.projectStatus != 'PROJECT_DELETED' ORDER BY p.createdAt DESC ")
-    Page<Project> findByProjectStatus(Pageable pageable);
+    List<Project> findByProjectStatus();
 
     @Query("SELECT p FROM Project p WHERE p.projectStatus = 'PROJECT_POSTED' and p.memberProfile.memberProfileId = :memberProfileId")
     List<Project> findByProjectStatusAndMemberProfile(@Param("memberProfileId") Long memberProfileId);
@@ -25,6 +25,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "AND p.projectStatus != 'PROJECT_DELETED' " +
             "GROUP BY p HAVING COUNT(st) IN :tagCount " +
             "ORDER BY p.createdAt DESC")
-    Page<Project> findAllByStackTags(Pageable pageable, List<String> tagNames, Long tagCount);
+    List<Project> findAllByStackTags(List<String> tagNames, Long tagCount);
 
 }
