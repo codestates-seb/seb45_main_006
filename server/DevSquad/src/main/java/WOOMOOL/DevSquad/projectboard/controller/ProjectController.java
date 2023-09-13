@@ -40,23 +40,24 @@ public class ProjectController {
     // 프로젝트 페이지 조회
     @GetMapping("/list")
     public ResponseEntity getProjects(@RequestParam int page,
+                                      @RequestParam int size,
                                       @RequestParam(required = false) List<String> stacks) {
         // 스택 필터링
         if (stacks != null) {
 
-            List<Project> projects = projectService.getProjectsByStack(page - 1, stacks);
-            projects = projectService.removeBlockUserBoard(projects);
+            Page<Project> projectPage = projectService.getProjectsByStack(page - 1, size, stacks);
+            List<Project> projectList = projectPage.getContent();
 
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
-            return new ResponseEntity(response, HttpStatus.OK);
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
 
         } else {
 
-            List<Project> projects = projectService.getProjects(page - 1);
-            projects = projectService.removeBlockUserBoard(projects);
+            Page<Project> projectPage = projectService.getProjects(page - 1, size);
+            List<Project> projectList = projectPage.getContent();
 
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projects);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
 
         }
 
