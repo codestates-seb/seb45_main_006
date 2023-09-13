@@ -140,7 +140,8 @@ export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회 수 ${info.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    <Typography text={`댓글 수 ${info.commentList.length}`} type="SmallLabel" color="text-gray-600" />
+                    {/* TODO: 댓글 수 */}
+                    <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
@@ -175,11 +176,8 @@ export const QuestionItemHor = ({ question }: { question: QuestionDefaultType })
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회 수 ${question.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    <Typography
-                        text={`답변 수 ${question.answerList.length}`}
-                        type="SmallLabel"
-                        color="text-gray-600"
-                    />
+                    {/* TODO: 답변수 */}
+                    <Typography text={`답변 수 ${0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">

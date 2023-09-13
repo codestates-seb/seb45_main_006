@@ -22,7 +22,6 @@ function BoardHeader({
     category?: CATEGORY_NAME | "";
     setCategory?: (v: CATEGORY_NAME | "") => void;
 }) {
-    console.log(category);
     return (
         <div className="fixed z-10 flex w-full max-w-screen-xl flex-col  bg-white p-8">
             <div className="flex justify-end">

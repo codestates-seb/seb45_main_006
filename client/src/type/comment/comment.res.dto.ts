@@ -1,3 +1,5 @@
+import { PageInfo } from "@type/common";
+
 export interface CommentDefaultType {
     commentId: number;
     memberId: number;
@@ -14,6 +16,12 @@ export interface CommentDefaultType {
 
 export interface CommentDefaultTypeWithRe extends CommentDefaultType {
     commentList: Array<CommentDefaultTypeWithRe>;
+}
+
+// 게시판 - 댓글 리스트
+export interface GetResComment {
+    data: Array<CommentDefaultTypeWithRe>;
+    pageInfo: PageInfo;
 }
 
 // 게시판 - 댓글 등록 - status code: 201

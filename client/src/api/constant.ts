@@ -1,4 +1,4 @@
-import { SpecifyBoard, SpecifyComment } from "@type/comment/comment.req.dto";
+import { GetReqComment, SpecifyBoard, SpecifyComment } from "@type/comment/comment.req.dto";
 import {
     SpecifyAnswer,
     SpecifyQuestion,
@@ -54,6 +54,8 @@ export const COMMON_API_PATH = {
 
 export const MAKE_API_PATH = {
     COMMENT: {
+        list: ({ board, boardId, page, size }: GetReqComment) =>
+            `/${board}/${boardId}/comment?page=${page}&size=${size}`,
         add: ({ board, boardId }: SpecifyBoard) => `/${board}/${boardId}/comment`,
         addRe: ({ board, boardId, commentId }: SpecifyComment) => `/${board}/${boardId}/comment/${commentId}`,
         update: ({ board, boardId, commentId }: SpecifyComment) => `/${board}/${boardId}/comment/${commentId}`,

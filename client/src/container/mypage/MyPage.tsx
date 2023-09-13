@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import { useRecoilValue } from "recoil";
-import { rawPasswordAtom } from "@feature/Global";
+// import { useRecoilValue } from "recoil";
+// import { rawPasswordAtom } from "@feature/Global";
 
 import { useGetMyDetail } from "@api/member/hook";
 import { useToast } from "@hook/useToast";
@@ -25,10 +25,11 @@ function MyPage() {
     const curNav = searchParams.get("nav");
     const auth = searchParams.get("auth");
 
-    const rawPassword = useRecoilValue(rawPasswordAtom);
+    // TODO: 로그인 후 마이페이지 조회
+    // const rawPassword = useRecoilValue(rawPasswordAtom);
     const myId = getItemFromStorage("memberId");
 
-    const { data: user, isError } = useGetMyDetail({ rawPassword });
+    const { data: user, isError } = useGetMyDetail();
 
     const { fireToast, createToast } = useToast();
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -9,7 +9,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 
 import { useGetMemberDetail } from "@api/member/hook";
 import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
-import { usePostComment } from "@api/comment/hook";
+import { usePostComment, useGetComment } from "@api/comment/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
@@ -26,6 +26,7 @@ import { InfoDefaultType } from "@type/info/info.res.dto";
 import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
 import bookmark_unfill from "@assets/bookmark_unfill.svg";
 import bookmark_fill from "@assets/bookmark_fill.svg";
+import Pagination from "@component/Pagination";
 
 export const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
     const tag = CATEGORY_TO_NAME[category];
@@ -110,7 +111,8 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    <Typography text={`댓글 수 ${info.commentList.length}`} type="SmallLabel" color="text-gray-600" />
+                    {/* TODO: 댓글 수  */}
+                    <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">
@@ -133,7 +135,22 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
 };
 
 function InfoItem({ info }: { info: InfoDefaultType }) {
-    const { commentList } = info;
+    // 페이지 필터
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+
+    const { data: commentList } = useGetComment({
+        board: "information",
+        boardId: info.boardId,
+        page: curPage,
+        size: 10,
+    });
+
+    useEffect(() => {
+        if (commentList && commentList?.pageInfo.totalElements) {
+            setTotalItems(commentList?.pageInfo.totalElements);
+        }
+    }, [commentList]);
 
     const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
     const { fireToast, errorToast } = useToast();
@@ -204,14 +221,17 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`댓글 ${commentList.length}개`} />
+                    <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
                     {isLoggedIn && (
                         <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
                     )}
                     <div className="my-16">
-                        {commentList.map((v) => (
-                            <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
-                        ))}
+                        {commentList?.data &&
+                            Array.isArray(commentList.data) &&
+                            commentList.data.map((v) => (
+                                <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
+                            ))}
+                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
                     </div>
                 </div>
             )}

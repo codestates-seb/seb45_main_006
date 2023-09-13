@@ -137,6 +137,7 @@ function QuestionItem({ question }: { question: QuestionDefaultType }) {
     }, [answerList]);
 
     const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
+    const { reqLoginToUserToast } = useToast();
 
     const [isOpened, setIsOpened] = useState(false);
     const [answer, setAnswer] = useState<string>("");
@@ -144,6 +145,10 @@ function QuestionItem({ question }: { question: QuestionDefaultType }) {
     const { mutate: postViewCount } = usePostViewCount();
 
     const onAddViewCount = () => {
+        if (!isLoggedIn) {
+            reqLoginToUserToast();
+            return;
+        }
         if (!isOpened) {
             // 열기 버튼 클릭 시 - 조회수 증가 api 요청 -> 요청 성공/실패 처리 X
             postViewCount({ questionId: question.boardId });
