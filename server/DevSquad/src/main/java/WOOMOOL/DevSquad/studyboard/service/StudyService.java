@@ -51,22 +51,28 @@ public class StudyService {
 
     // 스터디 리스트 조회
     @Transactional(readOnly = true)
-    public List<Study> getStudies(int page) {
+    public Page<Study> getStudies(int page, int size) {
 
-        Page<Study> studyPage = studyRepository.findByStudyStatus(PageRequest.of(page,5, Sort.by("createdAt")));
-        List<Study> studyList = removeBlockUserBoard(studyPage.getContent());
+        List<Study> studyList = studyRepository.findByStudyStatus();
+        studyList = removeBlockUserBoard(studyList);
 
-        return studyList;
+        List<Study> paging = studyList.subList(page * size, Math.min(page * size + size, studyList.size()));
+        Page<Study> response = new PageImpl<>(paging, PageRequest.of(page, size), studyList.size());
+
+        return response;
     }
 
     // 스택 별로 필터링
     @Transactional(readOnly = true)
-    public List<Study> getStudiesByStack(int page, List<String> stacks) {
+    public Page<Study> getStudiesByStack(int page, int size, List<String> stacks) {
 
-        Page<Study> studyPage = studyRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
-        List<Study> studyList = removeBlockUserBoard(studyPage.getContent());
+        List<Study> studyList = studyRepository.findAllByStackTags(stacks, stacks.stream().count());
+        studyList = removeBlockUserBoard(studyList);
 
-        return studyList;
+        List<Study> paging = studyList.subList(page * size, Math.min(page * size + size, studyList.size()));
+        Page<Study> response = new PageImpl<>(paging, PageRequest.of(page, size), studyList.size());
+
+        return response;
     }
 
     //스터디 페이징
