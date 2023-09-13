@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { useRecoilState } from "recoil";
 import { authCodeAtom, authEmailAtom, authNicknameAtom } from "@feature/Global";
@@ -26,7 +26,14 @@ function SignUp2() {
     const [searchParams] = useSearchParams();
     const redirectedEmail = searchParams.get("email");
 
-    const { errorToast, fireToast } = useToast();
+    useEffect(() => {
+        if (redirectedEmail) {
+            setIsRequestAuthenticate(true);
+            setAuthenticatedEmail(redirectedEmail);
+        }
+    }, [redirectedEmail]);
+
+    const { errorToast, fireToast, createToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
 
     const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();
@@ -180,9 +187,11 @@ function SignUp2() {
                 description="입력된 비밀번호와 다릅니다."
             />
             <div className="flex justify-center pt-20">
-                <SignButton type="OUTLINED" onClickHandler={() => navigate("/signup/1")} styles="mr-20">
-                    <Typography type="SmallLabel" text="이전" styles="font-bold" />
-                </SignButton>
+                <Link to={"/signup/1"}>
+                    <SignButton type="OUTLINED" styles="mr-20">
+                        <Typography type="SmallLabel" text="이전" styles="font-bold" />
+                    </SignButton>
+                </Link>
                 <SignButton type="FILLED" onClickHandler={onHandleSignUp}>
                     <Typography type="SmallLabel" text="다음" color="text-white" styles="font-bold" />
                 </SignButton>
