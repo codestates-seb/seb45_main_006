@@ -1,11 +1,4 @@
 // 기술스택 리스트
-export interface GetDefaultStack {
-    stackId: number;
-    stackName: string;
-}
-
+export type GetDefaultStack = Array<string>;
 // 포지션 리스트
-export interface GetDefaultPosition {
-    positionId: number;
-    positionName: string;
-}
+export type GetDefaultPosition = Array<string>;

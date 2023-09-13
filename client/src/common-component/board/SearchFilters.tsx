@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, RefObject } from "react";
 
+import { useRecoilValue } from "recoil";
+import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
+
 import Typography from "@component/Typography";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 
 import { VscTriangleDown } from "react-icons/vsc";
 import { AiFillCloseCircle } from "react-icons/ai";
-
-import { defaultStack, defaultPosition } from "@component/mockData";
 
 export const ShowResult = ({
     text,
@@ -111,6 +112,9 @@ function SearchFilters({
         setClickPos(false);
         setClickOrder(true);
     };
+
+    const defaultPosition = useRecoilValue(defaultPostionAtom);
+    const defaultStack = useRecoilValue(defaultStackAtom);
 
     return (
         <div className="mb-8 w-full sm:w-480" ref={dropdownRef}>
