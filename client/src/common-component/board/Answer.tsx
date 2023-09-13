@@ -1,11 +1,17 @@
 import { useState } from "react";
 
 import { useGetMemberDetail } from "@api/member/hook";
-import { usePostAnswer, usePatchAnswer, useDeleteAnswer, usePostAnswerComment } from "@api/answer/hook";
+import {
+    usePostAnswer,
+    usePatchAnswer,
+    useDeleteAnswer,
+    usePostAnswerComment,
+    useGetAnswerComment,
+} from "@api/answer/hook";
 
 import { useToast } from "@hook/useToast";
 import { useCheckUser } from "@hook/useCheckUser";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 import dayjs from "dayjs";
 import MDEditor from "@uiw/react-md-editor";
@@ -38,7 +44,7 @@ export const EditAnswer = ({
     const { mutate: postAnswer } = usePostAnswer();
 
     const { fireToast, errorToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "답변", content }];
@@ -99,6 +105,7 @@ export const OneAnswer = ({
     nickname: string;
 }) => {
     const { data: user } = useGetMemberDetail({ memberId: v.memberId });
+
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
     const [isEdit, setIsEdit] = useState(false);
@@ -106,11 +113,21 @@ export const OneAnswer = ({
     const [answerId, setAnswerId] = useState(0);
     const [nextComment, setNextComment] = useState("");
 
+    const [isShowComment, setIsShowComment] = useState(false);
+
     const { fireToast, createToast, errorToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
+
     const { mutate: patchAnswer } = usePatchAnswer();
     const { mutate: deleteAnswer } = useDeleteAnswer();
     const { mutate: postAnswerComment } = usePostAnswerComment();
+
+    const { data: commentList } = useGetAnswerComment({
+        page: 1,
+        size: 100,
+        questionId: boardId,
+        answerId,
+    });
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "댓글", content: curAnswer }];
@@ -188,8 +205,6 @@ export const OneAnswer = ({
         }
     };
 
-    const onViewCommentsHandler = () => {};
-
     return (
         <>
             <div className="relative flex items-center justify-between">
@@ -254,7 +269,10 @@ export const OneAnswer = ({
                     )}
                 </div>
             )}
-            <button className="my-8 w-fit border-1 border-borderline px-8 py-4" onClick={onViewCommentsHandler}>
+            <button
+                className="my-8 w-fit border-1 border-borderline px-8 py-4"
+                onClick={() => setIsShowComment(!isShowComment)}
+            >
                 <Typography text="답글" type="Description" />
             </button>
             {answerId > 0 && (
@@ -289,9 +307,10 @@ export const OneAnswer = ({
                 </div>
             )}
 
-            {Array.isArray(v.commentList) &&
-                v.commentList.length > 0 &&
-                v.commentList.map((v) => (
+            {isShowComment &&
+                Array.isArray(commentList) &&
+                commentList.length > 0 &&
+                commentList.map((v) => (
                     <div className="flex" key={`${v.commentId}-${v.memberId}`}>
                         <div className="flex rotate-180 items-end p-8">
                             <BiReply />

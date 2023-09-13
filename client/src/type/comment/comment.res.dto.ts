@@ -2,6 +2,7 @@ export interface CommentDefaultType {
     commentId: number;
     memberId: number;
     nickname: string;
+    profilePicture: string;
     boardId: number;
     answerId: null | number;
     parentId: null | number;

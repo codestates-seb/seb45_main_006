@@ -12,12 +12,17 @@ export interface AnswerDefaultType {
     answerStatus: "ANSWER_POSTED" | "ANSER_DELETED";
     createdAt: string;
     modifiedAt: string;
-    commentList: Array<CommentDefaultTypeWithRe>;
 }
 
 // 질문 게시판 - 답변 리스트
 export interface GetResAnswer {
     data: Array<AnswerDefaultType>;
+    pageInfo: PageInfo;
+}
+
+// 질문 게시판 - 대댓글 리스트
+export interface GetResAnswerComment {
+    data: Array<CommentDefaultTypeWithRe>;
     pageInfo: PageInfo;
 }
 

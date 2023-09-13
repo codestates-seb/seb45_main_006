@@ -17,6 +17,12 @@ export interface GetReqAnswer extends SpecifyQuestion {
     size: number;
 }
 
+// 질문 게시판 - 대댓글 리스트
+export interface GetReqAnswerComment extends SpecifyAnswer {
+    page: number;
+    size: number;
+}
+
 // 질문 게시판 - 답변 등록
 export interface PostReqAnswer extends SpecifyQuestion {
     content: string;

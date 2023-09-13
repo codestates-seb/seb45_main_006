@@ -11,6 +11,7 @@ import {
     DeleteReqAnswerComment,
     PostReqAnswerCommentRe,
     GetReqAnswer,
+    GetReqAnswerComment,
 } from "@type/answer/answer.req.dto";
 import {
     PostResAnswer,
@@ -22,6 +23,7 @@ import {
     DeleteResAnswerComment,
     PostResAnswerCommentRe,
     GetResAnswer,
+    GetResAnswerComment,
 } from "@type/answer/answer.res.dto";
 import {
     postAnswer,
@@ -33,13 +35,23 @@ import {
     postAnswerCommentRe,
     deleteAnswerComment,
     getAnswer,
+    getAnswerComments,
 } from "@api/answer/api";
 
 // 질문 게시판 - 답변 리스트
 export const useGetAnswer = ({ page, size, questionId }: GetReqAnswer) => {
     return useQuery<GetResAnswer, AxiosError, GetResAnswer>({
-        queryKey: ["answers", { page, size }],
+        queryKey: ["answers", { page, size, questionId }],
         queryFn: () => getAnswer({ page, size, questionId }),
+    });
+};
+
+// 질문 게시판 - 답변의 댓글 리스트
+export const useGetAnswerComment = ({ page, size, questionId, answerId }: GetReqAnswerComment) => {
+    return useQuery<GetResAnswerComment, AxiosError, GetResAnswerComment>({
+        queryKey: ["answers", { page, size, questionId, answerId }],
+        queryFn: () => getAnswerComments({ page, size, questionId, answerId }),
+        enabled: !!answerId,
     });
 };
 
