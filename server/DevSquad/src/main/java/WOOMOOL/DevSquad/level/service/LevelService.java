@@ -1,11 +1,13 @@
 package WOOMOOL.DevSquad.level.service;
 
+import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.board.entity.Board;
 import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
@@ -104,30 +106,48 @@ public class LevelService {
 
     }
 
-    public void getExpFrom10MoreLikes(InfoBoard infoBoard, QuestionBoard questionBoard) {
+    public void getExpFrom10MoreLikes(InfoBoard infoBoard) {
 
-        MemberProfile memberProfile;
-        // 게시판 글 쓴 회원프로필 정보
-        if (infoBoard == null) {
-            memberProfile = questionBoard.getMemberProfile();
-        } else {
-            memberProfile = infoBoard.getMemberProfile();
-        }
         // 회원 레벨 정보
-        Level level = memberProfile.getLevel();
+        Level level = getMemberProfileLevel(infoBoard.getMemberProfile());
 
         if (level.getCurrentExp() < level.getMaxExp()) {
-            // 정보게시판이 정보가 들어오고 좋아요가 10개 단위면 경험치 +5
-            if (infoBoard != null && infoBoard.getLikesList().size() % 10 == 0) {
+            // 좋아요 계수
+            int coefficient = infoBoard.getLikeExp();
+            // 정보게시판이 정보가 들어오고 좋아요가 10개 받을 때마다 경험치 +5
+            if (infoBoard.getLikesList().size() % 10 * coefficient == 0) {
 
                 level.setCurrentExp(level.getCurrentExp() + 5);
-                // 질문게시판 정보가 들어오고 좋아요가 10개 단위면 경험치 +5
-            } else if (questionBoard != null && questionBoard.getLikesList().size() % 10 == 0) {
-
-                level.setCurrentExp(level.getCurrentExp() + 5);
+                // 계수 1 증가
+                infoBoard.setLikeExp(coefficient + 1);
             }
-
         }
+    }
+
+    public void ㄱgetExpFrom10MoreLikes(QuestionBoard questionBoard) {
+
+        // 회원 레벨 정보
+        Level level = getMemberProfileLevel(questionBoard.getMemberProfile());
+
+        if (level.getCurrentExp() < level.getMaxExp()) {
+            // 좋아요 계수
+            int coefficient = questionBoard.getLikeExp();
+            // 정보게시판이 정보가 들어오고 좋아요가 10개 받을 때마다 경험치 +5
+            if (questionBoard.getLikesList().size() % 10 * coefficient == 0) {
+
+                level.setCurrentExp(level.getCurrentExp() + 5);
+                // 계수 1 증가
+                questionBoard.setLikeExp(coefficient + 1);
+            }
+        }
+    }
+
+    public void getExpFromAcceptedAnswer(Answer answer) {
+
+        MemberProfile memberProfile = answer.getMemberProfile();
+        Level level = memberProfile.getLevel();
+
+        level.setCurrentExp(level.getCurrentExp() + 10);
     }
 
 
@@ -157,5 +177,11 @@ public class LevelService {
         int questionNum = questionBoardRepository.findAllBy10MoreLikedByMemberProfile(memberProfileId).size();
 
         return infoNum + questionNum;
+    }
+
+    // 회원 레벨 정보 가져오기
+    private Level getMemberProfileLevel(MemberProfile memberProfile) {
+
+        return memberProfile.getLevel();
     }
 }

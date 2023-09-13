@@ -4,6 +4,7 @@ import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
@@ -28,15 +29,18 @@ import java.util.stream.Collectors;
 public class QuestionBoardService {
     private final QuestionBoardRepository questionBoardRepository;
     private final MemberService memberService;
+    private final LevelService levelService;
 
-    public QuestionBoardService(QuestionBoardRepository questionBoardRepository,
-                                MemberService memberService) {
+    public QuestionBoardService(QuestionBoardRepository questionBoardRepository, MemberService memberService, LevelService levelService) {
         this.questionBoardRepository = questionBoardRepository;
         this.memberService = memberService;
+        this.levelService = levelService;
     }
 
     public QuestionBoard createQuestionBoard(QuestionBoard questionBoard) {
         questionBoard.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+
+        levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
         return questionBoardRepository.save(questionBoard);
     }
