@@ -14,7 +14,7 @@ export const COMMON_API_PATH = {
         PATH: "/members",
         NICKNAME: "/members/checkNickname",
         LOGIN: "/login",
-        LOGOUT: "/logOut",
+        LOGOUT: "/refreshToken",
         NEW_ACCESS_TOKEN: "/accessToken",
     },
     AUTH: {

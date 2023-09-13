@@ -1,24 +1,41 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import { useNavigate } from "react-router-dom";
 import BoardList from "@container/project/component/BoardList";
 import Toggle from "@component/project-study/Toggle";
 import CommonSearchFilters from "@component/board/SearchFilters";
 import SearchInput from "@component/board/SearchInput";
+
+import { useRecoilValue } from "recoil";
+import { isLoggedInAtom } from "@feature/Global";
 import { useGetAllProjects } from "@api/project/hook";
+import { useToast } from "@hook/useToast";
 
 const Board = () => {
     const navigate = useNavigate();
+    const { reqLoginToUserToast } = useToast();
+
+    const isLogginedIn = useRecoilValue(isLoggedInAtom);
+
     // 검색어 필터
     const [searchValue, setSearchValue] = useState<string>("");
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
-    const { data: projectsList } = useGetAllProjects();
+    const { projectsList } = useGetAllProjects();
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
+    };
+
+    const onClickRegisterHandler = () => {
+        if (isLogginedIn) {
+            navigate("/projects/register");
+        } else {
+            reqLoginToUserToast();
+        }
     };
 
     return (
@@ -32,9 +49,7 @@ const Board = () => {
                     type="PROJECT"
                     styles="bg-project font-semibold"
                     isFullBtn={false}
-                    onClickHandler={() => {
-                        navigate("/projects/register");
-                    }}
+                    onClickHandler={onClickRegisterHandler}
                 >
                     <Typography type="Body" text="프로젝트 등록하기" />
                 </Button>

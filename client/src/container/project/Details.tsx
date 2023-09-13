@@ -22,7 +22,7 @@ const Details = () => {
 
     const { fireToast, createToast, errorToast } = useToast();
     const { data: projectInputs } = useGetDetailProject({ boardId: boardId });
-    const { isMine } = useCheckUser({ memberId: projectInputs?.memberId || 0 });
+    const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
     const { mutate: deleteProject } = useDeleteProject();
 
     // 북마크 온/오프 (기능X)
