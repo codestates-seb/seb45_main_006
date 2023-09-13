@@ -4,10 +4,9 @@ import githubImg from "@assets/sign/github.png";
 import fontImg from "@assets/sign/font.png";
 import Typography from "@component/Typography";
 import SignLayout from "@container/sign/component/SignLayout";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function SignUpContent1({ handleGoogleClick }: { handleGoogleClick: () => void }) {
-
     return (
         <div className="mb-70">
             <img className="absolute -top-32 left-96 w-100" src={fontImg} />

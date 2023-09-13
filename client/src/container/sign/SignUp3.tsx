@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import SignLayout from "@container/sign/component/SignLayout";
 import Typography from "@component/Typography";
 import progress from "@assets/sign/progress_bar3.png";
@@ -28,13 +28,13 @@ function SignUp3() {
             </div>
 
             <div className="flex flex-col items-center">
-                <Link to = {'/setpro/1'}>
+                <Link to={"/setpro/1"}>
                     <a className="m-auto flex w-230 justify-center rounded bg-button-next p-9">
                         <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
                     </a>
                 </Link>
                 <div className="pb-50">
-                    <Link to = {'/'}>
+                    <Link to={"/"}>
                         <a className="m-auto mt-25 flex w-230 justify-center rounded border-1 border-solid border-black p-9">
                             <Typography type="Highlight" text="다음에 만들어 볼래요" />
                         </a>

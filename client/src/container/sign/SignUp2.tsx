@@ -26,7 +26,7 @@ function SignUp2() {
             setIsRequestAuthenticate(true);
             setAuthenticatedEmail(redirectedEmail);
         }
-    }, [redirectedEmail])
+    }, [redirectedEmail]);
 
     const { errorToast, fireToast, createToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
@@ -346,12 +346,12 @@ function SignUp2() {
                 description="입력된 비밀번호와 다릅니다."
             />
             <div className="flex justify-center pt-20">
-                <Link to = {"/signup/1"}>
+                <Link to={"/signup/1"}>
                     <SignButton type="OUTLINED" styles="mr-20">
                         <Typography type="SmallLabel" text="이전" styles="font-bold" />
                     </SignButton>
                 </Link>
-                <Link to = {"/signup/3"}>
+                <Link to={"/signup/3"}>
                     <SignButton type="FILLED">
                         <Typography type="SmallLabel" text="다음" color="text-white" styles="font-bold" />
                     </SignButton>
