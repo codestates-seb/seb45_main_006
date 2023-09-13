@@ -71,10 +71,10 @@ public class MemberController {
 
     // 내 프로필 조회
     @GetMapping()
-    public ResponseEntity getMyProfile(@RequestBody PasswordDto passwordDto) {
+    public ResponseEntity getMyProfile() {
 
-        // 조회 전 비밀번호 확인하기
-        memberService.checkPassword(passwordDto.getRawPassword());
+        // 조회 전 비밀번호 확인하기 -> 프론트에서 하기로!
+//        memberService.checkPassword(passwordDto.getRawPassword());
 
         MemberProfile memberProfile = memberService.getMyProfile();
         MemberProfileDto.myProfileResponse response = memberMapper.entityToResponseDto(memberProfile);
@@ -204,7 +204,7 @@ public class MemberController {
     }
 
     // 중복 닉네임 확인
-    @GetMapping("/checkNickname")
+    @PostMapping("/checkNickname")
     public ResponseEntity checkNickname(@Valid @RequestBody NicknameDto nickname) {
 
         memberService.checkNickname(nickname.getNickname());

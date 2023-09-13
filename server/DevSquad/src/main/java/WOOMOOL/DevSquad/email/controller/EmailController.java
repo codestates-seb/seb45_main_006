@@ -26,7 +26,7 @@ public class EmailController {
     }
 
     // 메일 보내기
-    @PostMapping("/auth")
+    @PostMapping("/authEmail")
     public ResponseEntity sendAuthEmail(@RequestBody @Valid EmailDto emailDto) throws MessagingException, UnsupportedEncodingException {
 
         Email email = emailMapper.postDtoToEntity(emailDto);
@@ -45,7 +45,7 @@ public class EmailController {
     }
 
     // 인증 확인
-    @GetMapping("/auth")
+    @PostMapping("/auth")
     public ResponseEntity verifyAuthCode(@RequestBody @Valid EmailDto emailDto){
 
         Email email = emailMapper.postDtoToEntity(emailDto);
@@ -53,7 +53,7 @@ public class EmailController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("/authPassword")
+    @PostMapping("/authPassword")
     public ResponseEntity verifyRandomPassword(@RequestBody @Valid EmailDto emailDto){
 
         emailService.verifyRandomPassword(emailDto);
