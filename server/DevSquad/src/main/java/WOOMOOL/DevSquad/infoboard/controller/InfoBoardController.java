@@ -91,7 +91,7 @@ public class InfoBoardController {
                 HttpStatus.OK);
     }
     //정보게시판 카테고리별로 검색
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity getCategoryInfoBoard(@PathVariable("category") String category,
                                                @RequestParam(name = "search", required = false) String search,
                                                @RequestParam @Positive int page,
