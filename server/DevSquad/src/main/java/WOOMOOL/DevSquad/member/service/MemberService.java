@@ -24,10 +24,7 @@ import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -334,8 +331,17 @@ public class MemberService {
 
         // 차단한 회원 걸러낸 리스트
         List<MemberProfile> filteringMemberProfileList = removeBloackMemberProfileList(memberProfileList);
+        // 페이징 처리
+        int pageSize = 8;
+        int totalElements = filteringMemberProfileList.size();
+        // 최근 활동 순으로 정렬
+        Sort sort = Sort.by("modifiedAt");
 
-        Page<MemberProfile> memberProfilePage = new PageImpl<>(filteringMemberProfileList, PageRequest.of(page, 8, Sort.by("modifiedAt")), filteringMemberProfileList.size());
+        // 페이징 처리된 결과 페이지 생성
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+
+        List<MemberProfile> content = filteringMemberProfileList.subList(page * pageSize, Math.min((page + 1) * pageSize, totalElements));
+        Page<MemberProfile> memberProfilePage = new PageImpl<>(content, pageRequest, totalElements);
 
         return memberProfilePage;
     }
