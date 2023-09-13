@@ -15,7 +15,7 @@ export const useGetDefaultStack = () => {
 // 포지션 리스트
 export const useGetDefaultPostion = () => {
     return useQuery<GetDefaultPosition, AxiosError, GetDefaultPosition>({
-        queryKey: ["tags"],
+        queryKey: ["positions"],
         queryFn: getDefaultPostion,
     });
 };
