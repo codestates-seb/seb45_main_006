@@ -13,6 +13,7 @@ import { usePostComment, useGetComment } from "@api/comment/hook";
 import { useCheckUser } from "@hook/useCheckUser";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useToast } from "@hook/useToast";
+import { useToggleLikeAndBookmark } from "@hook/useToggleLikeAnBookmark";
 
 import Typography from "@component/Typography";
 import CommonBtn from "@component/CommonBtn";
@@ -52,6 +53,8 @@ const InfoTitle = ({
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
+    const { onClickLikeHandler } = useToggleLikeAndBookmark();
+
     return (
         <div className="flex border-b-1 border-borderline">
             <div className="flex-1 p-8">
@@ -93,7 +96,12 @@ const InfoTitle = ({
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <button onClick={() => setIsLiked(!isLiked)}>
+                        <button
+                            onClick={() => {
+                                setIsLiked(!isLiked);
+                                onClickLikeHandler({ board: "question", boardId: info.boardId });
+                            }}
+                        >
                             <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
                         </button>
                         <button onClick={() => setIsBookmarked(!isBookmarked)}>

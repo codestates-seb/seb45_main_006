@@ -12,6 +12,7 @@ import { useGetAnswer } from "@api/answer/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useToast } from "@hook/useToast";
+import { useToggleLikeAndBookmark } from "@hook/useToggleLikeAnBookmark";
 
 import Typography from "@component/Typography";
 import CommonBtn from "@component/CommonBtn";
@@ -35,10 +36,11 @@ const QuestionTitle = ({
     const { title, viewCount, modifiedAt } = question;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
-    const [isLiked, setIsLiked] = useState(false);
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isLiked, setIsLiked] = useState(question.liked);
+    const [isBookmarked, setIsBookmarked] = useState(question.bookmarked);
 
     const onClickEditHandler = () => navigate(`/questions/${question.boardId}/edit`, { state: question });
+    const { onClickLikeHandler } = useToggleLikeAndBookmark();
 
     return (
         <div className="flex border-b-1 border-borderline">
@@ -81,7 +83,12 @@ const QuestionTitle = ({
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <button onClick={() => setIsLiked(!isLiked)}>
+                        <button
+                            onClick={() => {
+                                setIsLiked(!isLiked);
+                                onClickLikeHandler({ board: "question", boardId: question.boardId });
+                            }}
+                        >
                             <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
                         </button>
                         <button onClick={() => setIsBookmarked(!isBookmarked)}>
