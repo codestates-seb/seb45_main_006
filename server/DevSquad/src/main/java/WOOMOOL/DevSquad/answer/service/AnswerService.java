@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
@@ -27,19 +28,21 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final MemberService memberService;
     private final QuestionBoardService questionBoardService;
+    private final LevelService levelService;
 
-    public AnswerService(AnswerRepository answerRepository,
-                         MemberService memberService,
-                         QuestionBoardService questionBoardService) {
+    public AnswerService(AnswerRepository answerRepository, MemberService memberService, QuestionBoardService questionBoardService, LevelService levelService) {
         this.answerRepository = answerRepository;
         this.memberService = memberService;
         this.questionBoardService = questionBoardService;
+        this.levelService = levelService;
     }
 
     public Answer createAnswer(Answer answer) {
         answer.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
         QuestionBoard questionBoard = questionBoardService.findVerifiedQuestionBoard(answer.getQuestionBoard().getBoardId());
         answer.setQuestionBoard(questionBoard);
+
+        levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
         return answerRepository.save(answer);
     }
@@ -84,6 +87,8 @@ public class AnswerService {
         findAnswer.getQuestionBoard().setAnswered(true);
 
         answerRepository.save(findAnswer);
+
+        levelService.getExpFromAcceptedAnswer(findAnswer);
     }
 
     public Answer findVerifiedAnswer(long answerId) {

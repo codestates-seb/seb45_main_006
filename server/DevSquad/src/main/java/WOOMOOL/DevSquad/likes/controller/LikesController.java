@@ -17,8 +17,8 @@ public class LikesController {
     private final LikesService likesService;
 
     @PostMapping("/likes/{board}/{board-id}")
-    public ResponseEntity postAndDeleteLikes(@PathVariable("board-id") @Positive long boardId) {
-        HttpStatus httpStatus = likesService.createAndDeleteLikes(boardId);
+    public ResponseEntity postAndDeleteLikes(@PathVariable("board-id") @Positive long boardId, @PathVariable("board") String board) {
+        HttpStatus httpStatus = likesService.createAndDeleteLikes(board,boardId);
 
         return new ResponseEntity<>(httpStatus);
     }

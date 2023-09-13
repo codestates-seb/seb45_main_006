@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import org.springframework.data.domain.Page;
@@ -26,15 +27,18 @@ import java.util.stream.Collectors;
 public class InfoBoardService {
     private final InfoBoardRepository infoBoardRepository;
     private final MemberService memberService;
+    private final LevelService levelService;
 
-    public InfoBoardService(InfoBoardRepository infoBoardRepository,
-                            MemberService memberService) {
+    public InfoBoardService(InfoBoardRepository infoBoardRepository, MemberService memberService, LevelService levelService) {
         this.infoBoardRepository = infoBoardRepository;
         this.memberService = memberService;
+        this.levelService = levelService;
     }
 
     public InfoBoard createInfoBoard(InfoBoard infoBoard) {
         infoBoard.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+
+        levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
         return infoBoardRepository.save(infoBoard);
     }
