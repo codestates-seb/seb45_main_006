@@ -212,7 +212,7 @@ const queryClient = new QueryClient({
 
 function App() {
     return (
-        <div className="m-0 box-border flex justify-center p-0 font-sans text-primary">
+        <div className="m-0 box-border flex justify-center p-0 font-ganpan font-light text-primary">
             <QueryClientProvider client={queryClient}>
                 <RecoilRoot>
                     <RouterProvider router={router} />

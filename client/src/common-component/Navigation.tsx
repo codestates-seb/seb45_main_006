@@ -23,7 +23,7 @@ export const NavItem = ({ item, onClickNavItem }: { item: INavItem; onClickNavIt
 
     return (
         <li onClick={() => navigate(item.route)}>
-            <button className="mr-16 w-max font-spoqa text-18 font-medium" onClick={() => onClickNavItem(item)}>
+            <button className="mr-16 w-max text-18 font-medium" onClick={() => onClickNavItem(item)}>
                 <Typography type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
             </button>
         </li>
