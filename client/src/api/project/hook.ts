@@ -19,10 +19,12 @@ import { deleteProject, getAllProjects, getDetailProject, patchProject, postProj
 
 // 프로젝트 - 전체 조회하기
 export const useGetAllProjects = () => {
-    return useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
+    const { data } = useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
         queryKey: projectKeyFactory.all(),
         queryFn: () => getAllProjects(),
     });
+    const projectsList = data;
+    return { projectsList };
 };
 // 프로젝트 - 상세 조회하기
 export const useGetDetailProject = ({ boardId }: GetReqDetailProject) => {

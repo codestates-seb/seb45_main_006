@@ -19,10 +19,12 @@ import { deleteStudy, getAllStudies, getDetailStudy, patchStudy, postStudy } fro
 
 // 스터디 - 전체 조회하기
 export const useGetAllStudies = () => {
-    return useQuery<GetResAllStudies, AxiosError, GetResAllStudies>({
+    const { data } = useQuery<GetResAllStudies, AxiosError, GetResAllStudies>({
         queryKey: studyKeyFactory.all(),
         queryFn: () => getAllStudies(),
     });
+    const studiesList = data;
+    return { studiesList };
 };
 // 스터디 - 상세 조회하기
 export const useGetDetailStudy = ({ boardId }: GetReqDetailStudy) => {
