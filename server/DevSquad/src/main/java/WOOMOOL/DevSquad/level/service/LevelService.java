@@ -124,7 +124,7 @@ public class LevelService {
         }
     }
 
-    public void ㄱgetExpFrom10MoreLikes(QuestionBoard questionBoard) {
+    public void getExpFrom10MoreLikes(QuestionBoard questionBoard) {
 
         // 회원 레벨 정보
         Level level = getMemberProfileLevel(questionBoard.getMemberProfile());
