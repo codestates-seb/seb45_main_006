@@ -27,3 +27,11 @@ export interface GetResQuestionOfMember {
     pageInfo: PageInfo;
     data: Array<QuestionDefaultType>;
 }
+
+// 나의 레벨 조회
+export interface GetResMyLevel {
+    memberId: number;
+    grade: "개구리알";
+    currentExp: number;
+    maxExp: number;
+}
