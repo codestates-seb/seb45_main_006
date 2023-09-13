@@ -68,7 +68,7 @@ public class AnswerService {
         List<Answer> answerList = answerRepository.findByBoardId(boardId);
         answerList = removeBlockUserBoard(answerList);
         List<Answer> pagingList = answerList.subList(page * size, Math.min(page * size + size, answerList.size()));
-        Page<Answer> result = new PageImpl<>(answerList, PageRequest.of(page, size), answerList.size());
+        Page<Answer> result = new PageImpl<>(pagingList, PageRequest.of(page, size), answerList.size());
         return result;
     }
 

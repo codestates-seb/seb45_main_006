@@ -93,7 +93,7 @@ public class CommentService {
         List<Comment> commentList = commentRepository.findByBoardId(boardId);
         commentList = removeBlockUserBoard(commentList);
         List<Comment> pagingList = commentList.subList(page * size, Math.min(page * size + size, commentList.size()));
-        Page<Comment> result = new PageImpl<>(commentList, PageRequest.of(page, size), commentList.size());
+        Page<Comment> result = new PageImpl<>(pagingList, PageRequest.of(page, size), commentList.size());
         return result;
     }
     public Page<Comment> selectCommentByAnswerId(long answerId, int page, int size) {
