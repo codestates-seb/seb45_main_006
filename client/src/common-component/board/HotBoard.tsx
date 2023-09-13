@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetHottestBoard } from "@api/info/hook";
+import { useGetHottestBoard } from "@api/board-common/hook";
 
 import Typography from "@component/Typography";
 

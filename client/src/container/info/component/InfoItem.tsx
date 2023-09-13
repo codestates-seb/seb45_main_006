@@ -53,7 +53,7 @@ const InfoTitle = ({
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
-    const { onClickLikeHandler } = useToggleLikeAndBookmark();
+    const { onClickLikeHandler, onClickBookmarkHandler } = useToggleLikeAndBookmark();
 
     return (
         <div className="flex border-b-1 border-borderline">
@@ -104,7 +104,12 @@ const InfoTitle = ({
                         >
                             <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
                         </button>
-                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
+                        <button
+                            onClick={() => {
+                                setIsBookmarked(!isBookmarked);
+                                onClickBookmarkHandler({ board: "question", boardId: info.boardId });
+                            }}
+                        >
                             <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
                         </button>
                     </>
@@ -203,7 +208,7 @@ function InfoItem({
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : info.content.length < 300 ? "댓글 열기" : "열기"}`}
+                        text={`${isOpened ? "닫기" : "내용 열기"}`}
                         color="text-blue-500 hover:text-blue-800"
                     />
                 </button>

@@ -31,14 +31,3 @@ export interface DeleteReqInfo extends SpecifyInfoId {}
 
 // 정보 게시판 - 조회수 증가
 export interface PostReqViewCount extends SpecifyInfoId {}
-
-// 정보/질문 게시판 HOT 게시글 조회
-export interface GetReqHottestBoard {
-    board: string;
-}
-
-// 정보/질문 게시판 좋아요 생성-삭제
-export interface PostReqToggleLike {
-    board: string;
-    boardId: number;
-}

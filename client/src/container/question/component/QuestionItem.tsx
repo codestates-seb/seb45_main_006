@@ -40,7 +40,7 @@ const QuestionTitle = ({
     const [isBookmarked, setIsBookmarked] = useState(question.bookmarked);
 
     const onClickEditHandler = () => navigate(`/questions/${question.boardId}/edit`, { state: question });
-    const { onClickLikeHandler } = useToggleLikeAndBookmark();
+    const { onClickLikeHandler, onClickBookmarkHandler } = useToggleLikeAndBookmark();
 
     return (
         <div className="flex border-b-1 border-borderline">
@@ -91,7 +91,12 @@ const QuestionTitle = ({
                         >
                             <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
                         </button>
-                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
+                        <button
+                            onClick={() => {
+                                setIsBookmarked(!isBookmarked);
+                                onClickBookmarkHandler({ board: "question", boardId: question.boardId });
+                            }}
+                        >
                             <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
                         </button>
                     </>
@@ -160,7 +165,7 @@ function QuestionItem({
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : question.content.length < 300 ? "답변 확인" : "열기"}`}
+                        text={`${isOpened ? "닫기" : "내용 열기"}`}
                         color="text-blue-500 hover:text-blue-800"
                     />
                 </button>

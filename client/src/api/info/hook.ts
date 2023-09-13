@@ -1,28 +1,11 @@
 import { AxiosError } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import {
-    GetReqAllInfo,
-    PostReqInfo,
-    PatchReqInfo,
-    DeleteReqInfo,
-    PostReqViewCount,
-    GetReqHottestBoard,
-    PostReqToggleLike,
-} from "@type/info/info.req.dto";
-import {
-    GetResAllInfo,
-    PostResInfo,
-    PatchResInfo,
-    DeleteResInfo,
-    PostResViewCount,
-    GetResHottestBoard,
-    PostResToggleLike,
-} from "@type/info/info.res.dto";
+import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
+import { GetResAllInfo, PostResInfo, PatchResInfo, DeleteResInfo, PostResViewCount } from "@type/info/info.res.dto";
 
-import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount, getHottestBoard, postToggleLike } from "./api";
+import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount } from "./api";
 import { infoKeyFactory } from "./infoKeyFactory";
-import dayjs from "dayjs";
 
 // 정보 게시판 - 리스트 조회
 export const useGetAllInfo = ({ category, search, page, size }: GetReqAllInfo) => {
@@ -50,17 +33,4 @@ export const useDeleteInfo = () => {
 // 정보 게시판 - 조회수 증가
 export const usePostViewCount = () => {
     return useMutation<PostResViewCount, AxiosError, PostReqViewCount>(postViewCount);
-};
-
-// 정보/질문 게시판 HOT 게시글 조회
-export const useGetHottestBoard = ({ board }: GetReqHottestBoard) => {
-    return useQuery<GetResHottestBoard, AxiosError, GetResHottestBoard>({
-        queryKey: ["hottest", { board, date: dayjs().format("YYYY-MM-DD") }],
-        queryFn: () => getHottestBoard({ board }),
-    });
-};
-
-// 정보/질문 게시판 좋아요 생성-삭제
-export const usePostToggleLike = () => {
-    return useMutation<PostResToggleLike, AxiosError, PostReqToggleLike>(postToggleLike);
 };
