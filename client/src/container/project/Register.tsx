@@ -12,6 +12,8 @@ import { useToast } from "@hook/useToast";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 import { GetResDetailProject } from "@type/project/project.res.dto";
+import InputForNumber from "@component/project-study/InputForNumber";
+import Dropdown from "@component/project-study/Dropdown";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -160,17 +162,18 @@ export default function Register() {
                     onChange={handleInput}
                      /> */}
                     {curActivity === "REGISTER" ? (
-                        <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                        <Dropdown />
                     ) : (
                         <BoardInput label="모집여부" disabled={false} placeholder="모집중" onChange={handleInput} />
                     )}
                     <DateChoice onChange={handleDates} />
-                    <BoardInput
+                    <InputForNumber
                         name="recruitNum"
                         label="모집인원"
                         required={true}
                         placeholder="ex) 6"
                         value={inputs.recruitNum}
+                        max={12}
                         onChange={handleInput}
                     />
                     <div className="flex w-full justify-center">
