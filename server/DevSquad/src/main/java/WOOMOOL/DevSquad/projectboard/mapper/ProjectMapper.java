@@ -5,14 +5,12 @@ import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
 import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
-import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -27,23 +25,8 @@ public interface ProjectMapper {
         project.setDeadline( postDto.getDeadline() );
         project.setRecruitNum( postDto.getRecruitNum() );
 
-//        if (postDto.getStack() != null) {
-//            Set<StackTag> stackTags = postDto.getStack().stream()
-//                    .map(stackName -> {
-//                        StackTag stackTag = new StackTag();
-//                        stackTag.setTagName(stackName);
-//                        return stackTag;
-//                    })
-//                    .collect(Collectors.toSet());
-//            project.setStackTags(stackTags);
-//        }
-
-        System.out.println("🚨🚨🚨mapper : " + postDto.getStack());
-
         return project;
     }
-
-//    Project patchDtoToEntity(ProjectDto.PatchDto patchDto);
 
     default Project patchDtoToEntity(ProjectDto.PatchDto patchDto) {
         Project project = new Project();
@@ -58,16 +41,6 @@ public interface ProjectMapper {
         project.setRecruitNum(patchDto.getRecruitNum());
         project.setProjectStatus(patchDto.getProjectStatus());
 
-
-        Set<StackTag> stackTags = patchDto.getStack().stream()
-                .map(stackName -> {
-                    StackTag stackTag = new StackTag();
-                    stackTag.setTagName(stackName);
-                    return stackTag;
-                })
-                .collect(Collectors.toSet());
-        project.setStackTags(stackTags);
-
         return project;
     }
 
@@ -76,6 +49,9 @@ public interface ProjectMapper {
                 .map(project -> new ProjectDto.previewResponseDto(
                         project.getBoardId(),
                         project.getTitle(),
+                        project.getStackTags().stream()
+                                .map(stackTag -> stackTag.getTagName())
+                                .collect(Collectors.toSet()),
                         project.getStartDate(),
                         project.getDeadline(),
                         project.getCreatedAt(),
@@ -90,11 +66,9 @@ public interface ProjectMapper {
                                 project.getMemberProfile().getGithubId(),
                                 project.getMemberProfile().getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
                                 project.getMemberProfile().getStackTags().stream().map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())
-                        ),
-                        project.getStackTags().stream()
-                                .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())))
+                        )
+                ))
                 .collect(Collectors.toList());
-
     }
 
     @Mapping(target = "bookmarked", expression = "java(markedOrNot(project.getBookmarkList()))")

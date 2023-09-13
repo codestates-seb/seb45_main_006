@@ -71,10 +71,10 @@ public class MemberController {
 
     // 내 프로필 조회
     @GetMapping()
-    public ResponseEntity getMyProfile(@RequestBody PasswordDto passwordDto) {
+    public ResponseEntity getMyProfile() {
 
-        // 조회 전 비밀번호 확인하기
-        memberService.checkPassword(passwordDto.getRawPassword());
+        // 조회 전 비밀번호 확인하기 -> 프론트에서 하기로!
+//        memberService.checkPassword(passwordDto.getRawPassword());
 
         MemberProfile memberProfile = memberService.getMyProfile();
         MemberProfileDto.myProfileResponse response = memberMapper.entityToResponseDto(memberProfile);
@@ -161,39 +161,6 @@ public class MemberController {
 
     }
 
-    // 나의 유저 리스트 조회 8명 까지 + 포지션, 스택 별로 필터링 (차단한 회원은 안보이게)
-    @GetMapping("/myList")
-    public ResponseEntity getMyMemberProfiles(@RequestParam int page,
-                                            @RequestParam(required = false) String nickname,
-                                            @RequestParam(required = false) List<String> positions,
-                                            @RequestParam(required = false) List<String> stacks) {
-
-        Page<MemberProfile> memberProfilePage;
-        // 포지션 필터링
-        if (positions != null) {
-
-            memberProfilePage = memberService.getMemberProfilesByPosition(page - 1, positions);
-        // 스택 필터링
-        } else if (stacks != null) {
-
-            memberProfilePage = memberService.getMemberProfilesByStack(page - 1, stacks);
-        // 필터링 X
-        } else if ( nickname != null ){
-            memberProfilePage = memberService.getMemberProfileByNickname(page-1, nickname);
-        }
-        else {
-
-            memberProfilePage = memberService.getMemberProfilePage(page - 1);
-
-        }
-
-        List<MemberProfile> memberProfileList = memberService.getMyMemberProfiles(memberProfilePage);
-        List<MemberProfileDto.listResponse> response = memberMapper.entityToResponseDto(memberProfileList);
-
-
-        return new ResponseEntity(new PageResponseDto<>(response, memberProfilePage), HttpStatus.OK);
-    }
-    // 로그인하지 않고도 볼 수 있는 회원 리스트
     @GetMapping("/list")
     public ResponseEntity getMemberProfiles(@RequestParam int page,
                                             @RequestParam(required = false) String nickname,
@@ -220,7 +187,7 @@ public class MemberController {
 
         }
 
-        List<MemberProfile> memberProfileList = memberService.getMemberProfile(memberProfilePage);
+        List<MemberProfile> memberProfileList = memberProfilePage.getContent();
         List<MemberProfileDto.listResponse> response = memberMapper.entityToResponseDto(memberProfileList);
 
 
@@ -237,7 +204,7 @@ public class MemberController {
     }
 
     // 중복 닉네임 확인
-    @GetMapping("/checkNickname")
+    @PostMapping("/checkNickname")
     public ResponseEntity checkNickname(@Valid @RequestBody NicknameDto nickname) {
 
         memberService.checkNickname(nickname.getNickname());

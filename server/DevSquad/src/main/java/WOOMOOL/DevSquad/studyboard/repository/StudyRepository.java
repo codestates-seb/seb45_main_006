@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.studyboard.repository;
 
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +14,17 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("SELECT s FROM Study s WHERE s.studyStatus != 'STUDY_DELETED' ORDER BY s.createdAt DESC ")
     Page<Study> findByStudyStatus(Pageable pageable);
   
-    @Query("SELECT p FROM Study p WHERE p.studyStatus = 'STUDY_POSTED' and p.memberProfile.memberProfileId = :memberProfileId")
+    @Query("SELECT s FROM Study s WHERE s.studyStatus = 'STUDY_POSTED' and s.memberProfile.memberProfileId = :memberProfileId")
     List<Study> findByStudyStatusAndMemberProfile(@Param("memberProfileId") Long memberProfileId);
-    // 페이지네이션
-    @Query("SELECT p FROM Study p WHERE p.studyStatus = 'STUDY_POSTED' and p.memberProfile.memberProfileId = :memberProfileId")
+
+    @Query("SELECT s FROM Study s WHERE s.studyStatus = 'STUDY_POSTED' and s.memberProfile.memberProfileId = :memberProfileId")
     Page<Study> findByStudyStatusAndMemberProfile(@Param("memberProfileId") Long memberProfileId,Pageable pageable);
+
+    // 스택에 따라서 필터링하기
+    @Query("SELECT DISTINCT s FROM Study s JOIN s.stackTags st " +
+            "WHERE st.tagName IN :tagNames " +
+            "AND s.studyStatus != 'STUDY_DELETED' " +
+            "GROUP BY s HAVING COUNT(st) IN :tagCount " +
+            "ORDER BY s.createdAt DESC")
+    Page<Study> findAllByStackTags(Pageable pageable, List<String> tagNames, Long tagCount);
 }

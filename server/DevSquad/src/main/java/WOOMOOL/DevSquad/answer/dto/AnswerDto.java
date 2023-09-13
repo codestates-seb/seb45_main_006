@@ -34,6 +34,7 @@ public class AnswerDto {
     public static class Response {
         private Long answerId;
         private Long memberId;
+        private String content;
         private String nickname;
         private String profilePicture;
         private Long boardId;

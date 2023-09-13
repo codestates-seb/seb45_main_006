@@ -26,10 +26,12 @@ export default function Register() {
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
+        stack: [""],
         startDate: "",
         deadline: "",
         recruitNum: 0,
-        recruitStatus: false,
+        projectStatus: "",
+        // recruitStatus: false,
     });
 
     useEffect(() => {
@@ -104,7 +106,7 @@ export default function Register() {
         if (isEmpty()) return;
 
         patchProject(
-            { boardId: location.state.boardId, content: inputs.content },
+            { boardId: location.state.boardId, ...inputs },
             {
                 onSuccess: (res) => {
                     navigate("/projects/:projectBoardId", { state: res.boardId });

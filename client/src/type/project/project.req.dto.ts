@@ -10,16 +10,22 @@ export type GetReqDetailProject = {
 export type PostReqProject = {
     title: string;
     content: string;
+    stack: string[];
     startDate: string;
     deadline: string;
     recruitNum: number;
-    recruitStatus: boolean;
+    // recruitStatus: boolean;
 };
 
 export type PatchReqProject = {
     boardId: number;
+    title: string;
     content: string;
-    //제목, 인원 수 수정 조율
+    stack: string[];
+    startDate: string;
+    deadline: string;
+    recruitNum: number;
+    projectStatus?: string;
 };
 
 export type DeleteReqProject = {
