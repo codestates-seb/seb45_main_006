@@ -181,12 +181,12 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                                 <div className="min-w-88 p-4">
                                     <Typography type="SmallLabel" text="기술스택" styles="font-bold" />
                                 </div>
-                                <AutoCompletionTags
+                                {/* <AutoCompletionTags
                                     placeholder="기술 스택을 입력해주세요."
                                     selectedTags={stacks}
                                     setSelectedTags={setStacks}
                                     defaultSuggestions={defaultStack}
-                                />
+                                /> */}
                             </>
                         ) : (
                             <UserStackAndPos user={user} type="stack" />

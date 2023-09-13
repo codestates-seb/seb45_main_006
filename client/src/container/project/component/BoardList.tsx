@@ -1,19 +1,15 @@
 import Typography from "@component/Typography";
 import Tag from "@component/project-study/Tag";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
 import { useState } from "react";
 import { CommonResProjects } from "@type/project/project.res.dto";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import Bookmark from "@component/board/Bookmark";
 
 const BoardList = ({ project }: { project: CommonResProjects }) => {
     const navigate = useNavigate();
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    const toggleBookmark = () => {
-        setIsBookmarked((prevState) => !prevState);
-    };
     const handleProjectItemClick = () => {
         navigate("/projects/:projectBoardId", { state: project.boardId });
     };
@@ -37,10 +33,11 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                     {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.deadline).format("MM-DD")}`}
                 </div>
             </div>
-            <img
-                src={isBookmarked ? bookmark_fill : bookmark_unfill}
-                className="m-10 h-28 w-28 cursor-pointer"
-                onClick={toggleBookmark}
+            <Bookmark
+                board="project"
+                boardId={project.boardId}
+                isBookmarked={isBookmarked}
+                setIsBookmarked={setIsBookmarked}
             />
         </div>
     );

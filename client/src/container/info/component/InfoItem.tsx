@@ -13,21 +13,20 @@ import { usePostComment, useGetComment } from "@api/comment/hook";
 import { useCheckUser } from "@hook/useCheckUser";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useToast } from "@hook/useToast";
-import { useToggleLikeAndBookmark } from "@hook/useToggleLikeAnBookmark";
 
 import Typography from "@component/Typography";
 import CommonBtn from "@component/CommonBtn";
 import { EditComment, ShowComment } from "@component/board/Comment";
 import UserProfile from "@component/user/UserProfile";
+import Bookmark from "@component/board/Bookmark";
 
 import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_TYPE } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 
-import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
+import { BsFillShareFill } from "react-icons/bs";
 import Pagination from "@component/Pagination";
+import LikeBtn from "@component/board/LikeBtn";
 
 export const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
     const tag = CATEGORY_TO_NAME[category];
@@ -53,7 +52,6 @@ const InfoTitle = ({
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
-    const { onClickLikeHandler, onClickBookmarkHandler } = useToggleLikeAndBookmark();
 
     return (
         <div className="flex border-b-1 border-borderline">
@@ -96,22 +94,13 @@ const InfoTitle = ({
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <button
-                            onClick={() => {
-                                setIsLiked(!isLiked);
-                                onClickLikeHandler({ board: "question", boardId: info.boardId });
-                            }}
-                        >
-                            <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                        </button>
-                        <button
-                            onClick={() => {
-                                setIsBookmarked(!isBookmarked);
-                                onClickBookmarkHandler({ board: "question", boardId: info.boardId });
-                            }}
-                        >
-                            <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
-                        </button>
+                        <LikeBtn board="information" boardId={info.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                        <Bookmark
+                            board="information"
+                            boardId={info.boardId}
+                            isBookmarked={isBookmarked}
+                            setIsBookmarked={setIsBookmarked}
+                        />
                     </>
                 )}
                 <button>

@@ -25,7 +25,7 @@ const Board = () => {
         <div>
             <div className="my-20 flex justify-end">
                 <div className="mr-8 w-200">
-                    <SearchInput value={searchValue} onChange={onChange} placeholder="프로젝트명 검색" />
+                    <SearchInput value={searchValue} onChange={onChange} placeholder="스터디명 검색" />
                 </div>
 
                 <Button

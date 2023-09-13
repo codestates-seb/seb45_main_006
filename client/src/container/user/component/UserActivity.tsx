@@ -8,9 +8,8 @@ import {
 import { useDeleteInfo } from "@api/info/hook";
 import { useDeleteQuestion } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
-import { TempProject, TempStudy } from "./UserCardModal";
-// import ProjectItem from "@container/project/component/BoardList";
-// import StudyItem from "@container/study/component/BoardList";
+import ProjectItem from "@container/project/component/BoardList";
+import StudyItem from "@container/study/component/BoardList";
 import InfoItem from "@container/info/component/InfoItem";
 import QuestionItem from "@container/question/component/QuestionItem";
 import Pagination from "@component/Pagination";
@@ -33,7 +32,7 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
             <div className="w-full">
                 {Array.isArray(project?.data) &&
                     project?.data.map((v, i) => {
-                        return <TempProject key={`member-${memberId}-project-${i}`} project={v} />;
+                        return <ProjectItem key={`member-${memberId}-project-${i}`} project={v} />;
                     })}
             </div>
             <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
@@ -58,7 +57,7 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
         <>
             <div className="w-full">
                 {Array.isArray(study?.data) &&
-                    study?.data.map((v, i) => <TempStudy key={`member-${memberId}-study-${i}`} study={v} />)}
+                    study?.data.map((v, i) => <StudyItem key={`member-${memberId}-study-${i}`} study={v} />)}
             </div>
             <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
         </>

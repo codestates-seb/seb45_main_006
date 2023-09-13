@@ -1,5 +1,5 @@
 import Typography from "@component/Typography";
-import { UserImage } from "@component/board/UserCard";
+import UserProfile from "@component/user/UserProfile";
 import { UserInfo } from "./UserCardModal";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
@@ -10,7 +10,7 @@ function UserCardHor({ user }: { user: GetResMemberDetail }) {
     return (
         <div className="mb-32 flex flex-1 items-center rounded-md bg-white p-8 shadow-md">
             <div className="mr-20 h-150 w-250 overflow-hidden rounded-xl">
-                <UserImage nickname={user.nickname} profilePicture={user.profilePicture} />
+                <UserProfile size="lg" profilePicture={user.profilePicture} />
             </div>
             <div>
                 <Typography type="Heading" text={user.nickname} styles="font-ganpan font-medium mb-16" />

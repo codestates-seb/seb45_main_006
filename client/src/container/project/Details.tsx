@@ -3,14 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
 import Report from "@component/project-study/Report";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useGetDetailProject } from "@api/project/hook";
 import { useDeleteProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
+import Bookmark from "@component/board/Bookmark";
 
 // import { GetResDetailProject } from "@type/project/project.res.dto";
 
@@ -24,11 +23,6 @@ const Details = () => {
     const { data: projectInputs } = useGetDetailProject({ boardId: boardId });
     const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
     const { mutate: deleteProject } = useDeleteProject();
-
-    // 북마크 온/오프 (기능X)
-    const toggleBookmark = () => {
-        setIsBookmarked((prevState) => !prevState);
-    };
 
     const onClickDeleteHandler = () => {
         createToast({
@@ -54,6 +48,7 @@ const Details = () => {
             },
         });
     };
+
     return (
         <div>
             <div className="m-20 flex gap-20">
@@ -105,10 +100,11 @@ const Details = () => {
                         </div>
                     )}
                     <div>
-                        <img
-                            src={isBookmarked ? bookmark_fill : bookmark_unfill}
-                            className="m-10 h-28 w-28 cursor-pointer"
-                            onClick={toggleBookmark}
+                        <Bookmark
+                            board="project"
+                            boardId={projectInputs?.boardId || 0}
+                            isBookmarked={isBookmarked}
+                            setIsBookmarked={setIsBookmarked}
                         />
                         <Report />
                     </div>
