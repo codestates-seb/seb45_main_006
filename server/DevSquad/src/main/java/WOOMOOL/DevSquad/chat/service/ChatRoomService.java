@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.chat.service;
 
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
+import WOOMOOL.DevSquad.chat.entity.Message;
 import WOOMOOL.DevSquad.chat.repository.ChatRoomRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +55,8 @@ public class ChatRoomService {
             chatRoom.joinChatRoom(sender, receiver);
             sender.addChatRoom(chatRoom);
             receiver.addChatRoom(chatRoom);
+
+           messageService.startMessage(chatRoom);
 
             return chatRoomRepository.save(chatRoom);
         }

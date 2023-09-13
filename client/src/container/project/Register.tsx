@@ -1,58 +1,89 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
 import DateChoice from "@container/project/component/DateChoice";
-import { usePostProject } from "@api/project/hook";
+
+import { usePatchProject, usePostProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
+import { useCheckCurActivity } from "@hook/useCheckCurActivity";
+import { GetResDetailProject } from "@type/project/project.res.dto";
 
 export default function Register() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { curActivity } = useCheckCurActivity({ location });
+
+    const { mutate: postProject } = usePostProject();
+    const { mutate: patchProject } = usePatchProject();
+    const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
+        stack: [""],
         startDate: "",
         deadline: "",
         recruitNum: 0,
-        recruitStatus: false,
+        projectStatus: "",
+        // recruitStatus: false,
     });
-    const [isFormValid, setIsFormValid] = useState(false);
 
-    const validateForm = () => {
-        const { title, content, startDate, deadline, recruitNum } = inputs;
-        const isTitleValid = title.trim() !== "";
-        const isContentValid = content.trim() !== "";
-        const isStartDateValid = startDate.trim() !== "";
-        const isDeadlineValid = deadline.trim() !== "";
-        const isRecruitNumValid = recruitNum > 0;
-
-        const isValid = isTitleValid && isContentValid && isStartDateValid && isDeadlineValid && isRecruitNumValid;
-        setIsFormValid(isValid);
-    };
+    useEffect(() => {
+        if (curActivity === "EDIT") {
+            const {
+                title: prevTitle,
+                content: prevContent,
+                startDate: prevStartDate,
+                deadline: prevDeadline,
+                recruitNum: prevRecruitNum,
+            }: GetResDetailProject = location.state;
+            setInputs({
+                ...inputs,
+                title: prevTitle,
+                content: prevContent,
+                startDate: prevStartDate,
+                deadline: prevDeadline,
+                recruitNum: prevRecruitNum,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [curActivity]);
 
     const handleDates = (start: string, end: string): void => {
         setInputs({ ...inputs, startDate: start, deadline: end });
-        validateForm();
     };
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
         setInputs({ ...inputs, [name]: value });
-        validateForm();
     }
 
-    const { mutate: postProject } = usePostProject();
-
+    const isEmpty = () => {
+        const registerInputs = [
+            { name: "제목", content: inputs.title },
+            { name: "내용", content: inputs.content },
+            { name: "시작날짜", content: inputs.startDate },
+            { name: "마감날짜", content: inputs.deadline },
+            { name: "모집인원", content: inputs.recruitNum },
+        ];
+        const emptyNames = alertWhenEmptyFn(registerInputs);
+        return emptyNames.length > 0;
+    };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleSubmit = async () => {
-        try {
+    const onPostClickHandler = () => {
+        if (isEmpty()) return;
+
+        if (inputs.title !== "") {
             postProject(inputs, {
-                onSuccess: () => {
-                    navigate("/projects/:projectBoardId");
+                //아이디가 있어야 상세조회 가능하므로 boardId 전달
+                onSuccess: (res) => {
+                    navigate("/projects/:projectBoardId", { state: res.boardId });
                     fireToast({
                         content: "게시글이 등록되었습니다!",
                         isConfirm: false,
@@ -64,13 +95,37 @@ export default function Register() {
                     fireToast({
                         content: "게시글 등록 중 에러가 발생하였습니다🥹",
                         isConfirm: false,
-                        // isWarning: true,
+                        isWarning: true,
                     });
                 },
             });
-        } catch (error) {
-            console.log("errorMessage", error);
         }
+    };
+
+    const onPatchClickHandler = () => {
+        if (isEmpty()) return;
+
+        patchProject(
+            { boardId: location.state.boardId, ...inputs },
+            {
+                onSuccess: (res) => {
+                    navigate("/projects/:projectBoardId", { state: res.boardId });
+                    fireToast({
+                        content: "게시글이 수정되었습니다!",
+                        isConfirm: false,
+                    });
+                },
+                // TODO: 에러 분기
+                onError: (err) => {
+                    console.log(err);
+                    fireToast({
+                        content: "게시글 수정 중 에러가 발생하였습니다🥹",
+                        isConfirm: false,
+                        isWarning: true,
+                    });
+                },
+            },
+        );
     };
 
     return (
@@ -103,35 +158,41 @@ export default function Register() {
                     placeholder="ex) java, javascript"
                     value={inputs.stack}
                     onChange={handleInput}
-                /> */}
-                    <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                     /> */}
+                    {curActivity === "REGISTER" ? (
+                        <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                    ) : (
+                        <BoardInput label="모집여부" disabled={false} placeholder="모집중" onChange={handleInput} />
+                    )}
                     <DateChoice onChange={handleDates} />
                     <BoardInput
                         name="recruitNum"
                         label="모집인원"
                         required={true}
-                        placeholder="ex) 6명"
+                        placeholder="ex) 6"
                         value={inputs.recruitNum}
                         onChange={handleInput}
                     />
                     <div className="flex w-full justify-center">
-                        <Button
-                            type="PROJECT_POINT"
-                            styles="mb-20 shadow-md hover:bg-blue-400"
-                            isFullBtn={false}
-                            onClickHandler={() => {
-                                if (isFormValid) {
-                                    handleSubmit();
-                                } else {
-                                    fireToast({
-                                        content: "빈 칸을 채워주세요!",
-                                        isConfirm: false,
-                                    });
-                                }
-                            }}
-                        >
-                            <Typography text="등록하기" type="Label" color="text-white" />
-                        </Button>
+                        {curActivity === "REGISTER" ? (
+                            <Button
+                                type="PROJECT_POINT"
+                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                isFullBtn={false}
+                                onClickHandler={onPostClickHandler}
+                            >
+                                <Typography text="등록하기" type="Label" color="text-white" />
+                            </Button>
+                        ) : (
+                            <Button
+                                type="PROJECT_POINT"
+                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                isFullBtn={false}
+                                onClickHandler={onPatchClickHandler}
+                            >
+                                <Typography text="수정하기" type="Label" color="text-white" />
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

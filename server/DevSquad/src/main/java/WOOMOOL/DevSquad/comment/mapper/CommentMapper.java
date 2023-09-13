@@ -27,6 +27,7 @@ public interface CommentMapper {
     @Mapping(source = "memberProfile.memberProfileId", target = "memberId")
     @Mapping(source = "parent.commentId", target = "parentId")
     @Mapping(source = "memberProfile.nickname", target = "nickname")
+    @Mapping(source = "memberProfile.profilePicture", target = "profilePicture")
     CommentDto.Response commentToCommentResponseDto(Comment comment);
 
     List<CommentDto.Response> commentListToCommentResponseDtoList(List<Comment> commentList);

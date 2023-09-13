@@ -9,6 +9,8 @@ interface SpecifyQuestionId {
 
 // 질문 게시판 - 리스트 조회
 export interface GetReqAllQuestion {
+    page: number;
+    size: number;
     search?: string;
 }
 

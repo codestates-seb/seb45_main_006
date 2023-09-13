@@ -2,18 +2,24 @@ package WOOMOOL.DevSquad.answer.service;
 
 import WOOMOOL.DevSquad.answer.entity.Answer;
 import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,8 +34,6 @@ public class AnswerService {
         this.answerRepository = answerRepository;
         this.memberService = memberService;
         this.questionBoardService = questionBoardService;
-
-
     }
 
     public Answer createAnswer(Answer answer) {
@@ -61,7 +65,11 @@ public class AnswerService {
     }
 
     public Page<Answer> selectAnswerByBoardId(Long boardId, int page, int size) {
-        return answerRepository.findByBoardId(boardId, PageRequest.of(page, size));
+        List<Answer> answerList = answerRepository.findByBoardId(boardId);
+        answerList = removeBlockUserBoard(answerList);
+        List<Answer> pagingList = answerList.subList(page * size, Math.min(page * size + size, answerList.size()));
+        Page<Answer> result = new PageImpl<>(answerList, PageRequest.of(page, size), answerList.size());
+        return result;
     }
 
     public void acceptAnswer(long answerId) {
@@ -90,6 +98,17 @@ public class AnswerService {
         long writerId = answer.getMemberProfile().getMemberProfileId();
         if(currentId!=writerId)
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+
+    public List<Answer> removeBlockUserBoard(List<Answer> answerList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return answerList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<Answer> result = answerList.stream()
+                .filter(answer -> !blockList.stream()
+                        .anyMatch(block -> block.getBlockMemberId()== answer.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 
 }

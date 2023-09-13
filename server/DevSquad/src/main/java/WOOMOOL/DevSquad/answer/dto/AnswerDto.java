@@ -34,12 +34,13 @@ public class AnswerDto {
     public static class Response {
         private Long answerId;
         private Long memberId;
+        private String content;
         private String nickname;
+        private String profilePicture;
         private Long boardId;
         private boolean accepted;
         private String answerStatus;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private List<CommentDto.Response> commentList;
     }
 }

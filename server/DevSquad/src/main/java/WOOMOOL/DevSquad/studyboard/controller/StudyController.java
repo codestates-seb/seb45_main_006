@@ -1,9 +1,13 @@
 package WOOMOOL.DevSquad.studyboard.controller;
 
+import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.mapper.StudyMapper;
 import WOOMOOL.DevSquad.studyboard.service.StudyService;
+import WOOMOOL.DevSquad.utils.PageResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,26 +32,57 @@ public class StudyController {
 
     @PostMapping
     public ResponseEntity postStudy(@Valid @RequestBody StudyDto.PostDto postDto) {
-         Study study = studyService.createStudy(mapper.postDtoToEntity(postDto));
+         Study study = studyService.createStudy(mapper.postDtoToEntity(postDto), postDto.getStack());
 
-         return new ResponseEntity<>(HttpStatus.CREATED);
+         StudyDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(study);
+         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     // 스터디 페이지 조회
     @GetMapping("/list")
-    public ResponseEntity getStudies(Pageable pageable) {
-        List<Study> studies = studyService.getStudies(pageable);
+    public ResponseEntity getStuies(@RequestParam int page,
+                                      @RequestParam(required = false) List<String> stacks) {
+        // 스택 필터링
+        if (stacks != null) {
 
-        List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            List<Study> studies = studyService.getStudiesByStack(page - 1, stacks);
+            studies = studyService.removeBlockUserBoard(studies);
+
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
+            return new ResponseEntity(response, HttpStatus.OK);
+
+        } else {
+
+            List<Study> studies = studyService.getStudies(page - 1);
+            studies = studyService.removeBlockUserBoard(studies);
+
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studies);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }
+
     }
 
     // 스터디 상세 조회
     @GetMapping("/{boardId}")
     public ResponseEntity getStudy(@PathVariable("boardId") @Positive Long boardId) {
-        StudyDto.AllResponseDto study = mapper.entityToAllResponseDto(studyService.getStudy(boardId));
+        Study study = studyService.getStudy(boardId);
 
-        return new ResponseEntity<>(study, HttpStatus.OK);
+        StudyDto.AllResponseDto responseDto = mapper.entityToAllResponseDto(study);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    // 회원이 쓴 스터디 게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberStudyBoard(@PathVariable("member-id") Long memberId,
+                                              @RequestParam int page){
+
+        Page<Study> studyListPage = studyService.getStudyBoardList(memberId,page-1);
+        List<Study> studytList = studyListPage.getContent();
+        List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studytList);
+
+        return new ResponseEntity(new PageResponseDto(response,studyListPage),HttpStatus.OK);
+
     }
 
     // 스터디 수정
@@ -55,7 +90,7 @@ public class StudyController {
     public ResponseEntity updateStudy(@PathVariable("boardId") @Positive Long boardId,
                                       @Valid @RequestBody StudyDto.PatchDto patchDto) {
         patchDto.setBoardId(boardId);
-        Study study = studyService.updateStudy(mapper.patchDtoToEntity(patchDto));
+        Study study = studyService.updateStudy(mapper.patchDtoToEntity(patchDto), patchDto.getStack());
 
         return new ResponseEntity<>(mapper.entityToAllResponseDto(study), HttpStatus.OK);
     }

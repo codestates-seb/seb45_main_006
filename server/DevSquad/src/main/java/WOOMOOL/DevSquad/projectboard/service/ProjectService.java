@@ -1,22 +1,22 @@
 package WOOMOOL.DevSquad.projectboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import WOOMOOL.DevSquad.stacktag.service.StackTagService;
+import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,14 +24,18 @@ import java.util.TimerTask;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
+    private final StackTagService stackTagService;
 
-    public ProjectService(ProjectRepository projectRepository, MemberService memberService) {
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService) {
         this.projectRepository = projectRepository;
         this.memberService = memberService;
+        this.stackTagService = stackTagService;
     }
 
-    public Project createProject(Project project) {
+    public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+
+        project.setStackTags(stackTagService.createBoardStackTag(stackTag));
 
         return projectRepository.save(project);
     }
@@ -46,12 +50,33 @@ public class ProjectService {
 
     // 프로젝트 리스트 조회
     @Transactional(readOnly = true)
-    public List<Project> getProjects(Pageable pageable) {
-        Page<Project> projectPage = projectRepository.findByProjectStatus(pageable);
-        return projectPage.getContent();
+    public List<Project> getProjects(int page) {
+
+        Page<Project> projectPage = projectRepository.findByProjectStatus(PageRequest.of(page,5, Sort.by("createdAt")));
+        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
+
+        return projectList;
+    }
+
+    // 스택 별로 필터링
+    @Transactional(readOnly = true)
+    public List<Project> getProjectsByStack(int page, List<String> stacks) {
+
+        Page<Project> projectPage = projectRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
+        List<Project> projectList = removeBlockUserBoard(projectPage.getContent());
+
+        return projectList;
+    }
+
+    //프로젝트 페이징
+    public Page<Project> getProjectBoardList(Long memberId,int page){
+
+        Page<Project> projectPage = projectRepository.findByProjectStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return projectPage;
     }
     // 프로젝트 수정
-    public Project updateProject(Project project) {
+    public Project updateProject(Project project, Set<String> stackTag) {
 
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
@@ -67,6 +92,7 @@ public class ProjectService {
         Optional.ofNullable(project.getRecruitNum())
                 .ifPresent(recruitNum -> findProject.setRecruitNum(recruitNum));
 
+        findProject.setStackTags(stackTagService.createBoardStackTag(stackTag));
         findProject.setModifiedAt(LocalDateTime.now());
 
         return findProject;
@@ -79,7 +105,7 @@ public class ProjectService {
         findProject.setProjectStatus(Project.ProjectStatus.PROJECT_CLOSED);
 
         Timer timer = new Timer();
-        long delayInMillis = 60000;    // 일단 1분
+        long delayInMillis = 6 * 3600000;    // 6시간
 
         timer.schedule(new TimerTask() {
             @Override
@@ -118,6 +144,16 @@ public class ProjectService {
         }
 
         return findProject;
+    }
+
+    public List<Project> removeBlockUserBoard(List<Project> projectList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return projectList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<Project> result = projectList.stream()
+                .filter(proejct -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== proejct.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }
 

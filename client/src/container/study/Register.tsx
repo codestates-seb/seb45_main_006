@@ -6,21 +6,12 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import { usePostStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 export default function Register() {
     const navigate = useNavigate();
     const { fireToast } = useToast();
-    const [isFormValid, setIsFormValid] = useState(false);
-
-    const validateForm = () => {
-        const { title, content, recruitNum } = inputs;
-        const isTitleValid = title.trim() !== "";
-        const isContentValid = content.trim() !== "";
-        const isRecruitNumValid = recruitNum > 0;
-
-        const isValid = isTitleValid && isContentValid && isRecruitNumValid;
-        setIsFormValid(isValid);
-    };
+    const { alertWhenEmptyFn } = useCheckValidValue();
 
     const [inputs, setInputs] = useState({
         title: "",
@@ -33,13 +24,18 @@ export default function Register() {
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
         setInputs({ ...inputs, [name]: value });
-        validateForm();
     }
 
     const { mutate: postStudy } = usePostStudy();
 
     const handleSubmit = async () => {
-        try {
+        const registerInputs = [
+            { name: "제목", content: inputs.title },
+            { name: "내용", content: inputs.content },
+            { name: "모집인원", content: inputs.recruitNum },
+        ];
+        const emptyNames = alertWhenEmptyFn(registerInputs);
+        if (emptyNames.length === 0) {
             postStudy(inputs, {
                 onSuccess: () => {
                     navigate("/studies/:studyBoardId");
@@ -58,8 +54,6 @@ export default function Register() {
                     });
                 },
             });
-        } catch (error) {
-            console.log("errorMessage", error);
         }
     };
 
@@ -108,16 +102,7 @@ export default function Register() {
                             type="STUDY_POINT"
                             styles="mb-20 shadow-md hover:bg-green-400"
                             isFullBtn={false}
-                            onClickHandler={() => {
-                                if (isFormValid) {
-                                    handleSubmit();
-                                } else {
-                                    fireToast({
-                                        content: "빈 칸을 채워주세요!",
-                                        isConfirm: false,
-                                    });
-                                }
-                            }}
+                            onClickHandler={handleSubmit}
                         >
                             <Typography text="등록하기" type="Label" color="text-white" />
                         </Button>

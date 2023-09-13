@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
 public class LikesController {
     private final LikesService likesService;
 
-    @PostMapping("/{board}/{board-id}/likes")
+    @PostMapping("/likes/{board}/{board-id}")
     public ResponseEntity postAndDeleteLikes(@PathVariable("board-id") @Positive long boardId) {
         HttpStatus httpStatus = likesService.createAndDeleteLikes(boardId);
 

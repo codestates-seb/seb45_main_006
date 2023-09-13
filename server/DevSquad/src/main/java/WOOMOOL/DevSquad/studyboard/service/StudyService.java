@@ -1,22 +1,23 @@
 package WOOMOOL.DevSquad.studyboard.service;
 
+import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.projectboard.entity.Project;
+import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,14 +25,18 @@ import java.util.TimerTask;
 public class StudyService {
     private final StudyRepository studyRepository;
     private final MemberService memberService;
+    private final StackTagService stackTagService;
 
-    public StudyService(StudyRepository studyRepository, MemberService memberService) {
+    public StudyService(StudyRepository studyRepository, MemberService memberService, StackTagService stackTagService) {
         this.studyRepository = studyRepository;
         this.memberService = memberService;
+        this.stackTagService = stackTagService;
     }
 
-    public Study createStudy(Study study) {
+    public Study createStudy(Study study, Set<String> stackTag) {
         study.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
+
+        study.setStackTags(stackTagService.createBoardStackTag(stackTag));
 
         return studyRepository.save(study);
     }
@@ -46,13 +51,35 @@ public class StudyService {
 
     // 스터디 리스트 조회
     @Transactional(readOnly = true)
-    public List<Study> getStudies(Pageable pageable) {
-        Page<Study> studyPage = studyRepository.findByStudyStatus(pageable);
-        return studyPage.getContent();
+    public List<Study> getStudies(int page) {
+
+        Page<Study> studyPage = studyRepository.findByStudyStatus(PageRequest.of(page,5, Sort.by("createdAt")));
+        List<Study> studyList = removeBlockUserBoard(studyPage.getContent());
+
+        return studyList;
+    }
+
+    // 스택 별로 필터링
+    @Transactional(readOnly = true)
+    public List<Study> getStudiesByStack(int page, List<String> stacks) {
+
+        Page<Study> studyPage = studyRepository.findAllByStackTags(PageRequest.of(page,5, Sort.by("createdAt")), stacks, stacks.stream().count());
+        List<Study> studyList = removeBlockUserBoard(studyPage.getContent());
+
+        return studyList;
+    }
+
+    //스터디 페이징
+    public Page<Study> getStudyBoardList(Long memberId, int page){
+
+        Page<Study> studyPage = studyRepository.findByStudyStatusAndMemberProfile(memberId, PageRequest.of(page,4, Sort.by("createdAt")));
+
+        return studyPage;
+
     }
 
     // 스터디 수정
-    public Study updateStudy(Study study) {
+    public Study updateStudy(Study study, Set<String> stackTag) {
 
         // 작성자, 로그인 멤버 일치 여부 확인
         Study findStudy = checkLoginMemberHasAuth(study);
@@ -64,6 +91,7 @@ public class StudyService {
         Optional.ofNullable(study.getRecruitNum())
                 .ifPresent(recruitNum -> findStudy.setRecruitNum(recruitNum));
 
+        findStudy.setStackTags(stackTagService.createBoardStackTag(stackTag));
         findStudy.setModifiedAt(LocalDateTime.now());
 
         return findStudy;
@@ -76,7 +104,7 @@ public class StudyService {
         findStudy.setStudyStatus(Study.StudyStatus.STUDY_CLOSED);
 
         Timer timer = new Timer();
-        long delayInMillis = 60000;    // 일단 1분
+        long delayInMillis = 6 * 3600000;    // 6시간
 
         timer.schedule(new TimerTask() {
             @Override
@@ -113,5 +141,15 @@ public class StudyService {
         }
 
         return findStudy;
+    }
+
+    public List<Study> removeBlockUserBoard(List<Study> studyList) {
+        if(SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
+            return studyList;
+        List<Block> blockList = memberService.findMemberFromToken().getMemberProfile().getBlockList();
+        List<Study> result = studyList.stream()
+                .filter(study -> !blockList.stream().anyMatch(block -> block.getBlockMemberId()== study.getMemberProfile().getMemberProfileId()))
+                .collect(Collectors.toList());
+        return result;
     }
 }

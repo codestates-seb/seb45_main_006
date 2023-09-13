@@ -24,8 +24,6 @@ public class Level {
     private int currentExp = 0;
     @Column
     private int maxExp = 0;
-    @Column
-    private String levelExplain = "좋아요 3번과 댓글 1회 작성 시 다음 단계로 올라갈 수 있어요!";
 
     @OneToOne
     @JoinColumn(name = "memberProfileId")

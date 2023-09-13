@@ -2,6 +2,7 @@ import { PageInfo } from "@type/common";
 import { CommonResProjects } from "@type/project/project.res.dto";
 import { CommonResStudies } from "@type/study/study.res.dto";
 import { InfoDefaultType } from "@type/info/info.res.dto";
+import { QuestionDefaultType } from "@type/question/question.res.dto";
 
 // 멤버 리스트 중 하나의 객체
 export type OneMember = {
@@ -31,10 +32,11 @@ export type GetResMemberDetail = {
     stack: Array<string>;
     modifiedAt: string; // 날짜 string 형식으로 도착
     oauthUser: boolean;
-    blockMemberList: Array<string>;
+    blockMemberList: Array<number>;
     projectList: Array<CommonResProjects>;
     studyList: Array<CommonResStudies>;
     infoBoardList: Array<InfoDefaultType>;
+    questionList: Array<QuestionDefaultType>;
 };
 
 // 마이페이지 - 비밀번호 수정 - status code: 200

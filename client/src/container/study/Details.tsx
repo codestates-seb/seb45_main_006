@@ -68,9 +68,7 @@ const Details = () => {
             </div>
             <div className="mx-20 flex items-start">
                 <div className="mt-20 h-40 w-40 rounded-3xl bg-deadline">유저</div>
-                <textarea className="m-20 h-100 w-11/12 rounded-xl border-2 border-solid border-borderline">
-                    댓글란
-                </textarea>
+                <textarea className="m-20 h-100 w-11/12 rounded-xl border-2 border-solid border-borderline" />
             </div>
             <Button type="STUDY_POINT" styles="font-semibold mx-20" isFullBtn={false}>
                 <Typography type="Body" text="댓글등록" />

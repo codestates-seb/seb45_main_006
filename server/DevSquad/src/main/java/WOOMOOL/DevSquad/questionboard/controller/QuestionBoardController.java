@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.questionboard.controller;
 
+import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.questionboard.mapper.QuestionBoardMapper;
@@ -57,16 +58,40 @@ public class QuestionBoardController {
 
         return new ResponseEntity<>(mapper.QuestionBoardToQuestionBoardResponseDto(updatedQuestionBoard), HttpStatus.OK);
     }
-    //정보게시판 전체 검색
+    @GetMapping("/{board-id}")
+    public ResponseEntity getQuestionBoard(@PathVariable("board-id") @Positive long boardId) {
+        QuestionBoard questionBoard = questionBoardService.findVerifiedQuestionBoard(boardId);
+
+        return new ResponseEntity<>(mapper.QuestionBoardToQuestionBoardResponseDto(questionBoard), HttpStatus.OK);
+    }
+    //질문게시판 전체 검색
     @GetMapping
     public ResponseEntity getAllQuestionBoard(@RequestParam(name = "search", required = false) String search,
                                               @RequestParam @Positive int page,
                                               @RequestParam @Positive int size) {
-        Page<QuestionBoard> questionBoardPage = questionBoardService.findAllQuestionBoard(search, page, size);
+        Page<QuestionBoard> questionBoardPage = questionBoardService.findAllQuestionBoard(search, page-1, size);
         List<QuestionBoard> questionBoardList = questionBoardPage.getContent();
 
         return new ResponseEntity<>(new PageResponseDto<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), questionBoardPage),
                 HttpStatus.OK);
+    }
+
+    // 회원이 쓴 질문게시판 조회
+    @GetMapping("/member/{member-id}")
+    public ResponseEntity getMemberQuestionBoard(@PathVariable("member-id") Long memberId,
+                                                 @RequestParam int page){
+
+        Page<QuestionBoard> questionBoardListPage = questionBoardService.getQuestionBoardList(memberId,page-1);
+        List<QuestionBoard> questionBoardList = questionBoardListPage.getContent();
+        List<QuestionBoardDto.Response> response = mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList);
+
+        return new ResponseEntity(new PageResponseDto(response,questionBoardListPage),HttpStatus.OK);
+    }
+    @GetMapping("/hottest")
+    public ResponseEntity getHottestQuestionBoard() {
+        List<QuestionBoard> questionBoardList = questionBoardService.findHottestQuestionBoard();
+
+        return new ResponseEntity<>(mapper.QuestionBoardListToQuestionBoardResponseDtoList(questionBoardList), HttpStatus.OK);
     }
     //뷰카운트 올리기 (정보게시판을 펼쳐서 보기때문에 상세페이지가 따로 없어서 펼치기를 누르면 조회수가 올라감
     @PostMapping("/{board-id}")

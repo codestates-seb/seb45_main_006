@@ -6,7 +6,7 @@ export type PostReqMember = {
 };
 
 // 닉네임 중복 체크
-export type GetReqNicknameDuplicated = {
+export type PostReqNickname = {
     nickname: string;
 };
 

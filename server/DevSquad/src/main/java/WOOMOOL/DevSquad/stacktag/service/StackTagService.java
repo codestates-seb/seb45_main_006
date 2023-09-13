@@ -1,21 +1,13 @@
 package WOOMOOL.DevSquad.stacktag.service;
 
-import WOOMOOL.DevSquad.exception.BusinessLogicException;
-import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.position.entity.Position;
-import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.stacktag.entity.StackTag;
 import WOOMOOL.DevSquad.stacktag.repository.StackTagRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+
 @Service
 public class StackTagService {
     private final StackTagRepository stackTagRepository;
@@ -35,6 +27,19 @@ public class StackTagService {
                 memberProfile.getStackTags().add(stackTag);
             }
         }
+    }
+
+    public Set<StackTag> createBoardStackTag(Set<String> stackTaglist){
+        if( stackTaglist.isEmpty() ) return null;
+
+        Set<StackTag> stackTags = new HashSet<>();
+
+        for(String stack : stackTaglist) {
+            StackTag stackTag = stackTagRepository.findByTagName(stack);
+            stackTags.add(stackTag);
+        }
+
+        return stackTags;
     }
 
     //검색어가 있을시 스택태그검색과 없을시 검색

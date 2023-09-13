@@ -2,13 +2,24 @@
 export interface CommonResProjects {
     boardId: number;
     title: string;
+    stack: string[];
     createdAt: string;
     modifiedAt: string;
     startDate: string;
     deadline: string;
     recruitNum: number;
-    recruitStatus: boolean;
+    projectStatus: string;
     viewCount: number;
+    memberProfile: MemberProfile;
+}
+
+export interface MemberProfile {
+    memberId: number;
+    profilePicture: string;
+    nickname: string;
+    githubId: string;
+    position: string[];
+    stack: string[];
 }
 
 export interface GetResAllProjects {
@@ -17,10 +28,12 @@ export interface GetResAllProjects {
 
 export interface GetResDetailProject extends CommonResProjects {
     content: string;
+    // bookmarked: boolean;
 }
 
 export interface PatchResProject extends GetResDetailProject {}
 
+export interface PostResProject extends CommonResProjects {}
+
 // 응답 바디가 없음
-export interface PostResProject {}
 export interface DeleteResProject {}

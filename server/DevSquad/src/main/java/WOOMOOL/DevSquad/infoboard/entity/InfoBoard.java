@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.infoboard.entity;
 
 import WOOMOOL.DevSquad.board.entity.Board;
+import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class InfoBoard extends Board {
 
     private String title;
-
+    @Column(length = 700)
     private String content;
 
     private int viewCount;
@@ -36,6 +37,9 @@ public class InfoBoard extends Board {
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Likes> likesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

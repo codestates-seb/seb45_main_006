@@ -28,6 +28,7 @@ export default function Report() {
             />
             {isModalOpen && (
                 <div
+                    // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                     onClick={handleModalClick}
                 >

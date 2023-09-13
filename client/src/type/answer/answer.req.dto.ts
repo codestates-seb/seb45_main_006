@@ -11,6 +11,18 @@ export interface SpecifyAnswerComment extends SpecifyAnswer {
     commentId: number;
 }
 
+// 질문 게시판 - 답변 리스트
+export interface GetReqAnswer extends SpecifyQuestion {
+    page: number;
+    size: number;
+}
+
+// 질문 게시판 - 대댓글 리스트
+export interface GetReqAnswerComment extends SpecifyAnswer {
+    page: number;
+    size: number;
+}
+
 // 질문 게시판 - 답변 등록
 export interface PostReqAnswer extends SpecifyQuestion {
     content: string;

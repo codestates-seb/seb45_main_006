@@ -2,7 +2,7 @@
 export type PostResMember = Record<string, never>; // empty object
 
 // 닉네임 중복 체크  - status code: 200
-export type GetResNicknameDuplicated = Record<string, never>; // empty object
+export type PostResNickname = Record<string, never>; // empty object
 
 // 로그인
 export type PostResLogin = {

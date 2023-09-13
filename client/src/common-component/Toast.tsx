@@ -32,9 +32,9 @@ function Toast({ toast }: { toast: IToast }) {
                     <div className="mr-64">
                         {typeof toast.content === "string" ? (
                             <Typography
-                                type="Highlight"
+                                type="SmallLabel"
                                 text={toast.content}
-                                color={toast.isWarning ? "text-white" : ""}
+                                color={toast.isWarning ? "text-white" : "font-bold"}
                             />
                         ) : (
                             toast.content
