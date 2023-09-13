@@ -7,6 +7,7 @@ import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.level.repository.LevelRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
@@ -18,9 +19,11 @@ import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LevelService {
 
     private final MemberService memberService;
@@ -30,6 +33,12 @@ public class LevelService {
     private final InfoBoardRepository infoBoardRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final AnswerRepository answerRepository;
+    private final LevelRepository levelRepository;
+
+    public Level getMemberLevel(Long memberProfileId){
+
+        return levelRepository.findByMemberProfileId(memberProfileId);
+    }
 
     public void leveling() {
 
@@ -124,7 +133,7 @@ public class LevelService {
         }
     }
 
-    public void ㄱgetExpFrom10MoreLikes(QuestionBoard questionBoard) {
+    public void getExpFrom10MoreLikes(QuestionBoard questionBoard) {
 
         // 회원 레벨 정보
         Level level = getMemberProfileLevel(questionBoard.getMemberProfile());
