@@ -45,6 +45,7 @@ function SignUp2() {
         if (redirectedEmail) {
             setAuthEmail(redirectedEmail);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redirectedEmail]);
 
     const { postCheckNickname, postCheckAuthCode, reqAuthenticateEmail } = useAuthHelper();

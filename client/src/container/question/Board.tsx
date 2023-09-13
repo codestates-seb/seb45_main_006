@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { isLoggedInAtom } from "@feature/Global";
 
 import { useGetAllQuestion } from "@api/question/hook";
+import { useDeleteQuestion } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
@@ -30,12 +31,17 @@ function Board() {
     const {
         data: questions,
         isLoading,
-        // refetch,
+        refetch: refetchQuestions,
     } = useGetAllQuestion({
         search: search,
         page: curPage,
         size: 10,
     });
+
+    useEffect(() => {
+        refetchQuestions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (questions && questions?.pageInfo.totalElements) {
@@ -61,6 +67,34 @@ function Board() {
         }
     };
 
+    const { fireToast, createToast, errorToast } = useToast();
+    const { mutate: deleteQuestion } = useDeleteQuestion();
+
+    const onClickDeleteHandler = ({ boardId }: { boardId: number }) => {
+        createToast({
+            content: "해당 게시글을 삭제하시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                deleteQuestion(
+                    { questionId: boardId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "질문이 삭제되었습니다!",
+                                isConfirm: false,
+                            });
+                            refetchQuestions();
+                        },
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
+                        },
+                    },
+                );
+            },
+        });
+    };
+
     return (
         <>
             <BoardHeader
@@ -84,7 +118,13 @@ function Board() {
                             questions?.data &&
                             Array.isArray(questions?.data) &&
                             questions.data.length > 0 &&
-                            questions.data.map((v) => <QuestionItem question={v} key={v.boardId} />)}
+                            questions.data.map((v) => (
+                                <QuestionItem
+                                    question={v}
+                                    key={v.boardId}
+                                    onClickDeleteHandler={onClickDeleteHandler}
+                                />
+                            ))}
                         {!isLoading &&
                             questions?.data &&
                             Array.isArray(questions?.data) &&

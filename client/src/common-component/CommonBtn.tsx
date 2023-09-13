@@ -28,9 +28,9 @@ const SIZE_CSS = {
 
 const STYLE_TYPE_CSS = {
     OUTLINED: (color: "GRAY" | "MAIN") =>
-        color === "GRAY" ? "border-1 border-gray-500 hover:font-bold" : "border-1 border-main hover:font-bold",
+        color === "GRAY" ? "border-1 border-gray-500 hover:font-bold" : "border-1 border-tertiary hover:font-bold",
     FILLED: (color: "GRAY" | "MAIN") =>
-        color === "GRAY" ? "bg-gray-600 hover:bg-gray-700" : "bg-tertiary hover:bg-light",
+        color === "GRAY" ? "bg-gray-600 hover:bg-gray-700" : "bg-tertiary hover:bg-light hover:font-bold",
 } as const;
 
 function CommonBtn({

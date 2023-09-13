@@ -6,7 +6,7 @@ import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCou
 // 정보 게시판 - 리스트 조회
 export const getAllInfo = async ({ search, category, page, size }: GetReqAllInfo) => {
     let url = `${COMMON_API_PATH.INFO.PATH}`;
-    if (category) url += `/${category.toLowerCase()}`;
+    if (category) url += `/category/${category.toLowerCase()}`;
     url += `?page=${page}&size=${size}`;
     if (search) url += `&search=${search}`;
 

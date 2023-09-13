@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { isLoggedInAtom } from "@feature/Global";
 
 import { useGetAllInfo } from "@api/info/hook";
+import { useDeleteInfo } from "@api/info/hook";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
@@ -31,12 +32,21 @@ function Board() {
     const [searchValue, setSearchValue] = useState<string>("");
     const [category, setCategory] = useState<CATEGORY_NAME | "">("");
 
-    const { data: infos, isLoading } = useGetAllInfo({
+    const {
+        data: infos,
+        isLoading,
+        refetch: refetchInfo,
+    } = useGetAllInfo({
         category: category === "" ? undefined : CATEGORY_TO_ENUM[category],
         search: search,
         page: curPage,
         size: 10,
     });
+
+    useEffect(() => {
+        refetchInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (infos && infos?.pageInfo.totalElements) {
@@ -60,6 +70,34 @@ function Board() {
         } else {
             reqLoginToUserToast();
         }
+    };
+
+    const { fireToast, createToast, errorToast } = useToast();
+    const { mutate: deleteInfo } = useDeleteInfo();
+
+    const onClickDeleteHandler = ({ boardId }: { boardId: number }) => {
+        createToast({
+            content: "해당 게시글을 삭제하시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                deleteInfo(
+                    { infoId: boardId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "게시글이 삭제되었습니다!",
+                                isConfirm: false,
+                            });
+                            refetchInfo();
+                        },
+                        onError: (err) => {
+                            console.log(err);
+                            errorToast();
+                        },
+                    },
+                );
+            },
+        });
     };
 
     return (
@@ -89,7 +127,9 @@ function Board() {
                             infos?.data &&
                             Array.isArray(infos?.data) &&
                             infos.data.length > 0 &&
-                            infos.data.map((v) => <InfoItem info={v} key={v.boardId} />)}
+                            infos.data.map((v) => (
+                                <InfoItem info={v} key={v.boardId} onClickDeleteHandler={onClickDeleteHandler} />
+                            ))}
                         {!isLoading && infos?.data && Array.isArray(infos?.data) && infos.data.length === 0 && (
                             <div className="flex h-500 flex-col items-center justify-center">
                                 <Typography text="게시된 글이 없습니다🥹" type="SmallLabel" styles="font-bold" />

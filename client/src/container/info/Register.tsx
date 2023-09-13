@@ -7,13 +7,13 @@ import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 
 import Typography from "@component/Typography";
-import Button from "@component/Button";
+import CommonBtn from "@component/CommonBtn";
 import BoardInput from "@component/board/Input";
 import BoardContent from "@component/board/BoardContent";
 import Dropdown from "@component/board/Dropdown";
 
 import { infoCategory } from "@component/mockData";
-import { CATEGORY_TO_ENUM, CATEGORY_TO_NAME } from "@api/info/constant";
+import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_NAME } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 
@@ -63,7 +63,7 @@ function Register() {
 
         if (selectedItem !== "") {
             postInfo(
-                { title, content, category: CATEGORY_TO_ENUM[selectedItem] },
+                { title, content, category: selectedItem || "뉴스 레터" },
                 {
                     onSuccess: () => {
                         navigate("/infos");
@@ -91,7 +91,7 @@ function Register() {
         if (isEmpty()) return;
 
         patchInfo(
-            { infoId: location.state.boardId, title, content, category: CATEGORY_TO_ENUM[selectedItem || "뉴스 레터"] },
+            { infoId: location.state.boardId, title, content, category: selectedItem || "뉴스 레터" },
             {
                 onSuccess: () => {
                     navigate("/infos");
@@ -116,7 +116,7 @@ function Register() {
 
     return (
         <div className="m-0 flex justify-center lg:m-80">
-            <div className="flex w-full flex-col rounded-lg bg-info p-8 sm:px-30 sm:py-60 lg:w-11/12">
+            <div className="flex w-full flex-col rounded-lg border-1 border-main  p-8 sm:px-30 sm:py-60 lg:w-11/12">
                 <Typography
                     type="Heading"
                     text={`자유게시판 ${curActivity === "REGISTER" ? "등록" : "수정"}`}
@@ -145,13 +145,13 @@ function Register() {
                 <BoardContent label="게시글 상세내용" required={true} content={content} setContent={setContent} />
                 <div className="flex w-full justify-center">
                     {curActivity === "REGISTER" ? (
-                        <Button type="INFO_POINT" styles="mt-20" isFullBtn={false} onClickHandler={onPostClickHandler}>
-                            <Typography text="등록하기" type="Label" color="text-white" />
-                        </Button>
+                        <CommonBtn size="LG" color="MAIN" styleType="FILLED" onClick={onPostClickHandler}>
+                            <Typography text="등록하기" type="Label" />
+                        </CommonBtn>
                     ) : (
-                        <Button type="INFO_POINT" styles="mt-20" isFullBtn={false} onClickHandler={onPatchClickHandler}>
-                            <Typography text="수정하기" type="Label" color="text-white" />
-                        </Button>
+                        <CommonBtn size="LG" color="MAIN" styleType="FILLED" onClick={onPatchClickHandler}>
+                            <Typography text="수정하기" type="Label" />
+                        </CommonBtn>
                     )}
                 </div>
             </div>

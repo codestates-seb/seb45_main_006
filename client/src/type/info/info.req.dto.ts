@@ -1,9 +1,9 @@
-import { CATEGORY_TYPE } from "./common";
+import { CATEGORY_NAME, CATEGORY_TYPE } from "./common";
 
 interface InfoDefaultType {
     title: string;
     content: string;
-    category: CATEGORY_TYPE;
+    category: CATEGORY_NAME;
 }
 
 interface SpecifyInfoId {

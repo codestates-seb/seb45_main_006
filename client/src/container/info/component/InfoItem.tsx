@@ -7,8 +7,7 @@ import "@component/MarkdownEditor.css";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { useGetMemberDetail } from "@api/member/hook";
-import { usePostViewCount, useDeleteInfo } from "@api/info/hook";
+import { usePostViewCount } from "@api/info/hook";
 import { usePostComment, useGetComment } from "@api/comment/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
@@ -16,8 +15,9 @@ import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
-import Button from "@component/Button";
+import CommonBtn from "@component/CommonBtn";
 import { EditComment, ShowComment } from "@component/board/Comment";
+import UserProfile from "@component/user/UserProfile";
 
 import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_TYPE } from "@type/info/common";
@@ -37,44 +37,21 @@ export const CategoryTag = ({ category }: { category: CATEGORY_TYPE }) => {
     );
 };
 
-const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
+const InfoTitle = ({
+    info,
+    onClickDeleteHandler,
+}: {
+    info: InfoDefaultType;
+    onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+}) => {
     const navigate = useNavigate();
     const { category, title, viewCount, modifiedAt } = info;
-    const { data: user } = useGetMemberDetail({ memberId: info.memberId });
     const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
-
-    const { fireToast, createToast, errorToast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    const { mutate: deleteInfo } = useDeleteInfo();
-
-    const onClickDeleteHandler = () => {
-        createToast({
-            content: "해당 게시글을 삭제하시겠습니까?",
-            isConfirm: true,
-            callback: () => {
-                deleteInfo(
-                    { infoId: info.boardId },
-                    {
-                        onSuccess: () => {
-                            fireToast({
-                                content: "게시글이 삭제되었습니다!",
-                                isConfirm: false,
-                            });
-                            navigate("/infos");
-                        },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
-                    },
-                );
-            },
-        });
-    };
-
+    const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
     return (
         <div className="flex border-b-1 border-borderline">
             <div className="flex-1 p-8">
@@ -82,29 +59,27 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <CategoryTag category={category} />
                     {isMine && (
                         <div className="flex">
-                            <Button
-                                type="PROJECT_POINT"
-                                styles="px-4 py-2 rounded-sm"
-                                onClickHandler={() => navigate(`/infos/${info.boardId}/edit`, { state: info })}
+                            <CommonBtn size="SM" color="MAIN" onClick={onClickEditHandelr}>
+                                <Typography text="수정" type="Description" />
+                            </CommonBtn>
+                            <CommonBtn
+                                size="SM"
+                                color="MAIN"
+                                styleType="FILLED"
+                                onClick={() => onClickDeleteHandler({ boardId: info.boardId })}
                             >
-                                <Typography text="수정" type="Description" color="text-white" />
-                            </Button>
-                            <Button type="WARN" styles="px-4 py-2 rounded-sm" onClickHandler={onClickDeleteHandler}>
-                                <Typography text="삭제" type="Description" color="text-white" />
-                            </Button>
+                                <Typography text="삭제" type="Description" />
+                            </CommonBtn>
                         </div>
                     )}
                 </div>
                 <div className="my-8 flex items-center justify-between">
                     <Typography text={title} type="Label" />
-                    {user && (
-                        <div className="flex items-center">
-                            <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                                <img src={user.profilePicture} alt="" />
-                            </div>
-                            <Typography text={user.nickname} type="Label" />
-                        </div>
-                    )}
+
+                    <div className="flex items-center">
+                        <UserProfile size="sm" profilePicture={info.profilePicture} />
+                        <Typography text={info.nickname} type="Label" />
+                    </div>
                 </div>
                 <div className="flex">
                     <Typography text={dayjs(modifiedAt).format("YYYY-MM-DD")} type="SmallLabel" color="text-gray-600" />
@@ -115,7 +90,7 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
-            <div className="mb-8 flex w-50 flex-col items-center justify-end border-l-1 border-borderline">
+            <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
                         <button onClick={() => setIsLiked(!isLiked)}>
@@ -134,12 +109,18 @@ const InfoTitle = ({ info }: { info: InfoDefaultType }) => {
     );
 };
 
-function InfoItem({ info }: { info: InfoDefaultType }) {
+function InfoItem({
+    info,
+    onClickDeleteHandler,
+}: {
+    info: InfoDefaultType;
+    onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+}) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
     const [totalItems, setTotalItems] = useState<number>(0);
 
-    const { data: commentList } = useGetComment({
+    const { data: commentList, refetch: refetchComment } = useGetComment({
         board: "information",
         boardId: info.boardId,
         page: curPage,
@@ -181,7 +162,7 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
                             isConfirm: false,
                         });
                         setComment("");
-                        // TODO: 댓글 리스트 조회
+                        refetchComment();
                     },
                     // TODO: 에러 분기
                     onError: (err) => {
@@ -203,10 +184,10 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
 
     return (
         <div className="mb-32 border-1 border-borderline p-8">
-            <InfoTitle info={info} />
+            <InfoTitle info={info} onClickDeleteHandler={onClickDeleteHandler} />
             <div
                 data-color-mode="light"
-                className={`relative overflow-hidden border-b-1 border-borderline pb-32 pt-12 ${
+                className={`relative overflow-hidden border-b-1 border-borderline p-8 pb-32 ${
                     isOpened ? "" : "max-h-300"
                 }`}
             >
@@ -229,7 +210,12 @@ function InfoItem({ info }: { info: InfoDefaultType }) {
                         {commentList?.data &&
                             Array.isArray(commentList.data) &&
                             commentList.data.map((v) => (
-                                <ShowComment key={v.commentId} comment={v} writerId={info.memberId} />
+                                <ShowComment
+                                    key={v.commentId}
+                                    comment={v}
+                                    writerId={info.memberId}
+                                    refetchComment={refetchComment}
+                                />
                             ))}
                         <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
                     </div>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { useGetMemberDetail } from "@api/member/hook";
 import { usePatchComment, useDeleteComment, usePostCommentRe } from "@api/comment/hook";
 
 import { useToast } from "@hook/useToast";
@@ -17,31 +16,23 @@ import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
+import UserProfile from "@component/user/UserProfile";
 
 interface IComment extends ITextarea {
     onSubmitHanlder: () => void;
 }
 
-const dummyUser = {
-    memberId: 5,
-    profilePicture:
-        "https://dszw1qtcnsa5e.cloudfront.net/community/20220519/453159ca-e328-429c-9b3f-460fc592d963/%EA%B7%80%EC%97%AC%EC%9A%B4%EB%AA%B0%EB%9D%BC%EB%AA%A8%EC%BD%94%EC%BD%94.png",
-    nickname: "모코코",
-    githubId: "mococo~",
-    introduction: "update",
-    listEnroll: true,
-    position: ["Front", "Back"],
-    stack: ["Javascript", "Typescript", "React.js", "Node.js", "Next.js", "BootStrap", "tailwindcss"],
-};
-
 export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment) => {
     return (
         <div className="flex flex-col border-b-1 border-borderline py-12">
-            <div className="flex">
-                <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                    <img src={dummyUser.profilePicture} alt="" />
+            <div className="flex flex-col">
+                <div className="flex justify-between">
+                    <UserProfile size="sm" mine={true} />
+                    <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
+                        <Typography type="Highlight" text="댓글 등록" color="text-white" />
+                    </Button>
                 </div>
-                <div className="flex-1">
+                <div className="mt-8 flex-1">
                     <Textarea
                         name="comment"
                         maxlength={200}
@@ -52,11 +43,6 @@ export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment)
                     />
                 </div>
             </div>
-            <div className="flex justify-end">
-                <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
-                    <Typography type="Highlight" text="댓글 등록" color="text-white" />
-                </Button>
-            </div>
         </div>
     );
 };
@@ -65,12 +51,13 @@ export const OneComment = ({
     v,
     writerId,
     boardId,
+    refetchComment,
 }: {
     v: CommentDefaultTypeWithRe;
     writerId: number;
     boardId: number;
+    refetchComment: () => void;
 }) => {
-    const { data: user } = useGetMemberDetail({ memberId: v.memberId });
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
     const [isEdit, setIsEdit] = useState(false);
@@ -105,6 +92,7 @@ export const OneComment = ({
                             content: "댓글이 수정되었습니다!",
                             isConfirm: false,
                         });
+                        refetchComment();
                     },
                     // TODO: 에러 분기
                     onError: (err) => {
@@ -130,7 +118,7 @@ export const OneComment = ({
                                 content: "댓글이 삭제되었습니다!",
                                 isConfirm: false,
                             });
-                            // TODO: 댓글 리스트 조회
+                            refetchComment();
                         },
                         onError: (err) => {
                             console.log(err);
@@ -155,6 +143,8 @@ export const OneComment = ({
                             content: "댓글이 등록되었습니다!",
                             isConfirm: false,
                         });
+                        setNextComment("");
+                        refetchComment();
                     },
                     // TODO: 에러 분기
                     onError: (err) => {
@@ -170,9 +160,7 @@ export const OneComment = ({
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
-                    <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                        {user && <img src={user.profilePicture} alt="" />}
-                    </div>
+                    <UserProfile profilePicture={v.profilePicture} size="sm" />
                     <Typography type="Highlight" text={v.nickname} />
                     {isSameUser && (
                         <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
@@ -232,6 +220,15 @@ export const OneComment = ({
                     )}
                 </div>
             )}
+            {/* <button
+                className="my-8 w-fit border-1 border-borderline px-8 py-4"
+                onClick={() => {
+                    if (parentId) setParentId(0);
+                    else setParentId(v.commentId);
+                }}
+            >
+                <Typography text={`답글 ${v.commentList?.length || 0}개`} type="Description" />
+            </button> */}
             {parentId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">
@@ -239,10 +236,7 @@ export const OneComment = ({
                             <div className="flex rotate-180 items-end p-8">
                                 <BiReply />
                             </div>
-                            <div className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline">
-                                <img src={dummyUser.profilePicture} alt="" />
-                            </div>
-                            <Typography type="Highlight" text={dummyUser.nickname} />
+                            <UserProfile mine={true} size="sm" />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>
@@ -273,7 +267,7 @@ export const OneComment = ({
                             <BiReply />
                         </div>
                         <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} boardId={boardId} />
+                            <OneComment v={v} writerId={writerId} boardId={boardId} refetchComment={refetchComment} />
                         </div>
                     </div>
                 ))}
@@ -281,7 +275,15 @@ export const OneComment = ({
     );
 };
 
-export const ShowComment = ({ comment, writerId }: { comment: CommentDefaultTypeWithRe; writerId: number }) => {
+export const ShowComment = ({
+    comment,
+    writerId,
+    refetchComment,
+}: {
+    comment: CommentDefaultTypeWithRe;
+    writerId: number;
+    refetchComment: () => void;
+}) => {
     return (
         <div className="mb-8 flex flex-col border-b-1 border-borderline">
             <OneComment
@@ -289,6 +291,7 @@ export const ShowComment = ({ comment, writerId }: { comment: CommentDefaultType
                 writerId={writerId}
                 boardId={comment.boardId}
                 key={`${comment.boardId}-${comment.memberId}`}
+                refetchComment={refetchComment}
             />
         </div>
     );
