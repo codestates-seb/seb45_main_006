@@ -9,8 +9,6 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
-import WOOMOOL.DevSquad.member.service.MemberService;
-import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +38,9 @@ public class MessageService {
         ChatRoom findChatRoom = findChatRoomById(chatRoomId);
         // 메시지 DB에 저장, 채팅방에 저장
         Message saveMessage = Message.builder()
-                .content(message.getContent())
                 .senderId(member.getMemberId())
                 .nickname(member.getNickname())
+                .content(message.getContent())
                 .createAt(LocalDateTime.now())
                 .chatRoom(findChatRoom)
                 .type(Message.Type.BASIC)
@@ -53,12 +51,27 @@ public class MessageService {
         return messageRepository.save(saveMessage);
     }
 
+    public void startMessage(ChatRoom chatRoom) {
+
+        Message startMessage = Message.builder()
+                .nickname("공지")
+                .content("대화가 이제 막 시작되었습니다.")
+                .chatRoom(chatRoom)
+                .createAt(LocalDateTime.now())
+                .type(Message.Type.NOTICE)
+                .build();
+
+        messageRepository.save(startMessage);
+        chatRoom.getMessageList().add(startMessage);
+
+    }
+
     // 채팅방 나갈때 남기는 메시지
     public void leaveMessage(ChatRoom chatRoom, MemberProfile memberProfile) {
 
         String nickname = memberProfile.getNickname();
 
-        Message message = Message.builder()
+        Message leaveMessage = Message.builder()
                 .senderId(memberProfile.getMemberProfileId())
                 .nickname(memberProfile.getNickname())
                 .content(nickname + "님께서 채팅방에서 나갔습니다.")
@@ -67,7 +80,8 @@ public class MessageService {
                 .type(Message.Type.NOTICE)
                 .build();
 
-        messageRepository.save(message);
+        messageRepository.save(leaveMessage);
+        chatRoom.getMessageList().add(leaveMessage);
     }
 
     private ChatRoom findChatRoomById(Long chatRoomId) {
