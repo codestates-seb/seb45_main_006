@@ -3,6 +3,7 @@ package WOOMOOL.DevSquad.projectboard.service;
 import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
@@ -25,17 +26,21 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
     private final StackTagService stackTagService;
+    private final LevelService levelService;
 
-    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService) {
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService, LevelService levelService) {
         this.projectRepository = projectRepository;
         this.memberService = memberService;
         this.stackTagService = stackTagService;
+        this.levelService = levelService;
     }
 
     public Project createProject(Project project, Set<String> stackTag) {
         project.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
         project.setStackTags(stackTagService.createBoardStackTag(stackTag));
+
+        levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
         return projectRepository.save(project);
     }

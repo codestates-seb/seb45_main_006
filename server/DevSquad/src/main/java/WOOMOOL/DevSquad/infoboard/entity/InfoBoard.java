@@ -46,6 +46,9 @@ public class InfoBoard extends Board {
 
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
+    // 좋아요 경험치 제한
+    private Integer likeExp = 1;
+
 
     @Enumerated(EnumType.STRING)
     private Category category;

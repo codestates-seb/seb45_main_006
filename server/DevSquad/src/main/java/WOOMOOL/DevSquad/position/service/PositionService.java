@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PositionService {
@@ -32,8 +33,10 @@ public class PositionService {
             }
         }
     }
-    public List<Position> getAllPosition(){
+    public List<String> getAllPosition(){
 
-        return positionRepository.findAll();
+        return positionRepository.findAll().stream()
+                .map(position -> position.getPositionName())
+                .collect(Collectors.toList());
     }
 }

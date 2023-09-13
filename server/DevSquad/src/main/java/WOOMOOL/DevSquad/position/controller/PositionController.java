@@ -22,7 +22,7 @@ public class PositionController {
     @GetMapping
     public ResponseEntity getAllPosition(){
 
-        List<Position> positionList = positionService.getAllPosition();
+        List<String> positionList = positionService.getAllPosition();
 
         return new ResponseEntity(positionList, HttpStatus.OK);
     }
