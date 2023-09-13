@@ -71,13 +71,10 @@ const BtnsWithoutAuth = () => {
     };
 
     return (
-        <div className="flex w-166 justify-between">
-            <button className={outlinedCss} onClick={onHandleLogin}>
+        <div className="flex w-166 justify-between text-center">
+            <Link to="/login" className={outlinedCss}>
                 <Typography type="Body" text="로그인" />
-            </button>
-            {/* <Link to="/login" className={outlinedCss}>
-                <Typography type="Body" text="로그인" />
-            </Link> */}
+            </Link>
             <Link to="/signup/1" className={filledCss}>
                 <Typography type="Body" text="회원가입" color="text-white" />
             </Link>
