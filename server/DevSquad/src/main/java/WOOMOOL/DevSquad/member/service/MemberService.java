@@ -146,7 +146,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilesByPosition(int page, List<String> positions) {
 
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions, positions.stream().count());
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions, (long) positions.size());
 
         Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 
@@ -157,7 +157,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Page<MemberProfile> getMemberProfilesByStack(int page, List<String> stacks) {
 
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks, stacks.stream().count());
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks, (long) stacks.size());
 
         Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 

@@ -129,7 +129,7 @@ public class EmailService {
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
 
-        String sender = "DevSquad";
+        String sender = "DevSquad<aokagami03@gmail.com>";
 
         mimeMessageHelper.setSubject(title);
         mimeMessageHelper.setTo(receiver);
