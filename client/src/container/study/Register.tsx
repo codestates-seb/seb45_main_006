@@ -6,12 +6,12 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import { usePostStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckEmptyInput } from "@hook/useCheckEmptyInput";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 export default function Register() {
     const navigate = useNavigate();
     const { fireToast } = useToast();
-    const { alertWhenEmptyFn } = useCheckEmptyInput();
+    const { alertWhenEmptyFn } = useCheckValidValue();
 
     const [inputs, setInputs] = useState({
         title: "",

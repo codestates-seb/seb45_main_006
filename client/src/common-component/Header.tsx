@@ -44,7 +44,6 @@ const BtnsWithoutAuth = () => {
             {
                 onSuccess: (res) => {
                     const { authorization, refresh } = res.headers;
-                    console.log(res.headers);
                     if (!authorization || !refresh) {
                         return Promise.reject("로그인에 실패하였습니다.");
                     }

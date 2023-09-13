@@ -11,6 +11,12 @@ export interface SpecifyComment {
     commentId: number;
 }
 
+// 게시판 - 댓글 리스트
+export interface GetReqComment extends SpecifyBoard {
+    page: number;
+    size: number;
+}
+
 // 게시판 - 댓글 등록
 export interface PostReqComment extends SpecifyBoard {
     content: string;

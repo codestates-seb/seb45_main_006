@@ -1,9 +1,30 @@
 import { AxiosError } from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { PostReqComment, PatchReqComment, DeleteReqComment, PostReqCommentRe } from "@type/comment/comment.req.dto";
-import { PostResComment, PatchResComment, DeleteResComment, PostResCommentRe } from "@type/comment/comment.res.dto";
-import { postComment, postCommentRe, patchComment, deleteComment } from "./api";
+import {
+    GetReqComment,
+    PostReqComment,
+    PatchReqComment,
+    DeleteReqComment,
+    PostReqCommentRe,
+} from "@type/comment/comment.req.dto";
+import {
+    GetResComment,
+    PostResComment,
+    PatchResComment,
+    DeleteResComment,
+    PostResCommentRe,
+} from "@type/comment/comment.res.dto";
+import { postComment, postCommentRe, patchComment, deleteComment, getComment } from "./api";
+
+// 게시판 - 댓글 리스트
+export const useGetComment = ({ page, size, board, boardId }: GetReqComment) => {
+    return useQuery<GetResComment, AxiosError, GetResComment>({
+        queryKey: ["comments", { page, size, board, boardId }],
+        queryFn: () => getComment({ page, size, board, boardId }),
+        enabled: !!boardId,
+    });
+};
 
 // 게시판 - 댓글 등록
 export const usePostComment = () => {

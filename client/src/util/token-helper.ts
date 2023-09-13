@@ -34,9 +34,10 @@ export const isValidToken = (token: string): boolean | undefined => {
         console.log("jwt 토큰이 유효하지 않습니다.", token);
         return;
     }
+
     const tokenJwtData = parseJwt(token);
     // dayjs.unix(tokenJwtData.exp): unix -> 시간
-    return tokenJwtData.exp > Date.now();
+    return tokenJwtData.exp > Date.now() / 1000;
 };
 
 export const isExistToken = (): boolean => {

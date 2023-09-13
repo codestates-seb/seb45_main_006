@@ -1,3 +1,4 @@
+import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import { DeleteReqProject, GetReqDetailProject, PatchReqProject, PostReqProject } from "@type/project/project.req.dto";
@@ -6,7 +7,7 @@ import { DeleteReqProject, GetReqDetailProject, PatchReqProject, PostReqProject 
 //TODO
 export const getAllProjects = async () => {
     const url = `${COMMON_API_PATH.PROJECT.LIST}?page=1`;
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 
