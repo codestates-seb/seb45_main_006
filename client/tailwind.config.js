@@ -12,8 +12,8 @@ const customColor = {
     light: "#cae9d1",
     // 메인 컬러 통일하기 - 수정 예정
     primary: "#191A20",
-    "button-next": "#888888",
-    "button-border": "#847D7D",
+    buttonnext: "#888888",
+    buttonborder: "#847D7D",
     borderline: "#D9D9D9",
     background: "#F1F1F1",
     main: "#44AE4E",
