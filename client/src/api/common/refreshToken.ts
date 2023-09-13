@@ -34,6 +34,6 @@ export const getRefreshToken = async (token: string) => {
     //     return Promise.reject("로그인 세션 유지에 실패하였습니다.");
     // }
 
-    setItemToStorage("accessToken", authorization);
+    setItemToStorage("accessToken", authorization.split(" ")[1]);
     return authorization;
 };
