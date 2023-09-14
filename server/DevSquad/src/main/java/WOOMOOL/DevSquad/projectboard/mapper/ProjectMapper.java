@@ -44,6 +44,7 @@ public interface ProjectMapper {
         return project;
     }
 
+    @Mapping(target = "bookmarked", expression = "java(markedOrNot(project.getBookmarkList()))")
     default List<ProjectDto.previewResponseDto> entityToPreviewResponseDto(List<Project> projects) {
         return projects.stream()
                 .map(project -> new ProjectDto.previewResponseDto(
@@ -58,6 +59,7 @@ public interface ProjectMapper {
                         project.getModifiedAt(),
                         project.getRecruitNum(),
                         project.getProjectStatus(),
+                        markedOrNot(project.getBookmarkList()),
                         project.getViewCount(),
                         new MemberProfileDto.listResponse(
                                 project.getMemberProfile().getMemberProfileId(),
