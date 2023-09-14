@@ -300,6 +300,10 @@ public class MemberService {
         // 정보 게시판 리스트 정보
         List<InfoBoard> infoBoardList = getMemberInfoBoardList(memberProfileId);
         memberProfile.setInfoBoardList(infoBoardList);
+        // 질문 게시판 리스트 정보
+        List<QuestionBoard> questionBoardList = getMemberQuestionList(memberProfileId);
+        memberProfile.setQuestionBoardList(questionBoardList);
+
     }
 
     // 특정 멤버가 가지고 있는 프로젝트 리스트
@@ -324,6 +328,12 @@ public class MemberService {
         List<InfoBoard> infoBoardList = infoBoardRepository.findAllByMemberProfile(memberProfileId);
 
         return infoBoardList;
+    }
+    // 특정 멤버가 가지고 있는 질문게시판 리스트
+    private List<QuestionBoard> getMemberQuestionList(Long memberProfileId){
+        List<QuestionBoard> questionBoardList = questionBoardRepository.findAllByMemberProfile(memberProfileId);
+
+        return questionBoardList;
     }
 
     // 프로필 페이징
@@ -352,7 +362,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<InfoBoard> infoBoardPage = likesRepository
-                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
 
         return infoBoardPage;
 
@@ -364,7 +374,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = likesRepository
-                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
 
         return questionBoardPage;
     }
@@ -376,7 +386,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = bookmarkRepository
-                .findQuestionByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findQuestionByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
 
         return questionBoardPage;
     }
@@ -386,7 +396,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<InfoBoard> infoBoardPage = bookmarkRepository
-                .findInfoByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findInfoByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
 
         return infoBoardPage;
     }
@@ -396,7 +406,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<Project> projectBoardPage = bookmarkRepository
-                .findProjectByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findProjectByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
 
         return projectBoardPage;
     }

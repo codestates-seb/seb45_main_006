@@ -92,8 +92,8 @@ public class ChatRoomService {
         if (findChatRoom.getMemberProfileList().size() == 0) {
 
             findChatRoom.setChatRoomStatus(ChatRoom.ChatRoomStatus.CHAT_ROOM_CLOSED);
-        // 멤버가 남아있으면 퇴장했다는 메시지 남기기
 
+        // 멤버가 남아있으면 퇴장했다는 메시지 남기기
         } else messageService.leaveMessage(findChatRoom, loginMember);
     }
 

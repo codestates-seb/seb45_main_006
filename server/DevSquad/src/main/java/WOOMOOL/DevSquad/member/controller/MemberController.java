@@ -155,7 +155,9 @@ public class MemberController {
         List<ProjectDto.previewResponseDto> projectResponses = projectMapper.entityToPreviewResponseDto(memberProfile.getProjectlist());
         List<StudyDto.previewResponseDto> studyResponse = studyMapper.entityToPreviewResponseDto(memberProfile.getStudyList());
         List<InfoBoardDto.Response> infoBoardResponse = infoBoardMapper.InfoBoardListToInfoBoardResponseDtoList(memberProfile.getInfoBoardList());
-        MemberProfileDto.memberProfileResponse response = memberMapper.entityToResponseDto(memberProfile,projectResponses,studyResponse,infoBoardResponse);
+        List<QuestionBoardDto.Response> questionBoardResponse = questionBoardMapper.QuestionBoardListToQuestionBoardResponseDtoList(memberProfile.getQuestionBoardList());
+        MemberProfileDto.memberProfileResponse response = memberMapper.entityToResponseDto(memberProfile,projectResponses,studyResponse,infoBoardResponse,questionBoardResponse);
+
 
         return new ResponseEntity(response, HttpStatus.OK);
 
