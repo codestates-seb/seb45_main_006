@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 
 import { useLoginInAndOut } from "@hook/useLogInAndOut";
 
@@ -9,15 +10,23 @@ import Input from "@component/Input";
 import Typography from "@component/Typography";
 import googleImg from "@assets/sign/login_google.png";
 import githubImg from "@assets/sign/login_github.png";
+import { isLoginFailedAtom } from "@feature/Global";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
+    const [isFailed, setIsFailed] = useRecoilState(isLoginFailedAtom);
 
     const { onHandleLogin } = useLoginInAndOut();
 
     const onClickLoginHandler = () => {
         onHandleLogin({ email, password: pw, routePath: "/" });
+    };
+
+    const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key == "Enter" && onClickLoginHandler) {
+            onClickLoginHandler();
+        }
     };
 
     return (
@@ -37,17 +46,29 @@ function Login() {
                         <Input
                             name="이메일"
                             value={email}
-                            onChange={(e) => setEmail(e.currentTarget.value)}
+                            onChange={(e) => {
+                                setIsFailed(false);
+                                setEmail(e.currentTarget.value);
+                            }}
+                            onKeyDownHandler={onKeyDownHandler}
                             placeholder="이메일을 입력해주세요."
-                            borderStyle="flex-1 rounded-none border-b-2 border-buttonborder outline-none focus:outline-none"
+                            borderStyle={`flex-1 rounded-none border-b-4 border-buttonborder outline-none focus:outline-none ${
+                                isFailed ? "border-warn" : ""
+                            }`}
                         />
                         <Input
                             name="비밀번호"
                             value={pw}
-                            onChange={(e) => setPw(e.currentTarget.value)}
+                            onChange={(e) => {
+                                setIsFailed(false);
+                                setPw(e.currentTarget.value);
+                            }}
+                            onKeyDownHandler={onKeyDownHandler}
                             type="password"
                             placeholder="비밀번호을 입력해주세요."
-                            borderStyle="flex-1 rounded-none border-b-2 border-buttonborder outline-none focus:outline-none"
+                            borderStyle={`flex-1 rounded-none border-b-4 border-buttonborder outline-none focus:outline-none ${
+                                isFailed ? "border-warn" : ""
+                            }`}
                         />
                     </div>
                     <div className="mt-30 flex-col items-center justify-center">

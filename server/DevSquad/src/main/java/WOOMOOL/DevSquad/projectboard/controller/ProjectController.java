@@ -41,9 +41,19 @@ public class ProjectController {
     @GetMapping("/list")
     public ResponseEntity getProjects(@RequestParam int page,
                                       @RequestParam int size,
-                                      @RequestParam(required = false) List<String> stacks) {
-        // 스택 필터링
-        if (stacks != null) {
+                                      @RequestParam(required = false) List<String> stacks,
+                                      @RequestParam(required = false) String title) {
+        // 스택 + 타이틀 필터링
+        if ( stacks != null && title != null ) {
+
+            Page<Project> projectPage = projectService.getProjectsByStackAndTitle(page - 1, size, stacks, title);
+            List<Project> projectList = projectPage.getContent();
+
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
+
+            // 스택 필터링
+        } else if ( stacks != null ) {
 
             Page<Project> projectPage = projectService.getProjectsByStack(page - 1, size, stacks);
             List<Project> projectList = projectPage.getContent();
@@ -51,6 +61,16 @@ public class ProjectController {
             List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
             return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
 
+            // 타이틀 필터링
+        } else if ( title != null ) {
+
+            Page<Project> projectPage = projectService.getProjectsByTitle(page - 1, size, title);
+            List<Project> projectList = projectPage.getContent();
+
+            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
+
+            // 필터링 X
         } else {
 
             Page<Project> projectPage = projectService.getProjects(page - 1, size);

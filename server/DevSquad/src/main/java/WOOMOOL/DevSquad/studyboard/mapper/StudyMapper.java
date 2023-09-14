@@ -39,6 +39,8 @@ public interface StudyMapper {
 
         return study;
     }
+
+    @Mapping(target = "bookmarked", expression = "java(markedOrNot(study.getBookmarkList()))")
     default List<StudyDto.previewResponseDto> entityToPreviewResponseDto(List<Study> studies) {
         return studies.stream()
                 .map(study -> new StudyDto.previewResponseDto(
@@ -51,6 +53,7 @@ public interface StudyMapper {
                         study.getModifiedAt(),
                         study.getRecruitNum(),
                         study.getStudyStatus(),
+                        markedOrNot(study.getBookmarkList()),
                         study.getViewCount(),
                         new MemberProfileDto.listResponse(
                                 study.getMemberProfile().getMemberProfileId(),

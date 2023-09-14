@@ -67,11 +67,37 @@ public class ProjectService {
         return response;
     }
 
-    // 스택 별로 필터링
+    // 스택 필터링
     @Transactional(readOnly = true)
     public Page<Project> getProjectsByStack(int page, int size, List<String> stacks) {
 
         List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
+        projectList = removeBlockUserBoard(projectList);
+
+        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
+        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+
+        return response;
+    }
+
+    // 타이틀 필터링
+    @Transactional(readOnly = true)
+    public Page<Project> getProjectsByTitle(int page, int size, String title) {
+
+        List<Project> projectList = projectRepository.findAllByTitle(title);
+        projectList = removeBlockUserBoard(projectList);
+
+        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
+        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+
+        return response;
+    }
+
+    // 스택 + 타이틀 필터링
+    @Transactional(readOnly = true)
+    public Page<Project> getProjectsByStackAndTitle(int page, int size, List<String> stacks, String title) {
+
+        List<Project> projectList = projectRepository.findAllByStackTagsAndTitle(stacks, stacks.stream().count(), title);
         projectList = removeBlockUserBoard(projectList);
 
         List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));

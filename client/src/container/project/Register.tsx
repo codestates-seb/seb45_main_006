@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { useRecoilValue } from "recoil";
+import { defaultStackAtom } from "@feature/Global";
+
 import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
@@ -14,6 +17,10 @@ import { useCheckCurActivity } from "@hook/useCheckCurActivity";
 import { GetResDetailProject } from "@type/project/project.res.dto";
 import InputForNumber from "@component/project-study/InputForNumber";
 import Dropdown from "@component/project-study/Dropdown";
+import AutoCompletionTags from "@component/AutoCompletionTags";
+import dayjs from "dayjs";
+
+// import { defaultStack } from "@component/mockData";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -22,6 +29,9 @@ export default function Register() {
 
     const options = ["모집중", "모집완료"];
     const [selectedOption, setSelectedOption] = useState("모집중");
+    const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
+    const [startDate, setStartDate] = useState<string>("");
+    const [deadline, setDeadline] = useState<string>("");
 
     const handleSelectOption = (option: string) => {
         setSelectedOption(option);
@@ -35,12 +45,7 @@ export default function Register() {
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
-        stack: [""],
-        startDate: "",
-        deadline: "",
         recruitNum: 0,
-        projectStatus: "",
-        // recruitStatus: false,
     });
 
     useEffect(() => {
@@ -51,22 +56,21 @@ export default function Register() {
                 startDate: prevStartDate,
                 deadline: prevDeadline,
                 recruitNum: prevRecruitNum,
+                stack: prevStack,
             }: GetResDetailProject = location.state;
             setInputs({
                 ...inputs,
                 title: prevTitle,
                 content: prevContent,
-                startDate: prevStartDate,
-                deadline: prevDeadline,
                 recruitNum: prevRecruitNum,
             });
+
+            setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
+            setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
+            setSelectedStack(prevStack);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
-
-    const handleDates = (start: string, end: string): void => {
-        setInputs({ ...inputs, startDate: start, deadline: end });
-    };
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
@@ -77,8 +81,8 @@ export default function Register() {
         const registerInputs = [
             { name: "제목", content: inputs.title },
             { name: "내용", content: inputs.content },
-            { name: "시작날짜", content: inputs.startDate },
-            { name: "마감날짜", content: inputs.deadline },
+            { name: "시작날짜", content: startDate || "" },
+            { name: "마감날짜", content: deadline || "" },
             { name: "모집인원", content: inputs.recruitNum },
         ];
         const emptyNames = alertWhenEmptyFn(registerInputs);
@@ -88,40 +92,50 @@ export default function Register() {
     const onPostClickHandler = () => {
         if (isEmpty()) return;
 
-        if (inputs.title !== "") {
-            postProject(
-                { ...inputs },
-                {
-                    //아이디가 있어야 상세조회 가능하므로 boardId 전달
-                    onSuccess: (res) => {
-                        navigate("/projects/:projectBoardId", { state: res.boardId });
-                        fireToast({
-                            content: "게시글이 등록되었습니다!",
-                            isConfirm: false,
-                        });
-                    },
-                    // TODO: 에러 분기
-                    onError: (err) => {
-                        console.log(err);
-                        fireToast({
-                            content: "게시글 등록 중 에러가 발생하였습니다🥹",
-                            isConfirm: false,
-                            isWarning: true,
-                        });
-                    },
+        postProject(
+            {
+                ...inputs,
+                stack: selectedStack,
+                startDate: dayjs(startDate).format("M/D"),
+                deadline: dayjs(deadline).format("M/D"),
+            },
+            {
+                //아이디가 있어야 상세조회 가능하므로 boardId 전달
+                onSuccess: (res) => {
+                    navigate(`/projects/${res.boardId}`);
+                    fireToast({
+                        content: "게시글이 등록되었습니다!",
+                        isConfirm: false,
+                    });
                 },
-            );
-        }
+                // TODO: 에러 분기
+                onError: (err) => {
+                    console.log(err);
+                    fireToast({
+                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                        isConfirm: false,
+                        isWarning: true,
+                    });
+                },
+            },
+        );
     };
 
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
         patchProject(
-            { boardId: location.state.boardId, recruitStatus: "PROJECT_POSTED", ...inputs },
+            {
+                ...inputs,
+                boardId: location.state.boardId,
+                recruitStatus: "PROJECT_POSTED",
+                stack: selectedStack,
+                startDate,
+                deadline,
+            },
             {
                 onSuccess: (res) => {
-                    navigate("/projects/:projectBoardId", { state: res.boardId });
+                    navigate(`/projects/${res.boardId}`);
                     fireToast({
                         content: "게시글이 수정되었습니다!",
                         isConfirm: false,
@@ -139,6 +153,8 @@ export default function Register() {
             },
         );
     };
+
+    const defaultStack = useRecoilValue(defaultStackAtom);
 
     return (
         <div className="m-80 flex justify-center">
@@ -163,20 +179,26 @@ export default function Register() {
                         onChange={handleInput}
                         borderStyle={""}
                     />
-                    {/* <BoardInput
-                    name="stack"
-                    label="요구스택"
-                    required={true}
-                    placeholder="ex) java, javascript"
-                    value={inputs.stack}
-                    onChange={handleInput}
-                     /> */}
+                    <div className="my-10 p-10">
+                        <div className="flex">
+                            <Typography text="요구 스택" type="Body" styles="mb-10" />
+                            <Typography text="*" type="Body" color="text-warn" />
+                        </div>
+                        <AutoCompletionTags
+                            type="OUTLINED"
+                            placeholder="검색할 기술 스택을 입력해주세요."
+                            selectedTags={selectedStack}
+                            setSelectedTags={setSelectedStack}
+                            defaultSuggestions={defaultStack}
+                        />
+                    </div>
                     {curActivity === "REGISTER" ? (
                         <Dropdown
                             label="모집여부"
                             options={options}
                             selectedOption={selectedOption}
                             onSelectOption={handleSelectOption}
+                            disabled={true}
                         />
                     ) : (
                         <Dropdown
@@ -184,9 +206,15 @@ export default function Register() {
                             options={options}
                             selectedOption={selectedOption}
                             onSelectOption={handleSelectOption}
+                            disabled={false}
                         />
                     )}
-                    <DateChoice onChange={handleDates} />
+                    <DateChoice
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        deadline={deadline}
+                        setDeadline={setDeadline}
+                    />
                     <InputForNumber
                         name="recruitNum"
                         label="모집인원"

@@ -75,6 +75,7 @@ public class ProjectDto {
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
         private Project.ProjectStatus projectStatus;
+        private boolean bookmarked;
         private int viewCount;
         private MemberProfileDto.listResponse memberProfile;
 

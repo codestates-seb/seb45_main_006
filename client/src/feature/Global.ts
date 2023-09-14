@@ -47,6 +47,11 @@ export const randomIdAtom = atom<string>({
     default: "",
 });
 
+export const isLoginFailedAtom = atom<boolean>({
+    key: "isLoginFailedAtom",
+    default: false,
+});
+
 export const defaultPostionAtom = atom<Array<string>>({
     key: "defaultPostionAtom",
     default: [],

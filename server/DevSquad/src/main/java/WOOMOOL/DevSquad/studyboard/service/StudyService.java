@@ -68,11 +68,37 @@ public class StudyService {
         return response;
     }
 
-    // 스택 별로 필터링
+    // 스택 필터링
     @Transactional(readOnly = true)
     public Page<Study> getStudiesByStack(int page, int size, List<String> stacks) {
 
         List<Study> studyList = studyRepository.findAllByStackTags(stacks, stacks.stream().count());
+        studyList = removeBlockUserBoard(studyList);
+
+        List<Study> paging = studyList.subList(page * size, Math.min(page * size + size, studyList.size()));
+        Page<Study> response = new PageImpl<>(paging, PageRequest.of(page, size), studyList.size());
+
+        return response;
+    }
+
+    // 타이틀 필터링
+    @Transactional(readOnly = true)
+    public Page<Study> getStudiesByTitle(int page, int size, String title) {
+
+        List<Study> studyList = studyRepository.findAllByTitle(title);
+        studyList = removeBlockUserBoard(studyList);
+
+        List<Study> paging = studyList.subList(page * size, Math.min(page * size + size, studyList.size()));
+        Page<Study> response = new PageImpl<>(paging, PageRequest.of(page, size), studyList.size());
+
+        return response;
+    }
+
+    // 스택 + 타이틀 필터링
+    @Transactional(readOnly = true)
+    public Page<Study> getStudiesByStackAndTitle(int page, int size, List<String> stacks, String title) {
+
+        List<Study> studyList = studyRepository.findAllByStackTagsAndTitle(stacks, stacks.stream().count(), title);
         studyList = removeBlockUserBoard(studyList);
 
         List<Study> paging = studyList.subList(page * size, Math.min(page * size + size, studyList.size()));
