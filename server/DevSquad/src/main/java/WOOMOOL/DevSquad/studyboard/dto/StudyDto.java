@@ -64,6 +64,7 @@ public class StudyDto {
         private LocalDateTime modifiedAt;
         private Integer recruitNum;
         private Study.StudyStatus studyStatus;
+        private boolean bookmarked;
         private int viewCount;
         private MemberProfileDto.listResponse memberProfile;
 
