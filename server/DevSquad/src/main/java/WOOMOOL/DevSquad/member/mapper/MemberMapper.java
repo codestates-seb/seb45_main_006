@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import org.mapstruct.Mapper;
 
@@ -71,9 +72,10 @@ public interface MemberMapper {
     }
     // 유저리스트 유저 정보 상세보기 Mapping
     default MemberProfileDto.memberProfileResponse entityToResponseDto(MemberProfile memberProfile,
-                                                                             List<ProjectDto.previewResponseDto> projectResponseDto,
-                                                                             List<StudyDto.previewResponseDto> studyResponseDto,
-                                                                             List<InfoBoardDto.Response> infoBoardResponseDto){
+                                                                       List<ProjectDto.previewResponseDto> projectResponseDto,
+                                                                       List<StudyDto.previewResponseDto> studyResponseDto,
+                                                                       List<InfoBoardDto.Response> infoBoardResponseDto,
+                                                                       List<QuestionBoardDto.Response> questionBoardDto){
 
         return new MemberProfileDto.memberProfileResponse(
                 memberProfile.getMemberProfileId(),
@@ -88,6 +90,7 @@ public interface MemberMapper {
                 projectResponseDto,
                 studyResponseDto,
                 infoBoardResponseDto,
+                questionBoardDto,
                 memberProfile.getModifiedAt()
         );
 

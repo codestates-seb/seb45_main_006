@@ -2,6 +2,8 @@ package WOOMOOL.DevSquad.member.dto;
 
 import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
+import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
+import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
 import lombok.*;
 
@@ -130,6 +132,8 @@ public class MemberProfileDto {
         private List<StudyDto.previewResponseDto> studyList;
 
         private List<InfoBoardDto.Response> infoBoardList;
+
+        private List<QuestionBoardDto.Response> questionBoardList;
 
         private LocalDateTime modifiedAt;
 
