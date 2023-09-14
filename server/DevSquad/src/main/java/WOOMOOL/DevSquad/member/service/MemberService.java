@@ -25,6 +25,7 @@ import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -419,6 +420,39 @@ public class MemberService {
                 .findStudyByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return studyBoardPage;
+    }
+
+    // 출석체크
+    public void attendanceCheck(){
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+        Level level = memberProfile.getLevel();
+
+        isAttendanceChecked();
+
+        memberProfile.setAttendanceChecked(true);
+
+        level.setCurrentExp(level.getCurrentExp() + 1);
+
+    }
+    private void isAttendanceChecked(){
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+
+        if(memberProfile.isAttendanceChecked()) throw new BusinessLogicException(CHECK_COMPLETED);
+
+    }
+    // 매일 자정 출석체크 초기화
+    @Scheduled(cron = "0 0 0 * * ?")
+    protected void resetAttendanceCheck(){
+
+       List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+
+       for(MemberProfile memberProfile : memberProfileList){
+           memberProfile.setAttendanceChecked(false);
+       }
+       memberProfileRepository.saveAll(memberProfileList);
+
     }
 }
 

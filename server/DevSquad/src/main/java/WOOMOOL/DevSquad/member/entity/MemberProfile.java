@@ -116,6 +116,8 @@ public class MemberProfile {
     @OneToMany(mappedBy = "memberProfile")
     private List<Likes> likesList;
 
+    private boolean attendanceChecked;
+
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
         MEMBER_QUIT("탈퇴함");
