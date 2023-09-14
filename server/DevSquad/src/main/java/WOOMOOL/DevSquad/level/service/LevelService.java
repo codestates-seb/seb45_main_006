@@ -8,6 +8,7 @@ import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.level.repository.LevelRepository;
+import WOOMOOL.DevSquad.likes.repository.LikesRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
@@ -17,6 +18,7 @@ import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class LevelService {
 
     private final MemberService memberService;
@@ -34,6 +37,7 @@ public class LevelService {
     private final QuestionBoardRepository questionBoardRepository;
     private final AnswerRepository answerRepository;
     private final LevelRepository levelRepository;
+    private final LikesRepository likesRepository;
 
     public Level getMemberLevel(Long memberProfileId){
 
@@ -55,8 +59,8 @@ public class LevelService {
         switch (memberGrade) {
 
             // 좋아요 3번, 댓글 1개 작성
-            case "알":
-                int likeNum = memberProfile.getLikesList().size();
+            case "개구리알":
+                int likeNum = countLikes(memberProfileId);
                 int commentNum = countComment(memberProfileId);
 
                 if (likeNum >= 3 && commentNum >= 1) {
@@ -157,6 +161,10 @@ public class LevelService {
         Level level = memberProfile.getLevel();
 
         level.setCurrentExp(level.getCurrentExp() + 10);
+    }
+    private int countLikes(Long memberProfileId){
+
+        return likesRepository.findByMemberProfileId(memberProfileId).size();
     }
 
 
