@@ -60,6 +60,7 @@ public class LevelService {
 
             // 좋아요 3번, 댓글 1개 작성
             case "개구리알":
+
                 int likeNum = countLikes(memberProfileId);
                 int commentNum = countComment(memberProfileId);
 

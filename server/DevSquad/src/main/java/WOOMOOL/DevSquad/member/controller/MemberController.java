@@ -169,25 +169,8 @@ public class MemberController {
                                             @RequestParam(required = false) List<String> positions,
                                             @RequestParam(required = false) List<String> stacks) {
 
-        Page<MemberProfile> memberProfilePage;
-        // 포지션 필터링
-        if (positions != null) {
-
-            memberProfilePage = memberService.getMemberProfilesByPosition(page - 1, positions);
-            // 스택 필터링
-        } else if (stacks != null) {
-
-            memberProfilePage = memberService.getMemberProfilesByStack(page - 1, stacks);
-            // 필터링 X
-        } else if (nickname != null){
-
-            memberProfilePage = memberService.getMemberProfileByNickname(page-1, nickname);
-        }
-        else {
-
-            memberProfilePage = memberService.getMemberProfilePage(page - 1);
-
-        }
+        // 필터링
+        Page<MemberProfile> memberProfilePage = memberService.getFilteredMemberProfile(page-1,nickname,positions,stacks);
 
         List<MemberProfile> memberProfileList = memberProfilePage.getContent();
         List<MemberProfileDto.listResponse> response = memberMapper.entityToResponseDto(memberProfileList);
