@@ -336,7 +336,7 @@ public class MemberService {
         return questionBoardList;
     }
 
-    // 프로필 페이징
+    // 프로필리스트 페이징
     private Page<MemberProfile> getMemberProfilePage(int page, List<MemberProfile> memberProfileList){
 
         // 차단한 회원 걸러낸 리스트

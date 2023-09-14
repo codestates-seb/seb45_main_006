@@ -20,7 +20,11 @@ public class levelAspect {
     @Pointcut("execution(public * WOOMOOL.DevSquad.projectboard.service..*(..)) ||" +
             "execution(public * WOOMOOL.DevSquad.studyboard.service..*(..)) ||" +
             "execution(public * WOOMOOL.DevSquad.infoboard.service..*(..)) ||" +
-            "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..))")
+            "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..)) " +
+            "execution(public * WOOMOOL.DevSquad.likes.service..*(..)) " +
+            "execution(public * WOOMOOL.DevSquad.comment.service..*(..)) " +
+            "execution(public * WOOMOOL.DevSquad.answer.service..*(..))")
+
     public void afterActivity(){}
 
     // 활동 후 레벨링 메서드 실행
