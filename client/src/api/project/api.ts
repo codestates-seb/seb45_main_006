@@ -1,12 +1,19 @@
 import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { DeleteReqProject, GetReqDetailProject, PatchReqProject, PostReqProject } from "@type/project/project.req.dto";
+import {
+    GetReqAllProjects,
+    DeleteReqProject,
+    GetReqDetailProject,
+    PatchReqProject,
+    PostReqProject,
+} from "@type/project/project.req.dto";
 
 // 프로젝트 - 전체 조회하기
 //TODO
-export const getAllProjects = async () => {
-    const url = `/project/list?page=1&size=10`;
+export const getAllProjects = async ({ page, size, stack }: GetReqAllProjects) => {
+    let url = `/project/list?page=${page}&size=${size}`;
+    if (stack) url += `&stack=${stack}`;
     const { data } = await commonApi.get(url);
     return data;
 };

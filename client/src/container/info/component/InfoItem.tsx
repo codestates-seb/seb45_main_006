@@ -126,7 +126,7 @@ function InfoItem({
         board: "information",
         boardId: info.boardId,
         page: curPage,
-        size: 10,
+        size: 4,
     });
 
     useEffect(() => {
@@ -219,7 +219,7 @@ function InfoItem({
                                     refetchComment={refetchComment}
                                 />
                             ))}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                     </div>
                 </div>
             )}

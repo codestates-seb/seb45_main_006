@@ -1,6 +1,11 @@
+import { PROEJCT_STATUS_TYPE } from "./common";
+
 export type GetReqAllProjects = {
-    // 파라미터 없음
-    // 나중에 확인
+    page: number;
+    size: number;
+    stack?: string;
+    // search?: string;
+    // orderBy: string;
 };
 
 export type GetReqDetailProject = {
@@ -14,7 +19,7 @@ export type PostReqProject = {
     startDate: string;
     deadline: string;
     recruitNum: number;
-    // recruitStatus: boolean;
+    // recruitStatus: PROEJCT_STATUS_TYPE;
 };
 
 export type PatchReqProject = {
@@ -25,7 +30,7 @@ export type PatchReqProject = {
     startDate: string;
     deadline: string;
     recruitNum: number;
-    projectStatus?: string;
+    recruitStatus: PROEJCT_STATUS_TYPE;
 };
 
 export type DeleteReqProject = {

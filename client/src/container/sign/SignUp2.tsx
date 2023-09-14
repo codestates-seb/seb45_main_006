@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { useRecoilState } from "recoil";
 import { authCodeAtom, authEmailAtom, authNicknameAtom } from "@feature/Global";
@@ -7,6 +7,7 @@ import { authCodeAtom, authEmailAtom, authNicknameAtom } from "@feature/Global";
 import { useToast } from "@hook/useToast";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useAuthHelper } from "@hook/useCheckAuth";
+import { useLoginInAndOut } from "@hook/useLogInAndOut";
 
 import { usePostMember } from "@api/sign/hook";
 
@@ -22,7 +23,6 @@ import progress from "@assets/sign/progress_bar2.png";
 import { REGEX } from "@hook/useCheckValidValue";
 
 function SignUp2() {
-    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirectedEmail = searchParams.get("email");
 
@@ -49,6 +49,7 @@ function SignUp2() {
     }, [redirectedEmail]);
 
     const { postCheckNickname, postCheckAuthCode, reqAuthenticateEmail } = useAuthHelper();
+    const { onHandleLogin } = useLoginInAndOut();
 
     const onHandleSignUp = () => {
         if (!authEmail || !authCode) {
@@ -84,7 +85,7 @@ function SignUp2() {
                     setAuthCode("");
                     setAuthEmail("");
                     setAuthNickname("");
-                    navigate("/signup/3");
+                    onHandleLogin({ email, password, routePath: "/signup/3" });
                 },
                 onError: (err) => {
                     console.log(err);
@@ -95,7 +96,11 @@ function SignUp2() {
     };
 
     if (authEmail && !redirectedEmail) {
-        return <EmailGuide />;
+        return (
+            <SignLayout title="이메일 인증" subTitle="" progressImage={""}>
+                <EmailGuide />
+            </SignLayout>
+        );
     }
 
     return (
@@ -153,13 +158,15 @@ function SignUp2() {
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
                 />
-                <Button
-                    type={authNickname.length > 0 ? "DISABLED" : "STUDY"}
-                    styles={`px-8 py-6 rounded-sm ml-12 flex flex-col ${authEmail.length > 0 ? "" : "hover:font-bold"}`}
-                    onClickHandler={() => postCheckNickname({ nickname })}
-                >
-                    <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
-                </Button>
+                {authNickname.length === 0 && (
+                    <Button
+                        type="STUDY"
+                        styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
+                        onClickHandler={() => postCheckNickname({ nickname })}
+                    >
+                        <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
+                    </Button>
+                )}
             </div>
             <SignInput
                 label="비밀번호"
@@ -175,7 +182,7 @@ function SignUp2() {
                 type="password"
                 value={passwordRe}
                 placeholder="비밀번호를 다시 입력해주세요."
-                regex={new RegExp(passwordRe)}
+                regex={new RegExp(password)}
                 onChange={(e) => setPasswordRe(e.currentTarget.value)}
                 description="입력된 비밀번호와 다릅니다."
             />

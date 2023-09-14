@@ -1,11 +1,18 @@
 import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { DeleteReqStudy, GetReqDetailStudy, PatchReqStudy, PostReqStudy } from "@type/study/study.req.dto";
+import {
+    DeleteReqStudy,
+    GetReqAllStudies,
+    GetReqDetailStudy,
+    PatchReqStudy,
+    PostReqStudy,
+} from "@type/study/study.req.dto";
 
 // 스터디 - 전체 조회하기
-export const getAllStudies = async () => {
-    const url = `/study/list?page=1&size=10`;
+export const getAllStudies = async ({ page, size, stack }: GetReqAllStudies) => {
+    let url = `/study/list?page=${page}&size=${size}`;
+    if (stack) url += `&stack=${stack}`;
     const { data } = await commonApi.get(url);
     return data;
 };
