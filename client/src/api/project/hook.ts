@@ -30,6 +30,7 @@ export const useGetDetailProject = ({ boardId }: GetReqDetailProject) => {
     return useQuery<GetResDetailProject, AxiosError, GetResDetailProject>({
         queryKey: projectKeyFactory.detail({ boardId }),
         queryFn: () => getDetailProject({ boardId }),
+        enabled: !!boardId,
     });
 };
 // 프로젝트 - 정보 등록하기

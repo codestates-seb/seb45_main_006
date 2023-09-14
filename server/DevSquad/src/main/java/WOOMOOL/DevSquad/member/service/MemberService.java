@@ -404,8 +404,8 @@ public class MemberService {
     }
 
     // 출석체크
-    public void attendanceCheck() {
-
+    public void attendanceCheck(){
+      
         MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
         Level level = memberProfile.getLevel();
 
@@ -484,6 +484,16 @@ public class MemberService {
         }
 
         return query.getResultList();
+
+        level.setCurrentExp(level.getCurrentExp() + 1);
+
+    }
+    private void isAttendanceChecked(){
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+
+        if(memberProfile.isAttendanceChecked()) throw new BusinessLogicException(CHECK_COMPLETED);
+
 
     }
 }

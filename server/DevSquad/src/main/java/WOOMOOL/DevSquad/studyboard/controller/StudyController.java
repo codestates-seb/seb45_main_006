@@ -40,11 +40,21 @@ public class StudyController {
 
     // 스터디 페이지 조회
     @GetMapping("/list")
-    public ResponseEntity getStuies(@RequestParam int page,
+    public ResponseEntity getStudies(@RequestParam int page,
                                     @RequestParam int size,
-                                    @RequestParam(required = false) List<String> stacks) {
-        // 스택 필터링
-        if (stacks != null) {
+                                    @RequestParam(required = false) List<String> stacks,
+                                    @RequestParam(required = false) String title) {
+        // 스택 + 타이틀 필터링
+        if ( stacks != null && title != null ) {
+
+            Page<Study> studyPage = studyService.getStudiesByStackAndTitle(page - 1, size, stacks, title);
+            List<Study> studyList = studyPage.getContent();
+
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
+
+            // 스택 필터링
+        } else if ( stacks != null ) {
 
             Page<Study> studyPage = studyService.getStudiesByStack(page - 1, size, stacks);
             List<Study> studyList = studyPage.getContent();
@@ -52,6 +62,16 @@ public class StudyController {
             List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
             return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
 
+            // 타이틀 필터링
+        } else if ( title != null ) {
+
+            Page<Study> studyPage = studyService.getStudiesByTitle(page - 1, size, title);
+            List<Study> studyList = studyPage.getContent();
+
+            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
+
+            // 필터링 X
         } else {
 
             Page<Study> studyPage = studyService.getStudies(page - 1, size);

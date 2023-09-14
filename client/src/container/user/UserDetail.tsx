@@ -64,7 +64,7 @@ function UserDetail() {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [match[1].pathname]);
+    }, []);
 
     const onClickTabItem = (item: ITabItem) => {
         setTabItems(

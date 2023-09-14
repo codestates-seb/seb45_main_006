@@ -29,11 +29,20 @@ const Board = () => {
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     // const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
-    const { data: projects, isLoading } = useGetAllProjects({
+    const {
+        data: projects,
+        isLoading,
+        refetch,
+    } = useGetAllProjects({
         page: curPage,
         size: 8,
         stack: selectedStacks.join(","),
     });
+
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);

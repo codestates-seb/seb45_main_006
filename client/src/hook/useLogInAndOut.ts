@@ -1,4 +1,4 @@
-import { isLoggedInAtom } from "@feature/Global";
+import { isLoggedInAtom, isLoginFailedAtom } from "@feature/Global";
 import { useSetRecoilState } from "recoil";
 
 import { useToast } from "./useToast";
@@ -8,8 +8,9 @@ import { setTokenToLocalStorage } from "@util/token-helper";
 export const useLoginInAndOut = () => {
     const { mutate: postLogin } = usePostLogin();
     const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
+    const setIsFailed = useSetRecoilState(isLoginFailedAtom);
 
-    const { fireToast, errorToast } = useToast();
+    const { fireToast } = useToast();
 
     const onHandleLogin = ({ email, password, routePath }: { email: string; password: string; routePath: string }) => {
         if (!email || !password) {
@@ -41,7 +42,12 @@ export const useLoginInAndOut = () => {
                 },
                 onError: (err) => {
                     console.log(err);
-                    errorToast();
+                    fireToast({
+                        content: "로그인에 실패하였습니다.",
+                        isConfirm: false,
+                        isWarning: true,
+                    });
+                    setIsFailed(true);
                 },
             },
         );

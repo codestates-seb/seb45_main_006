@@ -1,3 +1,5 @@
+import { STUDY_STATUS_TYPE } from "@type/project/common";
+
 export type GetReqAllStudies = {
     page: number;
     size: number;
@@ -19,8 +21,11 @@ export type PostReqStudy = {
 
 export type PatchReqStudy = {
     boardId: number;
+    title: string;
     content: string;
-    //제목, 인원 수 수정 조율
+    stack: Array<string>;
+    recruiteNum: number;
+    projectStatus: STUDY_STATUS_TYPE;
 };
 
 export type DeleteReqStudy = {
