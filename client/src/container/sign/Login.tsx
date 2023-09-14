@@ -12,6 +12,8 @@ import googleImg from "@assets/sign/login_google.png";
 import githubImg from "@assets/sign/login_github.png";
 import { isLoginFailedAtom } from "@feature/Global";
 
+const endpoint = import.meta.env.VITE_APP_API_ENDPOINT;
+
 function Login() {
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
@@ -27,6 +29,11 @@ function Login() {
         if (e.key == "Enter" && onClickLoginHandler) {
             onClickLoginHandler();
         }
+    };
+
+    const googleOauthHandler = () => {
+        const oAuthURL = `${endpoint}/oauth2/authorization/google`;
+        window.location.assign(oAuthURL);
     };
 
     return (
@@ -99,7 +106,7 @@ function Login() {
                             <button>
                                 <img className="flex w-50" src={githubImg} />
                             </button>
-                            <button>
+                            <button onClick={googleOauthHandler}>
                                 <img className="flex w-50" src={googleImg} />
                             </button>
                         </div>
