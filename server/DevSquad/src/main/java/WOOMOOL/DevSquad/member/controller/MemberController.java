@@ -222,4 +222,12 @@ public class MemberController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping("/attendanceCheck")
+    public ResponseEntity  attendanceCheck(){
+
+        memberService.attendanceCheck();
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
