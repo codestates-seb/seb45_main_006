@@ -444,7 +444,7 @@ public class MemberService {
     }
     // 매일 자정 출석체크 초기화
     @Scheduled(cron = "0 0 0 * * ?")
-    private void resetAttendanceCheck(){
+    protected void resetAttendanceCheck(){
 
        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
 
