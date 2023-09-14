@@ -8,6 +8,8 @@ type ISize = "sm" | "md" | "lg";
 
 function UserProfile({ size, mine = false, profilePicture }: { size: ISize; mine?: boolean; profilePicture?: string }) {
     const memberId = getItemFromStorage("memberId");
+    const nickname = getItemFromStorage("nickname");
+    const myProfilePicture = getItemFromStorage("profilePicture");
 
     if (size === "sm") {
         return (
@@ -16,9 +18,9 @@ function UserProfile({ size, mine = false, profilePicture }: { size: ISize; mine
                     to={mine ? `/members/auth` : `/members/${memberId}`}
                     className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline"
                 >
-                    <img width={36} height={36} src={profilePicture || DefaultUser} alt="" />
+                    <img width={36} height={36} src={myProfilePicture || profilePicture || DefaultUser} alt="" />
                 </Link>
-                {mine && <Typography type="Highlight" text={"내 닉네임 넣어야함"} />}
+                {mine && <Typography type="Highlight" text={nickname} />}
             </div>
         );
     }
