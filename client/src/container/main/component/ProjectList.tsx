@@ -18,9 +18,15 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
             className="m-10 flex h-300 w-260 flex-col justify-between rounded-lg border-2 border-solid border-project p-20 shadow-lg transition-transform hover:scale-105 hover:bg-gray-100"
         >
             <div>
-                <div className="flex w-48 items-center justify-center rounded bg-deadline ">
-                    <Typography type="SmallLabel" text="모집중" styles="text-white" />
-                </div>
+                {project.projectStatus === "PROJECT_POSTED" ? (
+                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline ">
+                        <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                    </div>
+                ) : (
+                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600">
+                        <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                    </div>
+                )}
                 <h1 className="my-20 cursor-pointer text-24 font-bold">{project.title}</h1>
                 <div className="my-20 flex">
                     <Tag type="PROJECT" text="Java"></Tag>
