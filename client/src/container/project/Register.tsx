@@ -20,6 +20,13 @@ export default function Register() {
     const location = useLocation();
     const { curActivity } = useCheckCurActivity({ location });
 
+    const options = ["모집중", "모집완료"];
+    const [selectedOption, setSelectedOption] = useState("모집중");
+
+    const handleSelectOption = (option: string) => {
+        setSelectedOption(option);
+    };
+
     const { mutate: postProject } = usePostProject();
     const { mutate: patchProject } = usePatchProject();
     const { alertWhenEmptyFn } = useCheckValidValue();
@@ -165,9 +172,19 @@ export default function Register() {
                     onChange={handleInput}
                      /> */}
                     {curActivity === "REGISTER" ? (
-                        <Dropdown />
+                        <Dropdown
+                            label="모집여부"
+                            options={options}
+                            selectedOption={selectedOption}
+                            onSelectOption={handleSelectOption}
+                        />
                     ) : (
-                        <BoardInput label="모집여부" disabled={false} placeholder="모집중" onChange={handleInput} />
+                        <Dropdown
+                            label="모집여부"
+                            options={options}
+                            selectedOption={selectedOption}
+                            onSelectOption={handleSelectOption}
+                        />
                     )}
                     <DateChoice onChange={handleDates} />
                     <InputForNumber
