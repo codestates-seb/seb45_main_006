@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import Typography from "@component/Typography";
 
-import { infoCategory } from "@component/mockData";
 import { CATEGORY_NAME } from "@type/info/common";
 
 interface ISearchInput {
@@ -17,6 +16,7 @@ type ICategoryItem = {
 
 function SearchFilter({ category, setCategory }: ISearchInput) {
     const [categoryItems, setCategoryItems] = useState<Array<ICategoryItem>>([]);
+    const infoCategory: Array<CATEGORY_NAME> = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];
 
     useEffect(() => {
         const list = infoCategory.map((v) => {

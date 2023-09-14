@@ -13,6 +13,7 @@ import QuestionItem from "./component/QuestionItem";
 import Pagination from "@component/Pagination";
 import SkeletonUi from "@component/board/SkeletonUi";
 import BoardHeader from "@component/board/BoardHeader";
+import HotBoard from "@component/board/HotBoard";
 
 function Board() {
     const navigate = useNavigate();
@@ -140,6 +141,7 @@ function Board() {
                 </div>
                 <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                     <Typography type="Label" text="🔥 HOT 게시글" />
+                    <HotBoard board="question" />
                 </div>
             </div>
         </>

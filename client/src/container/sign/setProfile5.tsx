@@ -21,7 +21,7 @@ const ProfileContent1 = () => {
 
             <div className="flex flex-col items-center">
                 <Link to={"/"}>
-                    <a className="m-auto flex w-230 justify-center rounded bg-button-next p-9">
+                    <a className="bg-button-next m-auto flex w-230 justify-center rounded p-9">
                         <Typography type="Highlight" text="네 좋아요!" color="text-white" />
                     </a>
                 </Link>

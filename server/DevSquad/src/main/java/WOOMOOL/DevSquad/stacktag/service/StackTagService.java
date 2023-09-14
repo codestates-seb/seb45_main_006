@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StackTagService {
@@ -43,12 +44,13 @@ public class StackTagService {
     }
 
     //검색어가 있을시 스택태그검색과 없을시 검색
-    public List<StackTag> getStackTags(String keyword) {
-        List<StackTag> result = new ArrayList<>();
+    public List<String> getStackTags(String keyword) {
+        List<StackTag> stackTags = new ArrayList<>();
         if(keyword==null)
-            result = stackTagRepository.findAll(Sort.by(Sort.Direction.ASC,"tagName"));
+            stackTags = stackTagRepository.findAll(Sort.by(Sort.Direction.ASC,"tagName"));
         else
-            result = stackTagRepository.findByKeyword(keyword);
+            stackTags = stackTagRepository.findByKeyword(keyword);
+        List<String> result = stackTags.stream().map(StackTag::getTagName).collect(Collectors.toList());
 
         return result;
     }

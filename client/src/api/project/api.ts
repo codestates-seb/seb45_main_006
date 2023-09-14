@@ -6,7 +6,7 @@ import { DeleteReqProject, GetReqDetailProject, PatchReqProject, PostReqProject 
 // 프로젝트 - 전체 조회하기
 //TODO
 export const getAllProjects = async () => {
-    const url = `${COMMON_API_PATH.PROJECT.LIST}?page=1`;
+    const url = `/project/list?page=1&size=10`;
     const { data } = await commonApi.get(url);
     return data;
 };

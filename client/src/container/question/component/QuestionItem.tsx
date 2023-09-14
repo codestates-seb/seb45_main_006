@@ -19,10 +19,10 @@ import { EditAnswer, ShowAnswer } from "@component/board/Answer";
 import Pagination from "@component/Pagination";
 import UserProfile from "@component/user/UserProfile";
 
-import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
+import { BsFillShareFill } from "react-icons/bs";
 import { QuestionDefaultType } from "@type/question/question.res.dto";
+import Bookmark from "@component/board/Bookmark";
+import LikeBtn from "@component/board/LikeBtn";
 
 const QuestionTitle = ({
     question,
@@ -35,8 +35,8 @@ const QuestionTitle = ({
     const { title, viewCount, modifiedAt } = question;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
-    const [isLiked, setIsLiked] = useState(false);
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isLiked, setIsLiked] = useState(question.liked);
+    const [isBookmarked, setIsBookmarked] = useState(question.bookmarked);
 
     const onClickEditHandler = () => navigate(`/questions/${question.boardId}/edit`, { state: question });
 
@@ -81,12 +81,18 @@ const QuestionTitle = ({
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <button onClick={() => setIsLiked(!isLiked)}>
-                            <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                        </button>
-                        <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                            <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="m-10 h-28 w-28" />
-                        </button>
+                        <LikeBtn
+                            board="question"
+                            boardId={question.boardId}
+                            isLiked={isLiked}
+                            setIsLiked={setIsLiked}
+                        />
+                        <Bookmark
+                            board="question"
+                            boardId={question.boardId}
+                            isBookmarked={isBookmarked}
+                            setIsBookmarked={setIsBookmarked}
+                        />
                     </>
                 )}
                 <button>
@@ -125,6 +131,7 @@ function QuestionItem({
 
     const [isOpened, setIsOpened] = useState(false);
     const [answer, setAnswer] = useState<string>("");
+    const { isMine } = useCheckUser({ memberId: question.memberId });
 
     const { mutate: postViewCount } = usePostViewCount();
 
@@ -153,14 +160,30 @@ function QuestionItem({
                 <button className="absolute bottom-8 right-8" onClick={onAddViewCount}>
                     <Typography
                         type="SmallLabel"
-                        text={`${isOpened ? "닫기" : question.content.length < 300 ? "답변 확인" : "열기"}`}
+                        text={`${isOpened ? "닫기" : "내용 열기"}`}
                         color="text-blue-500 hover:text-blue-800"
                     />
                 </button>
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`답변 ${answerList?.data.length || 0}개`} />
+                    {isMine && (
+                        <div className="my-24 flex flex-col">
+                            <Typography
+                                type="SmallLabel"
+                                text="Tip! 도움이 된 답변의 경우 초록색 체크 표시를 눌러 채택해주세요!"
+                                styles="font-bold"
+                                color="text-blue-700"
+                            />
+                            <Typography
+                                type="SmallLabel"
+                                text="비슷한 질문을 가진 분들에게 도움이 됩니다!"
+                                color="text-blue-700"
+                                styles="ml-28"
+                            />
+                        </div>
+                    )}
+                    <Typography type="SmallLabel" text={`답변 ${answerList?.data.length || 0}개`} />
                     {isLoggedIn && (
                         <EditAnswer
                             questionId={question.boardId}
@@ -179,6 +202,7 @@ function QuestionItem({
                                     answer={v}
                                     writerId={question.memberId}
                                     refetchAnswer={refetchAnswer}
+                                    isAcceptExisted={answerList.data.filter((v) => v.accepted).length > 0}
                                 />
                             ))}
                         <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />

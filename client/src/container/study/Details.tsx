@@ -1,17 +1,11 @@
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
 import { useState } from "react";
 import Report from "@component/project-study/Report";
+import Bookmark from "@component/board/Bookmark";
 
 const Details = () => {
     const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
-
-    // Function to toggle bookmark
-    const toggleBookmark = () => {
-        setIsBookmarked((prevState) => !prevState);
-    };
 
     return (
         <div>
@@ -48,10 +42,12 @@ const Details = () => {
                         </ul>
                     </div>
                     <div>
-                        <img
-                            src={isBookmarked ? bookmark_fill : bookmark_unfill}
-                            className="m-10 h-28 w-28 cursor-pointer"
-                            onClick={toggleBookmark}
+                        {/* TODO: study 전달받으면 보여주기 */}
+                        <Bookmark
+                            board="study"
+                            boardId={1}
+                            isBookmarked={isBookmarked}
+                            setIsBookmarked={setIsBookmarked}
                         />
                         <Report />
                     </div>

@@ -49,7 +49,7 @@ export const NavItem = ({
             }}
         >
             <button
-                className={`mr-16 w-max p-8 font-spoqa text-18 font-medium hover:font-bold ${
+                className={`mr-16 w-max p-8 text-18 font-medium hover:font-bold ${
                     item.selected ? "border-l-3 border-warn" : ""
                 }`}
                 onClick={() => onClickNavItem(item)}

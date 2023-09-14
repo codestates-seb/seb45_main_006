@@ -23,10 +23,7 @@ export const TabItem = ({ item, onClickTabItem }: { item: ITabItem; onClickTabIt
                 setSearchParams({ auth, nav: nav, tab: item.tab });
             }}
         >
-            <button
-                className={`mr-16 w-max font-spoqa text-18 font-medium hover:text-main`}
-                onClick={() => onClickTabItem(item)}
-            >
+            <button className={`mr-16 w-max text-18 font-medium hover:text-main`} onClick={() => onClickTabItem(item)}>
                 <Typography
                     type="SmallLabel"
                     text={item.label}
