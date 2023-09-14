@@ -17,7 +17,7 @@ const Details = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const boardId = location.state;
-    const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
+    const [isBookmarked, setIsBookmarked] = useState(false);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { data: projectInputs } = useGetDetailProject({ boardId: boardId });
@@ -52,11 +52,22 @@ const Details = () => {
     return (
         <div>
             <div className="m-20 flex gap-20">
-                <section className="relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline">
+                <section
+                    // eslint-disable-next-line tailwindcss/no-custom-classname
+                    className={`relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline ${
+                        projectInputs?.projectStatus === "PROJECT_POSTED" ? "" : "bg-gray-300"
+                    }`}
+                >
                     <div>
-                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline ">
-                            <Typography type="SmallLabel" text="모집중" styles="text-white" />
-                        </div>
+                        {projectInputs?.projectStatus === "PROJECT_POSTED" ? (
+                            <div className="absolute left-16 top-10 flex h-28 w-56 items-center justify-center rounded bg-deadline ">
+                                <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                            </div>
+                        ) : (
+                            <div className="absolute left-16 top-10 flex h-30 w-68 items-center justify-center rounded bg-gray-600">
+                                <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                            </div>
+                        )}
                         <h3 className="mx-20 mt-40">
                             <div className="mx-4 text-40 font-bold">{projectInputs?.title || ""}</div>
                         </h3>
