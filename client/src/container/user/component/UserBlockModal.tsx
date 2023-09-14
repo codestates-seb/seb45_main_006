@@ -17,7 +17,7 @@ function UserBlockModal({
 }: {
     user: GetResMemberDetail;
     closeModal: () => void;
-    setBlockedMemberId: (v: number) => void;
+    setBlockedMemberId: (v: number) => void; // TODO: 유저 차단 시 콜백함수로 이름 바꿀 것
     refetchAllMembers: () => void;
 }) {
     const [reportContent, setReportContent] = useState("");

@@ -29,7 +29,11 @@ const Board = () => {
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     // const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
-    const { data: studies, isLoading } = useGetAllStudies({
+    const {
+        data: studies,
+        isLoading,
+        refetch,
+    } = useGetAllStudies({
         page: curPage,
         size: 8,
         stack: selectedStacks.join(","),
@@ -46,6 +50,11 @@ const Board = () => {
             reqLoginToUserToast();
         }
     };
+
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (studies && studies?.pageInfo && studies.pageInfo.totalElements) {
