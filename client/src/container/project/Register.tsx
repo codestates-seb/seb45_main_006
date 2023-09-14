@@ -20,8 +20,6 @@ import Dropdown from "@component/project-study/Dropdown";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 import dayjs from "dayjs";
 
-// import { defaultStack } from "@component/mockData";
-
 export default function Register() {
     const navigate = useNavigate();
     const location = useLocation();
