@@ -8,7 +8,6 @@ import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.projectboard.repository.ProjectRepository;
-import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.stacktag.service.StackTagService;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,12 +29,14 @@ public class ProjectService {
     private final MemberService memberService;
     private final StackTagService stackTagService;
     private final LevelService levelService;
+    private final EntityManager entityManager;
 
-    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService, LevelService levelService) {
+    public ProjectService(ProjectRepository projectRepository, MemberService memberService, StackTagService stackTagService, LevelService levelService, EntityManager entityManager) {
         this.projectRepository = projectRepository;
         this.memberService = memberService;
         this.stackTagService = stackTagService;
         this.levelService = levelService;
+        this.entityManager = entityManager;
     }
 
     public Project createProject(Project project, Set<String> stackTag) {
@@ -54,50 +57,39 @@ public class ProjectService {
         return project;
     }
 
-    // 프로젝트 리스트 조회
+    // 프로젝트 리스트 조회 ( 스택, 타이틀, 모집 상태 필터링)
     @Transactional(readOnly = true)
-    public Page<Project> getProjects(int page, int size) {
+    public Page<Project> getProjects(int page, int size, String title, List<String> stacks, String status) {
+        StringBuilder jpql = new StringBuilder("SELECT p FROM Project p WHERE 1 = 1 ");
 
-        List<Project> projectList = projectRepository.findByProjectStatus();
-        projectList = removeBlockUserBoard(projectList);
+        if (title != null) {
+            jpql.append("AND LOWER(p.title) LIKE :title ");
+        }
 
-        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
-        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+        if (stacks != null && !stacks.isEmpty()) {
+            jpql.append("AND p IN (SELECT DISTINCT p FROM Project p JOIN p.stackTags st " +
+                    "WHERE st.tagName IN :tagNames " +
+                    "GROUP BY p HAVING COUNT(st) = :tagCount) ");
+        }
 
-        return response;
-    }
+        if (status != null && status.equals("posted")) {
+            jpql.append("AND p.projectStatus = 'PROJECT_POSTED' ");
+        }
 
-    // 스택 필터링
-    @Transactional(readOnly = true)
-    public Page<Project> getProjectsByStack(int page, int size, List<String> stacks) {
+        jpql.append("AND p.projectStatus != 'PROJECT_DELETED' ORDER BY p.createdAt DESC");
 
-        List<Project> projectList = projectRepository.findAllByStackTags(stacks, stacks.stream().count());
-        projectList = removeBlockUserBoard(projectList);
+        TypedQuery<Project> query = entityManager.createQuery(jpql.toString(), Project.class);
 
-        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
-        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
+        if (title != null) {
+            query.setParameter("title", "%" + title.toLowerCase() + "%");
+        }
 
-        return response;
-    }
+        if (stacks != null && !stacks.isEmpty()) {
+            query.setParameter("tagNames", stacks);
+            query.setParameter("tagCount", stacks.stream().count());
+        }
 
-    // 타이틀 필터링
-    @Transactional(readOnly = true)
-    public Page<Project> getProjectsByTitle(int page, int size, String title) {
-
-        List<Project> projectList = projectRepository.findAllByTitle(title);
-        projectList = removeBlockUserBoard(projectList);
-
-        List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
-        Page<Project> response = new PageImpl<>(paging, PageRequest.of(page, size), projectList.size());
-
-        return response;
-    }
-
-    // 스택 + 타이틀 필터링
-    @Transactional(readOnly = true)
-    public Page<Project> getProjectsByStackAndTitle(int page, int size, List<String> stacks, String title) {
-
-        List<Project> projectList = projectRepository.findAllByStackTagsAndTitle(stacks, stacks.stream().count(), title);
+        List<Project> projectList = query.getResultList();
         projectList = removeBlockUserBoard(projectList);
 
         List<Project> paging = projectList.subList(page * size, Math.min(page * size + size, projectList.size()));
@@ -113,6 +105,7 @@ public class ProjectService {
 
         return projectPage;
     }
+
     // 프로젝트 수정
     public Project updateProject(Project project, Set<String> stackTag) {
 

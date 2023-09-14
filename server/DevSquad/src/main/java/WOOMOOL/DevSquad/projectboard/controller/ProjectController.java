@@ -37,51 +37,35 @@ public class ProjectController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // 프로젝트 페이지 조회
+    // 전체 프로젝트 리스트 조회 ( 스택 + 타이틀 필터링)
     @GetMapping("/list")
-    public ResponseEntity getProjects(@RequestParam int page,
-                                      @RequestParam int size,
-                                      @RequestParam(required = false) List<String> stacks,
-                                      @RequestParam(required = false) String title) {
-        // 스택 + 타이틀 필터링
-        if ( stacks != null && title != null ) {
+    public ResponseEntity getProjectList(@RequestParam int page,
+                                         @RequestParam int size,
+                                         @RequestParam(required = false) List<String> stacks,
+                                         @RequestParam(required = false) String title) {
 
-            Page<Project> projectPage = projectService.getProjectsByStackAndTitle(page - 1, size, stacks, title);
-            List<Project> projectList = projectPage.getContent();
+        Page<Project> projectPage = projectService.getProjects(page - 1, size, title, stacks, null);
+        List<Project> projectList = projectPage.getContent();
 
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
-            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
-
-            // 스택 필터링
-        } else if ( stacks != null ) {
-
-            Page<Project> projectPage = projectService.getProjectsByStack(page - 1, size, stacks);
-            List<Project> projectList = projectPage.getContent();
-
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
-            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
-
-            // 타이틀 필터링
-        } else if ( title != null ) {
-
-            Page<Project> projectPage = projectService.getProjectsByTitle(page - 1, size, title);
-            List<Project> projectList = projectPage.getContent();
-
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
-            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
-
-            // 필터링 X
-        } else {
-
-            Page<Project> projectPage = projectService.getProjects(page - 1, size);
-            List<Project> projectList = projectPage.getContent();
-
-            List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
-            return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
-
-        }
-
+        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+        return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
     }
+
+    // 모집 중인 프로젝트 리스트 조회 ( 스택 + 타이틀 필터링)
+    @GetMapping("/list/posted")
+    public ResponseEntity getPostedProjectList(@RequestParam int page,
+                                         @RequestParam int size,
+                                         @RequestParam(required = false) List<String> stacks,
+                                         @RequestParam(required = false) String title) {
+
+        Page<Project> projectPage = projectService.getProjects(page - 1, size, title, stacks, "posted");
+        List<Project> projectList = projectPage.getContent();
+
+        List<ProjectDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(projectList);
+        return new ResponseEntity(new PageResponseDto<>(response, projectPage), HttpStatus.OK);
+    }
+
+
 
     // 프로젝트 상세 조회
     @GetMapping("/{boardId}")

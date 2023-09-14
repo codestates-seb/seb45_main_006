@@ -38,50 +38,32 @@ public class StudyController {
          return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // 스터디 페이지 조회
+    // 전체 스터디 리스트 조회 ( 스택 + 타이틀 필터링)
     @GetMapping("/list")
-    public ResponseEntity getStudies(@RequestParam int page,
-                                    @RequestParam int size,
-                                    @RequestParam(required = false) List<String> stacks,
-                                    @RequestParam(required = false) String title) {
-        // 스택 + 타이틀 필터링
-        if ( stacks != null && title != null ) {
+    public ResponseEntity getProjectList(@RequestParam int page,
+                                         @RequestParam int size,
+                                         @RequestParam(required = false) List<String> stacks,
+                                         @RequestParam(required = false) String title) {
 
-            Page<Study> studyPage = studyService.getStudiesByStackAndTitle(page - 1, size, stacks, title);
-            List<Study> studyList = studyPage.getContent();
+        Page<Study> studyPage = studyService.getStudies(page - 1, size, title, stacks, null);
+        List<Study> studyList = studyPage.getContent();
 
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
-            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
+        List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+        return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
+    }
 
-            // 스택 필터링
-        } else if ( stacks != null ) {
+    // 모집 중인 스터디 리스트 조회 ( 스택 + 타이틀 필터링)
+    @GetMapping("/list/posted")
+    public ResponseEntity getPostedProjectList(@RequestParam int page,
+                                               @RequestParam int size,
+                                               @RequestParam(required = false) List<String> stacks,
+                                               @RequestParam(required = false) String title) {
 
-            Page<Study> studyPage = studyService.getStudiesByStack(page - 1, size, stacks);
-            List<Study> studyList = studyPage.getContent();
+        Page<Study> studyPage = studyService.getStudies(page - 1, size, title, stacks, "posted");
+        List<Study> studyList = studyPage.getContent();
 
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
-            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
-
-            // 타이틀 필터링
-        } else if ( title != null ) {
-
-            Page<Study> studyPage = studyService.getStudiesByTitle(page - 1, size, title);
-            List<Study> studyList = studyPage.getContent();
-
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
-            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
-
-            // 필터링 X
-        } else {
-
-            Page<Study> studyPage = studyService.getStudies(page - 1, size);
-            List<Study> studyList = studyPage.getContent();
-
-            List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
-            return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
-
-        }
-
+        List<StudyDto.previewResponseDto> response = mapper.entityToPreviewResponseDto(studyList);
+        return new ResponseEntity(new PageResponseDto<>(response, studyPage), HttpStatus.OK);
     }
 
     // 스터디 상세 조회
