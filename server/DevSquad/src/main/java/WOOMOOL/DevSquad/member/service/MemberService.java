@@ -402,6 +402,7 @@ public class MemberService {
 
         return studyBoardPage;
     }
+//// 여기까지
 
     // 출석체크
     public void attendanceCheck() {
@@ -453,15 +454,19 @@ public class MemberService {
         }
 
         if (positions != null) {
-            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp JOIN mp.positions p WHERE p.positionName IN :positionNames " +
-                    "AND mp.memberStatus = 'MEMBER_ACTIVE' AND mp.listEnroll = true " +
+            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp " +
+                    "JOIN mp.positions p " +
+                    "WHERE p.positionName IN :positionNames " +
+                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+                    "AND mp.listEnroll = true " +
                     "GROUP BY mp HAVING COUNT(p) IN :positionCount)");
         }
 
         if(stacks != null){
             jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp JOIN mp.stackTags st " +
                     "WHERE st.tagName IN :tagNames " +
-                    "AND mp.memberStatus = 'MEMBER_ACTIVE' AND mp.listEnroll = true " +
+                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+                    "AND mp.listEnroll = true " +
                     "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
 
         }

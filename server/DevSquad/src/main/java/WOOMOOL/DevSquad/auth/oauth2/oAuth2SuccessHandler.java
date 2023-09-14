@@ -77,7 +77,8 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host("dev-squad.s3-website.ap-northeast-2.amazonaws.com")
+                .path("/signup/oauth-user")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
