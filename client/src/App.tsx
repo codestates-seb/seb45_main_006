@@ -19,7 +19,7 @@ import ProjectRegister from "@container/project/Register";
 import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
-import Login from "@container/sign/Login";
+// import Login from "@container/sign/Login";
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
@@ -92,10 +92,10 @@ const router = createBrowserRouter([
                 path: "/members/my",
                 element: <MyPage />,
             },
-            {
-                path: "/login",
-                element: <Login />,
-            },
+            // {
+            //     path: "/login",
+            //     element: <Login />,
+            // },
             {
                 path: "/signup/1",
                 element: <SignUp1 />,
@@ -212,7 +212,7 @@ const queryClient = new QueryClient({
 
 function App() {
     return (
-        <div className="m-0 box-border flex justify-center p-0 font-sans text-primary">
+        <div className="m-0 box-border flex justify-center p-0 font-ganpan font-light text-primary">
             <QueryClientProvider client={queryClient}>
                 <RecoilRoot>
                     <RouterProvider router={router} />

@@ -8,28 +8,28 @@ import { useCheckChat } from "@hook/useCheckChat";
 
 import dayjs from "dayjs";
 
-import { UserNickname, UserImage } from "@component/board/UserCard";
+import { UserNickname } from "@component/board/UserCard";
+import UserProfile from "@component/user/UserProfile";
 import UserBlockModal from "./UserBlockModal";
 
 import Typography from "@component/Typography";
 import Button from "@component/Button";
 import Modal from "@component/Modal";
+import ProjectList from "@container/project/component/BoardList";
+import StudyList from "@container/study/component/BoardList";
 import { CategoryTag } from "@container/info/component/InfoItem";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
-import { CommonResProjects } from "@type/project/project.res.dto";
-import { CommonResStudies } from "@type/study/study.res.dto";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 import { QuestionDefaultType } from "@type/question/question.res.dto";
 
 import { TbDeviceDesktopCode } from "react-icons/tb";
 import { PiUserFocus, PiBookOpenTextDuotone, PiChatTextDuotone, PiQuestionDuotone } from "react-icons/pi";
 import { GoProjectRoadmap } from "react-icons/go";
-import { BiBookmark } from "react-icons/bi";
 
-import { BsSuitHeartFill, BsFillShareFill } from "react-icons/bs";
-import bookmark_unfill from "@assets/bookmark_unfill.svg";
-import bookmark_fill from "@assets/bookmark_fill.svg";
+import { BsFillShareFill } from "react-icons/bs";
+import Bookmark from "@component/board/Bookmark";
+import LikeBtn from "@component/board/LikeBtn";
 
 const UserBtns = ({ setIsOpen, onClickChatBtn }: { setIsOpen: (v: boolean) => void; onClickChatBtn: () => void }) => {
     return (
@@ -49,12 +49,12 @@ export const UserInfo = ({ user, type }: { user: GetResMemberDetail; type: "stac
     const background = type === "stack" ? "bg-project" : "bg-study";
 
     return (
-        <li className="my-6 flex w-full items-center">
+        <li className="my-6 flex min-h-36 w-full items-center">
             {type === "stack" ? <TbDeviceDesktopCode size={"1.2rem"} /> : <PiUserFocus size={"1.2rem"} />}
             <div className="ml-4 mr-10 min-w-50">
                 <Typography type="SmallLabel" text={type === "stack" ? "스택" : "포지션"} styles="font-bold" />
             </div>
-            <div className="flex flex-wrap items-center">
+            <div className="flex min-h-36 flex-wrap items-center">
                 {arr.map((v) => (
                     <div key={v} className={`m-4 h-fit rounded-md p-4 ${background}`}>
                         <Typography type="SmallLabel" text={v} styles="font-bold" />
@@ -64,63 +64,6 @@ export const UserInfo = ({ user, type }: { user: GetResMemberDetail; type: "stac
         </li>
     );
 };
-
-const parseDateRange = (startMonth: string, endMonth: string) => {
-    const year = dayjs().format("YYYY");
-    return `시작 예정일: ${year}-${dayjs(startMonth).format("MM-DD")} ~ 마감 예정일: ${year}-${dayjs(endMonth).format(
-        "MM-DD",
-    )}`;
-};
-
-export const TempProject = ({ project }: { project: CommonResProjects }) => {
-    return (
-        <div className="my-10 flex max-w-700 flex-1 rounded-md border-1 border-borderline p-10">
-            <div className="flex-1">
-                <div className="flex justify-between">
-                    <Typography type="Label" text={project.title} />
-                    <Typography
-                        type="Description"
-                        text={`${dayjs(project.createdAt).format("YYYY-MM-DD")}`}
-                        color="text-gray-600"
-                    />
-                </div>
-                <div className="my-10 flex">
-                    <div className="mr-4 h-fit w-fit rounded-2xl bg-project px-8 py-4">
-                        <Typography type="Highlight" text="Java" styles="font-bold" />
-                    </div>
-                    <div className="h-fit w-fit rounded-2xl bg-project px-8 py-4">
-                        <Typography type="Highlight" text="Javascript" styles="font-bold" />
-                    </div>
-                </div>
-                <Typography
-                    type="Description"
-                    text={parseDateRange(project.startDate, project.deadline)}
-                    color="text-gray-600"
-                />
-            </div>
-            <div className="flex w-40 items-start justify-center">
-                <button className="">
-                    <BiBookmark size={"1.5rem"} />
-                </button>
-            </div>
-        </div>
-    );
-};
-
-export const TempStudy = ({ study }: { study: CommonResStudies }) => (
-    <div className="my-10 w-full max-w-700 rounded-md border-1 border-borderline p-10">
-        <div className="flex justify-between">
-            <Typography type="Label" text={study.title} />
-            <BiBookmark size={"1.5rem"} />
-        </div>
-        <div className="my-10 flex">
-            <div className="h-fit w-fit rounded-2xl bg-study px-8 py-4">
-                <Typography type="Highlight" text="모집인원: 6명" styles="font-bold" />
-            </div>
-        </div>
-        <Typography type="Description" text={`${dayjs(study.createdAt).format("YYYY-MM-DD")}`} color="text-gray-600" />
-    </div>
-);
 
 export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
     const [isLiked, setIsLiked] = useState(false);
@@ -145,12 +88,13 @@ export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
-                <button onClick={() => setIsLiked(!isLiked)}>
-                    <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                </button>
-                <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                    <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="my-10 h-28 w-28" />
-                </button>
+                <LikeBtn board="information" boardId={info.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                <Bookmark
+                    board="information"
+                    boardId={info.boardId}
+                    isBookmarked={isBookmarked}
+                    setIsBookmarked={setIsBookmarked}
+                />
                 <button>
                     <BsFillShareFill />
                 </button>
@@ -181,12 +125,13 @@ export const QuestionItemHor = ({ question }: { question: QuestionDefaultType })
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
-                <button onClick={() => setIsLiked(!isLiked)}>
-                    <BsSuitHeartFill size="1.2rem" color={isLiked ? "#FF2222" : "#E2E2E2"} />
-                </button>
-                <button onClick={() => setIsBookmarked(!isBookmarked)}>
-                    <img src={isBookmarked ? bookmark_fill : bookmark_unfill} className="my-10 h-28 w-28" />
-                </button>
+                <LikeBtn board="question" boardId={question.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                <Bookmark
+                    board="question"
+                    boardId={question.boardId}
+                    isBookmarked={isBookmarked}
+                    setIsBookmarked={setIsBookmarked}
+                />
                 <button>
                     <BsFillShareFill />
                 </button>
@@ -201,12 +146,14 @@ function UserCardModal({
     isUpperOpen,
     setIsUpperOpen,
     setBlockedMemberId,
+    refetchAllMembers,
 }: {
     memberId: number;
     closeModal: () => void;
     isUpperOpen: boolean;
     setIsUpperOpen: (v: boolean) => void;
     setBlockedMemberId: (v: number) => void;
+    refetchAllMembers: () => void;
 }) {
     const navigate = useNavigate();
 
@@ -231,7 +178,7 @@ function UserCardModal({
     if (user) {
         return (
             <>
-                <div className="flex flex-col p-30 md:flex-row">
+                <div className="flex min-h-350 flex-col p-30 md:flex-row">
                     <div className="flex max-w-600 flex-1 flex-col justify-between">
                         <div>
                             <UserNickname nickname={user.nickname} githubId={user.githubId} />
@@ -241,8 +188,8 @@ function UserCardModal({
                         <UserBtns setIsOpen={setIsUpperOpen} onClickChatBtn={onClickChatBtn} />
                     </div>
                     <div className="flex flex-1 items-center justify-center p-20">
-                        <div className="max-w-300 flex-1 overflow-hidden rounded-xl border-1 border-borderline">
-                            <UserImage nickname={user.nickname} profilePicture={user.profilePicture} />
+                        <div className="max-w-300 flex-1 overflow-hidden rounded-xl">
+                            <UserProfile profilePicture={user.profilePicture} size="lg" />
                         </div>
                     </div>
                 </div>
@@ -270,9 +217,11 @@ function UserCardModal({
                             />
                         </button>
                     </div>
-                    {user.projectList.slice(0, 4).map((v, i) => (
-                        <TempProject key={`project-${i}`} project={v} />
-                    ))}
+                    <div className="min-h-100 w-700">
+                        {user.projectList.slice(0, 4).map((v, i) => (
+                            <ProjectList key={`project-${i}`} project={v} />
+                        ))}
+                    </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
                         <div className="flex">
                             <PiBookOpenTextDuotone size={"1.5rem"} />
@@ -296,9 +245,11 @@ function UserCardModal({
                             />
                         </button>
                     </div>
-                    {user.studyList.slice(0, 4).map((v, i) => (
-                        <TempStudy key={`study-${i}`} study={v} />
-                    ))}
+                    <div className="min-h-100 w-700">
+                        {user.studyList.slice(0, 4).map((v, i) => (
+                            <StudyList key={`study-${i}`} study={v} />
+                        ))}
+                    </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
                         <div className="flex">
                             <PiChatTextDuotone size={"1.5rem"} />
@@ -322,9 +273,11 @@ function UserCardModal({
                             />
                         </button>
                     </div>
-                    {user.infoBoardList.slice(0, 4).map((v, i) => (
-                        <InfoItemHor key={`study-${i}`} info={v} />
-                    ))}
+                    <div className="min-h-100 w-700">
+                        {user.infoBoardList.slice(0, 4).map((v, i) => (
+                            <InfoItemHor key={`study-${i}`} info={v} />
+                        ))}
+                    </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
                         <div className="flex">
                             <PiQuestionDuotone size={"1.5rem"} />
@@ -348,14 +301,22 @@ function UserCardModal({
                             />
                         </button>
                     </div>
-                    {user.questionList.slice(0, 4).map((v, i) => (
-                        <QuestionItemHor key={`study-${i}`} question={v} />
-                    ))}
+                    <div className="min-h-100 w-700">
+                        {user?.questionList &&
+                            user.questionList
+                                .slice(0, 4)
+                                .map((v, i) => <QuestionItemHor key={`study-${i}`} question={v} />)}
+                    </div>
                 </div>
 
                 {user && isUpperOpen ? (
                     <Modal upperModal={isUpperOpen} closeModal={() => setIsUpperOpen(false)}>
-                        <UserBlockModal user={user} closeModal={closeModal} setBlockedMemberId={setBlockedMemberId} />
+                        <UserBlockModal
+                            user={user}
+                            closeModal={closeModal}
+                            setBlockedMemberId={setBlockedMemberId}
+                            refetchAllMembers={refetchAllMembers}
+                        />
                     </Modal>
                 ) : null}
             </>

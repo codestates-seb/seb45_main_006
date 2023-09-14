@@ -13,10 +13,12 @@ function UserBlockModal({
     user,
     closeModal,
     setBlockedMemberId,
+    refetchAllMembers,
 }: {
     user: GetResMemberDetail;
     closeModal: () => void;
     setBlockedMemberId: (v: number) => void;
+    refetchAllMembers: () => void;
 }) {
     const [reportContent, setReportContent] = useState("");
     const [isEmptyInput, setIsEmptyInput] = useState(false);
@@ -47,6 +49,7 @@ function UserBlockModal({
                             content: `${user.nickname} 유저를 차단하였습니다.`,
                             isConfirm: false,
                         });
+                        refetchAllMembers();
                     },
                     onError: (err) => {
                         console.log(err);

@@ -7,6 +7,7 @@ import BoardList from "@container/project/component/BoardList";
 import Toggle from "@component/project-study/Toggle";
 import CommonSearchFilters from "@component/board/SearchFilters";
 import SearchInput from "@component/board/SearchInput";
+// import Pagination from "@component/Pagination";
 
 import { useRecoilValue } from "recoil";
 import { isLoggedInAtom } from "@feature/Global";
@@ -14,6 +15,10 @@ import { useGetAllProjects } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
 
 const Board = () => {
+    // 페이지 필터
+    // const [curPage, setCurPage] = useState<number>(1);
+    // const [totalItems, setTotalItems] = useState<number>(0);
+
     const navigate = useNavigate();
     const { reqLoginToUserToast } = useToast();
 
@@ -37,6 +42,12 @@ const Board = () => {
             reqLoginToUserToast();
         }
     };
+
+    // useEffect(() => {
+    //     if (project?.pageInfo.totalElements) {
+    //         setTotalItems(project?.pageInfo.totalElements);
+    //     }
+    // }, [project?.pageInfo.totalElements]);
 
     return (
         <div>
@@ -72,6 +83,7 @@ const Board = () => {
                 {Array.isArray(projectsList) &&
                     projectsList.map((v) => <BoardList project={v} key={`project-${v.boardId}`} />)}
             </>
+            {/* <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} /> */}
         </div>
     );
 };

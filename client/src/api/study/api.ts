@@ -5,7 +5,7 @@ import { DeleteReqStudy, GetReqDetailStudy, PatchReqStudy, PostReqStudy } from "
 
 // 스터디 - 전체 조회하기
 export const getAllStudies = async () => {
-    const url = `${COMMON_API_PATH.STUDY.LIST}?page=1`;
+    const url = `/study/list?page=1&size=10`;
     const { data } = await commonApi.get(url);
     return data;
 };

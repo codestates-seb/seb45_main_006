@@ -1,8 +1,10 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
+import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
+import { useGetDefaultPostion, useGetDefaultStack } from "@api/default/hook";
 
 import Header from "@component/Header";
 import Navigation from "@component/Navigation";
@@ -21,11 +23,13 @@ function Layout() {
 
     const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
     const [isLoggedIn, setIsLoggined] = useRecoilState(isLoggedInAtom);
+    const setDefaultStack = useSetRecoilState(defaultStackAtom);
+    const setDefaultPosition = useSetRecoilState(defaultPostionAtom);
 
     const [marginTop, setMarginTop] = useState<number>(HEIGHT.MAIN_HEADER);
 
     useEffect(() => {
-        if (pathname.includes("/signup") || pathname.includes("/login")) {
+        if (pathname.includes("/signup") || pathname.includes("/login") || pathname.includes("/setpro")) {
             setIsSignPage(true);
         } else {
             setIsSignPage(false);
@@ -42,6 +46,24 @@ function Layout() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSignPage, pathname]);
+
+    const { data: position } = useGetDefaultPostion();
+
+    useEffect(() => {
+        if (position) {
+            setDefaultPosition(position);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [position]);
+
+    const { data: stack } = useGetDefaultStack();
+
+    useEffect(() => {
+        if (stack) {
+            setDefaultStack(stack);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stack]);
 
     return (
         <>

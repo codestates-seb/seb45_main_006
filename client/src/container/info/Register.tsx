@@ -12,7 +12,6 @@ import BoardInput from "@component/board/Input";
 import BoardContent from "@component/board/BoardContent";
 import Dropdown from "@component/board/Dropdown";
 
-import { infoCategory } from "@component/mockData";
 import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_NAME } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
@@ -113,6 +112,8 @@ function Register() {
             },
         );
     };
+
+    const infoCategory: Array<CATEGORY_NAME> = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];
 
     return (
         <div className="m-0 flex justify-center lg:m-80">

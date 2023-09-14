@@ -59,7 +59,7 @@ export const deleteBlockMember = async ({ memberId }: DeleteReqBlockMember) => {
     return data;
 };
 
-// 헤더 - 로그아웃
+// 회원 탈퇴
 export const deleteMember = async () => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}`;
     const { data } = await withAuthApi.delete(url);

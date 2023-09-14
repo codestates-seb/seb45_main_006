@@ -47,6 +47,16 @@ export const randomIdAtom = atom<string>({
     default: "",
 });
 
+export const defaultPostionAtom = atom<Array<string>>({
+    key: "defaultPostionAtom",
+    default: [],
+});
+
+export const defaultStackAtom = atom<Array<string>>({
+    key: "defaultStackAtom",
+    default: [],
+});
+
 export const toastState = atom<IToast[]>({
     key: "toastState",
     default: [],

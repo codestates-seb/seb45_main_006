@@ -6,6 +6,7 @@ import {
     useDeleteAnswer,
     usePostAnswerComment,
     useGetAnswerComment,
+    usePostAnswerAccept,
 } from "@api/answer/hook";
 
 import { useToast } from "@hook/useToast";
@@ -26,7 +27,7 @@ import UserProfile from "@component/user/UserProfile";
 
 import { AnswerDefaultType } from "@type/answer/answer.res.dto";
 
-import { BiPencil, BiReply } from "react-icons/bi";
+import { BiPencil, BiReply, BiSolidCheckSquare } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
 
 export const EditAnswer = ({
@@ -95,6 +96,7 @@ export const OneAnswer = ({
     boardId,
     profilePicture,
     refetchAnswer,
+    isAcceptExisted,
 }: {
     v: AnswerDefaultType;
     writerId: number;
@@ -102,6 +104,7 @@ export const OneAnswer = ({
     profilePicture: string;
     nickname: string;
     refetchAnswer: () => void;
+    isAcceptExisted: boolean;
 }) => {
     const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
@@ -116,6 +119,7 @@ export const OneAnswer = ({
     const { mutate: patchAnswer } = usePatchAnswer();
     const { mutate: deleteAnswer } = useDeleteAnswer();
     const { mutate: postAnswerComment } = usePostAnswerComment();
+    const { mutate: postAnswerAccept } = usePostAnswerAccept();
 
     const { data: commentList, refetch: refecthAnswerComments } = useGetAnswerComment({
         page: 1,
@@ -202,12 +206,38 @@ export const OneAnswer = ({
         }
     };
 
+    const onAcceptHandler = () => {
+        createToast({
+            content: "해당 답변을 채택하시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                postAnswerAccept(
+                    { questionId: boardId, answerId: v.answerId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "이 질문에 대한 답변 채택을 완료하였습니다!",
+                                isConfirm: false,
+                            });
+                            refetchAnswer();
+                        },
+                    },
+                );
+            },
+        });
+    };
+
     return (
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
                     <UserProfile size="sm" profilePicture={profilePicture} />
                     <Typography type="Highlight" text={v.nickname} />
+                    {v.accepted && (
+                        <div className="ml-12 rounded-sm border-1 border-main px-4 py-2">
+                            <Typography type="SmallLabel" text="답변 채택" color="text-main" />
+                        </div>
+                    )}
                     {isSameUser && (
                         <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
                             <Typography type="SmallLabel" text="작성자" color="text-blue-500" />
@@ -230,20 +260,26 @@ export const OneAnswer = ({
                     />
                 )}
                 {isLoggedIn && !isEdit && (
-                    <div className="absolute right-0 top-32">
-                        <div className={`flex w-70 ${isMine ? "justify-between" : "justify-end"}`}>
+                    <div className="absolute right-0 top-32 flex flex-col items-end">
+                        <div className={`my-12 flex w-90 ${isMine ? "justify-between" : "justify-end"}`}>
+                            {!isAcceptExisted && (
+                                <button onClick={onAcceptHandler}>
+                                    <BiSolidCheckSquare size={"1.2rem"} color="#44AE4E" />
+                                </button>
+                            )}
                             {isMine && (
                                 <>
                                     <button onClick={() => setIsEdit(true)}>
-                                        <BiPencil size={"1.2rem"} />
+                                        <BiPencil size={"1.2rem"} color="#44AE4E" />
                                     </button>
                                     <button onClick={onDeleteHanlder}>
-                                        <RiDeleteBin5Line size={"1.2rem"} />
+                                        <RiDeleteBin5Line size={"1.2rem"} color="#44AE4E" />
                                     </button>
                                 </>
                             )}
+
                             <button onClick={() => setAnswerId(v.answerId)}>
-                                <RiReplyLine size={"1.2rem"} />
+                                <RiReplyLine size={"1.2rem"} color="#44AE4E" />
                             </button>
                         </div>
                     </div>
@@ -328,10 +364,12 @@ export const ShowAnswer = ({
     answer,
     writerId,
     refetchAnswer,
+    isAcceptExisted,
 }: {
     answer: AnswerDefaultType;
     writerId: number;
     refetchAnswer: () => void;
+    isAcceptExisted: boolean;
 }) => {
     return (
         <div className="mb-8 flex flex-col border-b-1 border-borderline">
@@ -343,6 +381,7 @@ export const ShowAnswer = ({
                 nickname={answer.nickname}
                 profilePicture={answer.profilePicture}
                 refetchAnswer={refetchAnswer}
+                isAcceptExisted={isAcceptExisted}
             />
         </div>
     );

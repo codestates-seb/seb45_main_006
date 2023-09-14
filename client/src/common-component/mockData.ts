@@ -1,49 +1,3 @@
-import { CATEGORY_NAME } from "@type/info/common";
-
-export type IStack = {
-    id: number;
-    name: string;
-};
-
-export type IStacks = Array<IStack>;
-
-export const stacks = [
-    { id: 0, name: "JAVA" },
-    { id: 1, name: "Android" },
-    { id: 3, name: "iOS" },
-    { id: 4, name: "Python" },
-    { id: 5, name: "JSP" },
-    { id: 6, name: "PHP" },
-    { id: 7, name: "ASP" },
-    { id: 8, name: "C" },
-    { id: 9, name: "C#" },
-    { id: 10, name: "C++" },
-    { id: 11, name: "MFC" },
-    { id: 12, name: ".Net" },
-    { id: 13, name: "Node.js" },
-    { id: 14, name: "Vue.js" },
-    { id: 15, name: "React.js" },
-    { id: 16, name: "JQuery" },
-    { id: 17, name: "Javascript" },
-    { id: 18, name: "Oracle" },
-    { id: 19, name: "MMSQL" },
-    { id: 20, name: "MySQL" },
-    { id: 21, name: "MariaDB" },
-    { id: 22, name: "MongoDB" },
-    { id: 23, name: "PostgreSQL" },
-    { id: 24, name: "HTML5" },
-    { id: 25, name: "CSS" },
-    { id: 26, name: "BootStrap" },
-    { id: 27, name: "Typescript" },
-    { id: 28, name: "Photoshop" },
-    { id: 29, name: "Illustrator" },
-    { id: 30, name: "Adobe XD" },
-    { id: 31, name: "InDesign" },
-    { id: 32, name: "Zeplin" },
-    { id: 33, name: "Sketch" },
-    { id: 34, name: "Spring Boot" },
-];
-
 export const defaultStack = [
     "JAVA",
     "Android",
@@ -134,5 +88,3 @@ export const user = {
     modifiedAt: "2023-09-04T11:20:03.373275",
     oauthUser: false,
 };
-
-export const infoCategory: Array<CATEGORY_NAME> = ["기술 정보", "구직자 정보", "뉴스 레터", "부트캠프"];

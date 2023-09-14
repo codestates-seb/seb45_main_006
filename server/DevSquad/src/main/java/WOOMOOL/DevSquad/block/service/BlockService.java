@@ -31,12 +31,13 @@ public class BlockService {
         // 자신을 차단할 수 는 없음
         if (loginMemberProfile.getMemberProfileId() == blockMemberId)
             throw new BusinessLogicException(CANT_SELF_BLOCKING);
+
         // 블랙 리스트 확인하고 중복 차단이 되지 않게
-        List<Long> blockMemberLIdList = loginMemberProfile.getBlockList().stream()
-                .map(block -> block.getBlockId())
+        List<Long> blockMemberIdList = loginMemberProfile.getBlockList().stream()
+                .map(block -> block.getBlockMemberId())
                 .collect(Collectors.toList());
         // Id로 변환한 블랙리스트에 같은 id 값 있으면 exception
-        if (blockMemberLIdList.contains(blockMemberId))
+        if (blockMemberIdList.contains(blockMemberId))
             throw new BusinessLogicException(DUPLICATE_BLOCKING);
 
         // 차단할 멤버 닉네임 값을 얻기 위해 멤버 객체 생성..
