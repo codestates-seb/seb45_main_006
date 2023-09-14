@@ -46,7 +46,7 @@ function TodoList() {
                         <TodoItem key={v.id} id={v.id} userId={v.userId} todo={v.todo} completed={v.completed} />
                     ))}
             </ul>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={10} />
         </div>
     );
 }

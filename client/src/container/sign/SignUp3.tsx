@@ -1,12 +1,30 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+
+import { useGetMyDetail } from "@api/member/hook";
+
 import SignLayout from "@container/sign/component/SignLayout";
 import Typography from "@component/Typography";
+
 import progress from "@assets/sign/progress_bar3.png";
+import { setItemToStorage } from "@util/localstorage-helper";
 
 function SignUp3() {
-    //컴포넌트 내부에 useState, handleInput 넣기
+    const { data: myInfo } = useGetMyDetail();
+
+    useEffect(() => {
+        if (myInfo) {
+            setItemToStorage("nickname", myInfo.nickname);
+            setItemToStorage("profilePicture", myInfo.profilePicture);
+        }
+    }, [myInfo]);
+
     return (
-        <SignLayout title="설희님의 회원가입을" subTitle="축하합니다 🎉" progressImage={progress}>
+        <SignLayout
+            title={`${myInfo?.nickname || ""}님의 회원가입을`}
+            subTitle="축하합니다 🎉"
+            progressImage={progress}
+        >
             <div className="flex-col justify-center pb-50">
                 <div className="flex justify-center pb-10">
                     <Typography type="Highlight" text="잠깐! 알고 계신가요?"></Typography>
@@ -28,16 +46,15 @@ function SignUp3() {
             </div>
 
             <div className="flex flex-col items-center">
-                <Link to={"/setpro/1"}>
-                    <a className="bg-button-next m-auto flex w-230 justify-center rounded p-9">
-                        <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
-                    </a>
+                <Link to={"/setpro"} className="mt-25 flex w-230 justify-center rounded bg-[#888888] p-9">
+                    <Typography type="Highlight" text="간단 프로필 만들러 가기" color="text-white" />
                 </Link>
                 <div className="pb-50">
-                    <Link to={"/"}>
-                        <a className="m-auto mt-25 flex w-230 justify-center rounded border-1 border-solid border-black p-9">
-                            <Typography type="Highlight" text="다음에 만들어 볼래요" />
-                        </a>
+                    <Link
+                        to={"/"}
+                        className="m-auto mt-25 flex w-230 justify-center rounded border-1 border-solid border-black p-9"
+                    >
+                        <Typography type="Highlight" text="다음에 만들어 볼래요" />
                     </Link>
                 </div>
             </div>

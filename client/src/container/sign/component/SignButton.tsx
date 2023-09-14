@@ -8,14 +8,15 @@ type ISignButton = {
 };
 
 function SignButton({ type, children, styles, onClickHandler }: ISignButton) {
+    const defaultCss = "flex h-40 w-fit min-w-145 items-center justify-center rounded px-30";
+    const outlinedCss = "border-1 border-buttonborder";
+    const filledCss = "bg-buttonnext";
     return (
         <button
             onClick={() => {
                 if (onClickHandler) onClickHandler();
             }}
-            className={`flex h-40 w-fit min-w-145 items-center justify-center rounded px-30 ${
-                type === "OUTLINED" ? "border-button-border border-1" : ""
-            } ${type === "FILLED" ? "bg-button-next" : ""} ${styles}`}
+            className={`${defaultCss} ${type === "OUTLINED" ? outlinedCss : filledCss} ${styles}`}
         >
             {children}
         </button>

@@ -33,6 +33,7 @@ function AuthUser() {
             { email, password },
             {
                 onSuccess: () => {
+                    setRawPassword("");
                     navigate(`/members/my?auth=${randomId}&nav=edit`);
                 },
                 onError: () => {

@@ -19,17 +19,11 @@ import ProjectRegister from "@container/project/Register";
 import StudyBoard from "@container/study/Board";
 import StudyDetails from "@container/study/Details";
 import StudyRegister from "@container/study/Register";
-// import Login from "@container/sign/Login";
+import Login from "@container/sign/Login";
 import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
-import SetPro1 from "@container/sign/setProfile1";
-import SetPro2 from "@container/sign/setProfile2";
-import SetPro3 from "@container/sign/setProfile3";
-import SetPro4 from "@container/sign/setProfile4";
-import SetPro5 from "@container/sign/setProfile5";
-import TempProfile1 from "@container/sign/TempProfile1";
-import TempProfile4 from "@container/sign/TempProfile4";
+import SetPro from "@container/sign/SetPro";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
@@ -92,10 +86,10 @@ const router = createBrowserRouter([
                 path: "/members/my",
                 element: <MyPage />,
             },
-            // {
-            //     path: "/login",
-            //     element: <Login />,
-            // },
+            {
+                path: "/login",
+                element: <Login />,
+            },
             {
                 path: "/signup/1",
                 element: <SignUp1 />,
@@ -109,24 +103,8 @@ const router = createBrowserRouter([
                 element: <SignUp3 />,
             },
             {
-                path: "/setpro/1",
-                element: <SetPro1 />,
-            },
-            {
-                path: "/setpro/2",
-                element: <SetPro2 />,
-            },
-            {
-                path: "/setpro/3",
-                element: <SetPro3 />,
-            },
-            {
-                path: "/setpro/4",
-                element: <SetPro4 />,
-            },
-            {
-                path: "/setpro/5",
-                element: <SetPro5 />,
+                path: "/setpro",
+                element: <SetPro />,
             },
             {
                 path: "/todos",
@@ -139,14 +117,6 @@ const router = createBrowserRouter([
             {
                 path: "/todos/add",
                 element: <CreateTodo />,
-            },
-            {
-                path: "/signup/profile/1",
-                element: <TempProfile1 />,
-            },
-            {
-                path: "/signup/profile/4",
-                element: <TempProfile4 />,
             },
             {
                 path: "/login/find-pw",

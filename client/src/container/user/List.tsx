@@ -71,7 +71,7 @@ function UserList() {
                     )}
                 </div>
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={8} />
         </div>
     );
 }

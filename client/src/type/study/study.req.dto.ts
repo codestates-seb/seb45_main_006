@@ -1,6 +1,9 @@
 export type GetReqAllStudies = {
-    // 파라미터 없음
-    // 나중에 확인
+    page: number;
+    size: number;
+    stack?: string;
+    // search?: string;
+    // orderBy: string;
 };
 
 export type GetReqDetailStudy = {
@@ -10,8 +13,8 @@ export type GetReqDetailStudy = {
 export type PostReqStudy = {
     title: string;
     content: string;
+    stack: Array<string>;
     recruitNum: number;
-    recruitStatus: boolean;
 };
 
 export type PatchReqStudy = {

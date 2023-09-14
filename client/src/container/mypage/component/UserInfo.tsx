@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 
 import { useRecoilValue } from "recoil";
 import { authNicknameAtom } from "@feature/Global";
-import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
 import { useAuthHelper } from "@hook/useCheckAuth";
@@ -19,6 +18,7 @@ import { UserInfo as UserStackAndPos } from "@container/user/component/UserCardM
 import { GetResMemberDetail } from "@type/member/member.res.dto";
 import { getItemFromStorage } from "@util/localstorage-helper";
 
+import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
 
 function UserInfo({ user }: { user: GetResMemberDetail }) {
@@ -112,12 +112,10 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     };
 
     const linkCss = "bg-tertiary px-8 py-4 hover:bg-light hover:font-bold";
-    const defaultPosition = useRecoilValue(defaultPostionAtom);
-    const defaultStack = useRecoilValue(defaultStackAtom);
 
     return (
-        <div className="flex flex-col">
-            <div className="flex flex-1 flex-col items-center rounded-md bg-white p-40 shadow-md">
+        <div className="flex flex-1 flex-col">
+            <div className="flex flex-col items-center rounded-md bg-white p-40 shadow-md">
                 <div className="mb-32 min-w-400">
                     <SignInput
                         name="email"
@@ -181,12 +179,12 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                                 <div className="min-w-88 p-4">
                                     <Typography type="SmallLabel" text="기술스택" styles="font-bold" />
                                 </div>
-                                {/* <AutoCompletionTags
+                                <AutoCompletionTags
                                     placeholder="기술 스택을 입력해주세요."
                                     selectedTags={stacks}
                                     setSelectedTags={setStacks}
                                     defaultSuggestions={defaultStack}
-                                /> */}
+                                />
                             </>
                         ) : (
                             <UserStackAndPos user={user} type="stack" />
