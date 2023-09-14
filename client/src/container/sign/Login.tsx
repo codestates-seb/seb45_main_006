@@ -71,7 +71,16 @@ function Login() {
                             }`}
                         />
                     </div>
-                    <div className="mt-30 flex-col items-center justify-center">
+                    <div className="flex w-full justify-end p-8">
+                        <Link to={"/login/find-pw"}>
+                            <Typography
+                                type="SmallLabel"
+                                text="비밀번호 찾기"
+                                color="text-blue-700 hover:text-blue-900"
+                            />
+                        </Link>
+                    </div>
+                    <div className="mt-20 flex-col items-center justify-center">
                         <Button type="BLACK" isFullBtn={true} onClickHandler={onClickLoginHandler}>
                             <Typography type="Highlight" text="로그인" color="text-white" />
                         </Button>
