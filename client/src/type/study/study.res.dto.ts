@@ -11,6 +11,16 @@ export interface CommonResStudies {
     recruitNum: number;
     viewCount: number;
     recruitStatus: STUDY_STATUS_TYPE;
+    memberProfile: MemberProfile;
+}
+
+export interface MemberProfile {
+    memberId: number;
+    profilePicture: string;
+    nickname: string;
+    githubId: string;
+    position: string[];
+    stack: string[];
 }
 
 export interface GetResAllStudies {
@@ -20,6 +30,7 @@ export interface GetResAllStudies {
 
 export interface GetResDetailStudy extends CommonResStudies {
     content: string;
+    bookmarked: boolean;
 }
 
 export interface PostResStudy extends GetResDetailStudy {}

@@ -12,7 +12,7 @@ import {
 // 프로젝트 - 전체 조회하기
 export const getAllProjects = async ({ page, size, stack }: GetReqAllProjects) => {
     let url = `/project/list?page=${page}&size=${size}`;
-    if (stack) url += `&stack=${stack}`;
+    if (stack) url += `&stacks=${stack}`;
     const { data } = await commonApi.get(url);
     return data;
 };

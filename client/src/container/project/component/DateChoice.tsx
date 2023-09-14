@@ -7,18 +7,42 @@ import dayjs from "dayjs";
 
 registerLocale("ko", ko);
 
-const DateChoice = ({ onChange }: { onChange: (start: string, end: string) => void }) => {
+const DateChoice = ({
+    startDate,
+    setStartDate,
+    deadline,
+    setDeadline,
+}: {
+    startDate: string;
+    setStartDate: (v: string) => void;
+    deadline: string;
+    setDeadline: (v: string) => void;
+}) => {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-    const [startDate, endDate] = dateRange;
+    const [start, setStart] = useState<Date | null>(null);
+    const [end, setEnd] = useState<Date | null>(null);
 
     useEffect(() => {
-        if (startDate && endDate) {
-            const start = dayjs(startDate).format("M/D");
-            const end = dayjs(endDate).format("M/D");
-            onChange(start, end);
+        if (dateRange[0]) {
+            setStartDate("");
+            setDeadline("");
+            setStartDate(dayjs(dateRange[0]).format("YYYY/MM/DD"));
         }
+        if (dateRange[1]) {
+            setDeadline(dayjs(dateRange[1]).format("YYYY/MM/DD"));
+        }
+        setStart(dateRange[0]);
+        setEnd(dateRange[1]);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [startDate, endDate]);
+    }, [dateRange]);
+
+    useEffect(() => {
+        if (startDate && deadline) {
+            setStart(new Date(startDate));
+            setEnd(new Date(deadline));
+        }
+    }, [startDate, deadline]);
 
     return (
         <div className="my-10 flex flex-col p-10">
@@ -27,10 +51,10 @@ const DateChoice = ({ onChange }: { onChange: (start: string, end: string) => vo
                 <Typography text="*" type="Body" color="text-warn" />
             </div>
             <DatePicker
-                dateFormat="yyyy-MM-dd"
+                dateFormat="yyyy/MM/dd"
                 selectsRange={true}
-                startDate={startDate}
-                endDate={endDate}
+                startDate={start}
+                endDate={end}
                 onChange={(update) => {
                     setDateRange(update);
                 }}

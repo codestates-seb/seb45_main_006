@@ -12,7 +12,7 @@ import {
 // 스터디 - 전체 조회하기
 export const getAllStudies = async ({ page, size, stack }: GetReqAllStudies) => {
     let url = `/study/list?page=${page}&size=${size}`;
-    if (stack) url += `&stack=${stack}`;
+    if (stack) url += `&stacks=${stack}`;
     const { data } = await commonApi.get(url);
     return data;
 };

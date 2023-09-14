@@ -29,6 +29,7 @@ export const useGetDetailStudy = ({ boardId }: GetReqDetailStudy) => {
     return useQuery<GetResDetailStudy, AxiosError, GetResDetailStudy>({
         queryKey: studyKeyFactory.detail({ boardId }),
         queryFn: () => getDetailStudy({ boardId }),
+        enabled: !!boardId,
     });
 };
 // 스터디 - 정보 등록하기

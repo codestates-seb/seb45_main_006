@@ -1,25 +1,55 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { useRecoilValue } from "recoil";
+import { defaultStackAtom } from "@feature/Global";
+
+import { usePostStudy } from "@api/study/hook";
+import { useToast } from "@hook/useToast";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
+import { useCheckCurActivity } from "@hook/useCheckCurActivity";
+
 import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import { usePostStudy } from "@api/study/hook";
-import { useToast } from "@hook/useToast";
-import { useCheckValidValue } from "@hook/useCheckValidValue";
+import AutoCompletionTags from "@component/AutoCompletionTags";
+import InputForNumber from "@component/project-study/InputForNumber";
+import { GetResDetailStudy } from "@type/study/study.res.dto";
 
 export default function Register() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { fireToast } = useToast();
+    const { curActivity } = useCheckCurActivity({ location });
     const { alertWhenEmptyFn } = useCheckValidValue();
 
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
-        stack: [],
         recruitNum: 0,
-        recruitStatus: false,
     });
+
+    const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
+
+    useEffect(() => {
+        if (curActivity === "EDIT") {
+            const {
+                title: prevTitle,
+                content: prevContent,
+                stack: prevStack,
+                recruitNum: prevRecruitNum,
+            }: GetResDetailStudy = location.state;
+            setInputs({
+                ...inputs,
+                title: prevTitle,
+                content: prevContent,
+                recruitNum: prevRecruitNum,
+            });
+            setSelectedStack(prevStack);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [curActivity]);
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
@@ -30,32 +60,42 @@ export default function Register() {
 
     const handleSubmit = async () => {
         const registerInputs = [
-            { name: "제목", content: inputs.title },
-            { name: "내용", content: inputs.content },
+            { name: "스터디명", content: inputs.title },
+            { name: "스터디 상세내용", content: inputs.content },
             { name: "모집인원", content: inputs.recruitNum },
+            { name: "요구 스택", content: selectedStack.join(", ") },
         ];
         const emptyNames = alertWhenEmptyFn(registerInputs);
+
         if (emptyNames.length === 0) {
-            postStudy(inputs, {
-                onSuccess: () => {
-                    navigate("/studies/:studyBoardId");
-                    fireToast({
-                        content: "게시글이 등록되었습니다!",
-                        isConfirm: false,
-                    });
+            const recruitNum =
+                typeof inputs.recruitNum === "string" ? Number.parseInt(inputs.recruitNum) : inputs.recruitNum;
+            postStudy(
+                { ...inputs, stack: selectedStack, recruitNum },
+                {
+                    onSuccess: (res) => {
+                        const boardId = res.boardId;
+                        navigate(`/studies/${boardId}`);
+                        fireToast({
+                            content: "게시글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                        fireToast({
+                            content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                            isConfirm: false,
+                            isWarning: true,
+                        });
+                    },
                 },
-                // TODO: 에러 분기
-                onError: (err) => {
-                    console.log(err);
-                    fireToast({
-                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
-                        isConfirm: false,
-                        // isWarning: true,
-                    });
-                },
-            });
+            );
         }
     };
+    // recruitStatus: "STUDY_POSTED",
+
+    const defaultStack = useRecoilValue(defaultStackAtom);
 
     return (
         <div className="m-80 flex justify-center">
@@ -80,21 +120,27 @@ export default function Register() {
                         onChange={handleInput}
                         borderStyle={""}
                     />
-                    {/* <BoardInput
-                        name="stack"
-                        label="요구스택"
-                        required={true}
-                        placeholder="ex) java, javascript"
-                        value={inputs.stack}
-                        onChange={handleInput}
-                    /> */}
+                    <div className="my-10 p-10">
+                        <div className="flex">
+                            <Typography text="요구 스택" type="Body" styles="mb-10" />
+                            <Typography text="*" type="Body" color="text-warn" />
+                        </div>
+                        <AutoCompletionTags
+                            type="OUTLINED"
+                            placeholder="검색할 기술 스택을 입력해주세요."
+                            selectedTags={selectedStack}
+                            setSelectedTags={setSelectedStack}
+                            defaultSuggestions={defaultStack}
+                        />
+                    </div>
                     <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
-                    <BoardInput
+                    <InputForNumber
                         name="recruitNum"
                         label="모집인원"
                         required={true}
-                        placeholder="ex) 6명"
+                        placeholder="ex) 6"
                         value={inputs.recruitNum}
+                        max={12}
                         onChange={handleInput}
                     />
                     <div className="flex w-full justify-center">
