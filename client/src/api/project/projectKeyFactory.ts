@@ -1,6 +1,6 @@
-import { GetReqDetailProject } from "@type/project/project.req.dto";
+import { GetReqAllProjects, GetReqDetailProject } from "@type/project/project.req.dto";
 
 export const projectKeyFactory = {
-    all: () => ["projects"],
+    all: ({ page, size, stack }: GetReqAllProjects) => ["projects", { page, size, stack }],
     detail: ({ boardId }: GetReqDetailProject): [string, GetReqDetailProject] => ["projects", { boardId }],
 };

@@ -9,6 +9,7 @@ import {
 } from "@type/project/project.res.dto";
 import {
     DeleteReqProject,
+    GetReqAllProjects,
     // GetReqAllProjects,
     GetReqDetailProject,
     PatchReqProject,
@@ -18,13 +19,11 @@ import { projectKeyFactory } from "./projectKeyFactory";
 import { deleteProject, getAllProjects, getDetailProject, patchProject, postProject } from "./api";
 
 // 프로젝트 - 전체 조회하기
-export const useGetAllProjects = () => {
-    const { data } = useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
-        queryKey: projectKeyFactory.all(),
-        queryFn: () => getAllProjects(),
+export const useGetAllProjects = ({ page, size, stack }: GetReqAllProjects) => {
+    return useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
+        queryKey: projectKeyFactory.all({ page, size, stack }),
+        queryFn: () => getAllProjects({ page, size, stack }),
     });
-    const projectsList = data;
-    return { projectsList };
 };
 // 프로젝트 - 상세 조회하기
 export const useGetDetailProject = ({ boardId }: GetReqDetailProject) => {

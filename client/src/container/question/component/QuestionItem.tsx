@@ -205,7 +205,7 @@ function QuestionItem({
                                     isAcceptExisted={answerList.data.filter((v) => v.accepted).length > 0}
                                 />
                             ))}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={10} />
                     </div>
                 </div>
             )}

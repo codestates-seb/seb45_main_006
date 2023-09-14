@@ -137,7 +137,7 @@ function Board() {
                             )}
                     </div>
                     {/* 임시 */}
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={10} />
                 </div>
                 <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                     <Typography type="Label" text="🔥 HOT 게시글" />

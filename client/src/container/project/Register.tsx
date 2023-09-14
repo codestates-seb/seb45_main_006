@@ -82,25 +82,28 @@ export default function Register() {
         if (isEmpty()) return;
 
         if (inputs.title !== "") {
-            postProject(inputs, {
-                //아이디가 있어야 상세조회 가능하므로 boardId 전달
-                onSuccess: (res) => {
-                    navigate("/projects/:projectBoardId", { state: res.boardId });
-                    fireToast({
-                        content: "게시글이 등록되었습니다!",
-                        isConfirm: false,
-                    });
+            postProject(
+                { ...inputs },
+                {
+                    //아이디가 있어야 상세조회 가능하므로 boardId 전달
+                    onSuccess: (res) => {
+                        navigate("/projects/:projectBoardId", { state: res.boardId });
+                        fireToast({
+                            content: "게시글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                    },
+                    // TODO: 에러 분기
+                    onError: (err) => {
+                        console.log(err);
+                        fireToast({
+                            content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                            isConfirm: false,
+                            isWarning: true,
+                        });
+                    },
                 },
-                // TODO: 에러 분기
-                onError: (err) => {
-                    console.log(err);
-                    fireToast({
-                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
-                        isConfirm: false,
-                        isWarning: true,
-                    });
-                },
-            });
+            );
         }
     };
 
@@ -108,7 +111,7 @@ export default function Register() {
         if (isEmpty()) return;
 
         patchProject(
-            { boardId: location.state.boardId, ...inputs },
+            { boardId: location.state.boardId, recruitStatus: "PROJECT_POSTED", ...inputs },
             {
                 onSuccess: (res) => {
                     navigate("/projects/:projectBoardId", { state: res.boardId });

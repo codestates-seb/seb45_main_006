@@ -114,8 +114,8 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const linkCss = "bg-tertiary px-8 py-4 hover:bg-light hover:font-bold";
 
     return (
-        <div className="flex flex-col">
-            <div className="flex flex-1 flex-col items-center rounded-md bg-white p-40 shadow-md">
+        <div className="flex flex-1 flex-col">
+            <div className="flex flex-col items-center rounded-md bg-white p-40 shadow-md">
                 <div className="mb-32 min-w-400">
                     <SignInput
                         name="email"

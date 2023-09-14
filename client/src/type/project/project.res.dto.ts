@@ -1,3 +1,6 @@
+import { PageInfo } from "@type/common";
+import { PROEJCT_STATUS_TYPE } from "./common";
+
 // 가져다쓰기 편하게 interface
 export interface CommonResProjects {
     boardId: number;
@@ -8,7 +11,7 @@ export interface CommonResProjects {
     startDate: string;
     deadline: string;
     recruitNum: number;
-    projectStatus: string;
+    projectStatus: PROEJCT_STATUS_TYPE;
     viewCount: number;
     memberProfile: MemberProfile;
 }
@@ -24,11 +27,13 @@ export interface MemberProfile {
 
 export interface GetResAllProjects {
     data: CommonResProjects[];
+    pageInfo: PageInfo;
 }
 
 export interface GetResDetailProject extends CommonResProjects {
     content: string;
-    // bookmarked: boolean;
+    bookmarked: boolean;
+    viewCount: number;
 }
 
 export interface PatchResProject extends GetResDetailProject {}

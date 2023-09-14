@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import Typography from "@component/Typography";
 import Tag from "@component/project-study/Tag";
 import { CommonResProjects } from "@type/project/project.res.dto";
+import UserProfile from "@component/user/UserProfile";
 
 const ProjectList = ({ project }: { project: CommonResProjects }) => {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
             </div>
             <hr />
             <div className="flex cursor-pointer items-center">
-                <div className="h-40 w-40 rounded-3xl bg-deadline">유저</div>
+                <UserProfile profilePicture={project.memberProfile.profilePicture} size="sm" />
                 <div className="mx-20 text-20">yeeendy</div>
             </div>
         </div>

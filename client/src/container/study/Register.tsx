@@ -16,7 +16,7 @@ export default function Register() {
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
-        // stack: "",
+        stack: [],
         recruitNum: 0,
         recruitStatus: false,
     });

@@ -35,7 +35,7 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
                         return <ProjectItem key={`member-${memberId}-project-${i}`} project={v} />;
                     })}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
@@ -59,7 +59,7 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
                 {Array.isArray(study?.data) &&
                     study?.data.map((v, i) => <StudyItem key={`member-${memberId}-study-${i}`} study={v} />)}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
@@ -117,7 +117,7 @@ const InfoOfMember = ({ memberId }: { memberId: number }) => {
                         />
                     ))}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
@@ -175,7 +175,7 @@ const QuestionOfMember = ({ memberId }: { memberId: number }) => {
                         />
                     ))}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
