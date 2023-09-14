@@ -25,6 +25,7 @@ import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -336,7 +337,7 @@ public class MemberService {
         return questionBoardList;
     }
 
-    // 프로필 페이징
+    // 프로필리스트 페이징
     private Page<MemberProfile> getMemberProfilePage(int page, List<MemberProfile> memberProfileList){
 
         // 차단한 회원 걸러낸 리스트
@@ -362,7 +363,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<InfoBoard> infoBoardPage = likesRepository
-                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
+                .findInfoBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return infoBoardPage;
 
@@ -374,7 +375,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = likesRepository
-                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
+                .findQuestionBoardByLikedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return questionBoardPage;
     }
@@ -386,7 +387,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<QuestionBoard> questionBoardPage = bookmarkRepository
-                .findQuestionByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
+                .findQuestionByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return questionBoardPage;
     }
@@ -396,7 +397,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<InfoBoard> infoBoardPage = bookmarkRepository
-                .findInfoByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
+                .findInfoByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return infoBoardPage;
     }
@@ -406,7 +407,7 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<Project> projectBoardPage = bookmarkRepository
-                .findProjectByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt")));
+                .findProjectByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return projectBoardPage;
     }
@@ -416,9 +417,42 @@ public class MemberService {
         Member findMember = findMemberFromToken();
 
         Page<Study> studyBoardPage = bookmarkRepository
-                .findStudyByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createAt")));
+                .findStudyByBookmarkedMemberId(findMember.getMemberId(), PageRequest.of(page, 8, Sort.by("createdAt").descending()));
 
         return studyBoardPage;
+    }
+
+    // 출석체크
+    public void attendanceCheck(){
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+        Level level = memberProfile.getLevel();
+
+        isAttendanceChecked();
+
+        memberProfile.setAttendanceChecked(true);
+
+        level.setCurrentExp(level.getCurrentExp() + 1);
+
+    }
+    private void isAttendanceChecked(){
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+
+        if(memberProfile.isAttendanceChecked()) throw new BusinessLogicException(CHECK_COMPLETED);
+
+    }
+    // 매일 자정 출석체크 초기화
+    @Scheduled(cron = "0 0 0 * * ?")
+    protected void resetAttendanceCheck(){
+
+       List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+
+       for(MemberProfile memberProfile : memberProfileList){
+           memberProfile.setAttendanceChecked(false);
+       }
+       memberProfileRepository.saveAll(memberProfileList);
+
     }
 }
 

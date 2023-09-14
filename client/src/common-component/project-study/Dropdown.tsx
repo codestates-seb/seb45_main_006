@@ -8,7 +8,7 @@ interface DropdownProps {
     disabled?: boolean;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onSelectOption }) => {
+const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onSelectOption, disabled }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -19,15 +19,17 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onS
         onSelectOption(option);
         setIsOpen(false);
     };
-
     return (
         <div className="m-10">
-            <label className="mb-10 block text-gray-700">{label}</label>
+            <label className="mb-10 block">{label}</label>
             <div className={`relative rounded-3xl bg-white shadow-sm ${isOpen ? "z-10" : ""}`}>
                 <button
                     // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-                    className="w-full rounded-md bg-white p-4 text-left "
+                    className={`w-full rounded-md bg-white p-6 text-left ${
+                        disabled ? "z-10 bg-gray-400 text-gray-700" : "bg-white hover:bg-gray-100"
+                    }`}
                     onClick={toggleDropdown}
+                    disabled={disabled}
                 >
                     {selectedOption}
                 </button>

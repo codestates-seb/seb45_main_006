@@ -10,7 +10,6 @@ import {
 } from "@type/project/project.req.dto";
 
 // 프로젝트 - 전체 조회하기
-//TODO
 export const getAllProjects = async ({ page, size, stack }: GetReqAllProjects) => {
     let url = `/project/list?page=${page}&size=${size}`;
     if (stack) url += `&stacks=${stack}`;

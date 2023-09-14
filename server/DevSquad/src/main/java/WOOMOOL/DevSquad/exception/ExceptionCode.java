@@ -30,7 +30,8 @@ public enum ExceptionCode {
 
     TOKEN_EXPIRED(400, "만료된 토큰입니다."),
     INVALID_TOKEN(400, "유효하지 않은 토큰입니다"),
-    BAD_REQUEST(400, "잘못된 요청입니다.");
+    BAD_REQUEST(400, "잘못된 요청입니다."),
+    CHECK_COMPLETED(400, "출석은 1일 1회 가능합니다.");
 
 
 

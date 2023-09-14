@@ -198,6 +198,7 @@ export default function Register() {
                             options={options}
                             selectedOption={selectedOption}
                             onSelectOption={handleSelectOption}
+                            disabled={true}
                         />
                     ) : (
                         <Dropdown
@@ -205,6 +206,7 @@ export default function Register() {
                             options={options}
                             selectedOption={selectedOption}
                             onSelectOption={handleSelectOption}
+                            disabled={false}
                         />
                     )}
                     <DateChoice

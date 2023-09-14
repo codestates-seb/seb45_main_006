@@ -16,15 +16,15 @@ import UserProfile from "@component/user/UserProfile";
 
 const Details = () => {
     const navigate = useNavigate();
-
     const { projectBoardId } = useParams();
     const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
+    const boardId = projectBoardId;
 
     const {
         data: projectInputs,
         isLoading,
         refetch,
-    } = useGetDetailProject({ boardId: Number.parseInt(projectBoardId || "0") });
+    } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
 
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
@@ -67,12 +67,23 @@ const Details = () => {
     return (
         <div>
             <div className="m-20 flex gap-20">
-                <section className="relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline">
+                <section
+                    // eslint-disable-next-line tailwindcss/no-custom-classname
+                    className={`relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline ${
+                        projectInputs?.projectStatus === "PROJECT_POSTED" ? "" : "bg-gray-300"
+                    }`}
+                >
                     <div>
-                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline ">
-                            <Typography type="SmallLabel" text="모집중" styles="text-white" />
-                        </div>
-                        <h3 className="mx-20 mt-40 min-h-60">
+                        {projectInputs?.projectStatus === "PROJECT_POSTED" ? (
+                            <div className="absolute left-16 top-10 flex h-28 w-56 items-center justify-center rounded bg-deadline ">
+                                <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                            </div>
+                        ) : (
+                            <div className="absolute left-16 top-10 flex h-30 w-68 items-center justify-center rounded bg-gray-600">
+                                <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                            </div>
+                        )}
+                        <h3 className="mx-20 mt-40">
                             <div className="mx-4 text-40 font-bold">{projectInputs?.title || ""}</div>
                         </h3>
                         <ul className="flex flex-col p-20">
@@ -165,3 +176,4 @@ const Details = () => {
 };
 
 export default Details;
+
