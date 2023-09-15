@@ -15,12 +15,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'zulu'
-      - name: Initialize Gradle Wrapper
-      - run: gradle wrapper
+
       - name: Grant execute permission for gradlew # 실행 권한 부여
-        run: chmod +x gradlew
+        run: chmod +x DevSquad/gradlew
       - name: Build with Gradle # ./gradlew 로 빌드
-        run: ./gradlew build
+        working-directory: DevSquad
+      - run: ./gradlew clean build
       - name: Docker build # 도커로 이미지 생성 후 DockerHub에 배포
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}

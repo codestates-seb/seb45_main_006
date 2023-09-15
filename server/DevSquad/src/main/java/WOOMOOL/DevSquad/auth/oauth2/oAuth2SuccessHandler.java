@@ -51,6 +51,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if (optionalMember.isPresent()) return;
 
         // 멤버프로필 정보 생성해서 넣어주기
+        // 공백은 처음 회원 가입 하는 사람
         Member member = new Member("");
         MemberProfile memberProfile = new MemberProfile("");
         memberProfile.setOAuth2Member(true);
