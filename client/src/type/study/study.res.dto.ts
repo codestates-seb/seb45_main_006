@@ -10,7 +10,7 @@ export interface CommonResStudies {
     modifiedAt: string;
     recruitNum: number;
     viewCount: number;
-    recruitStatus: STUDY_STATUS_TYPE;
+    studyStatus: STUDY_STATUS_TYPE;
     memberProfile: MemberProfile;
 }
 
