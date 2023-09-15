@@ -10,6 +10,7 @@ import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,14 +32,14 @@ public class CommentService {
     private final AnswerService answerService;
     private final MemberService memberService;
 
-    public CommentService(CommentRepository commentRepository,
-                          BoardRepository boardRepository,
-                          AnswerService answerService,
-                          MemberService memberService) {
+    private final LevelService levelService;
+
+    public CommentService(CommentRepository commentRepository, BoardRepository boardRepository, AnswerService answerService, MemberService memberService, LevelService levelService) {
         this.commentRepository = commentRepository;
         this.boardRepository = boardRepository;
         this.answerService = answerService;
         this.memberService = memberService;
+        this.levelService = levelService;
     }
 
     public Comment createComment(long boardId, Comment comment) {
@@ -52,6 +53,7 @@ public class CommentService {
             comment.setBoard(null);
         }
 
+        levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
         return commentRepository.save(comment);
     }

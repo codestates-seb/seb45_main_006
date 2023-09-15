@@ -25,7 +25,8 @@ public class JwtTokenizer {
 
     //todo: 환경변수처리
     @Getter
-    private String secretKey = "rodnfrkdpdhfcoddlgksakflRHanfRHanfgodjaclekdkvekflrkTNrenltekflrkTNrvkfWKrvkfWKrornflehoTsp";
+    @Value("${jwt.secretKey}")
+    private String secretKey;
 
     @Getter
     @Value("${jwt.access-token-expiration-minutes}")

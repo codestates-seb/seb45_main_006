@@ -4,16 +4,41 @@ spring:
     url: jdbc:mysql://devsquad.cgbzoy0x62zh.ap-northeast-2.rds.amazonaws.com:13306/DevSquad?serverTimezone=Asia/Seoul
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
-
-
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
       format_sql: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${G_CLIENT_ID}
+            client-secret: ${G_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000 # 연결시도 5초
+          starttls.enable: true
+    auth-code-expiration-millis: 600000 # 유효시간 10분
+
 jwt:
   secretKey: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 30
-  refresh-token-expiration-minutes: 420
+  access-token-expiration-minutes: ${JWT_ACCESS_TOKEN_EXPIRATION}
+  refresh-token-expiration-minutes: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
+admin:
+  mail: ${ADMIN_MAIL}
 
