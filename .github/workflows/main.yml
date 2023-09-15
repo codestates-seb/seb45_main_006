@@ -20,7 +20,8 @@ jobs:
         run: chmod +x DevSquad/gradlew
       - name: Build with Gradle # ./gradlew 로 빌드
         working-directory: DevSquad
-      - run: ./gradlew clean build
+        run: ./gradlew clean build
+
       - name: Docker build # 도커로 이미지 생성 후 DockerHub에 배포
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}

@@ -20,7 +20,7 @@ public interface ChatRoomMapper {
     default ChatRoomDto.detailResponse entityToDetailResponse(ChatRoom chatRoom) {
 
         return new ChatRoomDto.detailResponse(
-                chatRoom.getCharRoomId(),
+                chatRoom.getChatRoomId(),
                 chatRoom.getMemberProfileList().stream()
                         .map(memberProfile -> memberProfile.getMemberProfileId()).collect(Collectors.toList()),
                 chatRoom.getMemberProfileList().stream()
@@ -42,7 +42,7 @@ public interface ChatRoomMapper {
 
         return chatRoomList.stream()
                 .map(chatRoom -> new ChatRoomDto.listResponse(
-                        chatRoom.getCharRoomId(),
+                        chatRoom.getChatRoomId(),
                         chatRoom.getMemberProfileList().stream()
                                 .map(memberProfile -> memberProfile.getMemberProfileId())
                                 .collect(Collectors.toList()),
