@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -59,6 +60,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = delegateRefreshToken(member);
 
         String username = member.getEmail();
+
+        // 이미 DB에 리프레스 토큰이 있으면 삭제하고 다시 저장
+        RefreshToken findRefreshToken = refreshTokenRepository.findByUsername(username);
+
+        if(findRefreshToken != null) {
+
+            refreshTokenRepository.delete(findRefreshToken);
+        }
 
         // 리프레시 토큰 DB에 저장
         RefreshToken token = RefreshToken.builder()
