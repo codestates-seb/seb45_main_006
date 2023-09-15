@@ -17,12 +17,14 @@ jobs:
           distribution: 'zulu'
 
       - name: Grant execute permission for gradlew # 실행 권한 부여
-        run: chmod +x gradlew
+        run: chmod +x server/DevSquad/gradlew
       - name: Build with Gradle # ./gradlew 로 빌드
-        run: ./gradlew build
+        working-directory: server/DevSquad
+        run: ./gradlew clean build
+
       - name: Docker build # 도커로 이미지 생성 후 DockerHub에 배포
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-          docker build -t devsquad .
+          docker build -t devsquad -f server/DevSquad/Dockerfile .
           docker tag devsquad ehdals0405/devsquad:${GITHUB_SHA::7}
           docker push ehdals0405/devsquad:${GITHUB_SHA::7}
