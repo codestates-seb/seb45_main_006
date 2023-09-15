@@ -96,7 +96,6 @@ public class SecurityConfig {
                 .clientSecret(clientSecret)
                 .build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
