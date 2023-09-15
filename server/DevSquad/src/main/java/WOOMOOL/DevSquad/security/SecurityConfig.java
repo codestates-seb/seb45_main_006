@@ -107,8 +107,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam/","http://localhost:3000","http://localhost:5173","http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/","http://ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com:8080"));
         configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization","Refresh"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization","Refresh"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization","Refresh","Location"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
