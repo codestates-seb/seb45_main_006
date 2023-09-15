@@ -1,6 +1,6 @@
-import ProjectImg from "@assets/main/project.svg";
-import StudyImg from "@assets/main/study.svg";
-import BoardImg from "@assets/main/board.svg";
+import ProjectImg from "@assets/main/project_wide.jpg";
+import StudyImg from "@assets/main/study_wide.jpg";
+import BoardImg from "@assets/main/board_wide.jpg";
 import { Carousel, IconButton } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
