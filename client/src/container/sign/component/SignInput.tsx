@@ -7,6 +7,7 @@ interface ISignInput extends IInput {
     label: string;
     description?: string;
     regex?: RegExp;
+    onKeyDownHandler?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 function SignInput({
@@ -19,6 +20,7 @@ function SignInput({
     placeholder,
     regex,
     disabled = false,
+    onKeyDownHandler,
 }: ISignInput) {
     const [isNeededWarn, setIsNeededWarn] = useState<boolean>(false);
 
@@ -43,6 +45,7 @@ function SignInput({
                     value={value}
                     onChange={onChange}
                     maxlength={100}
+                    onKeyDownHandler={onKeyDownHandler}
                     placeholder={placeholder}
                     borderStyle={`flex-1 rounded-none outline-none focus:outline-none ${
                         isNeededWarn ? "border-warn" : ""

@@ -17,7 +17,7 @@ import UserProfile from "@component/user/UserProfile";
 const Details = () => {
     const navigate = useNavigate();
     const { projectBoardId } = useParams();
-    const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
+
     const boardId = projectBoardId;
 
     const {
@@ -25,6 +25,8 @@ const Details = () => {
         isLoading,
         refetch,
     } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
+
+    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
@@ -176,4 +178,3 @@ const Details = () => {
 };
 
 export default Details;
-

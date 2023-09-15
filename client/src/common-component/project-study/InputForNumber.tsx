@@ -5,8 +5,6 @@ import { IInput } from "@component/Input";
 interface IBoardInput extends IInput {
     label: string;
     required?: boolean;
-    min?: number;
-    max?: number;
 }
 
 export default function InputForNumber({

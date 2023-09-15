@@ -45,11 +45,11 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-//    private String clientId;
-//
-//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-//    private String clientSecret;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String clientSecret;
 
     public SecurityConfig(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
         this.jwtTokenizer = jwtTokenizer;
@@ -75,30 +75,30 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfiguration())
                 .and()
-//                .oauth2Client(Customizer.withDefaults())
+                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests()
-                .anyRequest().permitAll();
-//               .and()
-//                .oauth2Login(oauth2 -> oauth2
-//                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer,memberAuthority,memberRepository))
-//                );
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer,memberAuthority,memberRepository))
+                );
 
         return http.build();
     }
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(){
-//        var clientRegistration = clientRegistration();
-//
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//    }
-////    private ClientRegistration clientRegistration(){
-////        return CommonOAuth2Provider
-////                .GOOGLE
-////                .getBuilder("google")
-////                .clientId(clientId)
-////                .clientSecret(clientSecret)
-////                .build();
-////    }
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository(){
+        var clientRegistration = clientRegistration();
+
+        return new InMemoryClientRegistrationRepository(clientRegistration);
+    }
+    private ClientRegistration clientRegistration(){
+        return CommonOAuth2Provider
+                .GOOGLE
+                .getBuilder("google")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -134,8 +134,8 @@ public class SecurityConfig {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
-//                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
 
 
         }

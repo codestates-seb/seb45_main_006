@@ -6,11 +6,14 @@ import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
 import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
 import { useGetDefaultPostion, useGetDefaultStack } from "@api/default/hook";
 
+import { useGetMyDetail } from "@api/member/hook";
+
 import Header from "@component/Header";
 import Navigation from "@component/Navigation";
 import ChatBot from "@container/chat/ChatBot";
 
 import { isExistToken } from "@util/token-helper";
+import { setItemToStorage } from "@util/localstorage-helper";
 
 const HEIGHT = {
     SIGN_HEADER: 60,
@@ -64,6 +67,15 @@ function Layout() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stack]);
+
+    const { data: myInfo } = useGetMyDetail();
+
+    useEffect(() => {
+        if (myInfo) {
+            setItemToStorage("nickname", myInfo.nickname);
+            setItemToStorage("profilePicture", myInfo.profilePicture);
+        }
+    }, [myInfo]);
 
     return (
         <>

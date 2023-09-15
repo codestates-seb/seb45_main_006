@@ -24,6 +24,7 @@ import SignUp1 from "@container/sign/SignUp1";
 import SignUp2 from "@container/sign/SignUp2";
 import SignUp3 from "@container/sign/SignUp3";
 import OauthUser from "@container/sign/OauthUser";
+import SetProOauth from "@container/sign/SetProOauth";
 import SetPro from "@container/sign/SetPro";
 import FindPw from "@container/sign/FindPw";
 import ToastList from "@component/ToastList";
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
                 element: <OauthUser />,
             },
             {
+                path: "/setpro/oauth",
+                element: <SetProOauth />,
+            },
+            {
                 path: "/setpro",
                 element: <SetPro />,
             },
@@ -183,7 +188,8 @@ const queryClient = new QueryClient({
         },
     }),
 });
-// queryClient.invalidateQueries({ queryKey: ["members"] });
+
+queryClient.invalidateQueries({ queryKey: ["projects"] });
 
 function App() {
     return (

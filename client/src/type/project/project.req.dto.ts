@@ -4,8 +4,8 @@ export type GetReqAllProjects = {
     page: number;
     size: number;
     stack?: string;
-    // search?: string;
-    // orderBy: string;
+    status: PROEJCT_STATUS_TYPE;
+    title?: string;
 };
 
 export type GetReqDetailProject = {

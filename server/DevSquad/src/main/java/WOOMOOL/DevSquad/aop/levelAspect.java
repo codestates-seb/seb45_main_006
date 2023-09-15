@@ -17,19 +17,19 @@ public class levelAspect {
     }
 
     // 활동 공통 기능
-    @Pointcut("execution(public * WOOMOOL.DevSquad.projectboard.service..*(..)) ||" +
-            "execution(public * WOOMOOL.DevSquad.studyboard.service..*(..)) ||" +
-            "execution(public * WOOMOOL.DevSquad.infoboard.service..*(..)) ||" +
-            "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..)) " +
-            "execution(public * WOOMOOL.DevSquad.likes.service..*(..)) " +
-            "execution(public * WOOMOOL.DevSquad.comment.service..*(..)) " +
+    @Pointcut("execution(public * WOOMOOL.DevSquad.projectboard.service..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.studyboard.service..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.infoboard.service..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.likes.service..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.comment.service..*(..)) || " +
             "execution(public * WOOMOOL.DevSquad.answer.service..*(..))")
-
-    public void afterActivity(){}
+    public void afterActivity() {
+    }
 
     // 활동 후 레벨링 메서드 실행
     @After("afterActivity()")
-    public void leveling(JoinPoint joinPoint){
+    public void leveling(JoinPoint joinPoint) {
 
         levelService.leveling();
     }

@@ -31,6 +31,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -58,6 +60,7 @@ public class MemberService {
     private final QuestionBoardRepository questionBoardRepository;
     private final LikesRepository likesRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final EntityManager entityManager;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -137,41 +140,18 @@ public class MemberService {
     public Page<MemberProfile> getMemberProfilePage(int page) {
         // 최근 활동으로 정렬
         List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
+
+        return memberProfilePage;
+
+    }
+
+    // 유저 리스트 필터링
+    @Transactional(readOnly = true)
+    public Page<MemberProfile> getFilteredMemberProfile(int page,String nickname,List<String> positions,List<String> stacks){
+
+        List<MemberProfile> memberProfileList = getFilteredMemberProfileList(nickname, positions,stacks);
         Page<MemberProfile> memberProfilePage = getMemberProfilePage(page,memberProfileList);
-
-        return memberProfilePage;
-
-    }
-
-    // 포지션 별로 필터링
-    @Transactional(readOnly = true)
-    public Page<MemberProfile> getMemberProfilesByPosition(int page, List<String> positions) {
-
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByPositions(positions, (long) positions.size());
-
-        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
-
-        return memberProfilePage;
-    }
-
-    // 스택 별로 필터링
-    @Transactional(readOnly = true)
-    public Page<MemberProfile> getMemberProfilesByStack(int page, List<String> stacks) {
-
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByStackTags(stacks, (long) stacks.size());
-
-        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
-
-        return memberProfilePage;
-    }
-
-    // 닉네임 필터링
-    @Transactional(readOnly = true)
-    public Page<MemberProfile> getMemberProfileByNickname(int page, String nickname) {
-
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAllByNickname(nickname);
-
-        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 
         return memberProfilePage;
     }
@@ -330,15 +310,16 @@ public class MemberService {
 
         return infoBoardList;
     }
+
     // 특정 멤버가 가지고 있는 질문게시판 리스트
-    private List<QuestionBoard> getMemberQuestionList(Long memberProfileId){
+    private List<QuestionBoard> getMemberQuestionList(Long memberProfileId) {
         List<QuestionBoard> questionBoardList = questionBoardRepository.findAllByMemberProfile(memberProfileId);
 
         return questionBoardList;
     }
 
     // 프로필리스트 페이징
-    private Page<MemberProfile> getMemberProfilePage(int page, List<MemberProfile> memberProfileList){
+    private Page<MemberProfile> getMemberProfilePage(int page, List<MemberProfile> memberProfileList) {
 
         // 차단한 회원 걸러낸 리스트
         List<MemberProfile> filteringMemberProfileList = removeBloackMemberProfileList(memberProfileList);
@@ -421,16 +402,93 @@ public class MemberService {
 
         return studyBoardPage;
     }
+//// 여기까지
 
     // 출석체크
     public void attendanceCheck(){
-
+      
         MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
         Level level = memberProfile.getLevel();
 
         isAttendanceChecked();
 
         memberProfile.setAttendanceChecked(true);
+
+        if (level.getCurrentExp() < level.getMaxExp()) {
+            level.setCurrentExp(level.getCurrentExp() + 1);
+        }
+    }
+
+    private void isAttendanceChecked() {
+
+        MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
+
+        if (memberProfile.isAttendanceChecked()) throw new BusinessLogicException(CHECK_COMPLETED);
+
+    }
+
+    // 매일 자정 출석체크 초기화
+    @Scheduled(cron = "0 0 0 * * ?")
+    protected void resetAttendanceCheck() {
+
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+
+        for (MemberProfile memberProfile : memberProfileList) {
+            memberProfile.setAttendanceChecked(false);
+        }
+        memberProfileRepository.saveAll(memberProfileList);
+
+    }
+
+    // 유저 리스트 필터링 기능
+    private List<MemberProfile> getFilteredMemberProfileList(String nickname, List<String> positions, List<String> stacks) {
+
+        // jpql 쿼리 문 작성
+        StringBuilder jpql = new StringBuilder("SELECT mp FROM MemberProfile mp WHERE 1 = 1");
+
+        // 필터 조건에 따라 쿼리문 추가
+        if (nickname != null) {
+            jpql.append(" AND LOWER(mp.nickname) LIKE CONCAT('%', LOWER(:nickname), '%') " +
+                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+                    "AND mp.listEnroll = true");
+        }
+
+        if (positions != null) {
+            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp " +
+                    "JOIN mp.positions p " +
+                    "WHERE p.positionName IN :positionNames " +
+                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+                    "AND mp.listEnroll = true " +
+                    "GROUP BY mp HAVING COUNT(p) IN :positionCount)");
+        }
+
+        if(stacks != null){
+            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp JOIN mp.stackTags st " +
+                    "WHERE st.tagName IN :tagNames " +
+                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
+                    "AND mp.listEnroll = true " +
+                    "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
+
+        }
+
+        TypedQuery<MemberProfile> query = entityManager.createQuery(jpql.toString(), MemberProfile.class);
+
+        // 쿼리 파라미터 추가
+        if(nickname != null) {
+            query.setParameter("nickname", nickname);
+        }
+
+        if(positions != null) {
+            query.setParameter("positionNames", positions);
+            query.setParameter("positionCount", positions.stream().count());
+        }
+
+        if(stacks != null) {
+            query.setParameter("tagNames", stacks);
+            query.setParameter("tagCount", stacks.stream().count());
+        }
+
+        return query.getResultList();
 
         level.setCurrentExp(level.getCurrentExp() + 1);
 
@@ -441,17 +499,6 @@ public class MemberService {
 
         if(memberProfile.isAttendanceChecked()) throw new BusinessLogicException(CHECK_COMPLETED);
 
-    }
-    // 매일 자정 출석체크 초기화
-    @Scheduled(cron = "0 0 0 * * ?")
-    protected void resetAttendanceCheck(){
-
-       List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
-
-       for(MemberProfile memberProfile : memberProfileList){
-           memberProfile.setAttendanceChecked(false);
-       }
-       memberProfileRepository.saveAll(memberProfileList);
 
     }
 }
