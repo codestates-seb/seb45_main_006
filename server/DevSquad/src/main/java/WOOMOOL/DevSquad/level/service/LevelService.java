@@ -39,9 +39,11 @@ public class LevelService {
     private final LevelRepository levelRepository;
     private final LikesRepository likesRepository;
 
-    public Level getMemberLevel(Long memberProfileId){
+    public Level getMemberLevel(){
 
-        return levelRepository.findByMemberProfileId(memberProfileId);
+        Member findMember = memberService.findMemberFromToken();
+
+        return levelRepository.findByMemberProfileId(findMember.getMemberId());
     }
 
     public void leveling() {

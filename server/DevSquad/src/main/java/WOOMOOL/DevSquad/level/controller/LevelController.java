@@ -20,10 +20,10 @@ public class LevelController {
 
     private final LevelMapper levelMapper;
     private final LevelService levelService;
-    @GetMapping("/{member-id}")
-    public ResponseEntity getMemberLevel(@PathVariable("member-id") Long memberProfileId){
+    @GetMapping()
+    public ResponseEntity getMemberLevel(){
 
-        Level level = levelService.getMemberLevel(memberProfileId);
+        Level level = levelService.getMemberLevel();
         LevelDto.Response response = levelMapper.entityToResponse(level);
 
         return new ResponseEntity(response, HttpStatus.OK);
