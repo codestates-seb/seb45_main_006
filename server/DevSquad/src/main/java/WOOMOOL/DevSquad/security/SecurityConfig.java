@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
-    public SecurityConfig(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
+    public SecurityConfig(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
         this.jwtTokenizer = jwtTokenizer;
         this.memberAuthority = memberAuthority;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -60,7 +60,8 @@ public class SecurityConfig {
         http
                 .headers().frameOptions().sameOrigin()
                 .and()
-                .cors(Customizer.withDefaults())
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -77,18 +78,20 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer,memberAuthority,memberRepository))
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository))
                 );
 
         return http.build();
     }
+
     @Bean
-    public ClientRegistrationRepository clientRegistrationRepository(){
+    public ClientRegistrationRepository clientRegistrationRepository() {
         var clientRegistration = clientRegistration();
 
         return new InMemoryClientRegistrationRepository(clientRegistration);
     }
-    private ClientRegistration clientRegistration(){
+
+    private ClientRegistration clientRegistration() {
         return CommonOAuth2Provider
                 .GOOGLE
                 .getBuilder("google")
@@ -96,6 +99,7 @@ public class SecurityConfig {
                 .clientSecret(clientSecret)
                 .build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -104,10 +108,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam/","http://localhost:3000","http://localhost:5173","http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/","http://ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam/", "http://localhost:3000", "http://localhost:5173", "http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/", "http://ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com:8080"));
         configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization","Refresh"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization","Refresh","Location"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Refresh"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh", "Location"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -126,7 +130,7 @@ public class SecurityConfig {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(memberRepository));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer,memberAuthority);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, memberAuthority);
 
             builder
                     .addFilter(jwtAuthenticationFilter)
