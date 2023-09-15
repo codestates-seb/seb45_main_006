@@ -27,7 +27,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final MemberAuthority memberAuthority;
     private final MemberRepository memberRepository;
 
-    public oAuth2SuccessHandler(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority,MemberRepository memberRepository) {
+    public oAuth2SuccessHandler(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority, MemberRepository memberRepository) {
         this.jwtTokenizer = jwtTokenizer;
         this.memberAuthority = memberAuthority;
         this.memberRepository = memberRepository;
@@ -35,24 +35,24 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        var oAuth2User = (OAuth2User)authentication.getPrincipal();
+        var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         List<String> roles = memberAuthority.createRoles(email);
 
         saveMember(email);
-        redirect(request,response,email,roles);
-
+        redirect(request, response, email, roles);
     }
+
     // oauth2로 로그인 시 회원 정보 생성
-    private void saveMember(String email){
+    private void saveMember(String email) {
 
         // 이미 회원 정보가 있으면 생성 X
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if(optionalMember.isPresent()) return;
+        if (optionalMember.isPresent()) return;
 
         // 멤버프로필 정보 생성해서 넣어주기
-        Member member = new Member(email);
-        MemberProfile memberProfile = new MemberProfile(email);
+        Member member = new Member("");
+        MemberProfile memberProfile = new MemberProfile("");
         memberProfile.setOAuth2Member(true);
         member.setMemberProfile(memberProfile);
 
@@ -61,18 +61,29 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         memberRepository.save(member);
     }
+
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> roles) throws IOException {
-        String accessToken  = delegateAccessToken(username,roles);
+        String accessToken = delegateAccessToken(username, roles);
         String refreshToken = delegateRefreshToken(username);
 
-        String uri = createURI(accessToken,refreshToken).toString();
-        getRedirectStrategy().sendRedirect(request,response,uri);
+
+        String uri = createURI(accessToken, refreshToken, username).toString();
+        getRedirectStrategy().sendRedirect(request, response, uri);
 
     }
-    private URI createURI(String accessToken, String refreshToken){
+
+    private URI createURI(String accessToken, String refreshToken, String username) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(username);
+        Member findMember = optionalMember.get();
+
+        String nickname = findMember.getNickname();
+        String memberId = String.valueOf(findMember.getMemberId());
+
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        queryParams.add("nickname", nickname);
+        queryParams.add("memberId", memberId);
 
         return UriComponentsBuilder
                 .newInstance()
@@ -83,6 +94,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .build()
                 .toUri();
     }
+
     // 엑세스 토큰 생성
     private String delegateAccessToken(String username, List<String> roles) {
         Map<String, Object> claims = new HashMap<>();

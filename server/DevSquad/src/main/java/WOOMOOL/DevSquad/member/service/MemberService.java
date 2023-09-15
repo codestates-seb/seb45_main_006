@@ -135,17 +135,6 @@ public class MemberService {
         return findMemberProfile;
     }
 
-    //필터없는 활동중이고 리스트 등록되어있는 유저 리스트 페이지
-    @Transactional(readOnly = true)
-    public Page<MemberProfile> getMemberProfilePage(int page) {
-        // 최근 활동으로 정렬
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
-        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
-
-        return memberProfilePage;
-
-    }
-
     // 유저 리스트 필터링
     @Transactional(readOnly = true)
     public Page<MemberProfile> getFilteredMemberProfile(int page,String nickname,List<String> positions,List<String> stacks){

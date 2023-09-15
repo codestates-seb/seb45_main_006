@@ -17,7 +17,7 @@ import static WOOMOOL.DevSquad.chat.entity.ChatRoom.ChatRoomStatus.CHAT_ROOM_OPE
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long charRoomId;
+    private Long chatRoomId;
 
     @OneToMany(mappedBy = "chatRoom")
     private List<Message> messageList = new ArrayList<>();

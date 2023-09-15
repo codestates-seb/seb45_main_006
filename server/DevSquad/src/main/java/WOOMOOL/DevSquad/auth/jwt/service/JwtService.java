@@ -56,6 +56,7 @@ public class JwtService {
 
     // 로그아웃할 시DB 에서 refresh Token 삭제
     public void deleteRefreshToken(String username) {
+
         RefreshToken refreshToken = refreshTokenRepository.findByUsername(username);
         refreshTokenRepository.delete(refreshToken);
     }
