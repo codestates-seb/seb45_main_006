@@ -73,7 +73,6 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfiguration())
                 .and()
-                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests()
                 .anyRequest().permitAll()
                 .and()
