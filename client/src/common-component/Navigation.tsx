@@ -23,7 +23,7 @@ export const NavItem = ({ item, onClickNavItem }: { item: INavItem; onClickNavIt
 
     return (
         <li onClick={() => navigate(item.route)}>
-            <button className="mr-16 w-max text-18 font-medium" onClick={() => onClickNavItem(item)}>
+            <button className="mr-16 w-max text-18 font-medium hover:text-main/60" onClick={() => onClickNavItem(item)}>
                 <Typography type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
             </button>
         </li>
@@ -60,7 +60,7 @@ function Navigation() {
 
     return (
         <nav className="flex h-50 w-full border-b-1 border-borderline px-10 lg:p-0">
-            <ul className="flex w-full items-center overflow-x-scroll sm:overflow-hidden">
+            <ul className="flex w-full items-center justify-around overflow-x-scroll sm:overflow-hidden">
                 {navItems.map((v: INavItem) => (
                     <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} />
                 ))}

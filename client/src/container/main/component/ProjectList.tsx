@@ -47,4 +47,3 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
 };
 
 export default ProjectList;
-

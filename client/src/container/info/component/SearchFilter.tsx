@@ -33,7 +33,7 @@ function SearchFilter({ category, setCategory }: ISearchInput) {
                     <Typography
                         text="전체"
                         type="Highlight"
-                        styles="font-bold mr-12"
+                        styles="font-bold mr-12 hover:text-warn/60"
                         color={category === "" ? "text-warn" : "text-primary"}
                     />
                 </button>
@@ -44,7 +44,7 @@ function SearchFilter({ category, setCategory }: ISearchInput) {
                         <Typography
                             text={v.label}
                             type="Highlight"
-                            styles="font-bold mr-12"
+                            styles="font-bold mr-12 hover:text-warn/60"
                             color={category === v.label ? "text-warn" : "text-primary"}
                         />
                     </button>
