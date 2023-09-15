@@ -4,8 +4,8 @@ export type GetReqAllStudies = {
     page: number;
     size: number;
     stack?: string;
-    // search?: string;
-    // orderBy: string;
+    status: STUDY_STATUS_TYPE;
+    title?: string;
 };
 
 export type GetReqDetailStudy = {

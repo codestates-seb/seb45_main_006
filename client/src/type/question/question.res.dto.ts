@@ -8,7 +8,7 @@ export interface QuestionDefaultType {
     nickname: string;
     profilePicture: string;
     viewCount: number;
-    QuestionBoardStatus: "QUESTIONBOARD_POSTED" | "QUESTIONBOARD_DELELTED";
+    QuestionBoardStatus: "QUESTIONBOARD_POSTED" | "QUESTIONBOARD_DELETED";
     answered: boolean;
     liked: boolean;
     likeCount: number;

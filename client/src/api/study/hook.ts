@@ -18,10 +18,10 @@ import { studyKeyFactory } from "./studyKeyFactory";
 import { deleteStudy, getAllStudies, getDetailStudy, patchStudy, postStudy } from "./api";
 
 // 스터디 - 전체 조회하기
-export const useGetAllStudies = ({ page, size, stack }: GetReqAllStudies) => {
+export const useGetAllStudies = ({ page, size, stack, title, status }: GetReqAllStudies) => {
     return useQuery<GetResAllStudies, AxiosError, GetResAllStudies>({
-        queryKey: studyKeyFactory.all({ page, size, stack }),
-        queryFn: () => getAllStudies({ page, size, stack }),
+        queryKey: studyKeyFactory.all({ page, size, stack, title, status }),
+        queryFn: () => getAllStudies({ page, size, stack, title, status }),
     });
 };
 // 스터디 - 상세 조회하기

@@ -9,6 +9,7 @@ export interface CommonResStudies {
     createdAt: string;
     modifiedAt: string;
     recruitNum: number;
+    bookmarked: boolean;
     viewCount: number;
     recruitStatus: STUDY_STATUS_TYPE;
     memberProfile: MemberProfile;
@@ -30,7 +31,6 @@ export interface GetResAllStudies {
 
 export interface GetResDetailStudy extends CommonResStudies {
     content: string;
-    bookmarked: boolean;
 }
 
 export interface PostResStudy extends GetResDetailStudy {}

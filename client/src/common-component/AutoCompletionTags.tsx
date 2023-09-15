@@ -60,7 +60,7 @@ function AutoCompletionTags({
                 ref={dropdownRef}
                 onClick={() => setIsDropDownShow(true)}
             >
-                {showResult && selectedTags.length > 0 ? (
+                {showResult && selectedTags && selectedTags.length > 0 ? (
                     <ol className="flex flex-wrap items-center">
                         {selectedTags.map((v) => (
                             <li key={v} className="flex w-fit items-center px-8">

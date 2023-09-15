@@ -8,7 +8,7 @@ import Bookmark from "@component/board/Bookmark";
 
 const BoardList = ({ project }: { project: CommonResProjects }) => {
     const navigate = useNavigate();
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(!!project.bookmarked);
 
     return (
         <div

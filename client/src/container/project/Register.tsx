@@ -10,7 +10,7 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import DateChoice from "@container/project/component/DateChoice";
 
-import { usePatchProject, usePostProject } from "@api/project/hook";
+import { usePatchProject, usePostProject, usePatchCloseProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
@@ -37,6 +37,7 @@ export default function Register() {
 
     const { mutate: postProject } = usePostProject();
     const { mutate: patchProject } = usePatchProject();
+    const { mutate: closeProject } = usePatchCloseProject();
     const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
@@ -65,7 +66,7 @@ export default function Register() {
 
             setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
             setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
-            setSelectedStack(prevStack);
+            setSelectedStack(prevStack || []);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -122,18 +123,26 @@ export default function Register() {
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
+        if (selectedOption === "모집완료") {
+            closeProject({ boardId: location.state.boardId });
+        }
+
         patchProject(
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                recruitStatus: "PROJECT_POSTED",
+                recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
                 stack: selectedStack,
-                startDate,
-                deadline,
+                startDate: dayjs(startDate).format("M/D"),
+                deadline: dayjs(deadline).format("M/D"),
             },
             {
                 onSuccess: (res) => {
-                    navigate(`/projects/${res.boardId}`);
+                    if (selectedOption === "모집완료") {
+                        navigate(`/projects`);
+                    } else {
+                        navigate(`/projects/${res.boardId}`);
+                    }
                     fireToast({
                         content: "게시글이 수정되었습니다!",
                         isConfirm: false,

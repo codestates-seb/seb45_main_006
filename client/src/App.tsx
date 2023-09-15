@@ -188,7 +188,8 @@ const queryClient = new QueryClient({
         },
     }),
 });
-// queryClient.invalidateQueries({ queryKey: ["members"] });
+
+queryClient.invalidateQueries({ queryKey: ["projects"] });
 
 function App() {
     return (

@@ -17,13 +17,14 @@ const Details = () => {
     const navigate = useNavigate();
 
     const { studyBoardId } = useParams();
-    const [isBookmarked, setIsBookmarked] = useState(false); // State to track bookmark status
 
     const { data: study, isLoading, refetch } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
 
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine } = useCheckUser({ memberId: study?.memberProfile.memberId || 0 });
     const { mutate: deleteStudy } = useDeleteStudy();
+
+    const [isBookmarked, setIsBookmarked] = useState(!!study?.bookmarked);
 
     useEffect(() => {
         refetch();
@@ -84,10 +85,7 @@ const Details = () => {
                                     color="text-blue-800"
                                 />
                             </li>
-                            <li className="my-10">
-                                <Typography type="Label" styles="list-disc" text="• 기간" />
-                                <div className="mx-4 my-6">2023-08-24 ~ 2023-09-22</div>
-                            </li>
+
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 인원" />
 
@@ -101,9 +99,7 @@ const Details = () => {
                                 <Button
                                     type="STUDY_POINT"
                                     styles="px-4 py-2 rounded-sm"
-                                    onClickHandler={() =>
-                                        navigate(`/projects/${study?.boardId}/edit`, { state: study })
-                                    }
+                                    onClickHandler={() => navigate(`/studies/${study?.boardId}/edit`, { state: study })}
                                 >
                                     <Typography text="수정" type="Description" color="text-white" />
                                 </Button>

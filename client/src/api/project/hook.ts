@@ -16,13 +16,13 @@ import {
     PostReqProject,
 } from "@type/project/project.req.dto";
 import { projectKeyFactory } from "./projectKeyFactory";
-import { deleteProject, getAllProjects, getDetailProject, patchProject, postProject } from "./api";
+import { deleteProject, patchCloseProject, getAllProjects, getDetailProject, patchProject, postProject } from "./api";
 
 // 프로젝트 - 전체 조회하기
-export const useGetAllProjects = ({ page, size, stack }: GetReqAllProjects) => {
+export const useGetAllProjects = ({ page, size, stack, status, title }: GetReqAllProjects) => {
     return useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
-        queryKey: projectKeyFactory.all({ page, size, stack }),
-        queryFn: () => getAllProjects({ page, size, stack }),
+        queryKey: projectKeyFactory.all({ page, size, stack, status, title }),
+        queryFn: () => getAllProjects({ page, size, stack, status, title }),
     });
 };
 // 프로젝트 - 상세 조회하기
@@ -44,4 +44,8 @@ export const usePatchProject = () => {
 // 프로젝트 - 정보 삭제하기
 export const useDeleteProject = () => {
     return useMutation<DeleteResProject, AxiosError, DeleteReqProject>(deleteProject);
+};
+
+export const usePatchCloseProject = () => {
+    return useMutation(patchCloseProject);
 };

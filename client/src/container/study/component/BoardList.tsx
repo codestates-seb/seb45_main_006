@@ -9,7 +9,7 @@ import { CommonResStudies } from "@type/study/study.res.dto";
 
 const BoardList = ({ study }: { study: CommonResStudies }) => {
     const navigate = useNavigate();
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(!!study.bookmarked);
 
     return (
         <div
