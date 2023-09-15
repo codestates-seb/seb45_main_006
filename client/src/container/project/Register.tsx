@@ -77,6 +77,19 @@ export default function Register() {
         setInputs({ ...inputs, [name]: value });
     }
 
+    function handleNumberInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
+        const { name, value } = e.target;
+        if (!value) {
+            setInputs({ ...inputs, [name]: "" });
+        }
+        if (parseInt(value) >= 0) {
+            setInputs({ ...inputs, [name]: value });
+        }
+        if (parseInt(value) > 12) {
+            setInputs({ ...inputs, [name]: 12 });
+        }
+    }
+
     const isEmpty = () => {
         const registerInputs = [
             { name: "제목", content: inputs.title },
@@ -221,8 +234,7 @@ export default function Register() {
                         required={true}
                         placeholder="ex) 6"
                         value={inputs.recruitNum}
-                        max={12}
-                        onChange={handleInput}
+                        onChange={handleNumberInput}
                     />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (
