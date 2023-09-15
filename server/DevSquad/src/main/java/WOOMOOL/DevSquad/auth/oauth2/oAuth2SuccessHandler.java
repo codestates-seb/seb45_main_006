@@ -41,7 +41,6 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         saveMember(email);
         redirect(request, response, email, roles);
-
     }
 
     // oauth2로 로그인 시 회원 정보 생성
