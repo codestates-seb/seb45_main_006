@@ -35,20 +35,18 @@ public interface InfoBoardMapper {
     List<InfoBoardDto.Response> InfoBoardListToInfoBoardResponseDtoList(List<InfoBoard> infoBoardList);
 
     default boolean hasUserLikedBoard(List<Likes> likesList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if(securityContext==null)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser"))
             return false;
         else {
-            String userEmail = securityContext.getAuthentication().getName();
-             return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
+            return likesList.stream().anyMatch(likes -> likes.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
     }
     default boolean markedOrNot(List<Bookmark> BookmarkList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if( securityContext == null ) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser")) {
             return false;
         } else {
-            String userEmail = securityContext.getAuthentication().getName();
             return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
     }

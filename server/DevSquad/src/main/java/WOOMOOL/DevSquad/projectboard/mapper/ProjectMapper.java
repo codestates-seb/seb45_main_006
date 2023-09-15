@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.projectboard.mapper;
 
 import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.comment.mapper.CommentMapper;
+import WOOMOOL.DevSquad.likes.entity.Likes;
 import WOOMOOL.DevSquad.member.dto.MemberProfileDto;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
@@ -100,14 +101,13 @@ public interface ProjectMapper {
         );
     }
 
+
     default boolean markedOrNot(List<Bookmark> BookmarkList) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if( securityContext == null ) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userEmail.equals("anonymousUser")) {
             return false;
         } else {
-            String userEmail = securityContext.getAuthentication().getName();
             return BookmarkList.stream().anyMatch(bookmark -> bookmark.getMemberProfile().getMember().getEmail().equals(userEmail));
         }
-
     }
 }
