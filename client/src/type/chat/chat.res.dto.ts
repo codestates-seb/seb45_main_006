@@ -32,9 +32,7 @@ export interface GetResEnrollChatRoom {
 }
 
 // 나의 채팅방 보기
-export interface GetResChatRooms {
-    data: ChatRooms;
-}
+export type GetResChatRooms = ChatRooms;
 
 // 채팅방 나가기
 export interface DeleteResExitChatRoom {}

@@ -24,7 +24,6 @@ const DateChoice = ({
 
     useEffect(() => {
         if (dateRange[0]) {
-            setStartDate("");
             setDeadline("");
             setStartDate(dayjs(dateRange[0]).format("YYYY/MM/DD"));
         }

@@ -10,9 +10,11 @@ import {
 } from "@type/study/study.req.dto";
 
 // 스터디 - 전체 조회하기
-export const getAllStudies = async ({ page, size, stack }: GetReqAllStudies) => {
+export const getAllStudies = async ({ page, size, stack, title, status }: GetReqAllStudies) => {
     let url = `/study/list?page=${page}&size=${size}`;
     if (stack) url += `&stacks=${stack}`;
+    if (title) url += `&title=${title}`;
+    if (status) url += `&status=${status}`;
     const { data } = await commonApi.get(url);
     return data;
 };

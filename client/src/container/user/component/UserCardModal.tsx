@@ -66,8 +66,8 @@ export const UserInfo = ({ user, type }: { user: GetResMemberDetail; type: "stac
 };
 
 export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isLiked, setIsLiked] = useState(!!info.liked);
+    const [isBookmarked, setIsBookmarked] = useState(!!info.bookmarked);
 
     return (
         <div className="my-10 flex max-w-700 flex-1 rounded-md border-1 border-borderline p-10">
@@ -104,8 +104,8 @@ export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
 };
 
 export const QuestionItemHor = ({ question }: { question: QuestionDefaultType }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isLiked, setIsLiked] = useState(!!question.liked);
+    const [isBookmarked, setIsBookmarked] = useState(!!question.bookmarked);
 
     return (
         <div className="my-10 flex max-w-700 flex-1 rounded-md border-1 border-borderline p-10">

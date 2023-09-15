@@ -1,33 +1,51 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SignLayout from "@container/sign/component/SignLayout";
+import { setItemToStorage } from "@util/localstorage-helper";
+
+import { parseJwt } from "@util/token-helper";
 
 function OauthUser() {
-    const [data, setData] = useState<unknown | null>(null);
-    console.log(data);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const url = new URL(window.location.href);
-        const hash = url.hash;
-        if (hash) {
-            const accessToken = hash.split("=")[1].split("&")[0];
-            axios
-                .get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + accessToken, {
-                    headers: {
-                        authorization: `token ${accessToken}`,
-                        accept: "application/json",
-                    },
-                })
-                .then((data) => {
-                    console.log(data);
-                    setData(data);
-                })
-                .catch((e) => console.log(e, "oAuth token expired"));
+        // 1. 전달받은 정보 확인 -> 존재하는 정보 로컬스토리지에 저장
+        const accessToken = new URL(location.href).searchParams.get("access_token");
+        const refreshToken = new URL(location.href).searchParams.get("refresh_token");
+        const memberId = new URL(location.href).searchParams.get("memberId");
+        const nickname = new URL(location.href).searchParams.get("nickname");
+        setItemToStorage("accessToken", accessToken);
+        setItemToStorage("refreshToken", refreshToken);
+        if (accessToken) {
+            setItemToStorage("email", parseJwt(accessToken).username);
         }
+        if (memberId) {
+            setItemToStorage("memberId", Number.parseInt(memberId));
+        }
+
+        if (nickname) {
+            setItemToStorage("nickname", nickname);
+            setTimeout(() => {
+                navigate("/");
+            }, 500);
+        } else {
+            setItemToStorage("nickname", nickname);
+            setTimeout(() => {
+                navigate("/setpro/oauth");
+            }, 500);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <SignLayout title="Google Oauth 회원가입">hello</SignLayout>;
+    return (
+        <SignLayout title="Google Oauth 회원가입/로그인">
+            <div className="flex h-300 items-start justify-center">
+                <p>처리 중입니다 ...</p>
+            </div>
+        </SignLayout>
+    );
 }
 
 export default OauthUser;

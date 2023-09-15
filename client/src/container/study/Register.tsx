@@ -46,7 +46,8 @@ export default function Register() {
                 content: prevContent,
                 recruitNum: prevRecruitNum,
             });
-            setSelectedStack(prevStack);
+
+            setSelectedStack(prevStack || []);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);

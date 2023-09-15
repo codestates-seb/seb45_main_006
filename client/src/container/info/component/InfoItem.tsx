@@ -48,8 +48,8 @@ const InfoTitle = ({
     const { category, title, viewCount, modifiedAt } = info;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
 
-    const [isLiked, setIsLiked] = useState(false);
-    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isLiked, setIsLiked] = useState(info.liked);
+    const [isBookmarked, setIsBookmarked] = useState(info.bookmarked);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useMatches } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 
 import { useGetMemberDetail } from "@api/member/hook";
 
@@ -33,13 +33,12 @@ export const TabItem = ({ item, onClickTabItem }: { item: ITabItem; onClickTabIt
 };
 
 function UserDetail() {
-    const match = useMatches();
-    const memberId = Number.parseInt(match[0].params.memberId || "0");
+    const { memberId } = useParams();
 
     const [searchParams] = useSearchParams();
     const curTab = searchParams.get("tab");
 
-    const { data: user, isError } = useGetMemberDetail({ memberId });
+    const { data: user, isError } = useGetMemberDetail({ memberId: Number.parseInt(memberId || "0") });
 
     const { fireToast } = useToast();
 
