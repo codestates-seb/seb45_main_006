@@ -25,6 +25,6 @@ jobs:
       - name: Docker build # 도커로 이미지 생성 후 DockerHub에 배포
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-          docker build -t devsquad .
+          docker build -t devsquad -f server/DevSquad/Dockerfile .
           docker tag devsquad ehdals0405/devsquad:${GITHUB_SHA::7}
           docker push ehdals0405/devsquad:${GITHUB_SHA::7}
