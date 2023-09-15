@@ -39,3 +39,6 @@ jwt:
   access-token-expiration-minutes: ${JWT_ACCESS_TOKEN_EXPIRATION}
   refresh-token-expiration-minutes: ${JWT_REFRESH_TOKEN_EXPIRATION}
 
+admin:
+  mail: ${ADMIN_MAIL}
+
