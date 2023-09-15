@@ -5,7 +5,6 @@ import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
-import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
@@ -40,6 +39,7 @@ public class AnswerService {
     public Answer createAnswer(Answer answer) {
         answer.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
         QuestionBoard questionBoard = questionBoardService.findVerifiedQuestionBoard(answer.getQuestionBoard().getBoardId());
+        verifiedIsNotWriter(questionBoard);
         answer.setQuestionBoard(questionBoard);
 
         levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
@@ -114,6 +114,12 @@ public class AnswerService {
                         .anyMatch(block -> block.getBlockMemberId()== answer.getMemberProfile().getMemberProfileId()))
                 .collect(Collectors.toList());
         return result;
+    }
+    public void verifiedIsNotWriter(QuestionBoard questionBoard) {
+        long currentId = memberService.findMemberFromToken().getMemberId();
+        long writerId = questionBoard.getMemberProfile().getMemberProfileId();
+        if(currentId==writerId)
+            throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
     }
 
 }

@@ -45,6 +45,7 @@ export const useGetMemberDetail = ({ memberId }: GetReqMemberDetail) => {
     return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.detail({ memberId }),
         queryFn: () => getMemberDetail({ memberId }),
+        enabled: !!memberId,
     });
 };
 

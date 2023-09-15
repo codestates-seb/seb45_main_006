@@ -19,7 +19,6 @@ const filledCss = "w-fit min-w-80 px-12 py-8 bg-[#888888] rounded-xl";
 const BtnsWithAuth = ({ onLogoutHandler }: { onLogoutHandler: () => void }) => {
     return (
         <div className="flex">
-            {/* TODO: 프로필 사진 응답으로 바꾸기 */}
             <UserProfile size="sm" mine={true} />
             <button className="w-80 min-w-70 rounded-sm px-8" onClick={onLogoutHandler}>
                 <Typography type="Body" text="Logout" color="text-warn" />

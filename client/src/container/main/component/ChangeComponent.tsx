@@ -12,12 +12,11 @@ const ChangeComponent = () => {
     const { data: projects, isLoading: projectLoading } = useGetAllProjects({
         page: 1,
         size: 8,
-        stack: "",
+        status: "PROJECT_POSTED",
     });
     const { data: studies, isLoading: studyLoading } = useGetAllStudies({
         page: 1,
         size: 8,
-        stack: "",
     });
 
     const handleProjectClick = () => {

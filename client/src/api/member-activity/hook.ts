@@ -69,6 +69,7 @@ export const useGetProjectLiked = ({ page, likedType }: PagingWithBoardLiked) =>
     return useQuery<GetResProjectOfMember, AxiosError, GetResProjectOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "project", page }],
         queryFn: () => getProjectLiked({ page, likedType }),
+        enabled: !!likedType,
     });
 };
 
@@ -77,6 +78,7 @@ export const useGetStudyLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResStudyOfMember, AxiosError, GetResStudyOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "study", page }],
         queryFn: () => getStudyLiked({ page, likedType }),
+        enabled: !!likedType,
     });
 };
 

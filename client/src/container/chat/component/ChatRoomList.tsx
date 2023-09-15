@@ -40,11 +40,12 @@ const ChatItem = ({ chat }: { chat: ChatRoom }) => {
 };
 
 function ChatRoomList({ chats }: { chats: GetResChatRooms | undefined }) {
+    console.log(chats);
     return (
         <>
-            {chats?.data && Array.isArray(chats?.data) && (
+            {chats && Array.isArray(chats) && (
                 <>
-                    {chats.data.length > 0 ? (
+                    {chats.length > 0 ? (
                         <>
                             <Typography
                                 text="채팅 리스트"
@@ -53,7 +54,7 @@ function ChatRoomList({ chats }: { chats: GetResChatRooms | undefined }) {
                                 color="text-main"
                             />
 
-                            {chats.data.map((v) => (
+                            {chats.map((v) => (
                                 <ChatItem chat={v} key={`chat-${v.chatRoomId}`} />
                             ))}
                         </>
@@ -61,6 +62,7 @@ function ChatRoomList({ chats }: { chats: GetResChatRooms | undefined }) {
                         <div className="flex h-full flex-col items-center justify-center">
                             <Typography text="아직 생성된 채팅방이 없습니다🥲" type="Description" styles="mb-8" />
                             <Typography text="마음에 드는 프로젝트 또는 스터디에 참여해보세요!" type="Description" />
+                            <Typography text="마음에 드는 유저에게 채팅을 걸어보세요!" type="Description" />
                         </div>
                     )}
                 </>

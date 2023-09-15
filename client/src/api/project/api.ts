@@ -10,9 +10,11 @@ import {
 } from "@type/project/project.req.dto";
 
 // 프로젝트 - 전체 조회하기
-export const getAllProjects = async ({ page, size, stack }: GetReqAllProjects) => {
+export const getAllProjects = async ({ page, size, stack, title, status }: GetReqAllProjects) => {
     let url = `/project/list?page=${page}&size=${size}`;
     if (stack) url += `&stacks=${stack}`;
+    if (title) url += `&title=${title}`;
+    if (status) url += `&status=${status}`;
     const { data } = await commonApi.get(url);
     return data;
 };
@@ -42,5 +44,12 @@ export const patchProject = async ({ boardId, ...requstObj }: PatchReqProject) =
 export const deleteProject = async ({ boardId }: DeleteReqProject) => {
     const url = `${COMMON_API_PATH.PROJECT.PATH}/${boardId}`;
     const { data } = await withAuthApi.delete(url);
+    return data;
+};
+
+// 프로젝트 - 모집 마감
+export const patchCloseProject = async ({ boardId }: { boardId: number }) => {
+    const url = `${COMMON_API_PATH.PROJECT.PATH}/${boardId}/close`;
+    const { data } = await withAuthApi.patch(url);
     return data;
 };

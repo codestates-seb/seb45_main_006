@@ -10,7 +10,7 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import DateChoice from "@container/project/component/DateChoice";
 
-import { usePatchProject, usePostProject } from "@api/project/hook";
+import { usePatchProject, usePostProject, usePatchCloseProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
@@ -19,8 +19,6 @@ import InputForNumber from "@component/project-study/InputForNumber";
 import Dropdown from "@component/project-study/Dropdown";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 import dayjs from "dayjs";
-
-// import { defaultStack } from "@component/mockData";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -39,6 +37,7 @@ export default function Register() {
 
     const { mutate: postProject } = usePostProject();
     const { mutate: patchProject } = usePatchProject();
+    const { mutate: closeProject } = usePatchCloseProject();
     const { alertWhenEmptyFn } = useCheckValidValue();
     const { fireToast } = useToast();
 
@@ -67,7 +66,7 @@ export default function Register() {
 
             setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
             setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
-            setSelectedStack(prevStack);
+            setSelectedStack(prevStack || []);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -75,6 +74,19 @@ export default function Register() {
     function handleInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target;
         setInputs({ ...inputs, [name]: value });
+    }
+
+    function handleNumberInput(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
+        const { name, value } = e.target;
+        if (!value) {
+            setInputs({ ...inputs, [name]: "" });
+        }
+        if (parseInt(value) >= 0) {
+            setInputs({ ...inputs, [name]: value });
+        }
+        if (parseInt(value) > 12) {
+            setInputs({ ...inputs, [name]: 12 });
+        }
     }
 
     const isEmpty = () => {
@@ -124,18 +136,26 @@ export default function Register() {
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
+        if (selectedOption === "모집완료") {
+            closeProject({ boardId: location.state.boardId });
+        }
+
         patchProject(
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                recruitStatus: "PROJECT_POSTED",
+                recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
                 stack: selectedStack,
-                startDate,
-                deadline,
+                startDate: dayjs(startDate).format("M/D"),
+                deadline: dayjs(deadline).format("M/D"),
             },
             {
                 onSuccess: (res) => {
-                    navigate(`/projects/${res.boardId}`);
+                    if (selectedOption === "모집완료") {
+                        navigate(`/projects`);
+                    } else {
+                        navigate(`/projects/${res.boardId}`);
+                    }
                     fireToast({
                         content: "게시글이 수정되었습니다!",
                         isConfirm: false,
@@ -221,8 +241,7 @@ export default function Register() {
                         required={true}
                         placeholder="ex) 6"
                         value={inputs.recruitNum}
-                        max={12}
-                        onChange={handleInput}
+                        onChange={handleNumberInput}
                     />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (

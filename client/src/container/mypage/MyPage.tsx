@@ -14,6 +14,7 @@ import UserPw from "./component/UserPw";
 import UserInfo from "./component/UserInfo";
 import ChatRooms from "./component/ChatRooms";
 import UserActivity from "@container/user/component/UserActivity";
+import UserLikeActivity from "@container/user/component/UserLikeActivity";
 import Typography from "@component/Typography";
 
 import { getItemFromStorage } from "@util/localstorage-helper";
@@ -78,8 +79,12 @@ function MyPage() {
                                 {curNav === "management" && (
                                     <UserActivity memberId={myId} tab={checkValidTab(curTab)} />
                                 )}
-                                {curNav === "bookmarks" && <UserActivity memberId={myId} tab={checkValidTab(curTab)} />}
-                                {curNav === "likes" && <UserActivity memberId={myId} tab={checkValidTab(curTab)} />}
+                                {curNav === "bookmarks" && (
+                                    <UserLikeActivity memberId={myId} tab={checkValidTab(curTab)} type="bookmark" />
+                                )}
+                                {curNav === "likes" && (
+                                    <UserLikeActivity memberId={myId} tab={checkValidTab(curTab)} type="likes" />
+                                )}
                                 {curNav === "block" && <UserBlock blockList={user.blockMemberList} />}
                                 {curNav === "chat" && <ChatRooms />}
                             </div>

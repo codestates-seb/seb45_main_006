@@ -32,11 +32,6 @@ const DetailSkeleton = () => {
                                     <div className="h-20 w-full rounded-md bg-gray-200 dark:bg-gray-700"></div>
                                 </div>
                             </li>
-                            <li className="my-10">
-                                <Typography type="Label" styles="list-disc" text="• 인원" />
-
-                                <div className="h-20 w-full rounded-md bg-gray-200 dark:bg-gray-700"></div>
-                            </li>
                         </ul>
                     </div>
                     <div>

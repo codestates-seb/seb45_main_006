@@ -26,9 +26,11 @@ const Board = () => {
     const [totalItems, setTotalItems] = useState<number>(0);
     // 검색어 필터
     const [searchValue, setSearchValue] = useState<string>("");
+    // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
+    const [search, setSearch] = useState<string>("");
     // 스택, 정렬 방식 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
-    // const [selectedOrder, setSelectedOrder] = useState<Array<string>>([]);
+    const [status, setStatus] = useState<boolean>(true);
     const {
         data: studies,
         isLoading,
@@ -37,10 +39,18 @@ const Board = () => {
         page: curPage,
         size: 8,
         stack: selectedStacks.join(","),
+        title: search,
+        status: status ? "STUDY_POSTED" : "STUDY_DELETED",
     });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
+    };
+
+    const onClickSearchHandler = () => {
+        if (searchValue !== "") {
+            setSearch(searchValue);
+        }
     };
 
     const onClickRegisterHandler = () => {
@@ -66,7 +76,12 @@ const Board = () => {
         <div>
             <div className="my-20 flex justify-end">
                 <div className="mr-8 w-200">
-                    <SearchInput value={searchValue} onChange={onChange} placeholder="스터디명 검색" />
+                    <SearchInput
+                        value={searchValue}
+                        onChange={onChange}
+                        placeholder="스터디명 검색"
+                        onClickSearchHandler={onClickSearchHandler}
+                    />
                 </div>
 
                 <Button
@@ -93,7 +108,7 @@ const Board = () => {
                         // setSelectedOrder={setSelectedOrder}
                     />
                 </div>
-                <Toggle />
+                <Toggle status={status} setStatus={setStatus} />
             </div>
             <>
                 {isLoading && (

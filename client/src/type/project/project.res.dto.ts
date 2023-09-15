@@ -13,6 +13,7 @@ export interface CommonResProjects {
     recruitNum: number;
     projectStatus: PROEJCT_STATUS_TYPE;
     viewCount: number;
+    bookmarked: boolean;
     memberProfile: MemberProfile;
 }
 
@@ -32,7 +33,6 @@ export interface GetResAllProjects {
 
 export interface GetResDetailProject extends CommonResProjects {
     content: string;
-    bookmarked: boolean;
     viewCount: number;
 }
 
