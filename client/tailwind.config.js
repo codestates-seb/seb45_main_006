@@ -43,7 +43,7 @@ export default withMT({
     theme: {
         extend: {
             spacing: { ...px0_500, 1120: "1120px" },
-            borderRadius: { none: "0", small: "20px", DEFAULT: "43px", large: "62px" }, 
+            borderRadius: { none: "0", small: "20px", DEFAULT: "43px", large: "62px" },
             // TODO borderRadius 큰 것은 43px 작은것은 20px인데 이미 DEFAULT에 43px 사용중이라 이름을 따로 수정하지 않았습니다
             padding: { "25px": "25px" },
             borderWidth: px0_10,

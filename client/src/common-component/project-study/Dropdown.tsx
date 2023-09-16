@@ -24,7 +24,6 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onS
             <label className="mb-10 block">{label}</label>
             <div className={`relative rounded-3xl bg-white shadow-sm ${isOpen ? "z-10" : ""}`}>
                 <button
-                    // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
                     className={`w-full rounded-md bg-white p-6 text-left ${
                         disabled ? "z-10 bg-gray-400 text-gray-700" : "bg-white hover:bg-gray-100"
                     }`}
