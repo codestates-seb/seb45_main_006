@@ -114,6 +114,11 @@ public class StudyService {
         // 작성자, 로그인 멤버 일치 여부 확인
         Study findStudy = checkLoginMemberHasAuth(study);
 
+        // 모집 완료 상태 게시물은 수정 불가능
+        if (findStudy.getStudyStatus() == Study.StudyStatus.STUDY_CLOSED) {
+            throw new BusinessLogicException(ExceptionCode.CANT_EDIT);
+        }
+
         Optional.ofNullable(study.getTitle())
                 .ifPresent(title -> findStudy.setTitle(title));
         Optional.ofNullable(study.getContent())
@@ -128,21 +133,29 @@ public class StudyService {
     }
 
     // 모집 마감 : 상태가 마감으로 바뀌고, 일정 시간 지나면 삭제( 목록에서 안 보이게 됨)
+    // + 모집 마감 상태인 게시물은 모집 중 상태로 변경
     public void closeStudy(Study study) {
+
         Study findStudy = checkLoginMemberHasAuth(study);
 
-        findStudy.setStudyStatus(Study.StudyStatus.STUDY_CLOSED);
+        if (findStudy.getStudyStatus() == Study.StudyStatus.STUDY_POSTED) {
+            findStudy.setStudyStatus(Study.StudyStatus.STUDY_CLOSED);
+        } else {
+            findStudy.setStudyStatus(Study.StudyStatus.STUDY_POSTED);
+        }
 
         Timer timer = new Timer();
         long delayInMillis = 6 * 3600000;    // 6시간
 
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                findStudy.setStudyStatus(Study.StudyStatus.STUDY_DELETED);
-                studyRepository.save(findStudy);
-            }
-        }, delayInMillis);
+        if (findStudy.getStudyStatus() == Study.StudyStatus.STUDY_CLOSED) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    findStudy.setStudyStatus(Study.StudyStatus.STUDY_DELETED);
+                    studyRepository.save(findStudy);
+                }
+            }, delayInMillis);
+        }
     }
 
     public void deleteStudy(Long boardId) {
@@ -156,7 +169,7 @@ public class StudyService {
 
     private Study findVerifiedStudy(Long boardId) {
         Optional<Study> optionalStudy = studyRepository.findById(boardId);
-        if( optionalStudy.isPresent() && optionalStudy.get().getStudyStatus() == Study.StudyStatus.STUDY_POSTED  )
+        if( optionalStudy.isPresent() && optionalStudy.get().getStudyStatus() != Study.StudyStatus.STUDY_DELETED )
             return optionalStudy.get();
         else throw new BusinessLogicException(ExceptionCode.STUDY_NOT_FOUND);
     }
