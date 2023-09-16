@@ -11,8 +11,9 @@ public enum ExceptionCode {
     ACCEPT_ALREADY_EXISTS(409, "이미 채택이 완료된 질문입니다."),
     POST_NOT_FOUND(404, "게시물을 찾을 수 없습니다."),
     PROJECT_NOT_FOUND(404, "프로젝트를 찾을 수 없습니다."),
-    STUDY_NOT_FOUND(404, "스터티를 찾을 수 없습니다."),
+    STUDY_NOT_FOUND(404, "스터디를 찾을 수 없습니다."),
     NO_AUTHORIZATION(401, "접근 권한이 없습니다."),
+    CANT_EDIT(400, "모집 완료된 게시물은 수정할 수 없습니다."),
     FORBIDDEN(403, "Forbidden"),
 
     UNMATCHED_CODE(400, "인증 코드가 다릅니다."),
