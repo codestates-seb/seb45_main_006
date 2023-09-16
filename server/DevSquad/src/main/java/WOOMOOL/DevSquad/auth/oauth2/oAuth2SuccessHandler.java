@@ -73,7 +73,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String accessToken = "Bearer " + delegateAccessToken(email, roles);
         String refreshToken = delegateRefreshToken(email);
 
-        log.info(accessToken);
+//        log.info(accessToken);
 
         String uri = createURI(accessToken, refreshToken, email,memberType).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
