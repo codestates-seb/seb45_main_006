@@ -46,11 +46,11 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
+//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+//    private String clientId;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+//    private String clientSecret;
 
 
     @Bean

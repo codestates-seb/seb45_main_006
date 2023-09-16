@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+import static WOOMOOL.DevSquad.member.entity.Member.MemberType.OAUTH2;
+
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
@@ -44,9 +46,8 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         List<String> roles = memberAuthority.createRoles(email);
 
-
-        Member member = saveMember(email);
-        redirect(request, response, email, member.getMemberType(),roles);
+        saveMember(email);
+        redirect(request, response, email, OAUTH2, roles);
     }
 
     // oauth2로 로그인 시 회원 정보 생성
@@ -62,8 +63,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         member.addProfile(memberProfile);
 
         Level level = new Level();
-        memberProfile.setLevel(level);
-        level.setMemberProfile(memberProfile);
+        memberProfile.addLevel(level);
 
         return memberRepository.save(member);
     }
@@ -75,13 +75,13 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        log.info(accessToken);
 
-        String uri = createURI(accessToken, refreshToken, email,memberType).toString();
+        String uri = createURI(accessToken, refreshToken, email, memberType).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
         // 리다이렉트 후 refreshToken 값은 재발급 로직을 위해 DB에 저장
         // 이미 있으면 삭제하고 다시 저장
         RefreshToken findRefreshToken = refreshTokenRepository.findByUsername(email);
 
-        if(findRefreshToken != null) {
+        if (findRefreshToken != null) {
 
             refreshTokenRepository.delete(findRefreshToken);
         }
@@ -95,6 +95,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     }
 
+    // 받은 email 과 oAuth2 타입인 회원 정보를 찾아서 uri 생성
     private URI createURI(String accessToken, String refreshToken, String email, Member.MemberType memberType) {
         Optional<Member> optionalMember = memberRepository.findByEmailAndMemberType(email, memberType);
         MemberProfile findMemberProfile = optionalMember.get().getMemberProfile();
@@ -120,6 +121,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     // 엑세스 토큰 생성
     private String delegateAccessToken(String email, List<String> roles) {
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", email);
         claims.put("roles", roles);
