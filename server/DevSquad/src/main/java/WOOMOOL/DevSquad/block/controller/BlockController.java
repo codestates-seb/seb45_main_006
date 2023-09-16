@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/block")
-public class BlockController {
+public class
+BlockController {
     private final BlockService blockService;
 
     public BlockController(BlockService blockService) {

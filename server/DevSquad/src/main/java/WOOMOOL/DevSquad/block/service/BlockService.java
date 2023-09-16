@@ -56,9 +56,10 @@ public class BlockService {
 
         // 현재 로그인한 회원의 프로필
         MemberProfile loginMemberProfile = findloginMemberProfile();
+        Long loginMemberProfileId = loginMemberProfile.getMemberProfileId();
 
         // 삭제할 차단 멤버 객체 찾기
-        Optional<Block> optionalBlockMember = blockRepository.findByBlockMemberId(blockMemberId);
+        Optional<Block> optionalBlockMember = blockRepository.findByBlockMemberIdByMemberProfileId(blockMemberId,loginMemberProfileId);
         Block findBlock = optionalBlockMember.orElseThrow(() -> new BusinessLogicException(NOT_BLOCKED_MEMBER));
 
         loginMemberProfile.getBlockList().remove(findBlock);
