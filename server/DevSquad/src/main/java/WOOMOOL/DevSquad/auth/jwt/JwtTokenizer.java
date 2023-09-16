@@ -23,7 +23,6 @@ import static java.util.Calendar.MINUTE;
 @Component
 public class JwtTokenizer {
 
-    //todo: 환경변수처리
     @Getter
     @Value("${jwt.secretKey}")
     private String secretKey;
