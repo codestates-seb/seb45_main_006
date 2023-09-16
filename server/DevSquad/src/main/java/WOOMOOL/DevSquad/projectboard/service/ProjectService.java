@@ -112,6 +112,11 @@ public class ProjectService {
         // 작성자, 로그인 멤버 일치 여부 확인
         Project findProject = checkLoginMemberHasAuth(project);
 
+        // 모집 완료 상태 게시물은 수정 불가능
+        if (findProject.getProjectStatus() == Project.ProjectStatus.PROJECT_CLOSED) {
+            throw new BusinessLogicException(ExceptionCode.CANT_EDIT);
+        }
+
         Optional.ofNullable(project.getTitle())
                 .ifPresent(title -> findProject.setTitle(title));
         Optional.ofNullable(project.getContent())
@@ -130,21 +135,30 @@ public class ProjectService {
     }
 
     // 모집 마감 : 상태가 마감으로 바뀌고, 일정 시간 지나면 삭제( 목록에서 안 보이게 됨)
+    // + 모집 마감 상태인 게시물은 모집 중 상태로 변경
     public void closeProject(Project project) {
+
         Project findProject = checkLoginMemberHasAuth(project);
 
-        findProject.setProjectStatus(Project.ProjectStatus.PROJECT_CLOSED);
+        if (findProject.getProjectStatus() == Project.ProjectStatus.PROJECT_POSTED) {
+            findProject.setProjectStatus(Project.ProjectStatus.PROJECT_CLOSED);
+        } else {
+            findProject.setProjectStatus(Project.ProjectStatus.PROJECT_POSTED);
+        }
 
         Timer timer = new Timer();
         long delayInMillis = 6 * 3600000;    // 6시간
+//        long delayInMillis = 120000;     // 2분 ( 테스트용)
 
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                findProject.setProjectStatus(Project.ProjectStatus.PROJECT_DELETED);
-                projectRepository.save(findProject);
-            }
-        }, delayInMillis);
+        if (findProject.getProjectStatus() == Project.ProjectStatus.PROJECT_CLOSED) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    findProject.setProjectStatus(Project.ProjectStatus.PROJECT_DELETED);
+                    projectRepository.save(findProject);
+                }
+            }, delayInMillis);
+        }
     }
 
 
@@ -159,7 +173,7 @@ public class ProjectService {
 
     private Project findVerifiedProject(Long boardId) {
         Optional<Project> optionalProject = projectRepository.findById(boardId);
-        if (optionalProject.isPresent() && optionalProject.get().getProjectStatus() == Project.ProjectStatus.PROJECT_POSTED)
+        if (optionalProject.isPresent() && optionalProject.get().getProjectStatus() != Project.ProjectStatus.PROJECT_DELETED)
             return optionalProject.get();
         else throw new BusinessLogicException(ExceptionCode.PROJECT_NOT_FOUND);
     }
