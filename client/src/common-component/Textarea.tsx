@@ -26,7 +26,9 @@ function Textarea({
             <textarea
                 name={name}
                 disabled={disabled}
-                className={`h-120 w-full rounded-md p-4 ${borderStyle ? borderStyle : ""}`}
+                className={`min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight ${
+                    borderStyle ? borderStyle : ""
+                }`}
                 minLength={minlength}
                 maxLength={maxlength}
                 placeholder={placeholder}

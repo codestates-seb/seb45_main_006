@@ -59,8 +59,8 @@ const DateChoice = ({
                 }}
                 locale="ko"
                 minDate={new Date()}
-                className="w-full rounded-md p-6"
-                placeholderText="choice your date"
+                className="min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight"
+                placeholderText="시작날짜와 마감날짜를 선택해주세요"
             />
         </div>
     );
