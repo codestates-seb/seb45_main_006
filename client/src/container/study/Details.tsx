@@ -4,14 +4,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCheckUser } from "@hook/useCheckUser";
 import { useDeleteStudy, useGetDetailStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
+import { useCheckChat } from "@hook/useCheckChat";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
 import Report from "@component/project-study/Report";
 import Bookmark from "@component/board/Bookmark";
-import DetailSkeleton from "./component/DetailSkeleton";
 import UserCard from "@component/board/UserCard";
-import UserProfile from "@component/user/UserProfile";
+import DetailSkeleton from "./component/DetailSkeleton";
+
+import { useGetComment } from "@api/comment/hook";
+import { EditComment, ShowComment } from "@component/board/Comment";
+import Pagination from "@component/Pagination";
+import { usePostComment } from "@api/comment/hook";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 const Details = () => {
     const navigate = useNavigate();
@@ -20,16 +26,38 @@ const Details = () => {
 
     const { data: study, isLoading, refetch } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
 
-    const { fireToast, createToast, errorToast } = useToast();
-    const { isMine } = useCheckUser({ memberId: study?.memberProfile.memberId || 0 });
-    const { mutate: deleteStudy } = useDeleteStudy();
-
-    const [isBookmarked, setIsBookmarked] = useState(!!study?.bookmarked);
-
     useEffect(() => {
         refetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const { fireToast, createToast, errorToast } = useToast();
+    const { isMine, isLoggedIn } = useCheckUser({ memberId: study?.memberProfile.memberId || 0 });
+    const { mutate: deleteStudy } = useDeleteStudy();
+
+    const [isBookmarked, setIsBookmarked] = useState(!!study?.bookmarked);
+
+    // 페이지 필터
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+    const [comment, setComment] = useState<string>("");
+
+    const { data: commentList, refetch: refetchComment } = useGetComment({
+        board: "project",
+        boardId: Number.parseInt(studyBoardId || "0"),
+        page: curPage,
+        size: 4,
+    });
+
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setComment(e.currentTarget.value);
+    };
+
+    useEffect(() => {
+        if (commentList && commentList?.pageInfo.totalElements) {
+            setTotalItems(commentList?.pageInfo.totalElements);
+        }
+    }, [commentList]);
 
     const onClickDeleteHandler = () => {
         createToast({
@@ -54,6 +82,39 @@ const Details = () => {
                 );
             },
         });
+    };
+
+    const { alertWhenEmptyFn } = useCheckValidValue();
+    const { mutate: postComment } = usePostComment();
+
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "댓글", content: comment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postComment(
+                { board: "project", boardId: Number.parseInt(studyBoardId || "0"), content: comment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setComment("");
+                        refetchComment();
+                    },
+                    onError: () => {
+                        errorToast();
+                    },
+                },
+            );
+        }
+    };
+
+    const { createOrEnrollChatRoom } = useCheckChat({ memberId: study?.memberProfile.memberId || 0 });
+
+    const onClickChatBtn = () => {
+        createOrEnrollChatRoom({ nickname: study?.memberProfile.nickname || "" });
     };
 
     if (isLoading) {
@@ -126,21 +187,38 @@ const Details = () => {
                             refetchAllMembers={() => {}}
                         />
                     )}
-                    <Button type="STUDY_POINT" styles="font-semibold m-20" isFullBtn={true}>
-                        <Typography type="Body" text="참여하기" />
-                    </Button>
+                    {!isMine && (
+                        <Button
+                            type="STUDY_POINT"
+                            styles="font-semibold m-20"
+                            isFullBtn={true}
+                            onClickHandler={onClickChatBtn}
+                        >
+                            <Typography type="Body" text="참여하기" />
+                        </Button>
+                    )}
                 </div>
             </div>
             <div className="ml-20">
                 <Typography type="Label" text="댓글 0개" />
             </div>
-            <div className="mx-20 flex items-start justify-between">
-                <UserProfile size="sm" mine={true} />
-                <Button type="PROJECT_POINT" styles="font-semibold mx-20" isFullBtn={false}>
-                    <Typography type="Body" text="댓글등록" />
-                </Button>
+            <div className="p-8">
+                <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
+                {isLoggedIn && <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />}
+                <div className="my-16">
+                    {commentList?.data &&
+                        Array.isArray(commentList.data) &&
+                        commentList.data.map((v) => (
+                            <ShowComment
+                                key={v.commentId}
+                                comment={v}
+                                writerId={study?.memberProfile.memberId || 0}
+                                refetchComment={refetchComment}
+                            />
+                        ))}
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                </div>
             </div>
-            <textarea className="m-20 h-100 w-full rounded-xl border-2 border-solid border-borderline" />
         </div>
     );
 };

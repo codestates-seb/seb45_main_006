@@ -9,10 +9,16 @@ import { useCheckUser } from "@hook/useCheckUser";
 import { useGetDetailProject } from "@api/project/hook";
 import { useDeleteProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
+import { useCheckChat } from "@hook/useCheckChat";
+
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
 import DetailSkeleton from "./component/DetailSkeleton";
-import UserProfile from "@component/user/UserProfile";
+
+import { useGetComment, usePostComment } from "@api/comment/hook";
+import { EditComment, ShowComment } from "@component/board/Comment";
+import Pagination from "@component/Pagination";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 const Details = () => {
     const navigate = useNavigate();
@@ -26,16 +32,38 @@ const Details = () => {
         refetch,
     } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
 
-    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
-
-    const { fireToast, createToast, errorToast } = useToast();
-    const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
-    const { mutate: deleteProject } = useDeleteProject();
-
     useEffect(() => {
         refetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // 페이지 필터
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+    const [comment, setComment] = useState<string>("");
+
+    const { data: commentList, refetch: refetchComment } = useGetComment({
+        board: "project",
+        boardId: Number.parseInt(boardId || "0"),
+        page: curPage,
+        size: 4,
+    });
+
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setComment(e.currentTarget.value);
+    };
+
+    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
+
+    const { fireToast, createToast, errorToast } = useToast();
+    const { isMine, isLoggedIn } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
+    const { mutate: deleteProject } = useDeleteProject();
+
+    useEffect(() => {
+        if (commentList && commentList?.pageInfo.totalElements) {
+            setTotalItems(commentList?.pageInfo.totalElements);
+        }
+    }, [commentList]);
 
     const onClickDeleteHandler = () => {
         createToast({
@@ -62,6 +90,39 @@ const Details = () => {
         });
     };
 
+    const { alertWhenEmptyFn } = useCheckValidValue();
+    const { mutate: postComment } = usePostComment();
+
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "댓글", content: comment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postComment(
+                { board: "project", boardId: Number.parseInt(boardId || "0"), content: comment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setComment("");
+                        refetchComment();
+                    },
+                    onError: () => {
+                        errorToast();
+                    },
+                },
+            );
+        }
+    };
+
+    const { createOrEnrollChatRoom } = useCheckChat({ memberId: projectInputs?.memberProfile.memberId || 0 });
+
+    const onClickChatBtn = () => {
+        createOrEnrollChatRoom({ nickname: projectInputs?.memberProfile.nickname || "" });
+    };
+
     if (isLoading) {
         return <DetailSkeleton />;
     }
@@ -70,7 +131,6 @@ const Details = () => {
         <div>
             <div className="m-20 flex gap-20">
                 <section
-                    // eslint-disable-next-line tailwindcss/no-custom-classname
                     className={`relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline ${
                         projectInputs?.projectStatus === "PROJECT_POSTED" ? "" : "bg-gray-300"
                     }`}
@@ -156,22 +216,37 @@ const Details = () => {
                             refetchAllMembers={() => {}}
                         />
                     )}
-                    <Button type="PROJECT_POINT" styles="font-semibold mr-0" isFullBtn={true}>
-                        <Typography type="Body" text="참여하기" />
-                    </Button>
+                    {!isMine && (
+                        <Button
+                            type="PROJECT_POINT"
+                            styles="font-semibold mr-0"
+                            isFullBtn={true}
+                            onClickHandler={onClickChatBtn}
+                        >
+                            <Typography type="Body" text="참여하기" />
+                        </Button>
+                    )}
                 </div>
             </div>
             <div className="mb-10 ml-20">
                 <Typography type="Label" text="댓글 0개" />
             </div>
-            <div className="mx-20 max-w-800">
-                <div className="mb-12 flex items-start justify-between">
-                    <UserProfile size="sm" mine={true} />
-                    <Button type="PROJECT_POINT" styles="font-semibold" isFullBtn={false}>
-                        <Typography type="Body" text="댓글등록" />
-                    </Button>
+            <div className="p-8">
+                <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
+                {isLoggedIn && <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />}
+                <div className="my-16">
+                    {commentList?.data &&
+                        Array.isArray(commentList.data) &&
+                        commentList.data.map((v) => (
+                            <ShowComment
+                                key={v.commentId}
+                                comment={v}
+                                writerId={projectInputs?.memberProfile.memberId || 0}
+                                refetchComment={refetchComment}
+                            />
+                        ))}
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                 </div>
-                <textarea className="h-100 w-full rounded-xl border-2 border-solid border-borderline" />
             </div>
         </div>
     );

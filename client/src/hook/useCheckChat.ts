@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useSetRecoilState } from "recoil";
 import { chatBotStatusAtom, isChatBotShowAtom, chatRoomIdAtom } from "@feature/chat";
@@ -12,27 +12,45 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
     const setIsChatBotShow = useSetRecoilState(isChatBotShowAtom);
     const setChatRoomId = useSetRecoilState(chatRoomIdAtom);
 
-    const [isChatRoomExisted, setIsAlreadyExisted] = useState(false);
+    // const [isChatRoomExisted, setIsAlreadyExisted] = useState(false);
 
-    const { data: chats } = useGetChatRooms();
+    const { data: chats, refetch } = useGetChatRooms();
     const { mutate: creatChatRoom } = usePostCreateChatRoom();
 
     const { fireToast, errorToast } = useToast();
 
     useEffect(() => {
-        if (chats?.data && Array.isArray(chats.data)) {
-            chats.data.map((v) => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // useEffect(() => {
+    //     if (chats && Array.isArray(chats)) {
+    //         chats.map((v) => {
+    //             if (v.membersId.includes(memberId)) {
+    //                 setIsAlreadyExisted(true);
+    //                 setChatRoomId(v.chatRoomId);
+    //             }
+    //         });
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [chats]);
+
+    const createOrEnrollChatRoom = ({ nickname, closeModal }: { nickname: string; closeModal?: () => void }) => {
+        let chatRoomExisted = false;
+        if (chats && Array.isArray(chats)) {
+            chats.map((v) => {
                 if (v.membersId.includes(memberId)) {
-                    setIsAlreadyExisted(true);
+                    chatRoomExisted = true;
                     setChatRoomId(v.chatRoomId);
                 }
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chats]);
 
-    const createOrEnrollChatRoom = ({ nickname, closeModal }: { nickname: string; closeModal?: () => void }) => {
+        console.log("1 chatRoomExisted", chatRoomExisted);
+
         const onClickChatRoomHandler = () => {
+            console.log("3 nickname", nickname);
             setChatBotStatus("DETAIL");
             setIsChatBotShow(true);
             fireToast({
@@ -46,6 +64,7 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
                 { memberId },
                 {
                     onSuccess: () => {
+                        console.log("2 ???");
                         onClickChatRoomHandler();
                     },
                     onError: (err) => {
@@ -56,13 +75,13 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
             );
         };
 
-        if (closeModal) closeModal();
-        if (isChatRoomExisted) {
+        if (chatRoomExisted) {
             onClickChatRoomHandler();
         } else {
             onCreateChatHanlder();
         }
+        if (closeModal) closeModal();
     };
 
-    return { isChatRoomExisted, createOrEnrollChatRoom };
+    return { createOrEnrollChatRoom };
 };
