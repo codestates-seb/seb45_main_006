@@ -20,7 +20,8 @@ public class Member {
     // oAuth2로 생성된 회원
     public Member(String email){
         this.email = email;
-        this.nickname = email;
+        this.nickname = "";
+        this.memberType = MemberType.OAUTH2;
     }
 
     @Id
@@ -30,11 +31,14 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false)
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    private MemberType memberType = MemberType.REGULAR;
 
     @ElementCollection(fetch = FetchType.EAGER)
     List<String> roles = new ArrayList<>();
@@ -48,4 +52,9 @@ public class Member {
             memberProfile.setMember(this);
         }
     }
+    public enum MemberType{
+        REGULAR,
+        OAUTH2;
+    }
+
 }

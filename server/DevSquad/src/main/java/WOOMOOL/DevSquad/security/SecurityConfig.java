@@ -10,7 +10,9 @@ import WOOMOOL.DevSquad.auth.jwt.JwtVerificationFilter;
 import WOOMOOL.DevSquad.auth.oauth2.oAuth2SuccessHandler;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
+import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,11 +38,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import java.util.Arrays;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
+    private final MemberProfileRepository memberProfileRepository;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -48,12 +52,6 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
-    public SecurityConfig(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberAuthority = memberAuthority;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -77,27 +75,27 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository))
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,memberProfileRepository))
                 );
 
         return http.build();
     }
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        var clientRegistration = clientRegistration();
-
-        return new InMemoryClientRegistrationRepository(clientRegistration);
-    }
-
-    private ClientRegistration clientRegistration() {
-        return CommonOAuth2Provider
-                .GOOGLE
-                .getBuilder("google")
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .build();
-    }
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        var clientRegistration = clientRegistration();
+//
+//        return new InMemoryClientRegistrationRepository(clientRegistration);
+//    }
+//
+//    private ClientRegistration clientRegistration() {
+//        return CommonOAuth2Provider
+//                .GOOGLE
+//                .getBuilder("google")
+//                .clientId(clientId)
+//                .clientSecret(clientSecret)
+//                .build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

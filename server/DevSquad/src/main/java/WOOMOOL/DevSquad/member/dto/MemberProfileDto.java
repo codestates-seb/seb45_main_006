@@ -1,6 +1,7 @@
 package WOOMOOL.DevSquad.member.dto;
 
 import WOOMOOL.DevSquad.infoboard.dto.InfoBoardDto;
+import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
@@ -99,7 +100,7 @@ public class MemberProfileDto {
 
         private boolean listEnroll;
 
-        private boolean OAuthUser;
+        private Member.MemberType memberType;
 
         private Set<String> position;
 

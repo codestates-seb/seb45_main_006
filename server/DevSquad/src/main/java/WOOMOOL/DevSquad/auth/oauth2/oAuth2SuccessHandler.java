@@ -5,11 +5,15 @@ import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
+import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,17 +25,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+@Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
     private final MemberRepository memberRepository;
-
-    public oAuth2SuccessHandler(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority, MemberRepository memberRepository) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberAuthority = memberAuthority;
-        this.memberRepository = memberRepository;
-    }
+    private final MemberProfileRepository memberProfileRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -39,46 +41,44 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         List<String> roles = memberAuthority.createRoles(email);
 
-        saveMember(email);
-        redirect(request, response, email, roles);
+        Member member = saveMember(email);
+        redirect(request, response, email, member.getMemberType(),roles);
     }
 
     // oauth2로 로그인 시 회원 정보 생성
-    private void saveMember(String email) {
+    private Member saveMember(String email) {
 
-        // 이미 회원 정보가 있으면 생성 X
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (optionalMember.isPresent()) return;
+        if (optionalMember.isPresent()) return optionalMember.get();
 
         // 멤버프로필 정보 생성해서 넣어주기
-        // 공백은 처음 회원 가입 하는 사람
-        Member member = new Member("");
+        // 닉네임 공백은 처음 회원 가입 하는 사람
+        Member member = new Member(email);
         MemberProfile memberProfile = new MemberProfile("");
-        memberProfile.setOAuth2Member(true);
-        member.setMemberProfile(memberProfile);
+        member.addProfile(memberProfile);
 
         Level level = new Level();
         memberProfile.setLevel(level);
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> roles) throws IOException {
-        String accessToken = delegateAccessToken(username, roles);
-        String refreshToken = delegateRefreshToken(username);
+    private void redirect(HttpServletRequest request, HttpServletResponse response, String email, Member.MemberType memberType, List<String> roles) throws IOException {
 
+        String accessToken = delegateAccessToken(email, roles);
+        String refreshToken = delegateRefreshToken(email);
 
-        String uri = createURI(accessToken, refreshToken, username).toString();
+        String uri = createURI(accessToken, refreshToken, email,memberType).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
 
     }
 
-    private URI createURI(String accessToken, String refreshToken, String username) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        Member findMember = optionalMember.get();
+    private URI createURI(String accessToken, String refreshToken, String email, Member.MemberType memberType) {
+        Optional<Member> optionalMember = memberRepository.findByEmailAndMemberType(email, memberType);
+        MemberProfile findMemberProfile = optionalMember.get().getMemberProfile();
 
-        String nickname = findMember.getNickname();
-        String memberId = String.valueOf(findMember.getMemberId());
+        String nickname = findMemberProfile.getNickname();
+        String memberId = String.valueOf(findMemberProfile.getMemberProfileId());
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
@@ -97,12 +97,12 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 엑세스 토큰 생성
-    private String delegateAccessToken(String username, List<String> roles) {
+    private String delegateAccessToken(String email, List<String> roles) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
+        claims.put("username", email);
         claims.put("roles", roles);
 
-        String subject = username;
+        String subject = email;
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -117,9 +117,9 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 리프레시 토큰 생성
-    private String delegateRefreshToken(String username) {
+    private String delegateRefreshToken(String email) {
 
-        String subject = username;
+        String subject = email;
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey());
 

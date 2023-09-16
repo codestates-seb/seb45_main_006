@@ -46,7 +46,7 @@ public interface MemberMapper {
                 memberProfile.getGithubId(),
                 memberProfile.getIntroduction(),
                 memberProfile.isListEnroll(),
-                memberProfile.isOAuth2Member(),
+                memberProfile.getMember().getMemberType(),
                 memberProfile.getPositions().stream()
                         .map(position -> position.getPositionName()).collect(Collectors.toSet()),
                 memberProfile.getStackTags().stream()
