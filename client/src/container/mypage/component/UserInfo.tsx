@@ -48,7 +48,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const { mutate: deleteMember } = useDeleteMember();
 
     const onHandleEditUser = () => {
-        if (authNickname !== nickname) {
+        if (user.nickname !== nickname && authNickname !== nickname) {
             fireToast({
                 content: "닉네임을 중복검사를 진행해주세요.",
                 isConfirm: false,

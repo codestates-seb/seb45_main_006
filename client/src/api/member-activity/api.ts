@@ -1,6 +1,6 @@
 import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
-import { PagingWithId, MemberId, PagingWithBoardLiked } from "@type/member-activity/member.req.dto";
+import { PagingWithId, PagingWithBoardLiked } from "@type/member-activity/member.req.dto";
 
 // 유저의 프로젝트
 export const getProjectOfMember = async ({ page, memberId }: PagingWithId) => {
@@ -30,35 +30,42 @@ export const getQuestionOfMember = async ({ page, memberId }: PagingWithId) => {
     return data;
 };
 
-// TODO: API - 나의 레벨 조회
-export const getMyLevel = async ({ memberId }: MemberId) => {
-    const url = `/level/${memberId}`;
+// API - 나의 레벨 조회
+export const getMyLevel = async () => {
+    const url = `/level`;
     const { data } = await withAuthApi.get(url);
     return data;
 };
 
-// TODO: API - 유저가 북마크/좋아요 한 프로젝트
+// API - 출석
+export const postAttendance = async () => {
+    const url = `/members/attendanceCheck`;
+    const { data } = await withAuthApi.post(url);
+    return data;
+};
+
+//  유저가 북마크/좋아요 한 프로젝트
 export const getProjectLiked = async ({ likedType, page }: PagingWithBoardLiked) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}/${likedType}/project?page=${page}`;
     const { data } = await withAuthApi.get(url);
     return data;
 };
 
-// TODO: API - 유저가 북마크/좋아요 한 스터디
+// 유저가 북마크/좋아요 한 스터디
 export const getStudyLiked = async ({ likedType, page }: PagingWithBoardLiked) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}/${likedType}/study?page=${page}`;
     const { data } = await withAuthApi.get(url);
     return data;
 };
 
-// TODO: API - 유저가 북마크/좋아요 한 자유 게시판
+// 유저가 북마크/좋아요 한 자유 게시판
 export const getInfoLiked = async ({ likedType, page }: PagingWithBoardLiked) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}/${likedType}/info?page=${page}`;
     const { data } = await withAuthApi.get(url);
     return data;
 };
 
-// TODO: API - 유저가 북마크/좋아요 한 질문 게시판
+// 유저가 북마크/좋아요 한 질문 게시판
 export const getQuestionLiked = async ({ likedType, page }: PagingWithBoardLiked) => {
     const url = `${COMMON_API_PATH.MEMBER.PATH}/${likedType}/question?page=${page}`;
     const { data } = await withAuthApi.get(url);

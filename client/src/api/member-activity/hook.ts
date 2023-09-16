@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { PagingWithId, MemberId, PagingWithBoardLiked } from "@type/member-activity/member.req.dto";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { PagingWithId, PagingWithBoardLiked } from "@type/member-activity/member.req.dto";
 import {
     GetResProjectOfMember,
     GetResStudyOfMember,
@@ -17,6 +17,7 @@ import {
     getProjectLiked,
     getStudyLiked,
     getInfoLiked,
+    postAttendance,
 } from "./api";
 
 // 유저의 프로젝트
@@ -56,15 +57,20 @@ export const useGetQuestionOfMember = ({ page, memberId }: PagingWithId) => {
 };
 
 // TODO: API - 나의 레벨 조회
-export const useGetMyLevel = ({ memberId }: MemberId) => {
+export const useGetMyLevel = () => {
     return useQuery<GetResMyLevel, AxiosError, GetResMyLevel>({
-        queryKey: ["level", { isMine: true, memberId }],
-        queryFn: () => getMyLevel({ memberId }),
-        enabled: !!memberId,
+        queryKey: ["level", { isMine: true }],
+        queryFn: () => getMyLevel(),
+        enabled: !!localStorage.getItem("memberId"),
     });
 };
 
-// TODO: 유저가 북마크/좋아요 한 프로젝트
+// TODO: API - 출석
+export const usePostAttendance = () => {
+    return useMutation<Record<string, never>, AxiosError, Record<string, never>>(postAttendance);
+};
+
+//  유저가 북마크/좋아요 한 프로젝트
 export const useGetProjectLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResProjectOfMember, AxiosError, GetResProjectOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "project", page }],
@@ -73,7 +79,7 @@ export const useGetProjectLiked = ({ page, likedType }: PagingWithBoardLiked) =>
     });
 };
 
-// TODO: 유저가 북마크/좋아요 한 스터디
+// 유저가 북마크/좋아요 한 스터디
 export const useGetStudyLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResStudyOfMember, AxiosError, GetResStudyOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "study", page }],
@@ -82,7 +88,7 @@ export const useGetStudyLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     });
 };
 
-// TODO: 유저가 북마크/좋아요 한 자유 게시판
+// 유저가 북마크/좋아요 한 자유 게시판
 export const useGetInfoLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResInfoOfMember, AxiosError, GetResInfoOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "info", page }],
@@ -90,7 +96,7 @@ export const useGetInfoLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     });
 };
 
-// TODO: 유저가 북마크/좋아요 한 질문 게시판
+// 유저가 북마크/좋아요 한 질문 게시판
 export const useGetQuestionLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResQuestionOfMember, AxiosError, GetResQuestionOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "question", page }],

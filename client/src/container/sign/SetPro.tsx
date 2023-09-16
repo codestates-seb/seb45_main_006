@@ -55,8 +55,36 @@ function SetPro() {
         );
     };
 
+    const onHandleNextEditBtn = () => {
+        // TODO: S3 업로드
+        patchMember(
+            {
+                memberId: memberId,
+                nickname: nickname,
+                profilePicture: "",
+                githubId: "",
+                introduction: "",
+                listEnroll: 1,
+                stack: selectedStack,
+                position: selectedPostion,
+            },
+            {
+                onSettled: () => {
+                    navigate("/");
+                },
+            },
+        );
+    };
+
     if (curStage === 1) {
-        return <SetPro1 setCurStage={setCurStage} selectedTags={selectedStack} setSelectedTags={setSelectedStack} />;
+        return (
+            <SetPro1
+                setCurStage={setCurStage}
+                selectedTags={selectedStack}
+                setSelectedTags={setSelectedStack}
+                onHandleNextEditBtn={onHandleNextEditBtn}
+            />
+        );
     }
 
     if (curStage === 2) {

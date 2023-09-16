@@ -15,6 +15,7 @@ function OauthUser() {
         const refreshToken = new URL(location.href).searchParams.get("refresh_token");
         const memberId = new URL(location.href).searchParams.get("memberId");
         const nickname = new URL(location.href).searchParams.get("nickname");
+
         setItemToStorage("accessToken", accessToken);
         setItemToStorage("refreshToken", refreshToken);
         if (accessToken) {
@@ -22,6 +23,7 @@ function OauthUser() {
         }
         if (memberId) {
             setItemToStorage("memberId", Number.parseInt(memberId));
+            setItemToStorage("memberType", "OAUTH2");
         }
 
         if (nickname) {
