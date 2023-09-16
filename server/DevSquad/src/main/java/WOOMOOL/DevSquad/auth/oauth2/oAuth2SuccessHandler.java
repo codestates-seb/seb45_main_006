@@ -1,6 +1,9 @@
 package WOOMOOL.DevSquad.auth.oauth2;
 
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
+import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
+import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
+import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
@@ -33,13 +36,14 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
     private final MemberRepository memberRepository;
-    private final MemberProfileRepository memberProfileRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         List<String> roles = memberAuthority.createRoles(email);
+
 
         Member member = saveMember(email);
         redirect(request, response, email, member.getMemberType(),roles);
@@ -70,6 +74,21 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String uri = createURI(accessToken, refreshToken, email,memberType).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
+        // 리다이렉트 후 refreshToken 값은 재발급 로직을 위해 DB에 저장
+        // 이미 있으면 삭제하고 다시 저장
+        RefreshToken findRefreshToken = refreshTokenRepository.findByUsername(email);
+
+        if(findRefreshToken != null) {
+
+            refreshTokenRepository.delete(findRefreshToken);
+        }
+
+        RefreshToken saveRefreshToken = RefreshToken.builder()
+                .refreshToken(refreshToken)
+                .username(email)
+                .build();
+
+        refreshTokenRepository.save(saveRefreshToken);
 
     }
 
