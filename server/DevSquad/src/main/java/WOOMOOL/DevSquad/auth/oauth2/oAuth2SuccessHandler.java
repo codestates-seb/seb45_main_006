@@ -1,6 +1,9 @@
 package WOOMOOL.DevSquad.auth.oauth2;
 
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
+import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
+import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
+import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
@@ -25,6 +28,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+import static WOOMOOL.DevSquad.member.entity.Member.MemberType.OAUTH2;
+
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
@@ -33,7 +38,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
     private final MemberRepository memberRepository;
-    private final MemberProfileRepository memberProfileRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -41,8 +46,8 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         List<String> roles = memberAuthority.createRoles(email);
 
-        Member member = saveMember(email);
-        redirect(request, response, email, member.getMemberType(),roles);
+        saveMember(email);
+        redirect(request, response, email, OAUTH2, roles);
     }
 
     // oauth2로 로그인 시 회원 정보 생성
@@ -58,21 +63,39 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         member.addProfile(memberProfile);
 
         Level level = new Level();
-        memberProfile.setLevel(level);
+        memberProfile.addLevel(level);
 
         return memberRepository.save(member);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String email, Member.MemberType memberType, List<String> roles) throws IOException {
 
-        String accessToken = delegateAccessToken(email, roles);
+        String accessToken = "Bearer " + delegateAccessToken(email, roles);
         String refreshToken = delegateRefreshToken(email);
 
-        String uri = createURI(accessToken, refreshToken, email,memberType).toString();
+//        log.info(accessToken);
+
+        String uri = createURI(accessToken, refreshToken, email, memberType).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
+        // 리다이렉트 후 refreshToken 값은 재발급 로직을 위해 DB에 저장
+        // 이미 있으면 삭제하고 다시 저장
+        RefreshToken findRefreshToken = refreshTokenRepository.findByUsername(email);
+
+        if (findRefreshToken != null) {
+
+            refreshTokenRepository.delete(findRefreshToken);
+        }
+
+        RefreshToken saveRefreshToken = RefreshToken.builder()
+                .refreshToken(refreshToken)
+                .username(email)
+                .build();
+
+        refreshTokenRepository.save(saveRefreshToken);
 
     }
 
+    // 받은 email 과 oAuth2 타입인 회원 정보를 찾아서 uri 생성
     private URI createURI(String accessToken, String refreshToken, String email, Member.MemberType memberType) {
         Optional<Member> optionalMember = memberRepository.findByEmailAndMemberType(email, memberType);
         MemberProfile findMemberProfile = optionalMember.get().getMemberProfile();
@@ -98,6 +121,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     // 엑세스 토큰 생성
     private String delegateAccessToken(String email, List<String> roles) {
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", email);
         claims.put("roles", roles);

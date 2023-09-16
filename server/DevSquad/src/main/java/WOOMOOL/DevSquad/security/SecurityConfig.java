@@ -46,11 +46,11 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
+//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+//    private String clientId;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+//    private String clientSecret;
 
 
     @Bean
@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,memberProfileRepository))
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository))
                 );
 
         return http.build();
