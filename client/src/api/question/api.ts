@@ -18,6 +18,13 @@ export const getAllQuestion = async ({ search, page, size }: GetReqAllQuestion) 
     return data;
 };
 
+export const getDetailQuestion = async ({ boardId }: { boardId: number }) => {
+    const url = `${COMMON_API_PATH.QUESTION.PATH}/${boardId}`;
+
+    const { data } = await commonApi.get(url);
+    return data;
+};
+
 // 질문 게시판 - 등록
 export const postQuestion = async (requstObj: PostReqQuestion) => {
     const url = `${COMMON_API_PATH.QUESTION.PATH}`;
