@@ -10,6 +10,7 @@ import ErrorPage from "@container/ErrorPage";
 import Main from "@container/main/Main";
 import AuthUser from "@container/mypage/AuthUser";
 import MyPage from "@container/mypage/MyPage";
+import Attendance from "@container/mypage/component/Attendance";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
             {
                 path: "/members/my",
                 element: <MyPage />,
+            },
+            {
+                path: "/attendance",
+                element: <Attendance />,
             },
             {
                 path: "/login",
@@ -190,6 +195,7 @@ const queryClient = new QueryClient({
 });
 
 queryClient.invalidateQueries({ queryKey: ["projects"] });
+queryClient.invalidateQueries({ queryKey: ["chats"] });
 
 function App() {
     return (
