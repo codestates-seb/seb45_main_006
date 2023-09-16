@@ -30,6 +30,7 @@ export default function Register() {
     const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
     const [startDate, setStartDate] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
+    const [prevProjectStatus, setPrevProjectStatus] = useState("");
 
     const handleSelectOption = (option: string) => {
         setSelectedOption(option);
@@ -56,6 +57,7 @@ export default function Register() {
                 deadline: prevDeadline,
                 recruitNum: prevRecruitNum,
                 stack: prevStack,
+                projectStatus,
             }: GetResDetailProject = location.state;
             setInputs({
                 ...inputs,
@@ -67,6 +69,7 @@ export default function Register() {
             setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
             setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
             setSelectedStack(prevStack || []);
+            setPrevProjectStatus(projectStatus);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -136,15 +139,20 @@ export default function Register() {
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
-        if (selectedOption === "모집완료") {
-            closeProject({ boardId: location.state.boardId });
+        if (prevProjectStatus) {
+            if (
+                (prevProjectStatus === "PROJECT_POSTED" && selectedOption === "모집완료") ||
+                (prevProjectStatus === "PROJECT_DELETED" && selectedOption === "모집중")
+            ) {
+                closeProject({ boardId: location.state.boardId });
+            }
         }
 
         patchProject(
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
+                // recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),

@@ -31,6 +31,8 @@ export default function Register() {
     });
 
     const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
+    const [prevStudyStatus, setPrevStudyStatus] = useState("");
+    console.log("수정 시 적용할 내용", prevStudyStatus);
 
     useEffect(() => {
         if (curActivity === "EDIT") {
@@ -39,6 +41,7 @@ export default function Register() {
                 content: prevContent,
                 stack: prevStack,
                 recruitNum: prevRecruitNum,
+                studyStatus,
             }: GetResDetailStudy = location.state;
             setInputs({
                 ...inputs,
@@ -48,6 +51,7 @@ export default function Register() {
             });
 
             setSelectedStack(prevStack || []);
+            setPrevStudyStatus(studyStatus);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -72,7 +76,7 @@ export default function Register() {
 
     const { mutate: postStudy } = usePostStudy();
 
-    const handleSubmit = async () => {
+    const onPostClickHandler = async () => {
         const registerInputs = [
             { name: "스터디명", content: inputs.title },
             { name: "스터디 상세내용", content: inputs.content },
@@ -107,7 +111,6 @@ export default function Register() {
             );
         }
     };
-    // recruitStatus: "STUDY_POSTED",
 
     const defaultStack = useRecoilValue(defaultStackAtom);
 
@@ -161,7 +164,7 @@ export default function Register() {
                             type="STUDY_POINT"
                             styles="mb-20 shadow-md hover:bg-green-400"
                             isFullBtn={false}
-                            onClickHandler={handleSubmit}
+                            onClickHandler={onPostClickHandler}
                         >
                             <Typography text="등록하기" type="Label" color="text-white" />
                         </Button>
