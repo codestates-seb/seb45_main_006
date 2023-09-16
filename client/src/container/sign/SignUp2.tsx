@@ -117,6 +117,7 @@ function SignUp2() {
                     description="이메일 형식이 맞지 않습니다."
                 />
 
+                {/* TODO: 인증버튼 한번만 누를 수 있도록 막기 */}
                 {!authEmail && (
                     <Button
                         type="STUDY"

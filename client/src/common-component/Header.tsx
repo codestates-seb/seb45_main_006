@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
@@ -7,18 +8,38 @@ import { useDeleteLogout } from "@api/sign/hook";
 
 import IconLogo from "@assets/icon_logo.png";
 import IconLogoText from "@assets/icon_logo-text.png";
+import IconAttendance from "@assets/icon-attendance.png";
 
 import Typography from "@component/Typography";
 import UserProfile from "@component/user/UserProfile";
 import { clearStorage, getItemFromStorage } from "@util/localstorage-helper";
+
+import dayjs from "dayjs";
 
 // 임시 버튼 css
 const outlinedCss = "w-fit min-w-80 px-12 py-8 border-1 border-[#888888] rounded-xl";
 const filledCss = "w-fit min-w-80 px-12 py-8 bg-[#888888] rounded-xl";
 
 const BtnsWithAuth = ({ onLogoutHandler }: { onLogoutHandler: () => void }) => {
+    const navigate = useNavigate();
+    const [isAttendanceBotShow, setIsAttendanceBotShow] = useState(true);
+
+    useEffect(() => {
+        const attendedDate = getItemFromStorage("attendedDate") || "";
+        const today = dayjs().format("YYYY-MM-DD");
+
+        if (attendedDate === today) {
+            setIsAttendanceBotShow(false);
+        }
+    }, []);
+
     return (
         <div className="flex">
+            {isAttendanceBotShow && (
+                <button className="mr-12 h-40 w-40 rounded-lg" onClick={() => navigate("/attendance")}>
+                    <img src={IconAttendance} className="left-4 top-0 h-40 w-40" />
+                </button>
+            )}
             <UserProfile size="sm" mine={true} />
             <button className="w-80 min-w-70 rounded-sm px-8" onClick={onLogoutHandler}>
                 <Typography type="Body" text="Logout" color="text-warn" />

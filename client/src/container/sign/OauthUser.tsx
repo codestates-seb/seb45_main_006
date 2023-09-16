@@ -16,7 +16,7 @@ function OauthUser() {
         const memberId = new URL(location.href).searchParams.get("memberId");
         const nickname = new URL(location.href).searchParams.get("nickname");
 
-        setItemToStorage("accessToken", accessToken);
+        setItemToStorage("accessToken", accessToken?.split(" ")[1]);
         setItemToStorage("refreshToken", refreshToken);
         if (accessToken) {
             setItemToStorage("email", parseJwt(accessToken).username);
