@@ -13,6 +13,7 @@ import BoardInput from "@component/board/Input";
 import BoardTextarea from "@component/board/Textarea";
 import Button from "@component/Button";
 import Typography from "@component/Typography";
+import Dropdown from "@component/project-study/Dropdown";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 import InputForNumber from "@component/project-study/InputForNumber";
 import { GetResDetailStudy } from "@type/study/study.res.dto";
@@ -20,8 +21,14 @@ import { GetResDetailStudy } from "@type/study/study.res.dto";
 export default function Register() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { fireToast } = useToast();
     const { curActivity } = useCheckCurActivity({ location });
+
+    const options = ["모집중", "모집완료"];
+    const [selectedOption, setSelectedOption] = useState("모집중");
+    const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
+
+    const { mutate: postStudy } = usePostStudy();
+    const { fireToast } = useToast();
     const { alertWhenEmptyFn } = useCheckValidValue();
 
     const [inputs, setInputs] = useState({
@@ -39,7 +46,7 @@ export default function Register() {
             const {
                 title: prevTitle,
                 content: prevContent,
-                stack: prevStack,
+                stacks: prevStack,
                 recruitNum: prevRecruitNum,
                 studyStatus,
             }: GetResDetailStudy = location.state;
@@ -74,7 +81,9 @@ export default function Register() {
         }
     }
 
-    const { mutate: postStudy } = usePostStudy();
+    const handleSelectOption = (option: string) => {
+        setSelectedOption(option);
+    };
 
     const onPostClickHandler = async () => {
         const registerInputs = [
@@ -150,12 +159,28 @@ export default function Register() {
                             defaultSuggestions={defaultStack}
                         />
                     </div>
-                    <BoardInput label="모집여부" disabled={true} placeholder="모집중" onChange={handleInput} />
+                    {curActivity === "REGISTER" ? (
+                        <Dropdown
+                            label="모집여부"
+                            options={options}
+                            selectedOption={selectedOption}
+                            onSelectOption={handleSelectOption}
+                            disabled={true}
+                        />
+                    ) : (
+                        <Dropdown
+                            label="모집여부"
+                            options={options}
+                            selectedOption={selectedOption}
+                            onSelectOption={handleSelectOption}
+                            disabled={false}
+                        />
+                    )}
                     <InputForNumber
                         name="recruitNum"
                         label="모집인원"
                         required={true}
-                        placeholder="ex) 6"
+                        placeholder="ex) 6 / 최대 12명"
                         value={inputs.recruitNum}
                         onChange={handleNumberInput}
                     />

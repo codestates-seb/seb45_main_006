@@ -138,11 +138,11 @@ const Details = () => {
                     <div>
                         {projectInputs?.projectStatus === "PROJECT_POSTED" ? (
                             <div className="absolute left-16 top-10 flex h-28 w-56 items-center justify-center rounded bg-deadline ">
-                                <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                                <Typography type="Recruit" text="모집중" styles="text-white font-gangwon" />
                             </div>
                         ) : (
                             <div className="absolute left-16 top-10 flex h-30 w-68 items-center justify-center rounded bg-gray-600">
-                                <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                                <Typography type="Recruit" text="모집완료" styles="text-white" />
                             </div>
                         )}
                         <h3 className="mx-20 mt-40">
@@ -151,7 +151,7 @@ const Details = () => {
                         <ul className="flex flex-col p-20">
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 상세내용" />
-                                <div className="mx-4 my-6">{projectInputs?.content || ""}</div>
+                                <div className="mx-4 my-6 font-gangwon text-lg">{projectInputs?.content || ""}</div>
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 요구 스택" />
@@ -169,14 +169,14 @@ const Details = () => {
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 기간" />
-                                <div className="mx-4 my-6">
+                                <div className="mx-4 my-6 font-gangwon text-lg">
                                     {projectInputs?.startDate || ""} ~ {projectInputs?.deadline || ""}
                                 </div>
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 인원" />
 
-                                <div className="mx-4 my-6">{projectInputs?.recruitNum || 0}명</div>
+                                <div className="mx-4 my-6 font-gangwon text-lg">{projectInputs?.recruitNum || 0}명</div>
                             </li>
                         </ul>
                     </div>

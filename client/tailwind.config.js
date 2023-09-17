@@ -59,6 +59,10 @@ export default withMT({
                 noto: ["Noto Sans KR, sans-serif"],
                 spoqa: ["Spoqa Han Sans Neo, sans-serif"],
                 ganpan: ["KCC-Ganpan"],
+                gangwon: ["GangwonEdu_OTFBoldA"],
+            },
+            boxShadow: {
+                "3xl": "0px 20px 20px -20px rgba(0,0,0,0.25);",
             },
         },
     },

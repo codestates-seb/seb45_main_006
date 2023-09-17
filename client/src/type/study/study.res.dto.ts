@@ -5,7 +5,7 @@ import { STUDY_STATUS_TYPE } from "@type/project/common";
 export interface CommonResStudies {
     boardId: number;
     title: string;
-    stack: string[];
+    stacks: string[];
     createdAt: string;
     modifiedAt: string;
     recruitNum: number;

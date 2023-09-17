@@ -39,7 +39,8 @@ function Input({
             placeholder={placeholder}
             minLength={minlength}
             maxLength={maxlength}
-            className={`min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight ${
+            // eslint-disable-next-line tailwindcss/no-custom-classname
+            className={`text-md min-h-40 w-full rounded-md border-b-2 p-8 font-gangwon leading-tight ${
                 borderStyle ? borderStyle : ""
             }`}
         />

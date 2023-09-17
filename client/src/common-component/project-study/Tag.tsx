@@ -13,7 +13,11 @@ const Tag = ({ type, text, styles }: ITag) => {
         if (type === "STUDY") setBackground("bg-study");
     }, [type]);
     return (
-        <div className={`mb-2 mr-4 flex rounded px-6 py-2 text-14 shadow-md ${background} ${styles ? styles : ""}`}>
+        <div
+            className={`mb-2 mr-4 flex rounded px-6 py-2 font-gangwon text-14 shadow-md ${background} ${
+                styles ? styles : ""
+            }`}
+        >
             {text}
         </div>
     );

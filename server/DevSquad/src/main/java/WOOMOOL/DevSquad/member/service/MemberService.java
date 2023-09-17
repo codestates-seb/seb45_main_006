@@ -408,6 +408,7 @@ public class MemberService {
         }
     }
 
+    // 출석체크 했는지 확인
     private void isAttendanceChecked() {
 
         MemberProfile memberProfile = findMemberFromToken().getMemberProfile();

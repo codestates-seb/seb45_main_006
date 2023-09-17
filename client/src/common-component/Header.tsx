@@ -17,8 +17,8 @@ import { clearStorage, getItemFromStorage } from "@util/localstorage-helper";
 import dayjs from "dayjs";
 
 // 임시 버튼 css
-const outlinedCss = "w-fit min-w-80 px-12 py-8 border-1 border-[#888888] rounded-xl";
-const filledCss = "w-fit min-w-80 px-12 py-8 bg-[#888888] rounded-xl";
+const outlinedCss = "w-fit min-w-80 px-12 py-8 hover:bg-[#888888]/20 border-2 border-[#888888] rounded-xl";
+const filledCss = "w-fit min-w-80 px-12 py-8 bg-[#888888] hover:bg-[#888888]/60 rounded-xl";
 
 const BtnsWithAuth = ({ onLogoutHandler }: { onLogoutHandler: () => void }) => {
     const navigate = useNavigate();

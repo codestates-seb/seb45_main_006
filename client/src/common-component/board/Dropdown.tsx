@@ -1,7 +1,7 @@
 import { useRef, useEffect, RefObject } from "react";
 import Typography from "@component/Typography";
 
-import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import ArrowUp from "@assets/arrowUp.png";
 
 import { CATEGORY_NAME } from "@type/info/common";
 
@@ -58,7 +58,12 @@ function Dropdown({
                 <div className="relative p-8">
                     <Typography type="Body" text={selectedItem || "선택"} />
                     <div className="absolute right-10 top-12">
-                        {isDropDownShow ? <VscTriangleUp /> : <VscTriangleDown />}
+                        <img
+                            src={ArrowUp}
+                            className={`mr-10 w-16 transition-transform duration-200 ease-in-out ${
+                                isDropDownShow ? "rotate-180" : ""
+                            }`}
+                        />
                     </div>
                 </div>
 

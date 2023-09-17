@@ -52,6 +52,7 @@ public class Member {
             memberProfile.setMember(this);
         }
     }
+    // 일반 회원인지 oAuth2 회원인지
     public enum MemberType{
         REGULAR,
         OAUTH2;
