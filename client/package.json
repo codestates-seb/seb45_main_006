@@ -33,6 +33,7 @@
         "react-router-dom": "^6.15.0",
         "recoil": "^0.7.7",
         "rehype-sanitize": "^6.0.0",
+        "tailwind-scrollbar-hide": "^1.1.7",
         "webstomp-client": "^1.2.6"
     },
     "devDependencies": {
