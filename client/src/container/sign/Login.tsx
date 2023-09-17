@@ -59,7 +59,7 @@ function Login() {
                             }}
                             onKeyDownHandler={onKeyDownHandler}
                             placeholder="이메일을 입력해주세요."
-                            borderStyle={`flex-1 rounded-none border-b-4 border-buttonborder outline-none focus:outline-none ${
+                            borderStyle={`flex-1 rounded-none border-b-3 border-buttonborder outline-none focus:outline-none ${
                                 isFailed ? "border-warn" : ""
                             }`}
                         />
@@ -73,7 +73,7 @@ function Login() {
                             onKeyDownHandler={onKeyDownHandler}
                             type="password"
                             placeholder="비밀번호을 입력해주세요."
-                            borderStyle={`flex-1 rounded-none border-b-4 border-buttonborder outline-none focus:outline-none ${
+                            borderStyle={`flex-1 rounded-none border-b-3 border-buttonborder outline-none focus:outline-none ${
                                 isFailed ? "border-warn" : ""
                             }`}
                         />
@@ -88,12 +88,17 @@ function Login() {
                         </Link>
                     </div>
                     <div className="mt-20 flex-col items-center justify-center">
-                        <Button type="BLACK" isFullBtn={true} onClickHandler={onClickLoginHandler}>
+                        <Button
+                            type="BLACK"
+                            styles="hover:bg-black/60"
+                            isFullBtn={true}
+                            onClickHandler={onClickLoginHandler}
+                        >
                             <Typography type="Highlight" text="로그인" color="text-white" />
                         </Button>
 
                         <Link to={"/signup/1"}>
-                            <div className="mt-10 flex w-300 justify-center rounded border-2 border-solid border-black p-6">
+                            <div className="mt-10 flex w-300 justify-center rounded border-2 border-solid border-black p-6 hover:bg-black/10">
                                 <Typography type="Highlight" text="회원가입" />
                             </div>
                         </Link>
