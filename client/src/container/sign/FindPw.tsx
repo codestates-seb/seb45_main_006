@@ -127,7 +127,7 @@ function FindPw() {
     // const randomId = getItemFromStorage("randomId");
 
     const [email, setEmail] = useState("");
-    const { reqAuthenticateEmail } = useAuthHelper();
+    const { reqTempPw } = useAuthHelper();
 
     if (isRedirected) {
         return (
@@ -143,7 +143,7 @@ function FindPw() {
                 <RequestEmailAuthenticate
                     email={email}
                     setEmail={setEmail}
-                    onHandleReqAuthForFindPw={() => reqAuthenticateEmail({ email })}
+                    onHandleReqAuthForFindPw={() => reqTempPw({ email })}
                 />
             ) : (
                 <EmailGuide />

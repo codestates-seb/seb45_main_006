@@ -15,7 +15,7 @@ import Button from "@component/Button";
 import Typography from "@component/Typography";
 import SignButton from "./component/SignButton";
 
-import { getItemFromStorage } from "@util/localstorage-helper";
+import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 function SetProOauth() {
     const memberId = getItemFromStorage("memberId");
@@ -50,6 +50,9 @@ function SetProOauth() {
             },
             {
                 onSuccess: () => {
+                    setItemToStorage("nickname", authNickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", "");
                     navigate("/signup/3");
                 },
 
@@ -60,6 +63,8 @@ function SetProOauth() {
             },
         );
     };
+    // localstorage 업데이트
+    // 수정할때마다 해야할듯
 
     return (
         <SignLayout title="Google Oauth 회원가입">

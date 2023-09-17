@@ -63,7 +63,7 @@ export const EditAnswer = ({
                         setContent("");
                         refetchAnswer();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();
@@ -143,7 +143,7 @@ export const OneAnswer = ({
                         });
                         refetchAnswer();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();
@@ -196,7 +196,7 @@ export const OneAnswer = ({
                         setNextComment("");
                         refecthAnswerComments();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();

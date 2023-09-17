@@ -9,7 +9,7 @@ import SetPro2 from "./setProfile2";
 import SetPro3 from "./setProfile3";
 import SetPro4 from "./setProfile4";
 import SetPro5 from "./setProfile5";
-import { getItemFromStorage } from "@util/localstorage-helper";
+import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 function SetPro() {
     const navigate = useNavigate();
@@ -22,6 +22,7 @@ function SetPro() {
 
     const memberId = getItemFromStorage("memberId");
     const nickname = getItemFromStorage("nickname");
+    const profilePicture = getItemFromStorage("profilePicture");
 
     const { fireToast, errorToast } = useToast();
     const { mutate: patchMember } = usePatchMember();
@@ -45,6 +46,9 @@ function SetPro() {
                         content: "등록 완료하였습니다.",
                         isConfirm: false,
                     });
+                    setItemToStorage("nickname", nickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", profilePicture);
                     navigate("/");
                 },
                 onError: (err) => {
@@ -55,8 +59,39 @@ function SetPro() {
         );
     };
 
+    const onHandleNextEditBtn = () => {
+        // TODO: S3 업로드
+        patchMember(
+            {
+                memberId: memberId,
+                nickname: nickname,
+                profilePicture: "",
+                githubId: "",
+                introduction: "",
+                listEnroll: 1,
+                stack: selectedStack,
+                position: selectedPostion,
+            },
+            {
+                onSettled: () => {
+                    setItemToStorage("nickname", nickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", profilePicture);
+                    navigate("/");
+                },
+            },
+        );
+    };
+
     if (curStage === 1) {
-        return <SetPro1 setCurStage={setCurStage} selectedTags={selectedStack} setSelectedTags={setSelectedStack} />;
+        return (
+            <SetPro1
+                setCurStage={setCurStage}
+                selectedTags={selectedStack}
+                setSelectedTags={setSelectedStack}
+                onHandleNextEditBtn={onHandleNextEditBtn}
+            />
+        );
     }
 
     if (curStage === 2) {

@@ -15,6 +15,7 @@ export default function InputForNumber({
     name,
     value = "",
     onChange,
+    borderStyle,
 }: IBoardInput) {
     return (
         <div className="my-10 flex flex-col p-10">
@@ -29,6 +30,7 @@ export default function InputForNumber({
                 placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange(e)}
+                borderStyle={borderStyle}
             />
         </div>
     );

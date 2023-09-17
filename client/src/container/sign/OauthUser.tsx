@@ -15,13 +15,15 @@ function OauthUser() {
         const refreshToken = new URL(location.href).searchParams.get("refresh_token");
         const memberId = new URL(location.href).searchParams.get("memberId");
         const nickname = new URL(location.href).searchParams.get("nickname");
-        setItemToStorage("accessToken", accessToken);
+
+        setItemToStorage("accessToken", accessToken?.split(" ")[1]);
         setItemToStorage("refreshToken", refreshToken);
         if (accessToken) {
             setItemToStorage("email", parseJwt(accessToken).username);
         }
         if (memberId) {
             setItemToStorage("memberId", Number.parseInt(memberId));
+            setItemToStorage("memberType", "OAUTH2");
         }
 
         if (nickname) {

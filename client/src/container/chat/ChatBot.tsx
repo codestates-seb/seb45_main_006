@@ -1,9 +1,9 @@
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
-import { useRecoilState } from "recoil";
-import { isChatBotShowAtom, chatBotStatusAtom } from "@feature/chat";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isChatBotShowAtom, chatBotStatusAtom, chatRoomIdAtom } from "@feature/chat";
 
-import { useGetChatRooms } from "@api/chat/hook";
+import { useGetChatRooms, useGetEnrollChatRoom } from "@api/chat/hook";
 
 import IconLogo from "@assets/icon_logo.png";
 import Typography from "@component/Typography";
@@ -13,13 +13,12 @@ import ChatRoomList from "./component/ChatRoomList";
 import ChatRoomItem from "./component/ChatRoomItem";
 
 function ChatBot() {
-    const { data: chats } = useGetChatRooms();
+    const { data: chats, refetch } = useGetChatRooms();
 
     const chatBtnRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
     const [chatBotStatus, setChatBotStatus] = useRecoilState(chatBotStatusAtom);
     const [isChatBotShow, setIsChatBotShow] = useRecoilState(isChatBotShowAtom);
-    // TODO: 채팅방 생성 후 채팅방 입장이 되지 않는 이슈 수정 필요
 
     const [isDescriptionShow, setIsDescriptionShow] = useState(true);
 
@@ -37,13 +36,23 @@ function ChatBot() {
     //     };
     // }, [isChatBotShow, setIsChatBotShow]);
 
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const chatRoomId = useRecoilValue(chatRoomIdAtom);
+    const { data: chatMessages } = useGetEnrollChatRoom({ chatRoomId });
+
     return (
         <div ref={chatBtnRef}>
             {isChatBotShow && (
-                <ol className="fixed bottom-100 right-30 h-500 w-300 overflow-auto rounded-md border-1 border-main bg-white p-8 shadow-sm shadow-main">
-                    {chatBotStatus === "LIST" && <ChatRoomList chats={chats} />}
+                <ol className="fixed bottom-100 right-30 h-500 w-300 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
+                    {chatBotStatus === "LIST" && <ChatRoomList chats={chats} refetch={refetch} />}
 
-                    {chatBotStatus === "DETAIL" && <ChatRoomItem />}
+                    {chatBotStatus === "DETAIL" && chatMessages && chatMessages.chatRoomId && (
+                        <ChatRoomItem chatMessages={chatMessages} />
+                    )}
                 </ol>
             )}
 

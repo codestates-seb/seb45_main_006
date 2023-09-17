@@ -2,9 +2,16 @@ import { AxiosError } from "axios";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { GetReqAllInfo, PostReqInfo, PatchReqInfo, DeleteReqInfo, PostReqViewCount } from "@type/info/info.req.dto";
-import { GetResAllInfo, PostResInfo, PatchResInfo, DeleteResInfo, PostResViewCount } from "@type/info/info.res.dto";
+import {
+    GetResAllInfo,
+    PostResInfo,
+    PatchResInfo,
+    DeleteResInfo,
+    PostResViewCount,
+    InfoDefaultType,
+} from "@type/info/info.res.dto";
 
-import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount } from "./api";
+import { getAllInfo, postInfo, patchInfo, deleteInfo, postViewCount, getDetailInfo } from "./api";
 import { infoKeyFactory } from "./infoKeyFactory";
 
 // 정보 게시판 - 리스트 조회
@@ -12,6 +19,14 @@ export const useGetAllInfo = ({ category, search, page, size }: GetReqAllInfo) =
     return useQuery<GetResAllInfo, AxiosError, GetResAllInfo>({
         queryKey: infoKeyFactory.all({ category, search, page, size }),
         queryFn: () => getAllInfo({ category, search, page, size }),
+    });
+};
+
+export const useGetDetailQuestion = ({ boardId }: { boardId: number }) => {
+    return useQuery<InfoDefaultType, AxiosError, InfoDefaultType>({
+        queryKey: infoKeyFactory.detail({ boardId }),
+        queryFn: () => getDetailInfo({ boardId }),
+        enabled: !!boardId,
     });
 };
 

@@ -40,7 +40,7 @@ const Board = () => {
         size: 8,
         stack: selectedStacks.join(","),
         title: search,
-        status: status ? "STUDY_POSTED" : "STUDY_DELETED",
+        status: status ? "STUDY_POSTED" : "STUDY_CLOSED",
     });
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

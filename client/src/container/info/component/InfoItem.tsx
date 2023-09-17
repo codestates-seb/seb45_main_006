@@ -114,9 +114,11 @@ const InfoTitle = ({
 function InfoItem({
     info,
     onClickDeleteHandler,
+    isDetail = false,
 }: {
     info: InfoDefaultType;
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+    isDetail?: boolean;
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -138,7 +140,7 @@ function InfoItem({
     const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
     const { fireToast, errorToast } = useToast();
 
-    const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(isDetail);
     const [comment, setComment] = useState<string>("");
 
     const { mutate: postViewCount } = usePostViewCount();
@@ -166,7 +168,7 @@ function InfoItem({
                         setComment("");
                         refetchComment();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();

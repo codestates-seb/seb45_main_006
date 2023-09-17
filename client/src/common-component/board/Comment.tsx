@@ -94,7 +94,7 @@ export const OneComment = ({
                         });
                         refetchComment();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();
@@ -262,7 +262,7 @@ export const OneComment = ({
             {Array.isArray(v.commentList) &&
                 v.commentList.length > 0 &&
                 v.commentList.map((v) => (
-                    <div className="flex" key={`${v.boardId}-${v.memberId}`}>
+                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
                         <div className="flex rotate-180 items-end p-8">
                             <BiReply />
                         </div>
@@ -290,7 +290,7 @@ export const ShowComment = ({
                 v={comment}
                 writerId={writerId}
                 boardId={comment.boardId}
-                key={`${comment.boardId}-${comment.memberId}`}
+                key={`${comment.commentId}-${comment.memberId}`}
                 refetchComment={refetchComment}
             />
         </div>

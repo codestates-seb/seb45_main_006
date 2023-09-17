@@ -4,7 +4,12 @@ import { authNicknameAtom, authCodeAtom, authCodeForPwAtom, authEmailAtom, authE
 import { useToast } from "@hook/useToast";
 
 import { usePostNickname } from "@api/sign/hook";
-import { usePostAuthForFindPw, usePostAuthForSignUp, usePostAuthForSignUpAuth } from "@api/auth/hook";
+import {
+    usePostAuthForFindPw,
+    usePostAuthForFindPwAuth,
+    usePostAuthForSignUp,
+    usePostAuthForSignUpAuth,
+} from "@api/auth/hook";
 import { useCheckValidValue } from "./useCheckValidValue";
 
 export const useAuthHelper = () => {
@@ -135,6 +140,40 @@ export const useAuthHelper = () => {
         );
     };
 
+    const { mutate: postAuthForFindPwAuth } = usePostAuthForFindPwAuth();
+
+    // 이메일 인증 POST 요청 api
+    const reqTempPw = ({ email }: { email: string }) => {
+        if (!email || !isEmailValid({ email })) {
+            fireToast({
+                content: "이메일 형식이 옳지 않습니다.",
+                isConfirm: false,
+                isWarning: true,
+            });
+            return;
+        }
+
+        postAuthForFindPwAuth(
+            { email: email },
+            {
+                onSuccess: () => {
+                    setAuthEmail(email);
+                    fireToast({
+                        content: `${email}로 인증코드를 보냈습니다.`,
+                        isConfirm: false,
+                    });
+                },
+                onError: () => {
+                    createToast({
+                        content: "해당 이메일을 가진 유저가 없습니다. 회원가입 화면으로 이동할까요?",
+                        isConfirm: true,
+                        callback: () => (window.location.href = "/signup/1"),
+                    });
+                },
+            },
+        );
+    };
+
     const { mutate: postAuthForFindPw } = usePostAuthForFindPw();
 
     // 비밀번호 재설정 요청 결과 GET 요청 api
@@ -189,7 +228,7 @@ export const useAuthHelper = () => {
                     });
                     setAuthEmailForPw(email);
                     setAuthCodeForPw(authCode);
-                    window.location.href = "/";
+                    window.location.href = "/login";
                 },
                 onError: () => {
                     fireToast({
@@ -204,5 +243,5 @@ export const useAuthHelper = () => {
         );
     };
 
-    return { postCheckNickname, reqAuthenticateEmail, postCheckAuthCode, postCheckAuthPw };
+    return { postCheckNickname, reqAuthenticateEmail, postCheckAuthCode, reqTempPw, postCheckAuthPw };
 };

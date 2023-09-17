@@ -18,8 +18,8 @@ type IButton = {
 //     [key: ISize]: string;
 // };
 
-const SIZE_CSS = { 
-    // TODO : 버튼 큰 것은 rounded-43px(padding 8px) / 작은 것은 20px(padding 12px)인데 
+const SIZE_CSS = {
+    // TODO : 버튼 큰 것은 rounded-43px(padding 8px) / 작은 것은 20px(padding 12px)인데
     // 이미 다른 사이즈를 사용중인것 같아서 혹시몰라.. 따로 변경하지 않았어요
 
     SM: "w-fit px-12 py-8 rounded-3xl",

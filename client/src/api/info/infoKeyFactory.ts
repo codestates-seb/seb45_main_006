@@ -5,4 +5,5 @@ export const infoKeyFactory = {
         "info",
         { category, search, page, size },
     ],
+    detail: ({ boardId }: { boardId: number }) => ["info", { boardId }],
 };

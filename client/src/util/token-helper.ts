@@ -67,4 +67,5 @@ export const setTokenToLocalStorage = ({
     setItemToStorage("refreshToken", refreshToken);
     setItemToStorage("memberId", memberId);
     setItemToStorage("email", parsedToken.username);
+    setItemToStorage("memberType", "REGULAR");
 };

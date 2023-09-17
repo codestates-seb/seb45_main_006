@@ -10,12 +10,14 @@ function UserProfile({ size, mine = false, profilePicture }: { size: ISize; mine
     const memberId = getItemFromStorage("memberId");
     const nickname = getItemFromStorage("nickname");
     const myProfilePicture = getItemFromStorage("profilePicture");
+    const memberType = getItemFromStorage("memberType");
+    const ouathUser = memberType && memberType === "OAUTH2" ? `/members/my` : `/members/auth`;
 
     if (size === "sm") {
         return (
             <div className="flex items-center">
                 <Link
-                    to={mine ? `/members/auth` : `/members/${memberId}`}
+                    to={mine ? ouathUser : `/members/${memberId}`}
                     className="mr-8 h-36 w-36 overflow-hidden rounded border-1 border-borderline"
                 >
                     <img width={36} height={36} src={myProfilePicture || profilePicture || DefaultUser} alt="" />

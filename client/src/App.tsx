@@ -10,6 +10,7 @@ import ErrorPage from "@container/ErrorPage";
 import Main from "@container/main/Main";
 import AuthUser from "@container/mypage/AuthUser";
 import MyPage from "@container/mypage/MyPage";
+import Attendance from "@container/mypage/component/Attendance";
 import TodoList from "@container/todo/TodoList";
 import TodoDetail from "@container/todo/TodoDetail";
 import CreateTodo from "@container/todo/CreateTodo";
@@ -31,8 +32,10 @@ import ToastList from "@component/ToastList";
 import UserList from "@container/user/List";
 import UserDetail from "@container/user/UserDetail";
 import InfoBoard from "@container/info/Board";
+import InfoDetail from "@container/info/Detail";
 import InfoRegister from "@container/info/Register";
 import QuestionBoard from "@container/question/Board";
+import QuestionDetail from "@container/question/Detail";
 import QuestionRegister from "@container/question/Register";
 
 // Header 컴포넌트가 필요할 경우 0번째 요소 children 안에 작성
@@ -87,6 +90,10 @@ const router = createBrowserRouter([
             {
                 path: "/members/my",
                 element: <MyPage />,
+            },
+            {
+                path: "/attendance",
+                element: <Attendance />,
             },
             {
                 path: "/login",
@@ -145,6 +152,10 @@ const router = createBrowserRouter([
                 element: <InfoBoard />,
             },
             {
+                path: "/infos/:infoId",
+                element: <InfoDetail />,
+            },
+            {
                 path: "/infos/add",
                 element: <InfoRegister />,
             },
@@ -159,6 +170,10 @@ const router = createBrowserRouter([
             {
                 path: "/questions/add",
                 element: <QuestionRegister />,
+            },
+            {
+                path: "/questions/:questionId",
+                element: <QuestionDetail />,
             },
             {
                 path: "/questions/:questionId/edit",
@@ -190,6 +205,7 @@ const queryClient = new QueryClient({
 });
 
 queryClient.invalidateQueries({ queryKey: ["projects"] });
+queryClient.invalidateQueries({ queryKey: ["chats"] });
 
 function App() {
     return (
