@@ -87,7 +87,8 @@ function Text({
 
         if (type === "SmallLabel") {
             return (
-                <p key={key} className={`text-sm ${colorAndStyle}`}>
+                // eslint-disable-next-line tailwindcss/no-custom-classname
+                <p key={key} className={`text-md font-gangwon ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );
@@ -95,7 +96,7 @@ function Text({
 
         if (type === "Description") {
             return (
-                <p key={key} className={`text-xs ${colorAndStyle}`}>
+                <p key={key} className={`font-gangwon text-sm ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );

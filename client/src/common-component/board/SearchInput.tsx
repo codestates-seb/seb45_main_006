@@ -21,7 +21,7 @@ function SearchInput({ value, onChange, placeholder, onClickSearchHandler }: ISe
                 onKeyDownHandler={onKeyDownHandler}
                 placeholder={placeholder}
                 maxlength={100}
-                borderStyle="border-1 border-borderline"
+                borderStyle="border-2 border-borderline"
             />
             <button className="absolute right-10 top-8" onClick={onClickSearchHandler}>
                 <img src={search} className="h-20 w-20" />
