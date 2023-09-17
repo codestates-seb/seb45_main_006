@@ -81,7 +81,7 @@ const Details = () => {
 
                                 <Typography
                                     type="Body"
-                                    text={(study && Array.isArray(study?.stack) && study.stack.join(", ")) || ""}
+                                    text={(study && Array.isArray(study?.stacks) && study.stacks.join(", ")) || ""}
                                     color="text-blue-800"
                                 />
                             </li>
