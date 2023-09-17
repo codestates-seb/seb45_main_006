@@ -8,6 +8,8 @@ export type ITextType =
     | "Label"
     | "Highlight"
     | "Body"
+    | "DetailBody"
+    | "Recruit"
     | "SmallLabel"
     | "Description";
 
@@ -69,6 +71,15 @@ function Text({
         if (type === "Body") {
             return (
                 <p key={key} className={`text-base ${colorAndStyle}`}>
+                    {textValue}
+                </p>
+            );
+        }
+
+        if (type === "Recruit") {
+            return (
+                // eslint-disable-next-line tailwindcss/no-custom-classname
+                <p key={key} className={`text-md font-gangwon ${colorAndStyle}`}>
                     {textValue}
                 </p>
             );

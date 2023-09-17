@@ -65,8 +65,8 @@ const Details = () => {
             <div className="m-20 flex gap-20">
                 <section className="relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline">
                     <div>
-                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline ">
-                            <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline font-gangwon ">
+                            <Typography type="Recruit" text="모집중" styles="text-white" />
                         </div>
                         <h3 className="mx-20 mt-40">
                             <div className="mx-4 text-40 font-bold">{study?.title || ""}</div>
@@ -74,7 +74,7 @@ const Details = () => {
                         <ul className="flex flex-col p-20">
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 상세내용" />
-                                <div className="mx-4 my-6">{study?.content || ""}</div>
+                                <div className="mx-4 my-6 font-gangwon text-lg">{study?.content || ""}</div>
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 요구 스택" />
@@ -89,7 +89,7 @@ const Details = () => {
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 인원" />
 
-                                <div className="mx-4 my-6">{study?.recruitNum || 0}명</div>
+                                <div className="mx-4 my-6 font-gangwon text-lg">{study?.recruitNum || 0}명</div>
                             </li>
                         </ul>
                     </div>

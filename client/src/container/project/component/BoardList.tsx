@@ -18,12 +18,12 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
         >
             <div>
                 {project.projectStatus === "PROJECT_POSTED" ? (
-                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline ">
-                        <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline font-gangwon ">
+                        <Typography type="Recruit" text="모집중" styles="text-white" />
                     </div>
                 ) : (
                     <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600">
-                        <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                        <Typography type="Recruit" text="모집완료" styles="text-white" />
                     </div>
                 )}
                 <h1 className="my-4 text-24 font-bold">{project.title}</h1>
@@ -33,7 +33,7 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                             return <Tag key={`${project.boardId}-tag-${v}`} type="PROJECT" text={v} />;
                         })}
                 </div>
-                <div className="mt-4 text-14 text-gray-600">
+                <div className="mt-4 font-gangwon text-16 text-gray-600">
                     {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.startDate).format("MM-DD")}`}
                     <span> ~ </span>
                     {`${dayjs(project.createdAt).format("YYYY-")}${dayjs(project.deadline).format("MM-DD")}`}

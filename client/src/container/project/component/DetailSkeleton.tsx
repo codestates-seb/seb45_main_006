@@ -10,8 +10,8 @@ const DetailSkeleton = () => {
             <div className="m-20 flex gap-20">
                 <section className="relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline">
                     <div>
-                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline ">
-                            <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                        <div className="absolute left-16 top-10 flex w-48 items-center justify-center rounded bg-deadline font-gangwon ">
+                            <Typography type="Recruit" text="모집중" styles="text-white" />
                         </div>
                         <h3 className="mx-20 mt-40 min-h-60">
                             <div className="h-50 w-300 rounded-md bg-gray-200 dark:bg-gray-700"></div>

@@ -15,13 +15,13 @@ const StudyList = ({ study }: { study: CommonResStudies }) => {
             className="m-10 flex h-300 w-260 cursor-pointer flex-col justify-between rounded-lg border-2 border-solid border-study p-20 shadow-lg transition-transform hover:scale-105 hover:bg-gray-100"
         >
             <div>
-                {study.recruitStatus === "STUDY_POSTED" ? (
-                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline ">
-                        <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                {study.studyStatus === "STUDY_POSTED" ? (
+                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline font-gangwon ">
+                        <Typography type="Recruit" text="모집중" styles="text-white" />
                     </div>
                 ) : (
-                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600">
-                        <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600 font-gangwon">
+                        <Typography type="Recruit" text="모집완료" styles="text-white" />
                     </div>
                 )}
                 <h1 className="my-20 cursor-pointer text-24 font-bold">{study.title}</h1>
