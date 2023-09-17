@@ -29,7 +29,7 @@ function SignUp2() {
     const { errorToast, fireToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
 
-    const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();
+    const { alertWhenEmptyFn, isPasswordVaid, isEmailValid } = useCheckValidValue();
 
     // 사용자 입력값
     const [email, setEmail] = useState(redirectedEmail || "");
@@ -94,10 +94,7 @@ function SignUp2() {
                     setAuthNickname("");
                     onHandleLogin({ email, password, routePath: "/signup/3" });
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -129,6 +126,10 @@ function SignUp2() {
                         type="STUDY"
                         styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
                         onClickHandler={() => {
+                            if (!email || !isEmailValid({ email })) {
+                                fireToast({ content: "이메일을 형식에 맞게 입력해주세요.", isConfirm: false });
+                                return;
+                            }
                             setIsRequestedAuthEmail(true);
                             reqAuthenticateEmail({ email });
                         }}
@@ -151,6 +152,10 @@ function SignUp2() {
                             type="STUDY"
                             styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
                             onClickHandler={() => {
+                                if (!authCode) {
+                                    fireToast({ content: "인증번호를 입력해주세요.", isConfirm: false });
+                                    return;
+                                }
                                 setIsRequestedAuthCode(true);
                                 postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue });
                             }}
@@ -174,6 +179,10 @@ function SignUp2() {
                         type="STUDY"
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                         onClickHandler={() => {
+                            if (!nickname) {
+                                fireToast({ content: "닉네임을 입력해주세요.", isConfirm: false });
+                                return;
+                            }
                             setIsRequestedNickname(true);
                             postCheckNickname({ nickname });
                         }}

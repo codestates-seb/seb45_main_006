@@ -51,10 +51,7 @@ function UserBlockModal({
                         });
                         refetchAllMembers();
                     },
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }

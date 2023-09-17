@@ -51,8 +51,7 @@ function Attendance() {
                     });
                 },
                 onError: (err) => {
-                    console.log(err);
-                    errorToast();
+                    errorToast(err);
                     setItemToStorage("attendedDate", dayjs().format("YYYY-MM-DD"));
                 },
             },

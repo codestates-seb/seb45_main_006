@@ -60,10 +60,7 @@ function UserPw() {
                     });
                     setSearchParams({ auth, tab, nav: "edit" });
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };

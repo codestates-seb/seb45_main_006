@@ -95,10 +95,7 @@ const InfoOfMember = ({ memberId }: { memberId: number }) => {
                             });
                             refetchInfo();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -153,10 +150,7 @@ const QuestionOfMember = ({ memberId }: { memberId: number }) => {
                             });
                             refetchQuestions();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

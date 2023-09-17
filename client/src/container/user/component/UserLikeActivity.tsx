@@ -98,10 +98,7 @@ const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "b
                             });
                             refetchInfo();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -156,10 +153,7 @@ const QuestionOfMember = ({ memberId, type }: { memberId: number; type: "likes" 
                             });
                             refetchQuestions();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

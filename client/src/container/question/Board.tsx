@@ -86,10 +86,7 @@ function Board() {
                             });
                             refetchQuestions();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

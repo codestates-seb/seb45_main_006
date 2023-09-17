@@ -74,10 +74,7 @@ const Details = () => {
                             });
                             navigate("/studies");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -103,9 +100,7 @@ const Details = () => {
                         setComment("");
                         refetchComment();
                     },
-                    onError: () => {
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }

@@ -56,10 +56,7 @@ function SetProOauth() {
                     navigate("/signup/3");
                 },
 
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };

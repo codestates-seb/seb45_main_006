@@ -32,10 +32,7 @@ function Detail() {
                             });
                             navigate("/infos");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

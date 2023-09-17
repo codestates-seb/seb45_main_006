@@ -32,10 +32,7 @@ function Detail() {
                             });
                             navigate("/questions");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

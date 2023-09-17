@@ -67,10 +67,7 @@ export const useCheckChat = ({ memberId }: { memberId: number }) => {
                         console.log("2 ???");
                         onClickChatRoomHandler();
                     },
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         };

@@ -82,10 +82,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", user.profilePicture);
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -109,10 +106,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                             });
                             navigate("/");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 ),
         });
