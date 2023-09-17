@@ -17,9 +17,15 @@ const BoardList = ({ study }: { study: CommonResStudies }) => {
             className="my-10 flex w-full cursor-pointer justify-between rounded-lg border-2 border-solid border-borderline p-20 shadow-lg transition-transform hover:scale-y-105 hover:bg-gray-100"
         >
             <div>
-                <div className="flex w-48 items-center justify-center rounded bg-deadline font-gangwon">
-                    <Typography type="Recruit" text="모집중" styles="text-white" />
-                </div>
+                {study.studyStatus === "STUDY_POSTED" ? (
+                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline">
+                        <Typography type="Recruit" text="모집중" styles="text-white" />
+                    </div>
+                ) : (
+                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600">
+                        <Typography type="Recruit" text="모집완료" styles="text-white" />
+                    </div>
+                )}
                 <h1 className="my-4 cursor-pointer text-24 font-bold">{study.title}</h1>
                 <div className="flex min-h-28">
                     {Array.isArray(study.stacks) &&

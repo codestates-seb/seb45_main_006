@@ -151,13 +151,13 @@ const Details = () => {
                         <ul className="flex flex-col p-20">
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 상세내용" />
-                                <div className="mx-4 my-6 font-gangwon text-lg">{projectInputs?.content || ""}</div>
+                                <Typography type="Recruit" text={projectInputs?.content || ""} />
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 요구 스택" />
 
                                 <Typography
-                                    type="Body"
+                                    type="Recruit"
                                     text={
                                         (projectInputs &&
                                             Array.isArray(projectInputs?.stack) &&
@@ -169,14 +169,17 @@ const Details = () => {
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 기간" />
-                                <div className="mx-4 my-6 font-gangwon text-lg">
-                                    {projectInputs?.startDate || ""} ~ {projectInputs?.deadline || ""}
+                                <div className="mx-4 my-6">
+                                    <Typography
+                                        type="Recruit"
+                                        text={`${projectInputs?.startDate || ""} ~ ${projectInputs?.deadline || ""}`}
+                                    />
                                 </div>
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 인원" />
 
-                                <div className="mx-4 my-6 font-gangwon text-lg">{projectInputs?.recruitNum || 0}명</div>
+                                <Typography type="Recruit" text={`${projectInputs?.recruitNum || 0}명`} />
                             </li>
                         </ul>
                     </div>
@@ -228,9 +231,7 @@ const Details = () => {
                     )}
                 </div>
             </div>
-            <div className="mb-10 ml-20">
-                <Typography type="Label" text="댓글 0개" />
-            </div>
+
             <div className="p-8">
                 <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
                 {isLoggedIn && <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />}

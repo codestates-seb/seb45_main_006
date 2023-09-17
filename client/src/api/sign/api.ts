@@ -24,7 +24,7 @@ export const postLogin = async (requestObj: PostReqLogin) => {
     return data;
 };
 
-// TODO: API 헤더 - 로그아웃
+// API 헤더 - 로그아웃
 export const deleteLogout = async (requestObj: DeleteReqLogout) => {
     const url = `${COMMON_API_PATH.SIGN.LOGOUT}`;
     const { data } = await withAuthApi.delete(url, { data: requestObj });

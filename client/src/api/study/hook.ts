@@ -15,7 +15,7 @@ import {
     PostReqStudy,
 } from "@type/study/study.req.dto";
 import { studyKeyFactory } from "./studyKeyFactory";
-import { deleteStudy, getAllStudies, getDetailStudy, patchStudy, postStudy } from "./api";
+import { deleteStudy, getAllStudies, getDetailStudy, patchStudy, postStudy, patchCloseStudy } from "./api";
 
 // 스터디 - 전체 조회하기
 export const useGetAllStudies = ({ page, size, stack, title, status }: GetReqAllStudies) => {
@@ -43,4 +43,8 @@ export const usePatchStudy = () => {
 // 스터디 - 정보 삭제하기
 export const useDeleteStudy = () => {
     return useMutation<DeleteResStudy, AxiosError, DeleteReqStudy>(deleteStudy);
+};
+
+export const usePatchCloseStudy = () => {
+    return useMutation(patchCloseStudy);
 };

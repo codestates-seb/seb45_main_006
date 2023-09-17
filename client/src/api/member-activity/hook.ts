@@ -56,7 +56,7 @@ export const useGetQuestionOfMember = ({ page, memberId }: PagingWithId) => {
     });
 };
 
-// TODO: API - 나의 레벨 조회
+// API - 나의 레벨 조회
 export const useGetMyLevel = () => {
     return useQuery<GetResMyLevel, AxiosError, GetResMyLevel>({
         queryKey: ["level", { isMine: true }],
@@ -65,7 +65,7 @@ export const useGetMyLevel = () => {
     });
 };
 
-// TODO: API - 출석
+// API - 출석
 export const usePostAttendance = () => {
     return useMutation<Record<string, never>, AxiosError, Record<string, never>>(postAttendance);
 };

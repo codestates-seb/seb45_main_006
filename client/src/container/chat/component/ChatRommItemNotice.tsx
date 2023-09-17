@@ -38,8 +38,8 @@ function ChatRommItemNotice({
                                                 ? `${latestNotice.content.substring(0, 17)}...`
                                                 : latestNotice.content || ""
                                         }
-                                        type="Highlight"
-                                        styles="font-ganpan ml-8"
+                                        type="SmallLabel"
+                                        styles="ml-8"
                                     />
                                 </div>
                                 <div className="w-full text-right">
@@ -47,7 +47,6 @@ function ChatRommItemNotice({
                                         text={dayjs(latestNotice.createAt).tz("Asia/Seoul").format("YYYY-MM-DD hh:mm")}
                                         type="Description"
                                         color="font-gray-600"
-                                        styles="font-ganpan"
                                     />
                                 </div>
                             </>
@@ -60,14 +59,13 @@ function ChatRommItemNotice({
                             <AccordionBody key={v.createAt}>
                                 <div className="border-b-1 border-borderline p-8">
                                     <div className="flex w-full items-center">
-                                        <Typography text={v.content} type="Highlight" styles="font-ganpan ml-8" />
+                                        <Typography text={v.content} type="SmallLabel" styles="ml-8" />
                                     </div>
                                     <div className="w-full text-right">
                                         <Typography
                                             text={dayjs(v.createAt).tz("Asia/Seoul").format("YYYY-MM-DD hh:mm")}
                                             type="Description"
                                             color="font-gray-600"
-                                            styles="font-ganpan"
                                         />
                                     </div>
                                 </div>

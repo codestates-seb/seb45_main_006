@@ -17,6 +17,7 @@ export default function BoardInput({
     name,
     value = "",
     onChange,
+    borderStyle,
 }: IBoardInput) {
     return (
         <div className="my-10 flex flex-col p-10">
@@ -33,6 +34,7 @@ export default function BoardInput({
                 placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange(e)}
+                borderStyle={borderStyle}
             />
         </div>
     );

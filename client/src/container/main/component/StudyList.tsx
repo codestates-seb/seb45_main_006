@@ -16,11 +16,11 @@ const StudyList = ({ study }: { study: CommonResStudies }) => {
         >
             <div>
                 {study.studyStatus === "STUDY_POSTED" ? (
-                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline font-gangwon ">
+                    <div className="flex h-24 w-54 items-center justify-center rounded bg-deadline">
                         <Typography type="Recruit" text="모집중" styles="text-white" />
                     </div>
                 ) : (
-                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600 font-gangwon">
+                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600">
                         <Typography type="Recruit" text="모집완료" styles="text-white" />
                     </div>
                 )}

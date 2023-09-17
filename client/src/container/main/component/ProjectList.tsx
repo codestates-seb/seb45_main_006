@@ -19,7 +19,7 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
                         <Typography type="Recruit" text="모집중" styles="text-white" />
                     </div>
                 ) : (
-                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600 font-gangwon">
+                    <div className="flex h-24 w-64 items-center justify-center rounded bg-gray-600 ">
                         <Typography type="Recruit" text="모집완료" styles="text-white" />
                     </div>
                 )}

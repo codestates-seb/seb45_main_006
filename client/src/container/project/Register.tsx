@@ -70,6 +70,8 @@ export default function Register() {
             setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
             setSelectedStack(prevStack || []);
             setPrevProjectStatus(projectStatus);
+            if (projectStatus === "PROJECT_POSTED") setSelectedOption("모집중");
+            else setSelectedOption("모집완료");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -123,7 +125,7 @@ export default function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
+
                 onError: (err) => {
                     console.log(err);
                     fireToast({
@@ -139,11 +141,25 @@ export default function Register() {
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
+        if (prevProjectStatus && prevProjectStatus === "PROJECT_CLOSED" && selectedOption === "모집중") {
+            closeProject(
+                { boardId: location.state.boardId },
+                {
+                    onSuccess: () => {
+                        navigate(`/projects/${location.state.boardId}`);
+
+                        fireToast({
+                            content: "게시글이 수정되었습니다!",
+                            isConfirm: false,
+                        });
+                    },
+                },
+            );
+            return;
+        }
+
         if (prevProjectStatus) {
-            if (
-                (prevProjectStatus === "PROJECT_POSTED" && selectedOption === "모집완료") ||
-                (prevProjectStatus === "PROJECT_DELETED" && selectedOption === "모집중")
-            ) {
+            if (prevProjectStatus === "PROJECT_POSTED" && selectedOption === "모집완료") {
                 closeProject({ boardId: location.state.boardId });
             }
         }
@@ -152,7 +168,7 @@ export default function Register() {
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                // recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
+                // recruitStatus: selectedOption === "모집완료" ? "PROJECT_CLOSED" : "PROJECT_POSTED",
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),
@@ -169,7 +185,7 @@ export default function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
+
                 onError: (err) => {
                     console.log(err);
                     fireToast({
@@ -197,6 +213,8 @@ export default function Register() {
                         value={inputs.title}
                         onChange={handleInput}
                         maxlength={20}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
                     <BoardTextarea
                         name="content"
@@ -205,7 +223,8 @@ export default function Register() {
                         placeholder="ex) 카메라 서비스 개발"
                         value={inputs.content}
                         onChange={handleInput}
-                        borderStyle={""}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
                     <div className="my-10 p-10">
                         <div className="flex">
@@ -218,6 +237,7 @@ export default function Register() {
                             selectedTags={selectedStack}
                             setSelectedTags={setSelectedStack}
                             defaultSuggestions={defaultStack}
+                            borderColor="border-project"
                         />
                     </div>
                     {curActivity === "REGISTER" ? (
@@ -242,6 +262,7 @@ export default function Register() {
                         setStartDate={setStartDate}
                         deadline={deadline}
                         setDeadline={setDeadline}
+                        borderColor="border-project"
                     />
                     <InputForNumber
                         name="recruitNum"
@@ -250,6 +271,8 @@ export default function Register() {
                         placeholder="ex) 6"
                         value={inputs.recruitNum}
                         onChange={handleNumberInput}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (

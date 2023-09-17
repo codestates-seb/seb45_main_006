@@ -35,7 +35,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     const [chatList, setChatList] = useState<MessageItem[]>([]);
 
     // 웹소켓으로 전달받은 메시지
-    const [recievedMsg, setRecievedMsg] = useState<MessageItem[]>([]);
+    // const [recievedMsg, setRecievedMsg] = useState<MessageItem[]>([]);
     // 웹소켓으로 전달하려는 메시지
     const [curMesg, setCurMsg] = useState("");
     const [isConnected, setIsConnected] = useState(false);
@@ -50,7 +50,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
         setNotice([]);
         setLatestNotice(null);
         setBasic([]);
-        setRecievedMsg([]);
+        // setRecievedMsg([]);
         setCurMsg("");
         setIsConnected(false);
         chatMessages.messageList.forEach((v) => {
@@ -63,8 +63,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
                 setBasic((prevBasic) => [...prevBasic, v]);
             }
         });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatMessages]);
 
     useEffect(() => {
@@ -74,7 +72,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     }, [notice]);
 
     useEffect(() => {
-        setRecievedMsg([]);
+        // setRecievedMsg([]);
 
         if (chatMessages.chatRoomId) {
             const socket = new WebSocket(VITE_APP_WEB_SOCKET_HOST_NAME as string);
@@ -161,9 +159,9 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
         <>
             <div className="relative mb-8 flex min-h-423 flex-1 flex-col justify-between bg-white">
                 <ChatRommItemNotice notice={notice} latestNotice={latestNotice} />
-                <div className="h-60"></div>
+                <div className="h-63"></div>
                 <div className="h-373 py-8">
-                    <div className="flex max-h-340 w-full flex-col overflow-y-scroll px-4" id="chatBox">
+                    <div className="flex max-h-373 w-full flex-col overflow-y-scroll px-4" id="chatBox">
                         {basic.length > 0 && basic.map((v) => <ChatMessageContent v={v} />)}
                         {chatList.map((v) => (
                             <MessageItemContent v={v} />
@@ -179,7 +177,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
                         onChange={(e) => setCurMsg(e.currentTarget.value)}
                         onKeyDownHandler={onKeyDownHandler}
                         maxlength={1000}
-                        borderStyle="h-50"
+                        borderStyle="h-50 outline-none hover:outline-none"
                     />
                 </div>
                 {isConnected && (

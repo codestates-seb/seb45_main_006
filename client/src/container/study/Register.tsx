@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { defaultStackAtom } from "@feature/Global";
 
-import { usePostStudy } from "@api/study/hook";
+import { usePostStudy, usePatchStudy, usePatchCloseStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
 import { useCheckValidValue } from "@hook/useCheckValidValue";
 import { useCheckCurActivity } from "@hook/useCheckCurActivity";
@@ -28,6 +28,8 @@ export default function Register() {
     const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
 
     const { mutate: postStudy } = usePostStudy();
+    const { mutate: patchStudy } = usePatchStudy();
+    const { mutate: closeStudy } = usePatchCloseStudy();
     const { fireToast } = useToast();
     const { alertWhenEmptyFn } = useCheckValidValue();
 
@@ -37,7 +39,6 @@ export default function Register() {
         recruitNum: 0,
     });
 
-    const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
     const [prevStudyStatus, setPrevStudyStatus] = useState("");
     console.log("수정 시 적용할 내용", prevStudyStatus);
 
@@ -59,6 +60,8 @@ export default function Register() {
 
             setSelectedStack(prevStack || []);
             setPrevStudyStatus(studyStatus);
+            if (studyStatus === "STUDY_POSTED") setSelectedOption("모집중");
+            else setSelectedOption("모집완료");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -85,7 +88,7 @@ export default function Register() {
         setSelectedOption(option);
     };
 
-    const onPostClickHandler = async () => {
+    const isEmpty = () => {
         const registerInputs = [
             { name: "스터디명", content: inputs.title },
             { name: "스터디 상세내용", content: inputs.content },
@@ -93,32 +96,92 @@ export default function Register() {
             { name: "요구 스택", content: selectedStack.join(", ") },
         ];
         const emptyNames = alertWhenEmptyFn(registerInputs);
+        return emptyNames.length !== 0;
+    };
 
-        if (emptyNames.length === 0) {
-            const recruitNum =
-                typeof inputs.recruitNum === "string" ? Number.parseInt(inputs.recruitNum) : inputs.recruitNum;
-            postStudy(
-                { ...inputs, stack: selectedStack, recruitNum },
+    const onPostClickHandler = async () => {
+        if (isEmpty()) return;
+        const recruitNum =
+            typeof inputs.recruitNum === "string" ? Number.parseInt(inputs.recruitNum) : inputs.recruitNum;
+        postStudy(
+            { ...inputs, stack: selectedStack, recruitNum },
+            {
+                onSuccess: (res) => {
+                    const boardId = res.boardId;
+                    navigate(`/studies/${boardId}`);
+                    fireToast({
+                        content: "게시글이 등록되었습니다!",
+                        isConfirm: false,
+                    });
+                },
+                onError: (err) => {
+                    console.log(err);
+                    fireToast({
+                        content: "게시글 등록 중 에러가 발생하였습니다🥹",
+                        isConfirm: false,
+                        isWarning: true,
+                    });
+                },
+            },
+        );
+    };
+
+    const onPatchClickHandler = () => {
+        if (isEmpty()) return;
+
+        if (prevStudyStatus && prevStudyStatus === "STUDY_CLOSED" && selectedOption === "모집중") {
+            closeStudy(
+                { boardId: location.state.boardId },
                 {
-                    onSuccess: (res) => {
-                        const boardId = res.boardId;
-                        navigate(`/studies/${boardId}`);
+                    onSuccess: () => {
+                        navigate(`/studies/${location.state.boardId}`);
+
                         fireToast({
-                            content: "게시글이 등록되었습니다!",
+                            content: "게시글이 수정되었습니다!",
                             isConfirm: false,
-                        });
-                    },
-                    onError: (err) => {
-                        console.log(err);
-                        fireToast({
-                            content: "게시글 등록 중 에러가 발생하였습니다🥹",
-                            isConfirm: false,
-                            isWarning: true,
                         });
                     },
                 },
             );
+            return;
         }
+
+        if (prevStudyStatus) {
+            if (prevStudyStatus === "STUDY_POSTED" && selectedOption === "모집완료") {
+                console.log("??");
+                closeStudy({ boardId: location.state.boardId });
+            }
+        }
+
+        patchStudy(
+            {
+                ...inputs,
+                boardId: location.state.boardId,
+                // recruitStatus: selectedOption === "모집완료" ? "STUDY_CLOSED" : "STUDY_POSTED",
+                stack: selectedStack,
+            },
+            {
+                onSuccess: () => {
+                    if (selectedOption === "모집완료") {
+                        navigate(`/studies`);
+                    } else {
+                        navigate(`/studies/${location.state.boardId}`);
+                    }
+                    fireToast({
+                        content: "게시글이 수정되었습니다!",
+                        isConfirm: false,
+                    });
+                },
+
+                onError: () => {
+                    fireToast({
+                        content: "게시글 수정 중 에러가 발생하였습니다🥹",
+                        isConfirm: false,
+                        isWarning: true,
+                    });
+                },
+            },
+        );
     };
 
     const defaultStack = useRecoilValue(defaultStackAtom);
@@ -185,14 +248,25 @@ export default function Register() {
                         onChange={handleNumberInput}
                     />
                     <div className="flex w-full justify-center">
-                        <Button
-                            type="STUDY_POINT"
-                            styles="mb-20 shadow-md hover:bg-green-400"
-                            isFullBtn={false}
-                            onClickHandler={onPostClickHandler}
-                        >
-                            <Typography text="등록하기" type="Label" color="text-white" />
-                        </Button>
+                        {curActivity === "REGISTER" ? (
+                            <Button
+                                type="STUDY_POINT"
+                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                isFullBtn={false}
+                                onClickHandler={onPostClickHandler}
+                            >
+                                <Typography text="등록하기" type="Label" color="text-white" />
+                            </Button>
+                        ) : (
+                            <Button
+                                type="STUDY_POINT"
+                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                isFullBtn={false}
+                                onClickHandler={onPatchClickHandler}
+                            >
+                                <Typography text="수정하기" type="Label" color="text-white" />
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

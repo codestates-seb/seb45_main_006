@@ -25,23 +25,25 @@ function Textarea({
 }: ITextarea) {
     return (
         <div className="relative w-full">
-            <textarea
-                name={name}
-                disabled={disabled}
-                className={`min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight ${
-                    borderStyle ? borderStyle : ""
-                }`}
-                minLength={minlength}
-                maxLength={maxlength}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-                onKeyDown={(e) => {
-                    if (onKeyDownHandler) {
-                        onKeyDownHandler(e);
-                    }
-                }}
-            />
+            <div className="font-gangwon">
+                <textarea
+                    name={name}
+                    disabled={disabled}
+                    className={`min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight ${
+                        borderStyle ? borderStyle : ""
+                    }`}
+                    minLength={minlength}
+                    maxLength={maxlength}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    onKeyDown={(e) => {
+                        if (onKeyDownHandler) {
+                            onKeyDownHandler(e);
+                        }
+                    }}
+                />
+            </div>
             <Typography
                 type="Description"
                 text={`${value.length} / ${maxlength}`}

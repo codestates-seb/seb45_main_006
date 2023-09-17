@@ -168,7 +168,7 @@ function InfoItem({
                         setComment("");
                         refetchComment();
                     },
-                    // TODO: 에러 분기
+
                     onError: (err) => {
                         console.log(err);
                         errorToast();

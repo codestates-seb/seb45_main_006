@@ -12,6 +12,7 @@ type IAutoCompletionTags = {
     selectedTags: Array<string>;
     defaultSuggestions: Array<string>;
     setSelectedTags: (tags: Array<string>) => void;
+    borderColor?: string;
 };
 
 function AutoCompletionTags({
@@ -21,6 +22,7 @@ function AutoCompletionTags({
     selectedTags,
     defaultSuggestions,
     setSelectedTags,
+    borderColor,
 }: IAutoCompletionTags) {
     const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
     const [isDropDownShow, setIsDropDownShow] = useState(false);
@@ -52,48 +54,55 @@ function AutoCompletionTags({
     }, [isDropDownShow]);
 
     return (
-        <div className="flex w-full flex-col py-10">
+        <div className="font-gangwon">
             <div
-                className={`flex flex-col justify-start border-borderline bg-white px-4 py-6 shadow-sm ${
-                    type === "OUTLINED" ? "rounded-md border-1" : "border-b-1"
-                }`}
-                ref={dropdownRef}
-                onClick={() => setIsDropDownShow(true)}
+                className={`flex w-full flex-col bg-white ${
+                    type === "OUTLINED" ? "rounded-md border-1 border-borderline" : "border-b-1"
+                }
+                `}
             >
-                {showResult && selectedTags && selectedTags.length > 0 ? (
-                    <ol className="flex flex-wrap items-center">
-                        {selectedTags.map((v) => (
-                            <li key={v} className="flex w-fit items-center px-8">
-                                <Typography type="Highlight" text={v} styles="font-extrabold mr-4 mt-2" />
-                                <button onClick={() => filterSuggestion(v)}>
-                                    <AiFillCloseCircle />
-                                </button>
-                            </li>
-                        ))}
-                    </ol>
-                ) : null}
-                <input
-                    value={text}
-                    onChange={(e) => setText(e.currentTarget.value)}
-                    className={`py-4 text-sm outline-none ${type === "OUTLINED" ? "px-8" : ""}`}
-                    placeholder={placeholder}
-                />
-            </div>
+                <div
+                    className={`m-1 flex flex-col justify-start border-borderline bg-white px-4 py-6 shadow-sm ${
+                        isDropDownShow ? `rounded-md border-3 ${borderColor ? borderColor : "border-main"}` : ""
+                    }`}
+                    ref={dropdownRef}
+                    onClick={() => setIsDropDownShow(true)}
+                >
+                    {showResult && selectedTags && selectedTags.length > 0 ? (
+                        <ol className="flex flex-wrap items-center">
+                            {selectedTags.map((v) => (
+                                <li key={v} className="flex w-fit items-center px-8">
+                                    <Typography type="Highlight" text={v} styles="font-extrabold mr-4 mt-2" />
+                                    <button onClick={() => filterSuggestion(v)}>
+                                        <AiFillCloseCircle />
+                                    </button>
+                                </li>
+                            ))}
+                        </ol>
+                    ) : null}
+                    <input
+                        value={text}
+                        onChange={(e) => setText(e.currentTarget.value)}
+                        className={`py-4 text-sm outline-none ${type === "OUTLINED" ? "px-8" : ""}`}
+                        placeholder={placeholder}
+                    />
+                </div>
 
-            <div className="relative flex-1">
-                {isDropDownShow ? (
-                    <ol className="absolute top-8 z-10 flex min-h-100 w-full flex-wrap overflow-auto rounded-2xl border-1 border-primary bg-white p-8">
-                        {suggestions.map((v) => (
-                            <li
-                                key={v}
-                                className="m-2 h-fit w-max cursor-pointer rounded-2xl border-1 border-borderline bg-gray-50 px-8 py-6 hover:bg-background"
-                                onClick={() => selectSuggestion(v)}
-                            >
-                                <Typography type="SmallLabel" text={v} styles="font-extrabold" />
-                            </li>
-                        ))}
-                    </ol>
-                ) : null}
+                <div className="relative flex-1">
+                    {isDropDownShow ? (
+                        <ol className="absolute top-8 z-10 flex min-h-100 w-full flex-wrap overflow-auto rounded-2xl border-1 border-primary bg-white p-8">
+                            {suggestions.map((v) => (
+                                <li
+                                    key={v}
+                                    className="m-2 h-fit w-max cursor-pointer rounded-2xl border-1 border-borderline bg-gray-50 px-8 py-6 hover:bg-background"
+                                    onClick={() => selectSuggestion(v)}
+                                >
+                                    <Typography type="SmallLabel" text={v} styles="font-extrabold" />
+                                </li>
+                            ))}
+                        </ol>
+                    ) : null}
+                </div>
             </div>
         </div>
     );
