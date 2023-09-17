@@ -18,12 +18,25 @@ const defaultNavItems: INavItems = [
     { label: "질문 게시판", route: "/questions", selected: false },
 ];
 
-export const NavItem = ({ item, onClickNavItem }: { item: INavItem; onClickNavItem: (item: INavItem) => void }) => {
+export const NavItem = ({
+    item,
+    onClickNavItem,
+    isSelected,
+}: {
+    item: INavItem;
+    onClickNavItem: (item: INavItem) => void;
+    isSelected: boolean;
+}) => {
     const navigate = useNavigate();
 
     return (
         <li onClick={() => navigate(item.route)}>
-            <button className="mr-16 w-max text-18 font-medium hover:text-main/60" onClick={() => onClickNavItem(item)}>
+            <button
+                className={`w-max px-40 py-10 text-18 font-medium hover:text-main/60 ${
+                    isSelected ? "border-b-2 border-main" : "border-b border-transparent"
+                }`}
+                onClick={() => onClickNavItem(item)}
+            >
                 <Typography type="Label" text={item.label} color={`${item.selected ? "text-main" : ""}`} />
             </button>
         </li>
@@ -59,10 +72,11 @@ function Navigation() {
     }, [pathname]);
 
     return (
-        <nav className="flex h-50 w-full border-b-1 border-borderline px-10 lg:p-0">
+        // eslint-disable-next-line tailwindcss/no-custom-classname
+        <nav className="flex h-full w-full px-10 shadow-3xl lg:p-0">
             <ul className="flex w-full items-center justify-around overflow-x-scroll sm:overflow-hidden">
                 {navItems.map((v: INavItem) => (
-                    <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} />
+                    <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} isSelected={v.selected} />
                 ))}
             </ul>
         </nav>

@@ -6,7 +6,7 @@ import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
 import Typography from "@component/Typography";
 import AutoCompletionTags from "@component/AutoCompletionTags";
 
-import { VscTriangleDown } from "react-icons/vsc";
+import ArrowUp from "@assets/arrowUp.png";
 import { AiFillCloseCircle } from "react-icons/ai";
 
 export const ShowResult = ({
@@ -41,14 +41,27 @@ export const ShowResult = ({
     );
 };
 
-export const SearchButton = ({ text, onClickHandler }: { text: string; onClickHandler?: () => void }) => (
+export const SearchButton = ({
+    text,
+    onClickHandler,
+    isOpen,
+}: {
+    text: string;
+    onClickHandler?: () => void;
+    isOpen: boolean;
+}) => (
     <button
         onClick={onClickHandler}
-        className="relative mr-8 w-110 rounded-sm border-1 border-borderline px-8 py-4 text-left"
+        className={`relative mr-8 w-110 rounded-md border-2 px-8 py-4 text-left hover:bg-main/20 ${
+            isOpen ? "border-main" : "border-borderline"
+        }`}
     >
         <Typography type="SmallLabel" text={text} />
-        <div className="absolute right-10 top-4">
-            <VscTriangleDown size="1.2rem" />
+        <div className="absolute right-10 top-8">
+            <img
+                src={ArrowUp}
+                className={`w-12 transition-transform duration-200 ease-in-out ${isOpen ? "rotate-180" : ""}`}
+            />
         </div>
     </button>
 );
@@ -119,11 +132,13 @@ function SearchFilters({
     return (
         <div className="mb-8 w-full sm:w-480" ref={dropdownRef}>
             <div className="flex">
-                {needStack && <SearchButton text="스택 검색" onClickHandler={onClickStackHandler} />}
-                {needPos && <SearchButton text="포지션 검색" onClickHandler={onClickPosHandler} />}
+                {needStack && (
+                    <SearchButton isOpen={clickStack} text="스택 검색" onClickHandler={onClickStackHandler} />
+                )}
+                {needPos && <SearchButton isOpen={clickPos} text="포지션 검색" onClickHandler={onClickPosHandler} />}
                 {needOrder && (
                     <div className="relative">
-                        <SearchButton text="정렬 방식" onClickHandler={onClickOrderHandler} />
+                        <SearchButton isOpen={clickOrder} text="정렬 방식" onClickHandler={onClickOrderHandler} />
                         {clickOrder && setSelectedOrder && (
                             <ol className="absolute top-34 h-61 w-110 border-1 border-borderline bg-white">
                                 <li

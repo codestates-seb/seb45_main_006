@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ArrowUp from "@assets/arrowUp.png";
 
 interface DropdownProps {
     label: string;
@@ -18,20 +19,33 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onS
     const handleOptionClick = (option: string) => {
         onSelectOption(option);
         setIsOpen(false);
+        console.log("11111", option);
     };
+
+    // const handleBlur = () => {
+    //     setIsOpen(false);
+    // };
+    console.log(selectedOption);
     return (
         <div className="m-10">
             <label className="mb-10 block">{label}</label>
             <div className={`relative rounded-3xl bg-white shadow-sm ${isOpen ? "z-10" : ""}`}>
                 <button
                     // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-                    className={`w-full rounded-md bg-white p-6 text-left ${
+                    className={`flex w-full items-center justify-between rounded-md bg-white p-6 text-left ${
                         disabled ? "z-10 bg-gray-400 text-gray-700" : "bg-white hover:bg-gray-100"
                     }`}
                     onClick={toggleDropdown}
+                    // onBlur={handleBlur}
                     disabled={disabled}
                 >
                     {selectedOption}
+                    <img
+                        src={ArrowUp}
+                        className={`mr-10 w-16 transition-transform duration-200 ease-in-out ${
+                            isOpen ? "rotate-180" : ""
+                        }`}
+                    />
                 </button>
 
                 <ul
@@ -43,8 +57,9 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onS
                         <li
                             key={option}
                             onClick={() => handleOptionClick(option)}
-                            className={`relative cursor-pointer select-none px-4 py-2 ${
-                                selectedOption === option ? "bg-indigo-100 text-indigo-600" : "text-gray-900"
+                            // onBlur={handleBlur}
+                            className={`relative cursor-pointer select-none px-4 py-2 hover:bg-indigo-100/30 ${
+                                selectedOption === option ? "bg-indigo-100/70 text-indigo-600" : "text-gray-900"
                             }`}
                             id={`listbox-option-${index}`}
                         >

@@ -75,7 +75,7 @@ function AutoCompletionTags({
                 <input
                     value={text}
                     onChange={(e) => setText(e.currentTarget.value)}
-                    className={`outline-none ${type === "OUTLINED" ? "px-8" : ""}`}
+                    className={`py-4 text-sm outline-none ${type === "OUTLINED" ? "px-8" : ""}`}
                     placeholder={placeholder}
                 />
             </div>
