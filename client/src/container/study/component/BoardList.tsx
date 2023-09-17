@@ -22,8 +22,8 @@ const BoardList = ({ study }: { study: CommonResStudies }) => {
                 </div>
                 <h1 className="my-4 cursor-pointer text-24 font-bold">{study.title}</h1>
                 <div className="flex min-h-28">
-                    {Array.isArray(study.stack) &&
-                        study.stack.map((v) => {
+                    {Array.isArray(study.stacks) &&
+                        study.stacks.map((v) => {
                             return <Tag key={`${study.boardId}-tag-${v}`} type="STUDY" text={v} />;
                         })}
                 </div>
