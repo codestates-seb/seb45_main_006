@@ -6,7 +6,7 @@ export interface MessageItem {
     messageId: number | null;
     content: string;
     senderId: number | null;
-    createdAt?: string;
+    createAt?: string;
     isRead?: boolean;
 }
 

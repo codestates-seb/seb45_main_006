@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MessageItem } from "@hook/useWebStompClient";
 import { getItemFromStorage } from "@util/localstorage-helper";
 
-import Input from "@component/Input";
+import Textarea from "@component/Textarea";
 import CommonBtn from "@component/CommonBtn";
 import Typography from "@component/Typography";
 import ChatRommItemNotice from "./ChatRommItemNotice";
@@ -47,6 +47,12 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     // const disconnectWebSocket = () => {};
 
     useEffect(() => {
+        setNotice([]);
+        setLatestNotice(null);
+        setBasic([]);
+        setRecievedMsg([]);
+        setCurMsg("");
+        setIsConnected(false);
         chatMessages.messageList.forEach((v) => {
             if (v.type === "NOTICE") {
                 setNotice((prevNotice) => [...prevNotice, v]);
@@ -59,7 +65,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [chatMessages]);
 
     useEffect(() => {
         if (notice.reverse()[0] && notice.reverse()[0].content) {
@@ -77,19 +83,27 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
             stompClient.connect(
                 {},
                 () => {
-                    console.log("Connected to the WebSocket server");
                     setIsConnected(true);
 
                     stompClient.subscribe(`/topic/chat/${chatMessages.chatRoomId}`, async (message) => {
                         const messageData = JSON.parse(message.body).body;
+                        console.log("3", messageData, memberId === messageData.senderId);
 
-                        const isRead = messageData.senderId === memberId;
+                        // const isMine = messageData.senderId === memberId;
 
-                        setRecievedMsg((prevMessages) => {
-                            const newMessages = [...prevMessages, { ...messageData, isRead }];
-                            return newMessages;
+                        // setRecievedMsg((prevMessages) => {
+                        //     const newMessages = [...prevMessages, { ...messageData }];
+                        //     return newMessages;
+                        // });
+
+                        setChatList((prevChatList) => {
+                            if (prevChatList.filter((v) => v.createAt === messageData.createAt)[0]) {
+                                console.log("v", prevChatList[0].createAt);
+                                console.log("messageData", messageData);
+                                return [...prevChatList];
+                            }
+                            return [...prevChatList, messageData];
                         });
-                        setChatList((prevChatList) => [...prevChatList, messageData]);
                     });
                 },
                 (error) => {
@@ -108,7 +122,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
         if (element) {
             element.scrollTop = element.scrollHeight;
         }
-    }, [recievedMsg]);
+    }, [chatList]);
 
     const onSendMessage = () => {
         if (client && client.connected) {
@@ -119,34 +133,37 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     };
 
     const onClickSendHandler = () => {
+        console.log("1");
         if (curMesg.trim() === "") return;
 
         onSendMessage();
 
-        const newMessage: MessageItem = {
-            content: curMesg,
-            senderId: null,
-            createdAt: new Date().toISOString(),
-            messageId: null,
-        };
-        setChatList((prevChatList) => [...prevChatList, newMessage]);
+        // const newMessage: MessageItem = {
+        //     content: curMesg,
+        //     senderId: null,
+        //     createdAt: new Date().toISOString(),
+        //     messageId: null,
+        // };
+        // setChatList((prevChatList) => [...prevChatList, newMessage]);
 
         setCurMsg("");
     };
 
-    const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const onKeyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        console.log("2");
         if (e.key == "Enter" && onClickSendHandler) {
+            e.preventDefault();
             onClickSendHandler();
         }
     };
 
     return (
         <>
-            <div className="relative mb-8 flex min-h-450 flex-1 flex-col justify-between bg-white">
+            <div className="relative mb-8 flex min-h-423 flex-1 flex-col justify-between bg-white">
                 <ChatRommItemNotice notice={notice} latestNotice={latestNotice} />
                 <div className="h-60"></div>
-                <div className="flex-1 py-8">
-                    <div className="flex max-h-370 w-full flex-col overflow-y-scroll">
+                <div className="h-373 py-8">
+                    <div className="flex max-h-340 w-full flex-col overflow-y-scroll px-4" id="chatBox">
                         {basic.length > 0 && basic.map((v) => <ChatMessageContent v={v} />)}
                         {chatList.map((v) => (
                             <MessageItemContent v={v} />
@@ -154,17 +171,25 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
                     </div>
                 </div>
             </div>
-            <div className="flex h-40 justify-between">
-                <div className="flex-1">
-                    <Input
+            <div className="flex h-50 items-center justify-between px-4">
+                <div className="mr-8 flex-1">
+                    <Textarea
                         placeholder="내용을 입력하세요..."
                         value={curMesg}
                         onChange={(e) => setCurMsg(e.currentTarget.value)}
                         onKeyDownHandler={onKeyDownHandler}
+                        maxlength={1000}
+                        borderStyle="h-50"
                     />
                 </div>
                 {isConnected && (
-                    <CommonBtn size="SM" styleType="OUTLINED" color="MAIN" onClick={onClickSendHandler}>
+                    <CommonBtn
+                        size="SM"
+                        styleType="OUTLINED"
+                        color="MAIN"
+                        onClick={onClickSendHandler}
+                        styles="h-fit outline-none focus:outline-none"
+                    >
                         <Typography text="전송" type="SmallLabel" />
                     </CommonBtn>
                 )}

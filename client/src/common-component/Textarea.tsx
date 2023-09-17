@@ -8,6 +8,7 @@ export interface ITextarea {
     name?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onKeyDownHandler?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
     borderStyle?: string;
 }
 
@@ -19,6 +20,7 @@ function Textarea({
     name,
     value = "",
     onChange,
+    onKeyDownHandler,
     borderStyle,
 }: ITextarea) {
     return (
@@ -32,6 +34,11 @@ function Textarea({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
+                onKeyDown={(e) => {
+                    if (onKeyDownHandler) {
+                        onKeyDownHandler(e);
+                    }
+                }}
             />
             <Typography
                 type="Description"

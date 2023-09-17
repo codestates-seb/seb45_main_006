@@ -31,15 +31,22 @@ function SignUp2() {
 
     const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();
 
+    // 사용자 입력값
     const [email, setEmail] = useState(redirectedEmail || "");
     const [nickname, setNickname] = useState("");
     const [authCodeValue, setAuthCodeValue] = useState("");
     const [password, setPassword] = useState("");
     const [passwordRe, setPasswordRe] = useState("");
 
+    // 인증된 입력값
     const [authEmail, setAuthEmail] = useRecoilState(authEmailAtom);
     const [authCode, setAuthCode] = useRecoilState(authCodeAtom);
     const [authNickname, setAuthNickname] = useRecoilState(authNicknameAtom);
+
+    // 인증 요청 여부
+    const [isRequestedAuthEmail, setIsRequestedAuthEmail] = useState(false);
+    const [isRequestedAuthCode, setIsRequestedAuthCode] = useState(false);
+    const [isRequestedNickname, setIsRequestedNickname] = useState(false);
 
     useEffect(() => {
         if (redirectedEmail) {
@@ -117,12 +124,14 @@ function SignUp2() {
                     description="이메일 형식이 맞지 않습니다."
                 />
 
-                {/* TODO: 인증버튼 한번만 누를 수 있도록 막기 */}
-                {!authEmail && (
+                {!isRequestedAuthEmail && !authEmail && (
                     <Button
                         type="STUDY"
                         styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
-                        onClickHandler={() => reqAuthenticateEmail({ email })}
+                        onClickHandler={() => {
+                            setIsRequestedAuthEmail(true);
+                            reqAuthenticateEmail({ email });
+                        }}
                     >
                         <Typography type="Description" text="인증 요청" styles="min-w-max" color="text-gray-700" />
                     </Button>
@@ -137,13 +146,14 @@ function SignUp2() {
                         placeholder="인증코드를 입력해주세요."
                         disabled={authCode.length > 0}
                     />
-                    {!authCode && (
+                    {!isRequestedAuthCode && !authCode && (
                         <Button
                             type="STUDY"
                             styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
-                            onClickHandler={() =>
-                                postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue })
-                            }
+                            onClickHandler={() => {
+                                setIsRequestedAuthCode(true);
+                                postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue });
+                            }}
                         >
                             <Typography type="Description" text="인증 확인" styles="min-w-max" color="text-gray-700" />
                         </Button>
@@ -159,11 +169,14 @@ function SignUp2() {
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
                 />
-                {authNickname.length === 0 && (
+                {!isRequestedNickname && authNickname.length === 0 && (
                     <Button
                         type="STUDY"
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
-                        onClickHandler={() => postCheckNickname({ nickname })}
+                        onClickHandler={() => {
+                            setIsRequestedNickname(true);
+                            postCheckNickname({ nickname });
+                        }}
                     >
                         <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
                     </Button>

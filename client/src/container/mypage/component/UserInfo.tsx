@@ -258,3 +258,5 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
 }
 
 export default UserInfo;
+
+// TODO: 자기소개 + input outline (초록색)
