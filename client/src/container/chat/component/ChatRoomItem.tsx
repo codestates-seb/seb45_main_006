@@ -108,7 +108,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
             setClient(stompClient);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatMessages.chatRoomId]);
 
     useEffect(() => {

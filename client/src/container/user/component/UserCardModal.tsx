@@ -179,6 +179,8 @@ function UserCardModal({
     const { checkIsChatRoomExist, createChatRoom, enrollChatRoomHandler } = useCheckChat();
 
     const onClickChatBtn = () => {
+        closeModal();
+        console.log(checkIsChatRoomExist({ memberId }));
         if (checkIsChatRoomExist({ memberId })) {
             createChatRoom({ memberId, nickname: user?.nickname || "" });
         }

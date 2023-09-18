@@ -50,9 +50,8 @@ export const useCheckChat = () => {
         creatChatRoom(
             { memberId },
             {
-                onSuccess: () => {
-                    console.log("2 ???");
-                    // onClickChatRoomHandler();
+                onSuccess: (res) => {
+                    setChatRoomId(res.chatRoomId);
                 },
                 onError: (err) => errorToast(err),
                 onSettled: () => {

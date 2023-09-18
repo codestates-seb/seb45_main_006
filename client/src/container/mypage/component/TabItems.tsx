@@ -68,8 +68,6 @@ function TabItems() {
         } else {
             setTabItems(defaultTabItems);
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curTab, nav]);
 
     const onClickTabItem = (item: ITabItem) => {

@@ -20,7 +20,7 @@ export type ChatRooms = Array<ChatRoom>;
 
 // 채팅방 생성
 export interface PostResCreateChatRoom {
-    memberId: number;
+    chatRoomId: number;
 }
 
 // 채팅방 들어가기
