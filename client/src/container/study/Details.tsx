@@ -4,11 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCheckUser } from "@hook/useCheckUser";
 import { useDeleteStudy, useGetDetailStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckChat } from "@hook/useCheckChat";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import Report from "@component/project-study/Report";
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
 import DetailSkeleton from "./component/DetailSkeleton";
@@ -24,10 +22,14 @@ const Details = () => {
 
     const { studyBoardId } = useParams();
 
-    const { data: study, isLoading, refetch } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
+    const {
+        data: study,
+        isLoading,
+        refetch: refetchStudy,
+    } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
 
     useEffect(() => {
-        refetch();
+        refetchStudy();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -35,7 +37,12 @@ const Details = () => {
     const { isMine, isLoggedIn } = useCheckUser({ memberId: study?.memberProfile.memberId || 0 });
     const { mutate: deleteStudy } = useDeleteStudy();
 
-    const [isBookmarked, setIsBookmarked] = useState(!!study?.bookmarked);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    useEffect(() => {
+        if (study && study.bookmarked) {
+            setIsBookmarked(!!study?.bookmarked);
+        }
+    }, [study]);
 
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -74,10 +81,7 @@ const Details = () => {
                             });
                             navigate("/studies");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -103,18 +107,10 @@ const Details = () => {
                         setComment("");
                         refetchComment();
                     },
-                    onError: () => {
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }
-    };
-
-    const { createOrEnrollChatRoom } = useCheckChat({ memberId: study?.memberProfile.memberId || 0 });
-
-    const onClickChatBtn = () => {
-        createOrEnrollChatRoom({ nickname: study?.memberProfile.nickname || "" });
     };
 
     if (isLoading) {
@@ -164,7 +160,7 @@ const Details = () => {
                             </li>
                         </ul>
                     </div>
-                    <div className="flex flex-col items-center py-10">
+                    <div className="flex min-w-50 flex-col items-center py-10">
                         {isMine && (
                             <>
                                 <Button
@@ -184,8 +180,8 @@ const Details = () => {
                             boardId={study?.boardId || 0}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={refetchStudy}
                         />
-                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -196,16 +192,6 @@ const Details = () => {
                             setBlockedMemberId={() => navigate("/projects")}
                             refetchAllMembers={() => {}}
                         />
-                    )}
-                    {!isMine && (
-                        <Button
-                            type="STUDY_POINT"
-                            styles="font-semibold m-20"
-                            isFullBtn={true}
-                            onClickHandler={onClickChatBtn}
-                        >
-                            <Typography type="Body" text="참여하기" />
-                        </Button>
                     )}
                 </div>
             </div>

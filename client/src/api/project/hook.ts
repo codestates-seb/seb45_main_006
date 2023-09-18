@@ -23,6 +23,7 @@ export const useGetAllProjects = ({ page, size, stack, status, title }: GetReqAl
     return useQuery<GetResAllProjects, AxiosError, GetResAllProjects>({
         queryKey: projectKeyFactory.all({ page, size, stack, status, title }),
         queryFn: () => getAllProjects({ page, size, stack, status, title }),
+        cacheTime: 0,
     });
 };
 // 프로젝트 - 상세 조회하기
@@ -31,6 +32,7 @@ export const useGetDetailProject = ({ boardId }: GetReqDetailProject) => {
         queryKey: projectKeyFactory.detail({ boardId }),
         queryFn: () => getDetailProject({ boardId }),
         enabled: !!boardId,
+        cacheTime: 0,
     });
 };
 // 프로젝트 - 정보 등록하기

@@ -19,6 +19,7 @@ import SignButton from "@container/sign/component/SignButton";
 import EmailGuide from "./component/EmailGuide";
 
 import progress from "@assets/sign/progress_bar2.png";
+import Loading from "@assets/loading.gif";
 
 import { REGEX } from "@hook/useCheckValidValue";
 
@@ -29,7 +30,7 @@ function SignUp2() {
     const { errorToast, fireToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
 
-    const { alertWhenEmptyFn, isPasswordVaid } = useCheckValidValue();
+    const { alertWhenEmptyFn, isPasswordVaid, isEmailValid, isNicknameVaid } = useCheckValidValue();
 
     // 사용자 입력값
     const [email, setEmail] = useState(redirectedEmail || "");
@@ -94,10 +95,7 @@ function SignUp2() {
                     setAuthNickname("");
                     onHandleLogin({ email, password, routePath: "/signup/3" });
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -105,7 +103,7 @@ function SignUp2() {
     if (authEmail && !redirectedEmail) {
         return (
             <SignLayout title="이메일 인증" subTitle="" progressImage={""}>
-                <EmailGuide />
+                <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
             </SignLayout>
         );
     }
@@ -124,13 +122,22 @@ function SignUp2() {
                     description="이메일 형식이 맞지 않습니다."
                 />
 
+                {isRequestedAuthEmail && !authEmail && (
+                    <div className="flex justify-center pr-4">
+                        <img src={Loading} alt="로딩 중" className="ml-12 h-32 min-w-63" />
+                    </div>
+                )}
                 {!isRequestedAuthEmail && !authEmail && (
                     <Button
                         type="STUDY"
                         styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
                         onClickHandler={() => {
+                            if (!email || !isEmailValid({ email })) {
+                                fireToast({ content: "이메일을 형식에 맞게 입력해주세요.", isConfirm: false });
+                                return;
+                            }
                             setIsRequestedAuthEmail(true);
-                            reqAuthenticateEmail({ email });
+                            reqAuthenticateEmail({ email, setIsRequestedAuthEmail });
                         }}
                     >
                         <Typography type="Description" text="인증 요청" styles="min-w-max" color="text-gray-700" />
@@ -151,8 +158,17 @@ function SignUp2() {
                             type="STUDY"
                             styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
                             onClickHandler={() => {
+                                if (!authCodeValue) {
+                                    fireToast({ content: "인증번호를 입력해주세요.", isConfirm: false });
+                                    return;
+                                }
+
                                 setIsRequestedAuthCode(true);
-                                postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue });
+                                postCheckAuthCode({
+                                    email: redirectedEmail || "",
+                                    authCode: authCodeValue,
+                                    setIsRequestedAuthCode,
+                                });
                             }}
                         >
                             <Typography type="Description" text="인증 확인" styles="min-w-max" color="text-gray-700" />
@@ -174,8 +190,12 @@ function SignUp2() {
                         type="STUDY"
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                         onClickHandler={() => {
+                            if (!nickname || !isNicknameVaid({ nickname })) {
+                                fireToast({ content: "닉네임을 입력해주세요.", isConfirm: false });
+                                return;
+                            }
                             setIsRequestedNickname(true);
-                            postCheckNickname({ nickname });
+                            postCheckNickname({ nickname, setIsRequestedNickname });
                         }}
                     >
                         <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />

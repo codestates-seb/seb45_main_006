@@ -183,12 +183,13 @@ const router = createBrowserRouter([
     },
 ]);
 
+// 참고:  https://pebblepark.tistory.com/32
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnMount: false,
-            refetchOnReconnect: false,
-            refetchOnWindowFocus: false,
+            refetchOnMount: true,
+            refetchOnReconnect: true,
+            refetchOnWindowFocus: true,
             retry: 0,
         },
     },
@@ -204,7 +205,7 @@ const queryClient = new QueryClient({
     }),
 });
 
-queryClient.invalidateQueries({ queryKey: ["projects"] });
+queryClient.invalidateQueries({ queryKey: ["members"] });
 queryClient.invalidateQueries({ queryKey: ["chats"] });
 
 function App() {

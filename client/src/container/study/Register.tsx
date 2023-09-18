@@ -40,7 +40,6 @@ export default function Register() {
     });
 
     const [prevStudyStatus, setPrevStudyStatus] = useState("");
-    console.log("수정 시 적용할 내용", prevStudyStatus);
 
     useEffect(() => {
         if (curActivity === "EDIT") {
@@ -75,6 +74,9 @@ export default function Register() {
         const { name, value } = e.target;
         if (!value) {
             setInputs({ ...inputs, [name]: "" });
+        }
+        if (value.length > 2) {
+            setInputs({ ...inputs, [name]: value.slice(0, 2) });
         }
         if (parseInt(value) >= 0) {
             setInputs({ ...inputs, [name]: value });
@@ -148,7 +150,6 @@ export default function Register() {
 
         if (prevStudyStatus) {
             if (prevStudyStatus === "STUDY_POSTED" && selectedOption === "모집완료") {
-                console.log("??");
                 closeStudy({ boardId: location.state.boardId });
             }
         }
@@ -251,7 +252,7 @@ export default function Register() {
                         {curActivity === "REGISTER" ? (
                             <Button
                                 type="STUDY_POINT"
-                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                styles="mb-20 shadow-md hover:bg-green-400"
                                 isFullBtn={false}
                                 onClickHandler={onPostClickHandler}
                             >
@@ -260,7 +261,7 @@ export default function Register() {
                         ) : (
                             <Button
                                 type="STUDY_POINT"
-                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                styles="mb-20 shadow-md hover:bg-green-400"
                                 isFullBtn={false}
                                 onClickHandler={onPatchClickHandler}
                             >

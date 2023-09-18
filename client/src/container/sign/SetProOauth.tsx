@@ -25,6 +25,7 @@ function SetProOauth() {
     const [nickname, setNickname] = useState("");
     const authNickname = useRecoilValue(authNicknameAtom);
 
+    const [isRequestedNickname, setIsRequestedNickname] = useState(false);
     const { postCheckNickname } = useAuthHelper();
     const { mutate: patchMember } = usePatchMember();
     const { fireToast, errorToast } = useToast();
@@ -40,7 +41,7 @@ function SetProOauth() {
         patchMember(
             {
                 memberId,
-                nickname: authNickname,
+                nickname: authNickname || nickname,
                 introduction: "",
                 profilePicture: "",
                 githubId: "",
@@ -50,16 +51,13 @@ function SetProOauth() {
             },
             {
                 onSuccess: () => {
-                    setItemToStorage("nickname", authNickname);
+                    setItemToStorage("nickname", authNickname || nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", "");
                     navigate("/signup/3");
                 },
 
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -83,11 +81,14 @@ function SetProOauth() {
                         onChange={(e) => setNickname(e.currentTarget.value)}
                         description="닉네임 형식이 맞지 않습니다."
                     />
-                    {authNickname.length === 0 && (
+                    {!isRequestedNickname && !authNickname && (
                         <Button
                             type="STUDY"
                             styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
-                            onClickHandler={() => postCheckNickname({ nickname })}
+                            onClickHandler={() => {
+                                setIsRequestedNickname(true);
+                                postCheckNickname({ nickname, setIsRequestedNickname });
+                            }}
                         >
                             <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
                         </Button>

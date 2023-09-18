@@ -18,6 +18,7 @@ import {
     getStudyLiked,
     getInfoLiked,
     postAttendance,
+    getQuestionLiked,
 } from "./api";
 
 // 유저의 프로젝트
@@ -26,6 +27,8 @@ export const useGetProjectOfMember = ({ page, memberId }: PagingWithId) => {
         queryKey: ["member-activity", { isMine: true, board: "project", page, memberId }],
         queryFn: () => getProjectOfMember({ page, memberId }),
         enabled: !!memberId,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -35,6 +38,8 @@ export const useGetStudyOfMember = ({ page, memberId }: PagingWithId) => {
         queryKey: ["member-activity", { isMine: true, board: "study", page, memberId }],
         queryFn: () => getStudyOfMember({ page, memberId }),
         enabled: !!memberId,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -44,6 +49,8 @@ export const useGetInfoOfMember = ({ page, memberId }: PagingWithId) => {
         queryKey: ["member-activity", { isMine: true, board: "infoboard", page, memberId }],
         queryFn: () => getInfoOfMember({ page, memberId }),
         enabled: !!memberId,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -53,6 +60,8 @@ export const useGetQuestionOfMember = ({ page, memberId }: PagingWithId) => {
         queryKey: ["member-activity", { isMine: true, board: "question", page, memberId }],
         queryFn: () => getQuestionOfMember({ page, memberId }),
         enabled: !!memberId,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -62,6 +71,8 @@ export const useGetMyLevel = () => {
         queryKey: ["level", { isMine: true }],
         queryFn: () => getMyLevel(),
         enabled: !!localStorage.getItem("memberId"),
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -76,6 +87,8 @@ export const useGetProjectLiked = ({ page, likedType }: PagingWithBoardLiked) =>
         queryKey: ["member-activity", { likedType: likedType, board: "project", page }],
         queryFn: () => getProjectLiked({ page, likedType }),
         enabled: !!likedType,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -85,6 +98,8 @@ export const useGetStudyLiked = ({ page, likedType }: PagingWithBoardLiked) => {
         queryKey: ["member-activity", { likedType: likedType, board: "study", page }],
         queryFn: () => getStudyLiked({ page, likedType }),
         enabled: !!likedType,
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -93,6 +108,8 @@ export const useGetInfoLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResInfoOfMember, AxiosError, GetResInfoOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "info", page }],
         queryFn: () => getInfoLiked({ page, likedType }),
+        staleTime: 0,
+        cacheTime: 0,
     });
 };
 
@@ -100,6 +117,8 @@ export const useGetInfoLiked = ({ page, likedType }: PagingWithBoardLiked) => {
 export const useGetQuestionLiked = ({ page, likedType }: PagingWithBoardLiked) => {
     return useQuery<GetResQuestionOfMember, AxiosError, GetResQuestionOfMember>({
         queryKey: ["member-activity", { likedType: likedType, board: "question", page }],
-        queryFn: () => getProjectLiked({ page, likedType }),
+        queryFn: () => getQuestionLiked({ page, likedType }),
+        staleTime: 0,
+        cacheTime: 0,
     });
 };

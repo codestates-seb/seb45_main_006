@@ -10,8 +10,10 @@ import {
     PatchReqMemberPw,
 } from "@type/member/member.req.dto";
 
-export const getAllMembers = async ({ page, stacks, posiions }: GetReqAllMembers) => {
-    const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${posiions ? "&positions=" + posiions : ""}`;
+export const getAllMembers = async ({ page, stacks, posiions, nickname }: GetReqAllMembers) => {
+    const query = `page=${page}${stacks ? "&stacks=" + stacks : ""}${
+        posiions ? "&positions=" + posiions : ""
+    }&nickname=${nickname}`;
     const url = `${COMMON_API_PATH.MEMBER.LIST}?${query}`;
     const { data } = await commonApi.get(url);
     return data;

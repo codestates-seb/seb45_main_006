@@ -5,15 +5,26 @@ import { CommonResProjects } from "@type/project/project.res.dto";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import Bookmark from "@component/board/Bookmark";
+import { useToast } from "@hook/useToast";
+import { useRecoilValue } from "recoil";
+import { isLoggedInAtom } from "@feature/Global";
 
-const BoardList = ({ project }: { project: CommonResProjects }) => {
+const BoardList = ({ project, refetch }: { project: CommonResProjects; refetch: () => void }) => {
     const navigate = useNavigate();
+    const isLogginedIn = useRecoilValue(isLoggedInAtom);
+    const { reqLoginToUserToast } = useToast();
     const [isBookmarked, setIsBookmarked] = useState(!!project.bookmarked);
 
     return (
         <div
             // 상세페이지로 넘어가는
-            onClick={() => navigate(`/projects/${project.boardId}`)}
+            onClick={() => {
+                if (!isLogginedIn) {
+                    reqLoginToUserToast();
+                    return;
+                }
+                navigate(`/projects/${project.boardId}`);
+            }}
             className="my-10 flex w-full cursor-pointer justify-between rounded-lg border-2 border-solid border-borderline p-20 shadow-lg transition-transform hover:scale-y-105 hover:bg-gray-100"
         >
             <div>
@@ -29,9 +40,10 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                 <h1 className="my-4 text-24 font-bold">{project.title}</h1>
                 <div className="flex min-h-28">
                     {Array.isArray(project.stack) &&
-                        project.stack.map((v) => {
+                        project.stack.slice(0, 5).map((v) => {
                             return <Tag key={`${project.boardId}-tag-${v}`} type="PROJECT" text={v} />;
                         })}
+                    {project.stack.length > 5 && <Typography text="and more ..." type="SmallLabel" />}
                 </div>
                 <div className="mt-4 flex text-16 text-gray-600">
                     <Typography
@@ -50,6 +62,7 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                 boardId={project.boardId}
                 isBookmarked={isBookmarked}
                 setIsBookmarked={setIsBookmarked}
+                refetch={refetch}
             />
         </div>
     );

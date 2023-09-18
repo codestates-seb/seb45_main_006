@@ -62,6 +62,7 @@ const BtnsWithoutAuth = () => {
 };
 
 function Header() {
+    const navigate = useNavigate();
     const isSignPage = useRecoilValue(isSignPageAtom);
     const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
@@ -75,6 +76,7 @@ function Header() {
                 onSuccess: () => {
                     clearStorage();
                     setIsLoggedIn(false);
+                    navigate("/");
                 },
             },
         );

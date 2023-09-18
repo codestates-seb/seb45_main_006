@@ -17,6 +17,12 @@ export default function InputForNumber({
     onChange,
     borderStyle,
 }: IBoardInput) {
+    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.currentTarget.value || !isNaN(Number.parseInt(e.currentTarget.value))) {
+            onChange(e);
+        }
+    };
+
     return (
         <div className="my-10 flex flex-col p-10">
             <div className="mb-10 flex">
@@ -29,7 +35,7 @@ export default function InputForNumber({
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value}
-                onChange={(e) => onChange(e)}
+                onChange={(e) => onChangeHandler(e)}
                 borderStyle={borderStyle}
             />
         </div>

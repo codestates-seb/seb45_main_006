@@ -45,7 +45,7 @@ export default function Register() {
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
-        recruitNum: 0,
+        recruitNum: "",
     });
 
     useEffect(() => {
@@ -63,7 +63,7 @@ export default function Register() {
                 ...inputs,
                 title: prevTitle,
                 content: prevContent,
-                recruitNum: prevRecruitNum,
+                recruitNum: prevRecruitNum.toString(),
             });
 
             setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
@@ -85,6 +85,9 @@ export default function Register() {
         const { name, value } = e.target;
         if (!value) {
             setInputs({ ...inputs, [name]: "" });
+        }
+        if (value.length > 2) {
+            setInputs({ ...inputs, [name]: value.slice(0, 2) });
         }
         if (parseInt(value) >= 0) {
             setInputs({ ...inputs, [name]: value });
@@ -112,6 +115,7 @@ export default function Register() {
         postProject(
             {
                 ...inputs,
+                recruitNum: Number.parseInt(inputs.recruitNum || "1"),
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),
@@ -168,7 +172,7 @@ export default function Register() {
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                // recruitStatus: selectedOption === "모집완료" ? "PROJECT_CLOSED" : "PROJECT_POSTED",
+                recruitNum: Number.parseInt(inputs.recruitNum || "1"),
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),
@@ -273,6 +277,11 @@ export default function Register() {
                         onChange={handleNumberInput}
                         borderStyle="outline-project"
                         disabled={prevProjectStatus === "PROJECT_CLOSED"}
+                    />
+                    <Typography
+                        type="Description"
+                        text="* 모집인원은 1 ~ 12 사이의 숫자로 입력해주세요."
+                        styles="ml-12 mb-12"
                     />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (

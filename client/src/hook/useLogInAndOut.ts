@@ -56,18 +56,12 @@ export const useLoginInAndOut = () => {
 
     const { mutate: deleteLogout } = useDeleteLogout();
 
-    const onHandleLogout = ({ email }: { email: string }) => {
-        console.log("1???");
-        deleteLogout(
-            { email },
-            {
-                onSuccess: () => {
-                    console.log("2???");
-                    clearStorage();
-                    setIsLoggedIn(false);
-                },
-            },
-        );
+    const onHandleLogout = ({ email, needCallback = true }: { email: string; needCallback?: boolean }) => {
+        deleteLogout({ email });
+        if (needCallback) {
+            clearStorage();
+            setIsLoggedIn(false);
+        }
     };
 
     return { onHandleLogin, onHandleLogout };

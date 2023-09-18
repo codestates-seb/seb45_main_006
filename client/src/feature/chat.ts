@@ -1,3 +1,4 @@
+import { ChatRooms } from "@type/chat/chat.res.dto";
 import { atom } from "recoil";
 
 export const isChatBotShowAtom = atom<boolean>({
@@ -13,4 +14,9 @@ export const chatBotStatusAtom = atom<"LIST" | "DETAIL">({
 export const chatRoomIdAtom = atom<number>({
     key: "chatRoomIdAtom",
     default: 0,
+});
+
+export const chatRoomsAtom = atom<ChatRooms>({
+    key: "chatRoomsAtom",
+    default: [],
 });

@@ -3,6 +3,7 @@ import { getItemFromStorage } from "@util/localstorage-helper";
 // import Temp from "@assets/temp.png";
 import DefaultUser from "@assets/default-user.jpg";
 import Typography from "@component/Typography";
+import { getRandomID } from "@util/random-helper";
 
 type ISize = "sm" | "md" | "lg";
 
@@ -11,7 +12,8 @@ function UserProfile({ size, mine = false, profilePicture }: { size: ISize; mine
     const nickname = getItemFromStorage("nickname");
     const myProfilePicture = getItemFromStorage("profilePicture");
     const memberType = getItemFromStorage("memberType");
-    const ouathUser = memberType && memberType === "OAUTH2" ? `/members/my` : `/members/auth`;
+    const randomId = getRandomID();
+    const ouathUser = memberType && memberType === "OAUTH2" ? `/members/my?auth=${randomId}&nav=edit` : `/members/auth`;
 
     if (size === "sm") {
         return (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { usePatchMember } from "@api/member/hook";
+import { useGetMyDetail, usePatchMember } from "@api/member/hook";
 import { useToast } from "@hook/useToast";
 
 import SetPro1 from "./setProfile1";
@@ -27,6 +27,8 @@ function SetPro() {
     const { fireToast, errorToast } = useToast();
     const { mutate: patchMember } = usePatchMember();
 
+    const { refetch } = useGetMyDetail();
+
     const onHandleEditUser = ({ isChecked }: { isChecked: boolean }) => {
         // TODO: S3 업로드
         patchMember(
@@ -49,12 +51,10 @@ function SetPro() {
                     setItemToStorage("nickname", nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", profilePicture);
+                    refetch();
                     navigate("/");
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -77,6 +77,7 @@ function SetPro() {
                     setItemToStorage("nickname", nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", profilePicture);
+                    refetch();
                     navigate("/");
                 },
             },

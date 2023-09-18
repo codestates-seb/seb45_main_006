@@ -2,6 +2,7 @@ import axios from "axios";
 import { getItemFromStorage, clearStorage } from "@util/localstorage-helper";
 import { isValidToken } from "@util/token-helper";
 import { getRefreshToken } from "./refreshToken";
+import { setRandomNickname } from "./randomNicknameApi";
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 
@@ -62,6 +63,12 @@ withAuthApi.interceptors.request.use(async (config) => {
     if (accessToken && isValidToken(accessToken)) {
         config.headers.Authorization = `Bearer ${accessToken}`;
         return config;
+    }
+
+    const nickname = getItemFromStorage("nickname");
+
+    if (!nickname) {
+        await setRandomNickname();
     }
 
     // 2. accessToken이 유효하지 않을 때

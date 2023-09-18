@@ -11,10 +11,15 @@ import {
 
 // 프로젝트 - 전체 조회하기
 export const getAllProjects = async ({ page, size, stack, title, status }: GetReqAllProjects) => {
-    let url = `/project/list?page=${page}&size=${size}`;
+    let addedPath = "";
+
+    if (status === "PROJECT_POSTED") {
+        addedPath = "/posted";
+    }
+    let url = `/project/list${addedPath}?page=${page}&size=${size}`;
     if (stack) url += `&stacks=${stack}`;
     if (title) url += `&title=${title}`;
-    if (status) url += `&status=${status}`;
+
     const { data } = await commonApi.get(url);
     return data;
 };

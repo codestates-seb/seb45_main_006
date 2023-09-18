@@ -3,6 +3,7 @@ import { toastState, addToastItem, removeToastItem } from "@feature/Global";
 import { getRandomID } from "@util/random-helper";
 
 import { IToast } from "@type/common";
+import { AxiosError } from "axios";
 
 export const useToast = () => {
     const toasts = useRecoilValue(toastState);
@@ -70,11 +71,13 @@ export const useToast = () => {
         ]);
     };
 
-    const errorToast = () => {
+    const errorToast = (err: AxiosError) => {
+        console.log(err);
+        const message = err.message || "요청 처리 중 에러가 발생하였습니다. 새로고침 후 다시 시도부탁드려요!🥹";
         addToastItemFn([
             {
                 id: id,
-                content: "요청 처리 중 에러가 발생하였습니다. 새로고침 후 다시 시도부탁드려요!🥹",
+                content: message,
                 isConfirm: false,
                 isWarning: true,
             },

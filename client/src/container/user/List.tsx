@@ -13,6 +13,8 @@ function UserList() {
     const [totalItems, setTotalItems] = useState<number>(0);
     // 검색어 필터
     const [searchValue, setSearchValue] = useState<string>("");
+    // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
+    const [search, setSearch] = useState<string>("");
     // 스택, 포지션 필터
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedPos, setSelectedPos] = useState<Array<string>>([]);
@@ -28,6 +30,7 @@ function UserList() {
         stacks: selectedStacks.join(","),
         posiions: selectedPos.join(","),
         blockedMemberId,
+        nickname: search,
     });
 
     useEffect(() => {
@@ -38,6 +41,10 @@ function UserList() {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
+    };
+
+    const onClickSearchHandler = () => {
+        setSearch(searchValue);
     };
 
     return (
@@ -51,6 +58,7 @@ function UserList() {
                     setSelectedStacks={setSelectedStacks}
                     selectedPos={selectedPos}
                     setSelectedPos={setSelectedPos}
+                    onClickSearchHandler={onClickSearchHandler}
                 />
                 <div className="my-20 flex flex-wrap">
                     {!isLoading && users?.data ? (

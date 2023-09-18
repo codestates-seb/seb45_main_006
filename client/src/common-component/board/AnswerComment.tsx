@@ -62,10 +62,7 @@ export const OneCommentAnswer = ({
                         });
                     },
 
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                     onSettled: () => setIsEdit(false),
                 },
             );
@@ -87,10 +84,7 @@ export const OneCommentAnswer = ({
                             });
                             refecthAnswerComments();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -114,10 +108,7 @@ export const OneCommentAnswer = ({
                         refecthAnswerComments();
                     },
 
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }

@@ -32,8 +32,10 @@ function SignInput({
         }
     }, [regex, value]);
 
+    const font = "font-gangwon";
+
     return (
-        <div className="mb-8 flex w-full flex-col">
+        <div className={`mb-8 flex w-full flex-col ${font}`}>
             <div className="mb-4 flex w-full items-center">
                 <div className="min-w-88 p-4">
                     <Typography type="SmallLabel" text={label} styles="font-bold" />

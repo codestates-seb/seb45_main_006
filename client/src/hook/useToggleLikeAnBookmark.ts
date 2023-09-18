@@ -11,10 +11,7 @@ export const useToggleLikeAndBookmark = () => {
             { board, boardId },
             {
                 onSuccess: () => {},
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
@@ -24,10 +21,7 @@ export const useToggleLikeAndBookmark = () => {
             { board, boardId },
             {
                 onSuccess: () => {},
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };

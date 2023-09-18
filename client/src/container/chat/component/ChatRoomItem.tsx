@@ -40,7 +40,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     const [curMesg, setCurMsg] = useState("");
     const [isConnected, setIsConnected] = useState(false);
 
-    const memberId = getItemFromStorage("memberId");
+    // const memberId = getItemFromStorage("memberId");
     const accessToken = getItemFromStorage("accessToken");
 
     // TODO: disconnection
@@ -59,7 +59,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
             }
 
             if (v.type === "BASIC") {
-                console.log("basic", v);
                 setBasic((prevBasic) => [...prevBasic, v]);
             }
         });
@@ -85,7 +84,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
                     stompClient.subscribe(`/topic/chat/${chatMessages.chatRoomId}`, async (message) => {
                         const messageData = JSON.parse(message.body).body;
-                        console.log("3", messageData, memberId === messageData.senderId);
 
                         // const isMine = messageData.senderId === memberId;
 
@@ -96,8 +94,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
                         setChatList((prevChatList) => {
                             if (prevChatList.filter((v) => v.createAt === messageData.createAt)[0]) {
-                                console.log("v", prevChatList[0].createAt);
-                                console.log("messageData", messageData);
                                 return [...prevChatList];
                             }
                             return [...prevChatList, messageData];
@@ -112,7 +108,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
             setClient(stompClient);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatMessages.chatRoomId]);
 
     useEffect(() => {
@@ -131,7 +126,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     };
 
     const onClickSendHandler = () => {
-        console.log("1");
         if (curMesg.trim() === "") return;
 
         onSendMessage();
@@ -148,7 +142,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     };
 
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.log("2");
         if (e.key == "Enter" && onClickSendHandler) {
             e.preventDefault();
             onClickSendHandler();
@@ -162,9 +155,9 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
                 <div className="h-63"></div>
                 <div className="h-373 py-8">
                     <div className="flex max-h-373 w-full flex-col overflow-y-scroll px-4" id="chatBox">
-                        {basic.length > 0 && basic.map((v) => <ChatMessageContent v={v} />)}
+                        {basic.length > 0 && basic.map((v) => <ChatMessageContent key={v.createAt} v={v} />)}
                         {chatList.map((v) => (
-                            <MessageItemContent v={v} />
+                            <MessageItemContent key={v.createAt} v={v} />
                         ))}
                     </div>
                 </div>

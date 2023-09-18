@@ -48,9 +48,7 @@ const Board = () => {
     };
 
     const onClickSearchHandler = () => {
-        if (searchValue !== "") {
-            setSearch(searchValue);
-        }
+        setSearch(searchValue);
     };
 
     const onClickRegisterHandler = () => {
@@ -108,7 +106,7 @@ const Board = () => {
                         // setSelectedOrder={setSelectedOrder}
                     />
                 </div>
-                <Toggle status={status} setStatus={setStatus} />
+                <Toggle status={status} setStatus={setStatus} label="스터디" />
             </div>
             <>
                 {isLoading && (
@@ -123,7 +121,7 @@ const Board = () => {
                         {studies.data.length > 0 ? (
                             <>
                                 {studies.data.map((v) => (
-                                    <BoardList study={v} key={`study-${v.boardId}`} />
+                                    <BoardList study={v} key={`study-${v.boardId}`} refetch={refetch} />
                                 ))}
                             </>
                         ) : (

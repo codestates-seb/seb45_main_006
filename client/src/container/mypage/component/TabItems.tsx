@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMatches, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import Typography from "@component/Typography";
 
@@ -44,24 +44,31 @@ const defaultTabItems: ITabItems = [
 function TabItems() {
     const [tabItems, setTabItems] = useState<ITabItems>(defaultTabItems);
 
-    const match = useMatches();
-
     const [searchParams] = useSearchParams();
     const curTab = searchParams.get("tab");
+    const nav = searchParams.get("nav") || "";
 
     useEffect(() => {
         if (curTab) {
-            setTabItems(
-                [...defaultTabItems].map((v) => {
-                    return { label: v.label, tab: v.tab, selected: curTab.includes(v.tab) };
-                }),
-            );
+            if (nav === "likes") {
+                setTabItems(
+                    [...defaultTabItems]
+                        .filter((v) => !(v.tab === "project" || v.tab === "study"))
+                        .map((v) => {
+                            return { label: v.label, tab: v.tab, selected: v.tab === "info" };
+                        }),
+                );
+            } else {
+                setTabItems(
+                    [...defaultTabItems].map((v) => {
+                        return { label: v.label, tab: v.tab, selected: curTab.includes(v.tab) };
+                    }),
+                );
+            }
         } else {
             setTabItems(defaultTabItems);
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [match[1].pathname]);
+    }, [curTab, nav]);
 
     const onClickTabItem = (item: ITabItem) => {
         setTabItems(

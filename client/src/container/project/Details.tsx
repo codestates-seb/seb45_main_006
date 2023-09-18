@@ -3,13 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import Report from "@component/project-study/Report";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useGetDetailProject } from "@api/project/hook";
 import { useDeleteProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckChat } from "@hook/useCheckChat";
 
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
@@ -29,11 +27,11 @@ const Details = () => {
     const {
         data: projectInputs,
         isLoading,
-        refetch,
+        refetch: refetchProject,
     } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
 
     useEffect(() => {
-        refetch();
+        refetchProject();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -53,7 +51,12 @@ const Details = () => {
         setComment(e.currentTarget.value);
     };
 
-    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    useEffect(() => {
+        if (projectInputs && projectInputs.bookmarked) {
+            setIsBookmarked(!!projectInputs?.bookmarked);
+        }
+    }, [projectInputs]);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine, isLoggedIn } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
@@ -80,10 +83,7 @@ const Details = () => {
                             });
                             navigate("/projects");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -109,18 +109,10 @@ const Details = () => {
                         setComment("");
                         refetchComment();
                     },
-                    onError: () => {
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }
-    };
-
-    const { createOrEnrollChatRoom } = useCheckChat({ memberId: projectInputs?.memberProfile.memberId || 0 });
-
-    const onClickChatBtn = () => {
-        createOrEnrollChatRoom({ nickname: projectInputs?.memberProfile.nickname || "" });
     };
 
     if (isLoading) {
@@ -184,7 +176,7 @@ const Details = () => {
                         </ul>
                     </div>
 
-                    <div className="flex flex-col items-center py-10">
+                    <div className="flex min-w-50 flex-col items-center py-10">
                         {isMine && (
                             <>
                                 <Button
@@ -206,8 +198,8 @@ const Details = () => {
                             boardId={projectInputs?.boardId || 0}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={refetchProject}
                         />
-                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -218,16 +210,6 @@ const Details = () => {
                             setBlockedMemberId={() => navigate("/projects")}
                             refetchAllMembers={() => {}}
                         />
-                    )}
-                    {!isMine && (
-                        <Button
-                            type="PROJECT_POINT"
-                            styles="font-semibold mr-0"
-                            isFullBtn={true}
-                            onClickHandler={onClickChatBtn}
-                        >
-                            <Typography type="Body" text="참여하기" />
-                        </Button>
                     )}
                 </div>
             </div>

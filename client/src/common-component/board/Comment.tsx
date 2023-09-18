@@ -95,10 +95,7 @@ export const OneComment = ({
                         refetchComment();
                     },
 
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                     onSettled: () => setIsEdit(false),
                 },
             );
@@ -120,10 +117,7 @@ export const OneComment = ({
                             });
                             refetchComment();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
@@ -147,10 +141,7 @@ export const OneComment = ({
                         refetchComment();
                     },
                     // TODO: 에러 분기
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }
