@@ -40,7 +40,7 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     const [curMesg, setCurMsg] = useState("");
     const [isConnected, setIsConnected] = useState(false);
 
-    const memberId = getItemFromStorage("memberId");
+    // const memberId = getItemFromStorage("memberId");
     const accessToken = getItemFromStorage("accessToken");
 
     // TODO: disconnection

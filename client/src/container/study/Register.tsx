@@ -75,6 +75,9 @@ export default function Register() {
         if (!value) {
             setInputs({ ...inputs, [name]: "" });
         }
+        if (value.length > 2) {
+            setInputs({ ...inputs, [name]: value.slice(0, 2) });
+        }
         if (parseInt(value) >= 0) {
             setInputs({ ...inputs, [name]: value });
         }
