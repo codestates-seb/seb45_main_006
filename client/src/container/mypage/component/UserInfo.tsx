@@ -1,12 +1,11 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useRecoilValue } from "recoil";
-import { authNicknameAtom } from "@feature/Global";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authNicknameAtom, isLoggedInAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
 import { useAuthHelper } from "@hook/useCheckAuth";
-import { useLoginInAndOut } from "@hook/useLogInAndOut";
 
 import { usePatchMember, useDeleteMember } from "@api/member/hook";
 
@@ -17,16 +16,18 @@ import AutoCompletionTags from "@component/AutoCompletionTags";
 import { UserInfo as UserStackAndPos } from "@container/user/component/UserCardModal";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
-import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
+import { clearStorage, getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
+import { useDeleteLogout } from "@api/sign/hook";
 
 function UserInfo({ user }: { user: GetResMemberDetail }) {
     const navigate = useNavigate();
     const checkboxRef = useRef(null);
 
     const authNickname = useRecoilValue(authNicknameAtom);
+    const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
 
     const email = getItemFromStorage("email");
 
@@ -43,7 +44,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const { postCheckNickname } = useAuthHelper();
 
     const onHandleCheckNickname = () => {
-        postCheckNickname({ nickname });
+        postCheckNickname({ nickname, setIsRequestedNickname: () => {} });
     };
     const { mutate: patchMember } = usePatchMember();
     const { mutate: deleteMember } = useDeleteMember();
@@ -87,7 +88,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
         );
     };
 
-    const { onHandleLogout } = useLoginInAndOut();
+    const { mutate: deleteLogout } = useDeleteLogout();
 
     const onHandleDeleteUser = () => {
         createToast({
@@ -99,17 +100,25 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                     { memberId: user.memberId },
                     {
                         onSuccess: () => {
-                            onHandleLogout({ email });
                             fireToast({
                                 content: "탈퇴 처리되었습니다.",
                                 isConfirm: false,
                             });
-                            navigate("/");
                         },
                         onError: (err) => errorToast(err),
                     },
                 ),
         });
+        deleteLogout(
+            { email },
+            {
+                onSuccess: () => {
+                    clearStorage();
+                    setIsLoggedIn(false);
+                    navigate("/");
+                },
+            },
+        );
     };
 
     const linkCss = "bg-tertiary px-8 py-4 hover:bg-light hover:font-bold";

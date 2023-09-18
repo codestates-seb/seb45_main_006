@@ -111,7 +111,7 @@ const Board = () => {
                         // setSelectedOrder={setSelectedOrder}
                     />
                 </div>
-                <Toggle status={status} setStatus={setStatus} />
+                <Toggle status={status} setStatus={setStatus} label="프로젝트" />
             </div>
             <>
                 {isLoading && (

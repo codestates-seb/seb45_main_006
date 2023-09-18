@@ -19,6 +19,7 @@ import SignButton from "@container/sign/component/SignButton";
 import EmailGuide from "./component/EmailGuide";
 
 import progress from "@assets/sign/progress_bar2.png";
+import Loading from "@assets/loading.gif";
 
 import { REGEX } from "@hook/useCheckValidValue";
 
@@ -102,7 +103,7 @@ function SignUp2() {
     if (authEmail && !redirectedEmail) {
         return (
             <SignLayout title="이메일 인증" subTitle="" progressImage={""}>
-                <EmailGuide />
+                <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
             </SignLayout>
         );
     }
@@ -121,6 +122,11 @@ function SignUp2() {
                     description="이메일 형식이 맞지 않습니다."
                 />
 
+                {isRequestedAuthEmail && !authEmail && (
+                    <div className="flex justify-center pr-4">
+                        <img src={Loading} alt="로딩 중" className="ml-12 h-32 min-w-63" />
+                    </div>
+                )}
                 {!isRequestedAuthEmail && !authEmail && (
                     <Button
                         type="STUDY"
@@ -131,7 +137,7 @@ function SignUp2() {
                                 return;
                             }
                             setIsRequestedAuthEmail(true);
-                            reqAuthenticateEmail({ email });
+                            reqAuthenticateEmail({ email, setIsRequestedAuthEmail });
                         }}
                     >
                         <Typography type="Description" text="인증 요청" styles="min-w-max" color="text-gray-700" />
@@ -156,8 +162,13 @@ function SignUp2() {
                                     fireToast({ content: "인증번호를 입력해주세요.", isConfirm: false });
                                     return;
                                 }
+
                                 setIsRequestedAuthCode(true);
-                                postCheckAuthCode({ email: redirectedEmail || "", authCode: authCodeValue });
+                                postCheckAuthCode({
+                                    email: redirectedEmail || "",
+                                    authCode: authCodeValue,
+                                    setIsRequestedAuthCode,
+                                });
                             }}
                         >
                             <Typography type="Description" text="인증 확인" styles="min-w-max" color="text-gray-700" />
@@ -184,7 +195,7 @@ function SignUp2() {
                                 return;
                             }
                             setIsRequestedNickname(true);
-                            postCheckNickname({ nickname });
+                            postCheckNickname({ nickname, setIsRequestedNickname });
                         }}
                     >
                         <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />

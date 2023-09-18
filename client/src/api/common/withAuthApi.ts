@@ -51,11 +51,6 @@ export const withAuthApi = axios.create({
 withAuthApi.interceptors.request.use(async (config) => {
     if (!config.headers) return config;
 
-    const nickname = getItemFromStorage("nickname");
-    if (!nickname) {
-        await setRandomNickname();
-    }
-
     let accessToken = getItemFromStorage("accessToken") || "";
     const refreshToken = getItemFromStorage("refreshToken") || "";
 
@@ -68,6 +63,12 @@ withAuthApi.interceptors.request.use(async (config) => {
     if (accessToken && isValidToken(accessToken)) {
         config.headers.Authorization = `Bearer ${accessToken}`;
         return config;
+    }
+
+    const nickname = getItemFromStorage("nickname");
+    console.log("nickname", nickname);
+    if (!nickname) {
+        await setRandomNickname();
     }
 
     // 2. accessToken이 유효하지 않을 때

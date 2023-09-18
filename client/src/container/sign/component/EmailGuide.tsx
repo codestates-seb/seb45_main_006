@@ -3,7 +3,7 @@ import { authEmailAtom } from "@feature/Global";
 
 import Typography from "@component/Typography";
 
-function EmailGuide() {
+function EmailGuide({ setIsRequestedAuthEmail }: { setIsRequestedAuthEmail: (v: boolean) => void }) {
     const setAuthEmail = useSetRecoilState(authEmailAtom);
 
     return (
@@ -16,7 +16,12 @@ function EmailGuide() {
             <br />
             <div className="mb-4 flex items-center justify-between">
                 <Typography type="Description" text="혹시 이메일을 잘못 입력하셨다면?" color="text-gray-700" />
-                <button onClick={() => setAuthEmail("")}>
+                <button
+                    onClick={() => {
+                        setAuthEmail("");
+                        setIsRequestedAuthEmail(false);
+                    }}
+                >
                     <Typography
                         type="Description"
                         text="이메일 재입력"

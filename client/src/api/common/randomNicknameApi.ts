@@ -25,28 +25,30 @@ export const setRandomNickname = async () => {
 
     const randomNickname = getRandomIDNotTracing();
     const user = userWithoutNickname;
-    const reqObj = {
-        memberId: user.memberId,
-        nickname: randomNickname,
-        profilePicture: user.profilePicture,
-        githubId: user.githubId,
-        introduction: user.introduction,
-        listEnroll: user.listEnroll,
-        stack: user.stack,
-        position: user.position,
-    };
+    if (!user.nickname) {
+        const reqObj = {
+            memberId: user.memberId,
+            nickname: randomNickname,
+            profilePicture: user.profilePicture,
+            githubId: user.githubId,
+            introduction: user.introduction,
+            listEnroll: user.listEnroll,
+            stack: user.stack,
+            position: user.position,
+        };
 
-    setItemToStorage("nickname", randomNickname);
+        setItemToStorage("nickname", randomNickname);
 
-    await axios.request({
-        baseURL,
-        url: "/members",
-        method: "patch",
-        headers: { Authorization: `Bearer ${accessToken}` },
-        data: { ...reqObj },
-        timeout: 1000 * 10,
-        validateStatus: () => {
-            return true;
-        },
-    });
+        await axios.request({
+            baseURL,
+            url: "/members",
+            method: "patch",
+            headers: { Authorization: `Bearer ${accessToken}` },
+            data: { ...reqObj },
+            timeout: 1000 * 10,
+            validateStatus: () => {
+                return true;
+            },
+        });
+    }
 };

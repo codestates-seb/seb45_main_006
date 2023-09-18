@@ -5,13 +5,24 @@ import Tag from "@component/project-study/Tag";
 import UserProfile from "@component/user/UserProfile";
 
 import { CommonResStudies } from "@type/study/study.res.dto";
+import { useRecoilValue } from "recoil";
+import { isLoggedInAtom } from "@feature/Global";
+import { useToast } from "@hook/useToast";
 
 const StudyList = ({ study }: { study: CommonResStudies }) => {
     const navigate = useNavigate();
+    const isLogginedIn = useRecoilValue(isLoggedInAtom);
+    const { reqLoginToUserToast } = useToast();
 
     return (
         <div
-            onClick={() => navigate(`/studies/${study.boardId}`)}
+            onClick={() => {
+                if (!isLogginedIn) {
+                    reqLoginToUserToast();
+                    return;
+                }
+                navigate(`/studies/${study.boardId}`);
+            }}
             className="m-10 flex h-300 w-260 cursor-pointer flex-col justify-between rounded-lg border-2 border-solid border-study p-20 shadow-lg transition-transform hover:scale-105 hover:bg-gray-100"
         >
             <div>
@@ -27,9 +38,10 @@ const StudyList = ({ study }: { study: CommonResStudies }) => {
                 <h1 className="my-20 cursor-pointer text-24 font-bold">{study.title}</h1>
                 <div className="my-20 flex min-h-26">
                     {Array.isArray(study.stacks) &&
-                        study.stacks.map((v) => {
+                        study.stacks.slice(0, 2).map((v) => {
                             return <Tag key={`${study.boardId}-tag-${v}`} type="STUDY" text={v} />;
                         })}
+                    {study.stacks.length > 2 && <Typography text="and more ..." type="SmallLabel" />}
                 </div>
             </div>
             <hr />
