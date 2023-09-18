@@ -127,7 +127,7 @@ export default function Register() {
                         name="title"
                         label="스터디명"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="스터디명을 입력하세요."
                         value={inputs.title}
                         onChange={handleInput}
                         maxlength={20}
@@ -136,7 +136,7 @@ export default function Register() {
                         name="content"
                         label="스터디 상세내용"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="스터디를 자세히 설명해주세요."
                         value={inputs.content}
                         onChange={handleInput}
                         borderStyle={""}

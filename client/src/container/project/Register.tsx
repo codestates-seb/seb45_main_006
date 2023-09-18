@@ -185,7 +185,7 @@ export default function Register() {
                         name="title"
                         label="프로젝트명"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="프로젝트명을 입력하세요."
                         value={inputs.title}
                         onChange={handleInput}
                         maxlength={20}
@@ -194,7 +194,7 @@ export default function Register() {
                         name="content"
                         label="프로젝트 상세내용"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="프로젝트를 자세히 설명해주세요."
                         value={inputs.content}
                         onChange={handleInput}
                         borderStyle={""}

@@ -59,7 +59,8 @@ const DateChoice = ({
                 }}
                 locale="ko"
                 minDate={new Date()}
-                className="min-h-40 w-full rounded-md border-b-1 p-8 text-sm leading-tight"
+                // eslint-disable-next-line tailwindcss/no-custom-classname
+                className="text-md min-h-40 w-full rounded-md border-b-1 p-8 leading-tight placeholder:font-gangwon"
                 placeholderText="시작날짜와 마감날짜를 선택해주세요"
             />
         </div>
