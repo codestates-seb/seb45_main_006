@@ -54,6 +54,7 @@ export const useGetMyDetail = () => {
     return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
         queryFn: getMyDetail,
+        enabled: !!localStorage.getItem("memberId"),
     });
 };
 

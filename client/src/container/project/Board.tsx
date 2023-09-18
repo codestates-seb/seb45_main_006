@@ -41,7 +41,7 @@ const Board = () => {
         size: 8,
         stack: selectedStacks.join(","),
         title: search,
-        status: status ? "PROJECT_POSTED" : "PROJECT_DELETED",
+        status: status ? "PROJECT_POSTED" : "PROJECT_CLOSED",
     });
 
     useEffect(() => {

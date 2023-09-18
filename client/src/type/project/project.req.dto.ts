@@ -19,7 +19,6 @@ export type PostReqProject = {
     startDate: string;
     deadline: string;
     recruitNum: number;
-    // recruitStatus: PROEJCT_STATUS_TYPE;
 };
 
 export type PatchReqProject = {
@@ -30,7 +29,7 @@ export type PatchReqProject = {
     startDate: string;
     deadline: string;
     recruitNum: number;
-    recruitStatus: PROEJCT_STATUS_TYPE;
+    // recruitStatus: PROEJCT_STATUS_TYPE;
 };
 
 export type DeleteReqProject = {

@@ -106,9 +106,11 @@ const QuestionTitle = ({
 function QuestionItem({
     question,
     onClickDeleteHandler,
+    isDetail = false,
 }: {
     question: QuestionDefaultType;
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+    isDetail?: boolean;
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -129,7 +131,7 @@ function QuestionItem({
     const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
     const { reqLoginToUserToast } = useToast();
 
-    const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(isDetail);
     const [answer, setAnswer] = useState<string>("");
     const { isMine } = useCheckUser({ memberId: question.memberId });
 

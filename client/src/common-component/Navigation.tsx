@@ -72,13 +72,14 @@ function Navigation() {
     }, [pathname]);
 
     return (
-        // eslint-disable-next-line tailwindcss/no-custom-classname
-        <nav className="flex h-full w-full px-10 shadow-3xl lg:p-0">
-            <ul className="flex w-full items-center justify-around overflow-x-scroll sm:overflow-hidden">
-                {navItems.map((v: INavItem) => (
-                    <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} isSelected={v.selected} />
-                ))}
-            </ul>
+        <nav className="flex h-full w-full px-10 lg:p-0">
+            <div className="shadow-3xl">
+                <ul className="flex w-full items-center justify-around overflow-x-scroll sm:overflow-hidden">
+                    {navItems.map((v: INavItem) => (
+                        <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} isSelected={v.selected} />
+                    ))}
+                </ul>
+            </div>
         </nav>
     );
 }

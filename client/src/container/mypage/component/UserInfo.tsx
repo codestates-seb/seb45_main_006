@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import { useRecoilValue } from "recoil";
 import { authNicknameAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
 import { useAuthHelper } from "@hook/useCheckAuth";
+import { useLoginInAndOut } from "@hook/useLogInAndOut";
 
 import { usePatchMember, useDeleteMember } from "@api/member/hook";
 
@@ -16,7 +17,7 @@ import AutoCompletionTags from "@component/AutoCompletionTags";
 import { UserInfo as UserStackAndPos } from "@container/user/component/UserCardModal";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
-import { getItemFromStorage } from "@util/localstorage-helper";
+import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
@@ -48,7 +49,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const { mutate: deleteMember } = useDeleteMember();
 
     const onHandleEditUser = () => {
-        if (authNickname !== nickname) {
+        if (user.nickname !== nickname && authNickname !== nickname) {
             fireToast({
                 content: "닉네임을 중복검사를 진행해주세요.",
                 isConfirm: false,
@@ -76,6 +77,10 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                         content: "수정 완료하였습니다.",
                         isConfirm: false,
                     });
+
+                    setItemToStorage("nickname", authNickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", user.profilePicture);
                 },
                 onError: (err) => {
                     console.log(err);
@@ -84,6 +89,8 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
             },
         );
     };
+
+    const { onHandleLogout } = useLoginInAndOut();
 
     const onHandleDeleteUser = () => {
         createToast({
@@ -95,7 +102,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                     { memberId: user.memberId },
                     {
                         onSuccess: () => {
-                            // TODO: 로그아웃
+                            onHandleLogout({ email });
                             fireToast({
                                 content: "탈퇴 처리되었습니다.",
                                 isConfirm: false,

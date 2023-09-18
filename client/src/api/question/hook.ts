@@ -14,9 +14,10 @@ import {
     PatchResQuestion,
     DeleteResQuestion,
     PostResViewCount,
+    QuestionDefaultType,
 } from "@type/question/question.res.dto";
 
-import { getAllQuestion, postQuestion, patchQuestion, deleteQuestion, postViewCount } from "./api";
+import { getAllQuestion, postQuestion, patchQuestion, deleteQuestion, postViewCount, getDetailQuestion } from "./api";
 import { questionKeyFactory } from "./questionKeyFactory";
 
 // 질문 게시판 - 리스트 조회
@@ -24,6 +25,14 @@ export const useGetAllQuestion = ({ page, size, search }: GetReqAllQuestion) => 
     return useQuery<GetResAllQuestion, AxiosError, GetResAllQuestion>({
         queryKey: questionKeyFactory.all({ page, size, search }),
         queryFn: () => getAllQuestion({ page, size, search }),
+    });
+};
+
+export const useGetDetailQuestion = ({ boardId }: { boardId: number }) => {
+    return useQuery<QuestionDefaultType, AxiosError, QuestionDefaultType>({
+        queryKey: questionKeyFactory.detail({ boardId }),
+        queryFn: () => getDetailQuestion({ boardId }),
+        enabled: !!boardId,
     });
 };
 

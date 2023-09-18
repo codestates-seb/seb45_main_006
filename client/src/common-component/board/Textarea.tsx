@@ -18,6 +18,7 @@ export default function BoardTextarea({
     name,
     value = "",
     onChange,
+    borderStyle,
 }: IBoardTextarea) {
     return (
         <div className="my-10 flex flex-col p-10">
@@ -33,7 +34,7 @@ export default function BoardTextarea({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                borderStyle="shadow-md"
+                borderStyle={borderStyle ? borderStyle : "shadow-md outline-main"}
             />
         </div>
     );

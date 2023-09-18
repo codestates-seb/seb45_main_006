@@ -46,3 +46,10 @@ export const deleteStudy = async ({ boardId }: DeleteReqStudy) => {
     const { data } = await withAuthApi.delete(url);
     return data;
 };
+
+// 프로젝트 - 모집 마감
+export const patchCloseStudy = async ({ boardId }: { boardId: number }) => {
+    const url = `${COMMON_API_PATH.STUDY.PATH}/${boardId}/close`;
+    const { data } = await withAuthApi.patch(url);
+    return data;
+};

@@ -16,9 +16,9 @@ export const usePostCreateChatRoom = () => {
 
 // 채팅방 들어가기
 export const useGetEnrollChatRoom = ({ chatRoomId }: GetReqEnrollChatRoom) => {
-    return useQuery<GetResEnrollChatRoom, AxiosError, GetReqEnrollChatRoom>({
+    return useQuery<GetResEnrollChatRoom, AxiosError, GetResEnrollChatRoom>({
         queryKey: ["chats", { chatRoomId: chatRoomId }],
-        queryFn: () => getEnrollChatRoom({ chatRoomId: 4 }),
+        queryFn: () => getEnrollChatRoom({ chatRoomId }),
         enabled: !!chatRoomId,
     });
 };

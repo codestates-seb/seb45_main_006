@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { useRecoilValue } from "recoil";
 import { defaultStackAtom } from "@feature/Global";
 
@@ -16,10 +14,12 @@ function SetPro1({
     setCurStage,
     selectedTags,
     setSelectedTags,
+    onHandleNextEditBtn,
 }: {
     setCurStage: (v: number) => void;
     selectedTags: Array<string>;
     setSelectedTags: (tags: Array<string>) => void;
+    onHandleNextEditBtn: () => void;
 }) {
     const nickname = getItemFromStorage("nickname");
     const defaultStack = useRecoilValue(defaultStackAtom);
@@ -34,11 +34,9 @@ function SetPro1({
                     defaultSuggestions={defaultStack}
                 />
                 <div className="flex justify-center">
-                    <Link to={"/"}>
-                        <SignButton type="OUTLINED" styles="mr-20">
-                            <Typography type="SmallLabel" text="다음에 할게요" styles="font-bold" />
-                        </SignButton>
-                    </Link>
+                    <SignButton type="OUTLINED" styles="mr-20" onClickHandler={onHandleNextEditBtn}>
+                        <Typography type="SmallLabel" text="다음에 할게요" styles="font-bold" />
+                    </SignButton>
 
                     <SignButton type="FILLED" onClickHandler={() => setCurStage(2)}>
                         <Typography type="SmallLabel" text="다음" color="text-white" styles="font-bold" />

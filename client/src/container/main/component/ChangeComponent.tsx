@@ -17,6 +17,7 @@ const ChangeComponent = () => {
     const { data: studies, isLoading: studyLoading } = useGetAllStudies({
         page: 1,
         size: 8,
+        status: "STUDY_POSTED",
     });
 
     const handleProjectClick = () => {

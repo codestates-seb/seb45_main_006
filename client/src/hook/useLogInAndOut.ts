@@ -2,8 +2,9 @@ import { isLoggedInAtom, isLoginFailedAtom } from "@feature/Global";
 import { useSetRecoilState } from "recoil";
 
 import { useToast } from "./useToast";
-import { usePostLogin } from "@api/sign/hook";
+import { usePostLogin, useDeleteLogout } from "@api/sign/hook";
 import { setTokenToLocalStorage } from "@util/token-helper";
+import { clearStorage } from "@util/localstorage-helper";
 
 export const useLoginInAndOut = () => {
     const { mutate: postLogin } = usePostLogin();
@@ -53,5 +54,21 @@ export const useLoginInAndOut = () => {
         );
     };
 
-    return { onHandleLogin };
+    const { mutate: deleteLogout } = useDeleteLogout();
+
+    const onHandleLogout = ({ email }: { email: string }) => {
+        console.log("1???");
+        deleteLogout(
+            { email },
+            {
+                onSuccess: () => {
+                    console.log("2???");
+                    clearStorage();
+                    setIsLoggedIn(false);
+                },
+            },
+        );
+    };
+
+    return { onHandleLogin, onHandleLogout };
 };
