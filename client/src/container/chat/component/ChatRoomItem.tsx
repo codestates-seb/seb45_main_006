@@ -59,7 +59,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
             }
 
             if (v.type === "BASIC") {
-                console.log("basic", v);
                 setBasic((prevBasic) => [...prevBasic, v]);
             }
         });
@@ -85,7 +84,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
                     stompClient.subscribe(`/topic/chat/${chatMessages.chatRoomId}`, async (message) => {
                         const messageData = JSON.parse(message.body).body;
-                        console.log("3", messageData, memberId === messageData.senderId);
 
                         // const isMine = messageData.senderId === memberId;
 
@@ -96,8 +94,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
 
                         setChatList((prevChatList) => {
                             if (prevChatList.filter((v) => v.createAt === messageData.createAt)[0]) {
-                                console.log("v", prevChatList[0].createAt);
-                                console.log("messageData", messageData);
                                 return [...prevChatList];
                             }
                             return [...prevChatList, messageData];
@@ -131,7 +127,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     };
 
     const onClickSendHandler = () => {
-        console.log("1");
         if (curMesg.trim() === "") return;
 
         onSendMessage();
@@ -148,7 +143,6 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     };
 
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.log("2");
         if (e.key == "Enter" && onClickSendHandler) {
             e.preventDefault();
             onClickSendHandler();

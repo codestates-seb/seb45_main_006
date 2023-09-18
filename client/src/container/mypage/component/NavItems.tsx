@@ -109,7 +109,6 @@ function NavItems({ user }: { user: GetResMemberDetail }) {
                 }),
             );
         } else {
-            console.log("???????");
             setNavItems(
                 [...navItems].map((v) => {
                     return { label: v.label, nav: v.nav, selected: v.nav === "edit", oauth: v.oauth };

@@ -47,7 +47,7 @@ export const useWebStompClient = (
 
                         setMessages((prevMessages) => {
                             const newMessages = [...prevMessages, { ...messageData, isRead }];
-                            console.log("New Messages:", newMessages);
+
                             return newMessages;
                         });
 

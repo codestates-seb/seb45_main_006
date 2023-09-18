@@ -8,7 +8,6 @@ const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 export const setRandomNickname = async () => {
     const baseURL = apiEndpoint;
     const accessToken = getItemFromStorage("accessToken") || "";
-    console.log("???? accessToken", accessToken);
 
     const { data: userWithoutNickname } = await axios.request({
         baseURL,
@@ -21,7 +20,6 @@ export const setRandomNickname = async () => {
             return true;
         },
     });
-    console.log("userWithoutNickname", userWithoutNickname);
 
     const randomNickname = getRandomIDNotTracing();
     const user = userWithoutNickname;

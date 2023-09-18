@@ -38,7 +38,7 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
                     {project.title.length > 10 ? `${project.title.slice(0, 10)}...` : project.title}
                 </h1>
                 <div className="my-20 flex min-h-26 flex-wrap">
-                    {project.stack.map((v) => {
+                    {project.stack.slice(0, 2).map((v) => {
                         return <Tag key={`${project.boardId}-tag-${v}`} type="PROJECT" text={v} />;
                     })}
                     {project.stack.length > 2 && <Typography text="and more ..." type="SmallLabel" />}

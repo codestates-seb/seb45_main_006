@@ -40,7 +40,6 @@ export default function Register() {
     });
 
     const [prevStudyStatus, setPrevStudyStatus] = useState("");
-    console.log("수정 시 적용할 내용", prevStudyStatus);
 
     useEffect(() => {
         if (curActivity === "EDIT") {
@@ -148,7 +147,6 @@ export default function Register() {
 
         if (prevStudyStatus) {
             if (prevStudyStatus === "STUDY_POSTED" && selectedOption === "모집완료") {
-                console.log("??");
                 closeStudy({ boardId: location.state.boardId });
             }
         }

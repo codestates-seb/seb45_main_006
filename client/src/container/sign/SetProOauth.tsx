@@ -25,6 +25,7 @@ function SetProOauth() {
     const [nickname, setNickname] = useState("");
     const authNickname = useRecoilValue(authNicknameAtom);
 
+    const [isRequestedNickname, setIsRequestedNickname] = useState(false);
     const { postCheckNickname } = useAuthHelper();
     const { mutate: patchMember } = usePatchMember();
     const { fireToast, errorToast } = useToast();
@@ -80,11 +81,14 @@ function SetProOauth() {
                         onChange={(e) => setNickname(e.currentTarget.value)}
                         description="닉네임 형식이 맞지 않습니다."
                     />
-                    {authNickname.length === 0 && (
+                    {!isRequestedNickname && !authNickname && (
                         <Button
                             type="STUDY"
                             styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
-                            onClickHandler={() => postCheckNickname({ nickname })}
+                            onClickHandler={() => {
+                                setIsRequestedNickname(true);
+                                postCheckNickname({ nickname, setIsRequestedNickname });
+                            }}
                         >
                             <Typography type="Description" text="중복 확인" styles="min-w-max" color="text-gray-700" />
                         </Button>

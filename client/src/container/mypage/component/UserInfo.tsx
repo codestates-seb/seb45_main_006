@@ -95,7 +95,8 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
             content: "탈퇴하시면 DevSquad에서 기록이 삭제됩니다. 정말 탈퇴하시겠습니까?🥺",
             isWarning: false,
             isConfirm: true,
-            callback: () =>
+            callback: () => {
+                deleteLogout({ email });
                 deleteMember(
                     { memberId: user.memberId },
                     {
@@ -104,21 +105,15 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                                 content: "탈퇴 처리되었습니다.",
                                 isConfirm: false,
                             });
+                            setIsLoggedIn(false);
+                            clearStorage();
+                            navigate("/");
                         },
                         onError: (err) => errorToast(err),
                     },
-                ),
-        });
-        deleteLogout(
-            { email },
-            {
-                onSuccess: () => {
-                    clearStorage();
-                    setIsLoggedIn(false);
-                    navigate("/");
-                },
+                );
             },
-        );
+        });
     };
 
     const linkCss = "bg-tertiary px-8 py-4 hover:bg-light hover:font-bold";

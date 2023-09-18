@@ -4,9 +4,7 @@ import githubImg from "@assets/github.png";
 import fontImg from "@assets/font.png";
 
 function SignUp() {
-    const handleGoogleClick = () => {
-        console.log("on google handle clicked");
-    };
+    const handleGoogleClick = () => {};
 
     return (
         <>

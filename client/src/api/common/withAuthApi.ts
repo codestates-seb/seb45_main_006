@@ -66,7 +66,7 @@ withAuthApi.interceptors.request.use(async (config) => {
     }
 
     const nickname = getItemFromStorage("nickname");
-    console.log("nickname", nickname);
+
     if (!nickname) {
         await setRandomNickname();
     }

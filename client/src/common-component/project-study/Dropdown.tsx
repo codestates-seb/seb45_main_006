@@ -19,13 +19,11 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, selectedOption, onS
     const handleOptionClick = (option: string) => {
         onSelectOption(option);
         setIsOpen(false);
-        console.log("11111", option);
     };
 
     // const handleBlur = () => {
     //     setIsOpen(false);
     // };
-    console.log(selectedOption);
     return (
         <div className="font-gangwon">
             <div className="m-10">
