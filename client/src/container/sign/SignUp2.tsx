@@ -29,7 +29,7 @@ function SignUp2() {
     const { errorToast, fireToast } = useToast();
     const { mutate: postSignUp } = usePostMember();
 
-    const { alertWhenEmptyFn, isPasswordVaid, isEmailValid } = useCheckValidValue();
+    const { alertWhenEmptyFn, isPasswordVaid, isEmailValid, isNicknameVaid } = useCheckValidValue();
 
     // 사용자 입력값
     const [email, setEmail] = useState(redirectedEmail || "");
@@ -152,7 +152,7 @@ function SignUp2() {
                             type="STUDY"
                             styles="px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold"
                             onClickHandler={() => {
-                                if (!authCode) {
+                                if (!authCodeValue) {
                                     fireToast({ content: "인증번호를 입력해주세요.", isConfirm: false });
                                     return;
                                 }
@@ -179,7 +179,7 @@ function SignUp2() {
                         type="STUDY"
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                         onClickHandler={() => {
-                            if (!nickname) {
+                            if (!nickname || !isNicknameVaid({ nickname })) {
                                 fireToast({ content: "닉네임을 입력해주세요.", isConfirm: false });
                                 return;
                             }

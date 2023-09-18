@@ -1,71 +1,13 @@
 import { useState, useEffect } from "react";
-import { useGetProjectLiked, useGetStudyLiked, useGetInfoLiked, useGetQuestionLiked } from "@api/member-activity/hook";
+import { useGetInfoLiked, useGetQuestionLiked } from "@api/member-activity/hook";
 import { useDeleteInfo } from "@api/info/hook";
 import { useDeleteQuestion } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
-import ProjectItem from "@container/project/component/BoardList";
-import StudyItem from "@container/study/component/BoardList";
+
 import InfoItem from "@container/info/component/InfoItem";
 import QuestionItem from "@container/question/component/QuestionItem";
 import Pagination from "@component/Pagination";
-
-const ProjectOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "bookmark" }) => {
-    // 페이지 필터
-    const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
-
-    const { data: project } = useGetProjectLiked({ page: curPage, likedType: type });
-
-    useEffect(() => {
-        if (project?.pageInfo.totalElements) {
-            setTotalItems(project?.pageInfo.totalElements);
-        }
-    }, [project?.pageInfo.totalElements]);
-
-    return (
-        <>
-            {type === "bookmark" && (
-                <>
-                    <div className="w-full">
-                        {Array.isArray(project?.data) &&
-                            project?.data.map((v, i) => {
-                                return <ProjectItem key={`member-${memberId}-project-${i}`} project={v} />;
-                            })}
-                    </div>
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
-                </>
-            )}
-        </>
-    );
-};
-
-const StudyOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "bookmark" }) => {
-    // 페이지 필터
-    const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
-
-    const { data: study } = useGetStudyLiked({ page: curPage, likedType: type });
-
-    useEffect(() => {
-        if (study?.pageInfo.totalElements) {
-            setTotalItems(study?.pageInfo.totalElements);
-        }
-    }, [study?.pageInfo.totalElements]);
-
-    return (
-        <>
-            {type === "bookmark" && (
-                <>
-                    <div className="w-full">
-                        {Array.isArray(study?.data) &&
-                            study?.data.map((v, i) => <StudyItem key={`member-${memberId}-study-${i}`} study={v} />)}
-                    </div>
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
-                </>
-            )}
-        </>
-    );
-};
+import Typography from "@component/Typography";
 
 const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "bookmark" }) => {
     // 페이지 필터
@@ -108,16 +50,32 @@ const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "b
     return (
         <>
             <div className="w-full">
-                {Array.isArray(info?.data) &&
-                    info?.data.map((v, i) => (
-                        <InfoItem
-                            key={`member-${memberId}-info-${i}`}
-                            info={v}
-                            onClickDeleteHandler={onClickDeleteHandler}
+                {info?.data && Array.isArray(info?.data) && info.data.length > 0 ? (
+                    info.data.map((v, i) => (
+                        <>
+                            <InfoItem
+                                key={`member-${memberId}-info-${i}`}
+                                info={v}
+                                onClickDeleteHandler={onClickDeleteHandler}
+                            />
+                            <Pagination
+                                curPage={curPage}
+                                setCurPage={setCurPage}
+                                totalItems={totalItems || 0}
+                                size={4}
+                            />
+                        </>
+                    ))
+                ) : (
+                    <div className="flex h-full flex-col items-center justify-center">
+                        <Typography
+                            text={`${type === "likes" ? "좋아요" : "북마크"}한 자유게시글이 없습니다.`}
+                            type="Description"
+                            styles="mb-8"
                         />
-                    ))}
+                    </div>
+                )}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
@@ -163,16 +121,32 @@ const QuestionOfMember = ({ memberId, type }: { memberId: number; type: "likes" 
     return (
         <>
             <div className="w-full">
-                {Array.isArray(question?.data) &&
-                    question?.data.map((v, i) => (
-                        <QuestionItem
-                            key={`member-${memberId}-question-${i}`}
-                            question={v}
-                            onClickDeleteHandler={onClickDeleteHandler}
+                {question?.data && Array.isArray(question?.data) && question.data.length > 0 ? (
+                    question.data.map((v, i) => (
+                        <>
+                            <QuestionItem
+                                key={`member-${memberId}-info-${i}`}
+                                question={v}
+                                onClickDeleteHandler={onClickDeleteHandler}
+                            />
+                            <Pagination
+                                curPage={curPage}
+                                setCurPage={setCurPage}
+                                totalItems={totalItems || 0}
+                                size={4}
+                            />
+                        </>
+                    ))
+                ) : (
+                    <div className="flex h-full flex-col items-center justify-center">
+                        <Typography
+                            text={`${type === "likes" ? "좋아요" : "북마크"}한 질문게시글이 없습니다.`}
+                            type="Description"
+                            styles="mb-8"
                         />
-                    ))}
+                    </div>
+                )}
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
         </>
     );
 };
@@ -188,8 +162,24 @@ function UserLikeActivity({
 }) {
     return (
         <div className="flex flex-1 flex-col items-center rounded-md bg-white p-12 shadow-md">
-            {tab === "project" && <ProjectOfMember memberId={memberId} type={type} />}
-            {tab === "study" && <StudyOfMember memberId={memberId} type={type} />}
+            {tab === "project" && (
+                <div className="flex h-full flex-col items-center justify-center">
+                    <Typography
+                        text={`${type === "likes" ? "좋아요" : "북마크"}한 프로젝트가 없습니다.`}
+                        type="Description"
+                        styles="mb-8"
+                    />
+                </div>
+            )}
+            {tab === "study" && (
+                <div className="flex h-full flex-col items-center justify-center">
+                    <Typography
+                        text={`${type === "likes" ? "좋아요" : "북마크"}한 스터디가 없습니다.`}
+                        type="Description"
+                        styles="mb-8"
+                    />
+                </div>
+            )}
             {tab === "info" && <InfoOfMember memberId={memberId} type={type} />}
             {tab === "question" && <QuestionOfMember memberId={memberId} type={type} />}
         </div>

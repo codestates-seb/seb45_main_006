@@ -2,6 +2,7 @@ import axios from "axios";
 import { getItemFromStorage, clearStorage } from "@util/localstorage-helper";
 import { isValidToken } from "@util/token-helper";
 import { getRefreshToken } from "./refreshToken";
+import { setRandomNickname } from "./randomNicknameApi";
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 
@@ -49,6 +50,11 @@ export const withAuthApi = axios.create({
 // // 요청 전 interceptor에서 토큰 확인
 withAuthApi.interceptors.request.use(async (config) => {
     if (!config.headers) return config;
+
+    const nickname = getItemFromStorage("nickname");
+    if (!nickname) {
+        await setRandomNickname();
+    }
 
     let accessToken = getItemFromStorage("accessToken") || "";
     const refreshToken = getItemFromStorage("refreshToken") || "";

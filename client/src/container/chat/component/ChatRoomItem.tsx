@@ -162,9 +162,9 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
                 <div className="h-63"></div>
                 <div className="h-373 py-8">
                     <div className="flex max-h-373 w-full flex-col overflow-y-scroll px-4" id="chatBox">
-                        {basic.length > 0 && basic.map((v) => <ChatMessageContent v={v} />)}
+                        {basic.length > 0 && basic.map((v) => <ChatMessageContent key={v.createAt} v={v} />)}
                         {chatList.map((v) => (
-                            <MessageItemContent v={v} />
+                            <MessageItemContent key={v.createAt} v={v} />
                         ))}
                     </div>
                 </div>

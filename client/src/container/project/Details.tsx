@@ -3,13 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import Report from "@component/project-study/Report";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useGetDetailProject } from "@api/project/hook";
 import { useDeleteProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckChat } from "@hook/useCheckChat";
 
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
@@ -29,11 +27,11 @@ const Details = () => {
     const {
         data: projectInputs,
         isLoading,
-        refetch,
+        refetch: refetchProject,
     } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
 
     useEffect(() => {
-        refetch();
+        refetchProject();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -110,12 +108,6 @@ const Details = () => {
                 },
             );
         }
-    };
-
-    const { createOrEnrollChatRoom } = useCheckChat({ memberId: projectInputs?.memberProfile.memberId || 0 });
-
-    const onClickChatBtn = () => {
-        createOrEnrollChatRoom({ nickname: projectInputs?.memberProfile.nickname || "" });
     };
 
     if (isLoading) {
@@ -202,7 +194,6 @@ const Details = () => {
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
                         />
-                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -213,16 +204,6 @@ const Details = () => {
                             setBlockedMemberId={() => navigate("/projects")}
                             refetchAllMembers={() => {}}
                         />
-                    )}
-                    {!isMine && (
-                        <Button
-                            type="PROJECT_POINT"
-                            styles="font-semibold mr-0"
-                            isFullBtn={true}
-                            onClickHandler={onClickChatBtn}
-                        >
-                            <Typography type="Body" text="참여하기" />
-                        </Button>
                     )}
                 </div>
             </div>

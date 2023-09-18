@@ -160,10 +160,15 @@ function UserCardModal({
     const { data: user, isError } = useGetMemberDetail({ memberId });
 
     const { fireToast } = useToast();
-    const { createOrEnrollChatRoom } = useCheckChat({ memberId });
+
+    const { checkIsChatRoomExist, createChatRoom, enrollChatRoomHandler } = useCheckChat();
 
     const onClickChatBtn = () => {
-        createOrEnrollChatRoom({ nickname: user?.nickname || "", closeModal });
+        if (checkIsChatRoomExist({ memberId })) {
+            createChatRoom({ memberId, nickname: user?.nickname || "" });
+        }
+
+        enrollChatRoomHandler({ nickname: user?.nickname || "" });
     };
 
     if (isError) {

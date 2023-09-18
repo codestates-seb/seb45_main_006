@@ -6,6 +6,7 @@ import { useGetMemberDetail } from "@api/member/hook";
 
 import { ChatRoom } from "@type/chat/chat.res.dto";
 import { getItemFromStorage } from "@util/localstorage-helper";
+import { useEffect } from "react";
 
 const ChatItem = ({ chat }: { chat: ChatRoom }) => {
     const { nicknames, lastMessage } = chat;
@@ -26,7 +27,11 @@ const ChatItem = ({ chat }: { chat: ChatRoom }) => {
 };
 
 function ChatRooms() {
-    const { data: chats } = useGetChatRooms();
+    const { data: chats, refetch } = useGetChatRooms();
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="flex flex-1 flex-col items-center rounded-md bg-white p-40 shadow-md">

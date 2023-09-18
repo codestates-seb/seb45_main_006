@@ -40,7 +40,7 @@ function SetProOauth() {
         patchMember(
             {
                 memberId,
-                nickname: authNickname,
+                nickname: authNickname || nickname,
                 introduction: "",
                 profilePicture: "",
                 githubId: "",
@@ -50,7 +50,7 @@ function SetProOauth() {
             },
             {
                 onSuccess: () => {
-                    setItemToStorage("nickname", authNickname);
+                    setItemToStorage("nickname", authNickname || nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", "");
                     navigate("/signup/3");

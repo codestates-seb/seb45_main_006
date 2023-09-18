@@ -7,10 +7,11 @@ import UserProfile from "@component/user/UserProfile";
 import Typography from "@component/Typography";
 
 import { getItemFromStorage } from "@util/localstorage-helper";
-import { ChatRoom, GetResChatRooms } from "@type/chat/chat.res.dto";
+import { ChatRoom } from "@type/chat/chat.res.dto";
 import { useToast } from "@hook/useToast";
+import { useCheckChat } from "@hook/useCheckChat";
 
-const ChatItem = ({ chat, refetch }: { chat: ChatRoom; refetch: () => void }) => {
+const ChatItem = ({ chat, refetchChatRooms }: { chat: ChatRoom; refetchChatRooms: () => void }) => {
     const { nicknames, lastMessage } = chat;
 
     const setChatBotStatus = useSetRecoilState(chatBotStatusAtom);
@@ -44,7 +45,7 @@ const ChatItem = ({ chat, refetch }: { chat: ChatRoom; refetch: () => void }) =>
                                 content: "채팅방을 나갔습니다!",
                                 isConfirm: false,
                             });
-                            refetch();
+                            refetchChatRooms();
                         },
                     },
                 );
@@ -53,7 +54,10 @@ const ChatItem = ({ chat, refetch }: { chat: ChatRoom; refetch: () => void }) =>
     };
 
     return (
-        <li className={`flex w-full cursor-pointer justify-between p-12 ${borderCss}`} onClick={onClickChatRoomHandler}>
+        <li
+            className={`flex w-full cursor-pointer items-center justify-between p-12 ${borderCss}`}
+            onClick={onClickChatRoomHandler}
+        >
             <div className="flex">
                 <UserProfile size="sm" profilePicture={otherUser?.profilePicture} />
                 <div className="flex flex-col">
@@ -67,7 +71,7 @@ const ChatItem = ({ chat, refetch }: { chat: ChatRoom; refetch: () => void }) =>
                 </div>
             </div>
             <button
-                className="rounded-sm bg-warn px-4 py-2"
+                className="h-fit rounded-sm bg-warn px-4 py-2"
                 onClick={(e) => {
                     e.stopPropagation();
                     onClickDeleteHandler();
@@ -79,8 +83,8 @@ const ChatItem = ({ chat, refetch }: { chat: ChatRoom; refetch: () => void }) =>
     );
 };
 
-function ChatRoomList({ chats, refetch }: { chats: GetResChatRooms | undefined; refetch: () => void }) {
-    console.log(chats);
+function ChatRoomList() {
+    const { chats, reqRefetchChatRooms } = useCheckChat();
     return (
         <>
             {chats && Array.isArray(chats) && (
@@ -95,7 +99,11 @@ function ChatRoomList({ chats, refetch }: { chats: GetResChatRooms | undefined; 
                             />
 
                             {chats.map((v) => (
-                                <ChatItem chat={v} key={`chat-${v.chatRoomId}`} refetch={refetch} />
+                                <ChatItem
+                                    chat={v}
+                                    key={`chat-${v.chatRoomId}`}
+                                    refetchChatRooms={reqRefetchChatRooms}
+                                />
                             ))}
                         </>
                     ) : (

@@ -4,11 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCheckUser } from "@hook/useCheckUser";
 import { useDeleteStudy, useGetDetailStudy } from "@api/study/hook";
 import { useToast } from "@hook/useToast";
-import { useCheckChat } from "@hook/useCheckChat";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import Report from "@component/project-study/Report";
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
 import DetailSkeleton from "./component/DetailSkeleton";
@@ -106,12 +104,6 @@ const Details = () => {
         }
     };
 
-    const { createOrEnrollChatRoom } = useCheckChat({ memberId: study?.memberProfile.memberId || 0 });
-
-    const onClickChatBtn = () => {
-        createOrEnrollChatRoom({ nickname: study?.memberProfile.nickname || "" });
-    };
-
     if (isLoading) {
         return <DetailSkeleton />;
     }
@@ -180,7 +172,6 @@ const Details = () => {
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
                         />
-                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -191,16 +182,6 @@ const Details = () => {
                             setBlockedMemberId={() => navigate("/projects")}
                             refetchAllMembers={() => {}}
                         />
-                    )}
-                    {!isMine && (
-                        <Button
-                            type="STUDY_POINT"
-                            styles="font-semibold m-20"
-                            isFullBtn={true}
-                            onClickHandler={onClickChatBtn}
-                        >
-                            <Typography type="Body" text="참여하기" />
-                        </Button>
                     )}
                 </div>
             </div>

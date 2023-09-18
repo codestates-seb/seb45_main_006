@@ -62,7 +62,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
         patchMember(
             {
                 memberId: user.memberId,
-                nickname: authNickname,
+                nickname: authNickname || nickname,
                 profilePicture: user.profilePicture,
                 githubId,
                 introduction,
@@ -78,7 +78,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                         isConfirm: false,
                     });
 
-                    setItemToStorage("nickname", authNickname);
+                    setItemToStorage("nickname", authNickname || nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", user.profilePicture);
                 },

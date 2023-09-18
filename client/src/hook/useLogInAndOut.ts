@@ -57,17 +57,9 @@ export const useLoginInAndOut = () => {
     const { mutate: deleteLogout } = useDeleteLogout();
 
     const onHandleLogout = ({ email }: { email: string }) => {
-        console.log("1???");
-        deleteLogout(
-            { email },
-            {
-                onSuccess: () => {
-                    console.log("2???");
-                    clearStorage();
-                    setIsLoggedIn(false);
-                },
-            },
-        );
+        clearStorage();
+        setIsLoggedIn(false);
+        deleteLogout({ email });
     };
 
     return { onHandleLogin, onHandleLogout };

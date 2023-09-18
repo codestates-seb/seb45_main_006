@@ -39,14 +39,16 @@ function MyPage() {
     }, []);
 
     useEffect(() => {
-        if (!auth || auth !== getItemFromStorage("randomId")) {
-            createToast({
-                content: "올바른 접근이 아닙니다. 메인화면으로 이동합니다.",
-                isConfirm: false,
-                isWarning: false,
-            });
-            navigate("/");
-            return;
+        if (user && user?.memberType !== "OAUTH2") {
+            if (!auth || auth !== getItemFromStorage("randomId")) {
+                createToast({
+                    content: "올바른 접근이 아닙니다. 메인화면으로 이동합니다.",
+                    isConfirm: false,
+                    isWarning: false,
+                });
+                navigate("/");
+                return;
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

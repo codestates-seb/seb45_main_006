@@ -4,6 +4,7 @@ export type GetReqAllMembers = {
     posiions?: string;
     stacks?: string;
     blockedMemberId: number;
+    nickname?: string;
 };
 
 // 유저 리스트 - 멤버 상세 조회하기

@@ -60,9 +60,7 @@ function Board() {
     };
 
     const onClickSearchHandler = () => {
-        if (searchValue !== "") {
-            setSearch(searchValue);
-        }
+        setSearch(searchValue);
     };
 
     const onClickRegisterHandler = () => {
