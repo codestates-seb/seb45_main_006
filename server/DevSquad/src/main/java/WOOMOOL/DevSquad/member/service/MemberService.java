@@ -170,7 +170,21 @@ public class MemberService {
     public void deleteMember() {
 
         Member findMember = findMemberFromToken();
+        Long memberId = findMember.getMemberId();
+
         findMember.getMemberProfile().setMemberStatus(MEMBER_QUIT);
+
+        // 회원이 쓴 게시글 모두 삭제
+        List<Project> projectList = getMemberProjectList(memberId);
+        List<Study> studyList = getMemberStudyList(memberId);
+        List<InfoBoard> infoBoardList = getMemberInfoBoardList(memberId);
+        List<QuestionBoard> questionBoardList = getMemberQuestionList(memberId);
+
+        projectList.stream().forEach(project -> project.setProjectStatus(Project.ProjectStatus.PROJECT_DELETED));
+        studyList.stream().forEach(study -> study.setStudyStatus(Study.StudyStatus.STUDY_DELETED));
+        infoBoardList.stream().forEach(infoBoard -> infoBoard.setInfoBoardStatus(InfoBoard.InfoBoardStatus.INFOBOARD_DELETED));
+        questionBoardList.stream().forEach(questionBoard -> questionBoard.setQuestionBoardStatus(QuestionBoard.QuestionBoardStatus.QUESTIONBOARD_DELETED));
+
     }
 
 
