@@ -1,16 +1,13 @@
 package WOOMOOL.DevSquad.auth.oauth2;
 
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
-import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
 import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
-import WOOMOOL.DevSquad.member.repository.MemberProfileRepository;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
-import WOOMOOL.DevSquad.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -27,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-
-import static WOOMOOL.DevSquad.member.entity.Member.MemberType.OAUTH2;
 
 @Transactional
 @RequiredArgsConstructor
@@ -47,14 +42,15 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         List<String> roles = memberAuthority.createRoles(email);
 
         saveMember(email);
-        redirect(request, response, email, OAUTH2, roles);
+        redirect(request, response, email,roles);
     }
 
     // oauth2로 로그인 시 회원 정보 생성
-    private Member saveMember(String email) {
+    private void saveMember(String email) {
 
+        // 이미 가입한 유저면 객체 반환
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (optionalMember.isPresent()) return optionalMember.get();
+        if (optionalMember.isPresent()) return;
 
         // 멤버프로필 정보 생성해서 넣어주기
         // 닉네임 공백은 처음 회원 가입 하는 사람
@@ -65,17 +61,17 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Level level = new Level();
         memberProfile.addLevel(level);
 
-        return memberRepository.save(member);
+        memberRepository.save(member);
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String email, Member.MemberType memberType, List<String> roles) throws IOException {
+    private void redirect(HttpServletRequest request, HttpServletResponse response, String email, List<String> roles) throws IOException {
 
         String accessToken = "Bearer " + delegateAccessToken(email, roles);
         String refreshToken = delegateRefreshToken(email);
 
 //        log.info(accessToken);
 
-        String uri = createURI(accessToken, refreshToken, email, memberType).toString();
+        String uri = createURI(accessToken, refreshToken, email).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
         // 리다이렉트 후 refreshToken 값은 재발급 로직을 위해 DB에 저장
         // 이미 있으면 삭제하고 다시 저장
@@ -96,8 +92,8 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 받은 email 과 oAuth2 타입인 회원 정보를 찾아서 uri 생성
-    private URI createURI(String accessToken, String refreshToken, String email, Member.MemberType memberType) {
-        Optional<Member> optionalMember = memberRepository.findByEmailAndMemberType(email, memberType);
+    private URI createURI(String accessToken, String refreshToken, String email) {
+        Optional<Member> optionalMember = memberRepository.findOAuth2UserByEmail(email);
         MemberProfile findMemberProfile = optionalMember.get().getMemberProfile();
 
         String nickname = findMemberProfile.getNickname();

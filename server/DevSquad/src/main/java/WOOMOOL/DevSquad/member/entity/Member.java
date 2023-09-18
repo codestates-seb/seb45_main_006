@@ -55,7 +55,7 @@ public class Member {
     // 일반 회원인지 oAuth2 회원인지
     public enum MemberType{
         REGULAR,
-        OAUTH2;
+        OAUTH2
     }
 
 }
