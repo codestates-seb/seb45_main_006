@@ -38,7 +38,7 @@ export type GetResMemberDetail = {
     projectList: Array<CommonResProjects>;
     studyList: Array<CommonResStudies>;
     infoBoardList: Array<InfoDefaultType>;
-    questionList: Array<QuestionDefaultType>;
+    questionBoardList: Array<QuestionDefaultType>;
 };
 
 // 마이페이지 - 비밀번호 수정 - status code: 200

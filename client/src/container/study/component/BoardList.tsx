@@ -10,7 +10,7 @@ import { isLoggedInAtom } from "@feature/Global";
 
 import { CommonResStudies } from "@type/study/study.res.dto";
 
-const BoardList = ({ study }: { study: CommonResStudies }) => {
+const BoardList = ({ study, refetch }: { study: CommonResStudies; refetch: () => void }) => {
     const navigate = useNavigate();
     const [isBookmarked, setIsBookmarked] = useState(!!study.bookmarked);
 
@@ -52,6 +52,7 @@ const BoardList = ({ study }: { study: CommonResStudies }) => {
                 boardId={study.boardId}
                 isBookmarked={isBookmarked}
                 setIsBookmarked={setIsBookmarked}
+                refetch={refetch}
             />
         </div>
     );

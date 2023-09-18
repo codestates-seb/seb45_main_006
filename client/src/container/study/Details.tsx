@@ -22,10 +22,14 @@ const Details = () => {
 
     const { studyBoardId } = useParams();
 
-    const { data: study, isLoading, refetch } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
+    const {
+        data: study,
+        isLoading,
+        refetch: refetchStudy,
+    } = useGetDetailStudy({ boardId: Number.parseInt(studyBoardId || "0") });
 
     useEffect(() => {
-        refetch();
+        refetchStudy();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -33,7 +37,12 @@ const Details = () => {
     const { isMine, isLoggedIn } = useCheckUser({ memberId: study?.memberProfile.memberId || 0 });
     const { mutate: deleteStudy } = useDeleteStudy();
 
-    const [isBookmarked, setIsBookmarked] = useState(!!study?.bookmarked);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    useEffect(() => {
+        if (study && study.bookmarked) {
+            setIsBookmarked(!!study?.bookmarked);
+        }
+    }, [study]);
 
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -151,7 +160,7 @@ const Details = () => {
                             </li>
                         </ul>
                     </div>
-                    <div className="flex flex-col items-center py-10">
+                    <div className="flex min-w-50 flex-col items-center py-10">
                         {isMine && (
                             <>
                                 <Button
@@ -171,6 +180,7 @@ const Details = () => {
                             boardId={study?.boardId || 0}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={refetchStudy}
                         />
                     </div>
                 </section>

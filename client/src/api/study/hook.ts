@@ -22,6 +22,7 @@ export const useGetAllStudies = ({ page, size, stack, title, status }: GetReqAll
     return useQuery<GetResAllStudies, AxiosError, GetResAllStudies>({
         queryKey: studyKeyFactory.all({ page, size, stack, title, status }),
         queryFn: () => getAllStudies({ page, size, stack, title, status }),
+        cacheTime: 0,
     });
 };
 // 스터디 - 상세 조회하기
@@ -30,6 +31,7 @@ export const useGetDetailStudy = ({ boardId }: GetReqDetailStudy) => {
         queryKey: studyKeyFactory.detail({ boardId }),
         queryFn: () => getDetailStudy({ boardId }),
         enabled: !!boardId,
+        cacheTime: 0,
     });
 };
 // 스터디 - 정보 등록하기

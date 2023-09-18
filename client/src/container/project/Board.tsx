@@ -124,7 +124,9 @@ const Board = () => {
                 {!isLoading && projects && projects.data && Array.isArray(projects.data) && (
                     <>
                         {projects.data.length > 0 ? (
-                            projects.data.map((v) => <BoardList project={v} key={`project-${v.boardId}`} />)
+                            projects.data.map((v) => (
+                                <BoardList project={v} key={`project-${v.boardId}`} refetch={refetch} />
+                            ))
                         ) : (
                             <div className="flex h-300 w-full items-center justify-center">
                                 <Typography

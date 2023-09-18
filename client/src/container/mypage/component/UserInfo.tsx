@@ -217,7 +217,13 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                         <div className="min-w-100 p-4">
                             <Typography type="SmallLabel" text="유저 리스트 페이지 공개 여부" styles="font-bold" />
                         </div>
-                        <div onClick={() => setIsChecked(!isChecked)}>
+                        <div
+                            onClick={() => {
+                                if (isEdit) {
+                                    setIsChecked(!isChecked);
+                                }
+                            }}
+                        >
                             <Checkbox
                                 color="green"
                                 checked={isChecked}

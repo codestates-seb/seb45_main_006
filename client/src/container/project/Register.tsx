@@ -278,6 +278,11 @@ export default function Register() {
                         borderStyle="outline-project"
                         disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
+                    <Typography
+                        type="Description"
+                        text="* 모집인원은 1 ~ 12 사이의 숫자로 입력해주세요."
+                        styles="ml-12 mb-12"
+                    />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (
                             <Button

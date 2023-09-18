@@ -121,7 +121,7 @@ const Board = () => {
                         {studies.data.length > 0 ? (
                             <>
                                 {studies.data.map((v) => (
-                                    <BoardList study={v} key={`study-${v.boardId}`} />
+                                    <BoardList study={v} key={`study-${v.boardId}`} refetch={refetch} />
                                 ))}
                             </>
                         ) : (

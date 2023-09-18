@@ -25,9 +25,10 @@ import { QuestionDefaultType } from "@type/question/question.res.dto";
 
 import { TbDeviceDesktopCode } from "react-icons/tb";
 import { PiUserFocus, PiBookOpenTextDuotone, PiChatTextDuotone, PiQuestionDuotone } from "react-icons/pi";
+import { BsFileEarmarkPerson } from "react-icons/bs";
 import { GoProjectRoadmap } from "react-icons/go";
 
-import { BsFillShareFill } from "react-icons/bs";
+// import { BsFillShareFill } from "react-icons/bs";
 import Bookmark from "@component/board/Bookmark";
 import LikeBtn from "@component/board/LikeBtn";
 
@@ -65,7 +66,13 @@ export const UserInfo = ({ user, type }: { user: GetResMemberDetail; type: "stac
     );
 };
 
-export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
+export const InfoItemHor = ({
+    info,
+    refetchMemberDetail,
+}: {
+    info: InfoDefaultType;
+    refetchMemberDetail: () => void;
+}) => {
     const [isLiked, setIsLiked] = useState(!!info.liked);
     const [isBookmarked, setIsBookmarked] = useState(!!info.bookmarked);
 
@@ -84,7 +91,7 @@ export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
                     <Typography text={`조회 수 ${info.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     {/* TODO: 댓글 수 */}
-                    <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
+                    {/* <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
@@ -94,16 +101,23 @@ export const InfoItemHor = ({ info }: { info: InfoDefaultType }) => {
                     boardId={info.boardId}
                     isBookmarked={isBookmarked}
                     setIsBookmarked={setIsBookmarked}
+                    refetch={refetchMemberDetail}
                 />
-                <button>
+                {/* <button>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );
 };
 
-export const QuestionItemHor = ({ question }: { question: QuestionDefaultType }) => {
+export const QuestionItemHor = ({
+    question,
+    refetchMemberDetail,
+}: {
+    question: QuestionDefaultType;
+    refetchMemberDetail: () => void;
+}) => {
     const [isLiked, setIsLiked] = useState(!!question.liked);
     const [isBookmarked, setIsBookmarked] = useState(!!question.bookmarked);
 
@@ -121,7 +135,7 @@ export const QuestionItemHor = ({ question }: { question: QuestionDefaultType })
                     <Typography text={`조회 수 ${question.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     {/* TODO: 답변수 */}
-                    <Typography text={`답변 수 ${0}`} type="SmallLabel" color="text-gray-600" />
+                    {/* <Typography text={`답변 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
@@ -131,10 +145,11 @@ export const QuestionItemHor = ({ question }: { question: QuestionDefaultType })
                     boardId={question.boardId}
                     isBookmarked={isBookmarked}
                     setIsBookmarked={setIsBookmarked}
+                    refetch={refetchMemberDetail}
                 />
-                <button>
+                {/* <button>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );
@@ -157,7 +172,7 @@ function UserCardModal({
 }) {
     const navigate = useNavigate();
 
-    const { data: user, isError } = useGetMemberDetail({ memberId });
+    const { data: user, isError, refetch: refetchMemberDetail } = useGetMemberDetail({ memberId });
 
     const { fireToast } = useToast();
 
@@ -189,6 +204,15 @@ function UserCardModal({
                             <UserNickname nickname={user.nickname} githubId={user.githubId} />
                             <UserInfo type="stack" user={user} />
                             <UserInfo type="position" user={user} />
+                            <div className="mb-12 flex">
+                                <div>
+                                    <BsFileEarmarkPerson size={"1.2rem"} />
+                                </div>
+                                <div className="ml-4 mr-10 min-w-55">
+                                    <Typography type="SmallLabel" text="자기소개" styles="font-bold" />
+                                </div>
+                                <Typography type="SmallLabel" text={user.introduction} />
+                            </div>
                         </div>
                         <UserBtns setIsOpen={setIsUpperOpen} onClickChatBtn={onClickChatBtn} />
                     </div>
@@ -224,7 +248,7 @@ function UserCardModal({
                     </div>
                     <div className="min-h-100 w-700">
                         {user.projectList.slice(0, 4).map((v, i) => (
-                            <ProjectList key={`project-${i}`} project={v} />
+                            <ProjectList key={`project-${i}`} project={v} refetch={refetchMemberDetail} />
                         ))}
                     </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
@@ -252,7 +276,7 @@ function UserCardModal({
                     </div>
                     <div className="min-h-100 w-700">
                         {user.studyList.slice(0, 4).map((v, i) => (
-                            <StudyList key={`study-${i}`} study={v} />
+                            <StudyList key={`study-${i}`} study={v} refetch={refetchMemberDetail} />
                         ))}
                     </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
@@ -280,7 +304,7 @@ function UserCardModal({
                     </div>
                     <div className="min-h-100 w-700">
                         {user.infoBoardList.slice(0, 4).map((v, i) => (
-                            <InfoItemHor key={`study-${i}`} info={v} />
+                            <InfoItemHor key={`study-${i}`} info={v} refetchMemberDetail={refetchMemberDetail} />
                         ))}
                     </div>
                     <div className="mt-20 flex w-full max-w-700 items-center justify-between">
@@ -307,10 +331,16 @@ function UserCardModal({
                         </button>
                     </div>
                     <div className="min-h-100 w-700">
-                        {user?.questionList &&
-                            user.questionList
+                        {user?.questionBoardList &&
+                            user.questionBoardList
                                 .slice(0, 4)
-                                .map((v, i) => <QuestionItemHor key={`study-${i}`} question={v} />)}
+                                .map((v, i) => (
+                                    <QuestionItemHor
+                                        key={`study-${i}`}
+                                        question={v}
+                                        refetchMemberDetail={refetchMemberDetail}
+                                    />
+                                ))}
                     </div>
                 </div>
 

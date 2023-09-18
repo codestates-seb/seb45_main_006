@@ -9,7 +9,7 @@ import { useToast } from "@hook/useToast";
 import { useRecoilValue } from "recoil";
 import { isLoggedInAtom } from "@feature/Global";
 
-const BoardList = ({ project }: { project: CommonResProjects }) => {
+const BoardList = ({ project, refetch }: { project: CommonResProjects; refetch: () => void }) => {
     const navigate = useNavigate();
     const isLogginedIn = useRecoilValue(isLoggedInAtom);
     const { reqLoginToUserToast } = useToast();
@@ -62,6 +62,7 @@ const BoardList = ({ project }: { project: CommonResProjects }) => {
                 boardId={project.boardId}
                 isBookmarked={isBookmarked}
                 setIsBookmarked={setIsBookmarked}
+                refetch={refetch}
             />
         </div>
     );

@@ -24,7 +24,7 @@ import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_TYPE } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 
-import { BsFillShareFill } from "react-icons/bs";
+// import { BsFillShareFill } from "react-icons/bs";
 import Pagination from "@component/Pagination";
 import LikeBtn from "@component/board/LikeBtn";
 
@@ -88,7 +88,7 @@ const InfoTitle = ({
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     {/* TODO: 댓글 수  */}
-                    <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
+                    {/* <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
@@ -100,12 +100,13 @@ const InfoTitle = ({
                             boardId={info.boardId}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={() => {}}
                         />
                     </>
                 )}
-                <button>
+                {/* <button>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );

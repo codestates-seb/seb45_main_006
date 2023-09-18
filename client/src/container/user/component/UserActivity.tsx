@@ -20,7 +20,7 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
     const [curPage, setCurPage] = useState<number>(1);
     const [totalItems, setTotalItems] = useState<number>(0);
 
-    const { data: project } = useGetProjectOfMember({ memberId, page: curPage });
+    const { data: project, refetch } = useGetProjectOfMember({ memberId, page: curPage });
 
     useEffect(() => {
         if (project?.pageInfo.totalElements) {
@@ -33,14 +33,18 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
             <div className="w-full">
                 {project?.data && Array.isArray(project?.data) && project?.data.length > 0 ? (
                     <>
-                        {project?.data.map((v, i) => <ProjectItem key={`member-${memberId}-study-${i}`} project={v} />)}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                        {project?.data.map((v, i) => (
+                            <ProjectItem key={`member-${memberId}-study-${i}`} project={v} refetch={refetch} />
+                        ))}
                     </>
                 ) : (
                     <div className="flex h-full flex-col items-center justify-center">
                         <Typography text={`작성한 프로젝트가 없습니다.`} type="Description" styles="mb-8" />
                     </div>
                 )}
+                {project?.data && Array.isArray(project.data) && project.data.length > 0 ? (
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                ) : null}
             </div>
         </>
     );
@@ -51,7 +55,7 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
     const [curPage, setCurPage] = useState<number>(1);
     const [totalItems, setTotalItems] = useState<number>(0);
 
-    const { data: study } = useGetStudyOfMember({ memberId, page: curPage });
+    const { data: study, refetch } = useGetStudyOfMember({ memberId, page: curPage });
 
     useEffect(() => {
         if (study?.pageInfo.totalElements) {
@@ -64,13 +68,17 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
             <div className="w-full">
                 {study?.data && Array.isArray(study?.data) && study?.data.length > 0 ? (
                     <>
-                        {study?.data.map((v, i) => <StudyItem key={`member-${memberId}-study-${i}`} study={v} />)}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                        {study?.data.map((v, i) => (
+                            <StudyItem key={`member-${memberId}-study-${i}`} study={v} refetch={refetch} />
+                        ))}
                     </>
                 ) : (
                     <div className="flex h-full flex-col items-center justify-center">
                         <Typography text={`작성한 스터디가 없습니다.`} type="Description" styles="mb-8" />
                     </div>
+                )}
+                {study?.data && Array.isArray(study?.data) && study?.data.length > 0 && (
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                 )}
             </div>
         </>
@@ -126,18 +134,15 @@ const InfoOfMember = ({ memberId }: { memberId: number }) => {
                                 info={v}
                                 onClickDeleteHandler={onClickDeleteHandler}
                             />
-                            <Pagination
-                                curPage={curPage}
-                                setCurPage={setCurPage}
-                                totalItems={totalItems || 0}
-                                size={4}
-                            />
                         </>
                     ))
                 ) : (
                     <div className="flex h-full flex-col items-center justify-center">
                         <Typography text={`작성한 질문게시글이 없습니다.`} type="Description" styles="mb-8" />
                     </div>
+                )}
+                {info?.data && Array.isArray(info?.data) && info.data.length > 0 && (
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                 )}
             </div>
         </>
@@ -193,18 +198,15 @@ const QuestionOfMember = ({ memberId }: { memberId: number }) => {
                                 question={v}
                                 onClickDeleteHandler={onClickDeleteHandler}
                             />
-                            <Pagination
-                                curPage={curPage}
-                                setCurPage={setCurPage}
-                                totalItems={totalItems || 0}
-                                size={4}
-                            />
                         </>
                     ))
                 ) : (
                     <div className="flex h-full flex-col items-center justify-center">
                         <Typography text={`작성한 질문게시글이 없습니다.`} type="Description" styles="mb-8" />
                     </div>
+                )}
+                {question?.data && Array.isArray(question?.data) && question.data.length > 0 && (
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                 )}
             </div>
         </>

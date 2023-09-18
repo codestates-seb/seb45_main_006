@@ -51,7 +51,12 @@ const Details = () => {
         setComment(e.currentTarget.value);
     };
 
-    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    useEffect(() => {
+        if (projectInputs && projectInputs.bookmarked) {
+            setIsBookmarked(!!projectInputs?.bookmarked);
+        }
+    }, [projectInputs]);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine, isLoggedIn } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
@@ -171,7 +176,7 @@ const Details = () => {
                         </ul>
                     </div>
 
-                    <div className="flex flex-col items-center py-10">
+                    <div className="flex min-w-50 flex-col items-center py-10">
                         {isMine && (
                             <>
                                 <Button
@@ -193,6 +198,7 @@ const Details = () => {
                             boardId={projectInputs?.boardId || 0}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={refetchProject}
                         />
                     </div>
                 </section>

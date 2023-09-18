@@ -35,7 +35,9 @@ const StudyList = ({ study }: { study: CommonResStudies }) => {
                         <Typography type="Recruit" text="모집완료" styles="text-white" />
                     </div>
                 )}
-                <h1 className="my-20 cursor-pointer text-24 font-bold">{study.title}</h1>
+                <h1 className="my-20 cursor-pointer text-24 font-bold">
+                    {study.title.length > 10 ? `${study.title.slice(0, 10)}...` : study.title}
+                </h1>
                 <div className="my-20 flex min-h-26">
                     {Array.isArray(study.stacks) &&
                         study.stacks.slice(0, 2).map((v) => {

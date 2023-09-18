@@ -252,7 +252,7 @@ export default function Register() {
                         {curActivity === "REGISTER" ? (
                             <Button
                                 type="STUDY_POINT"
-                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                styles="mb-20 shadow-md hover:bg-green-400"
                                 isFullBtn={false}
                                 onClickHandler={onPostClickHandler}
                             >
@@ -261,7 +261,7 @@ export default function Register() {
                         ) : (
                             <Button
                                 type="STUDY_POINT"
-                                styles="mb-20 shadow-md hover:bg-blue-400"
+                                styles="mb-20 shadow-md hover:bg-green-400"
                                 isFullBtn={false}
                                 onClickHandler={onPatchClickHandler}
                             >

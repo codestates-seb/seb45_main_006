@@ -19,7 +19,7 @@ import { EditAnswer, ShowAnswer } from "@component/board/Answer";
 import Pagination from "@component/Pagination";
 import UserProfile from "@component/user/UserProfile";
 
-import { BsFillShareFill } from "react-icons/bs";
+// import { BsFillShareFill } from "react-icons/bs";
 import { QuestionDefaultType } from "@type/question/question.res.dto";
 import Bookmark from "@component/board/Bookmark";
 import LikeBtn from "@component/board/LikeBtn";
@@ -92,12 +92,13 @@ const QuestionTitle = ({
                             boardId={question.boardId}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={() => {}}
                         />
                     </>
                 )}
-                <button>
+                {/* <button onClick={}>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );
