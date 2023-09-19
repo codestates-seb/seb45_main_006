@@ -17,6 +17,12 @@ public class ChatRoomDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    public static class Response{
+        private Long chatRoomId;
+    }
+    @Getter
+    @Setter
+    @AllArgsConstructor
     public static class listResponse{
 
         private Long chatRoomId;

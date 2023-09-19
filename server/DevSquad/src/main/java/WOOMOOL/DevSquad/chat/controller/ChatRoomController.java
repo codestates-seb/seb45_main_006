@@ -25,9 +25,10 @@ public class ChatRoomController {
     @PostMapping
     public ResponseEntity postChatRoom(@RequestBody ChatRoomDto.Post postDto){
 
-        chatRoomService.createChatRoom(postDto.getMemberId());
+        ChatRoom chatRoom = chatRoomService.createChatRoom(postDto.getMemberId());
+        ChatRoomDto.Response response = chatRoomMapper.entityToResponse(chatRoom);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(response,HttpStatus.OK);
     }
 
     // 채팅방 들어가기

@@ -16,6 +16,10 @@ public interface ChatRoomMapper {
 
     ChatRoom postDtoToEntity(ChatRoomDto.Post chatRoomDto);
 
+    default ChatRoomDto.Response entityToResponse(ChatRoom chatRoom){
+        return new ChatRoomDto.Response(chatRoom.getChatRoomId());
+    }
+
     // 채팅방 들어갔을 때 닉네임, 메시지들 정보 반환 매핑
     default ChatRoomDto.detailResponse entityToDetailResponse(ChatRoom chatRoom) {
 
