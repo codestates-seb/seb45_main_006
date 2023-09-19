@@ -90,7 +90,7 @@ function ChatRoomList() {
             {chats && Array.isArray(chats) && (
                 <>
                     {chats.length > 0 ? (
-                        <>
+                        <div className="p-4">
                             <Typography
                                 text="채팅 리스트"
                                 type="SmallLabel"
@@ -105,7 +105,7 @@ function ChatRoomList() {
                                     refetchChatRooms={reqRefetchChatRooms}
                                 />
                             ))}
-                        </>
+                        </div>
                     ) : (
                         <div className="flex h-full flex-col items-center justify-center">
                             <Typography text="아직 생성된 채팅방이 없습니다🥲" type="Description" styles="mb-8" />

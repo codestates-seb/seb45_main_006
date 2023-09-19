@@ -23,7 +23,7 @@ export const useCheckChat = () => {
         if (chats && Array.isArray(chats)) {
             setChatRooms(chats);
         }
-    }, [chats, setChatRoomId, setChatRooms]);
+    }, [chats, setChatRooms]);
 
     const reqRefetchChatRooms = () => {
         refetchChatRooms();
@@ -47,16 +47,26 @@ export const useCheckChat = () => {
         return { chatRoomId };
     };
 
-    const createChatRoom = ({ nickname, memberId }: { nickname: string; memberId: number }) => {
+    const createChatRoom = ({
+        nickname,
+        memberId,
+        closeModal,
+    }: {
+        nickname: string;
+        memberId: number;
+        closeModal: () => void;
+    }) => {
+        let chatId = 0;
         creatChatRoom(
             { memberId },
             {
                 onSuccess: (res) => {
                     setChatRoomId(res.chatRoomId);
+                    chatId = res.chatRoomId;
                 },
                 onError: (err) => errorToast(err),
                 onSettled: () => {
-                    console.log("3", "???");
+                    setChatRoomId(chatId);
                     refetchChatRooms();
                     setChatBotStatus("DETAIL");
                     setIsChatBotShow(true);
@@ -64,13 +74,22 @@ export const useCheckChat = () => {
                         content: `오른쪽 하단에 채팅방이 열렸습니다! ${nickname}님과 대화를 이어가보세요!`,
                         isConfirm: false,
                     });
+                    closeModal();
                 },
             },
         );
     };
 
-    const enrollChatRoomHandler = ({ nickname, chatRoomId }: { nickname: string; chatRoomId: number }) => {
-        console.log("3", "???");
+    const enrollChatRoomHandler = ({
+        nickname,
+        chatRoomId,
+        closeModal,
+    }: {
+        nickname: string;
+        chatRoomId: number;
+        closeModal: () => void;
+    }) => {
+        setChatRoomId(chatRoomId);
         refetchChatRooms();
         setChatBotStatus("DETAIL");
         setIsChatBotShow(true);
@@ -78,6 +97,7 @@ export const useCheckChat = () => {
             content: `오른쪽 하단에 채팅방이 열렸습니다! ${nickname}님과 대화를 이어가보세요!`,
             isConfirm: false,
         });
+        closeModal();
     };
 
     return { chats, reqRefetchChatRooms, checkIsChatRoomExist, createChatRoom, enrollChatRoomHandler };

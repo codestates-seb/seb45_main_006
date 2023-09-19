@@ -179,12 +179,12 @@ function UserCardModal({
     const { checkIsChatRoomExist, createChatRoom, enrollChatRoomHandler } = useCheckChat();
 
     const onClickChatBtn = () => {
-        closeModal();
+        const { chatRoomId } = checkIsChatRoomExist({ memberId });
 
-        if (!checkIsChatRoomExist({ memberId })) {
-            createChatRoom({ memberId, nickname: user?.nickname || "" });
+        if (chatRoomId === 0) {
+            createChatRoom({ memberId, nickname: user?.nickname || "", closeModal });
         } else {
-            enrollChatRoomHandler({ nickname: user?.nickname || "" });
+            enrollChatRoomHandler({ nickname: user?.nickname || "", chatRoomId: chatRoomId, closeModal });
         }
     };
 

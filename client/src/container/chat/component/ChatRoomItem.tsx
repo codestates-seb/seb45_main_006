@@ -27,9 +27,8 @@ const VITE_APP_WEB_SOCKET_HOST_NAME = import.meta.env.VITE_APP_WEB_SOCKET_HOST_N
 
 function ChatRoomItem() {
     const chatRoomId = useRecoilValue(chatRoomIdAtom);
-    console.log("1", chatRoomId);
-
     const { data: chatMessages } = useGetEnrollChatRoom({ chatRoomId });
+
     const chatBox: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
     const [client, setClient] = useState<Webstomp.Client | null>(null);
@@ -62,15 +61,17 @@ function ChatRoomItem() {
         // setRecievedMsg([]);
         setCurMsg("");
         setIsConnected(false);
-        chatMessages.messageList.forEach((v) => {
-            if (v.type === "NOTICE") {
-                setNotice((prevNotice) => [...prevNotice, v]);
-            }
+        if (chatMessages && Array.isArray(chatMessages.messageList)) {
+            chatMessages.messageList.forEach((v) => {
+                if (v.type === "NOTICE") {
+                    setNotice((prevNotice) => [...prevNotice, v]);
+                }
 
-            if (v.type === "BASIC") {
-                setBasic((prevBasic) => [...prevBasic, v]);
-            }
-        });
+                if (v.type === "BASIC") {
+                    setBasic((prevBasic) => [...prevBasic, v]);
+                }
+            });
+        }
     }, [chatMessages]);
 
     useEffect(() => {
@@ -82,7 +83,7 @@ function ChatRoomItem() {
     useEffect(() => {
         // setRecievedMsg([]);
 
-        if (chatMessages.chatRoomId) {
+        if (chatMessages && chatMessages.chatRoomId) {
             const socket = new WebSocket(VITE_APP_WEB_SOCKET_HOST_NAME as string);
             const stompClient = Webstomp.over(socket);
 
@@ -117,7 +118,7 @@ function ChatRoomItem() {
 
             setClient(stompClient);
         }
-    }, [chatMessages.chatRoomId]);
+    }, [chatMessages]);
 
     useEffect(() => {
         if (chatBox && chatBox.current) {
@@ -128,7 +129,7 @@ function ChatRoomItem() {
     }, [chatList, chatBox]);
 
     const onSendMessage = () => {
-        if (client && client.connected) {
+        if (chatMessages?.chatRoomId && client && client.connected) {
             client.send(`/app/chat/${chatMessages.chatRoomId}`, JSON.stringify({ content: curMesg, accessToken }), {});
         } else {
             console.error("WebSocket connection is not yet established.");
