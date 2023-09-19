@@ -5,11 +5,13 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
-      format_sql: true
-      highlight_sql: true
+#      format_sql: true
+#      highlight_sql: true
+
+
 
   security:
     oauth2:

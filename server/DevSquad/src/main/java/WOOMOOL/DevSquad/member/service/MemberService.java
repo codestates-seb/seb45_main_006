@@ -330,7 +330,7 @@ public class MemberService {
         int pageSize = 8;
         int totalElements = filteringMemberProfileList.size();
         // 최근 활동 순으로 정렬
-        Sort sort = Sort.by("modifiedAt");
+        Sort sort = Sort.by("modifiedAt").descending();
 
         // 페이징 처리된 결과 페이지 생성
         PageRequest pageRequest = PageRequest.of(page, pageSize, sort);

@@ -59,7 +59,7 @@ public class EmailService {
         // 비밀번호를 찾을 이메일
         String receiver = email.getEmail();
         // 이메일로 회원 찾기
-        Optional<Member> optionalMember = memberRepository.findByEmail(receiver);
+        Optional<Member> optionalMember = memberRepository.findRegularUserByEmail(receiver);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(MEMBER_NOT_FOUND));
         // 랜덤 비밀번호 생성
         String randomPassword = generateRandomCode();
