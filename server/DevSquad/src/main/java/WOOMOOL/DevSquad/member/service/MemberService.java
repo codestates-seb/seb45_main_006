@@ -476,6 +476,7 @@ public class MemberService {
                     "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
 
         }
+        // 최근 활동 순으로 정렬
         jpql.append(" ORDER BY mp.modifiedAt DESC");
 
         TypedQuery<MemberProfile> query = entityManager.createQuery(jpql.toString(), MemberProfile.class);
