@@ -24,18 +24,11 @@ public class MemberProfileDto {
         @Pattern(regexp = "^[A-Za-z0-9가-힣]{2,8}$",
                 message = "닉네임은 2~8글자로 이루어져야 합니다.")
         private String nickname;
-        @NotNull
         private String profilePicture;
-
-        @NotNull
         private String githubId;
-        @NotNull
         private String introduction;
-        @NotNull
         private boolean listEnroll;
-        @NotNull
         private Set<String> position;
-        @NotNull
         private Set<String> stack;
 
 

@@ -18,8 +18,6 @@ import java.io.IOException;
 public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     // JwtVerificationFilter에서 exception 생길 시 commence 메서드 실행
-
-    // todo: 이거 왜 안되는지 확인해야댐..
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("exception");

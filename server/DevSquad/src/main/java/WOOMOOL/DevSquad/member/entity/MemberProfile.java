@@ -44,10 +44,10 @@ public class MemberProfile {
     private String profilePicture = "";
 
     @Column(nullable = false)
-    private String githubId = "GithubId를 입력해주세요";
+    private String githubId = "";
 
     @Column(nullable = false)
-    private String introduction = "자기소개를 입력해주세요";
+    private String introduction = "";
 
     @Column(updatable = false)
     private LocalDateTime createAt = LocalDateTime.now();
