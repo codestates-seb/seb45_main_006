@@ -5,7 +5,7 @@ import SignLayout from "@container/sign/component/SignLayout";
 
 import progress from "@assets/sign/progress_bar1.png";
 import googleImg from "@assets/sign/google.png";
-import githubImg from "@assets/sign/github.png";
+// import githubImg from "@assets/sign/github.png";
 import fontImg from "@assets/sign/font.png";
 
 const endpoint = import.meta.env.VITE_APP_API_ENDPOINT;
@@ -29,13 +29,14 @@ function SignUpContent1() {
                 <img className="flex w-30 pr-5" src={googleImg} />
                 <Typography type="Highlight" text="Google 계정으로 가입" />
             </button>
-            <button
+            {/* <button
                 className="m-auto mt-25 flex w-320 justify-center rounded border-2 border-solid border-black p-6"
                 onClick={() => {}}
             >
                 <img className="flex w-30 pr-5" src={githubImg} />
                 <Typography type="Highlight" text="GitHub 계정으로 가입" />
-            </button>
+            </button> */}
+            <div className="h-40 w-320"></div>
         </div>
     );
 }

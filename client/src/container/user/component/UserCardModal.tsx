@@ -180,12 +180,12 @@ function UserCardModal({
 
     const onClickChatBtn = () => {
         closeModal();
-        console.log(checkIsChatRoomExist({ memberId }));
-        if (checkIsChatRoomExist({ memberId })) {
-            createChatRoom({ memberId, nickname: user?.nickname || "" });
-        }
 
-        enrollChatRoomHandler({ nickname: user?.nickname || "" });
+        if (!checkIsChatRoomExist({ memberId })) {
+            createChatRoom({ memberId, nickname: user?.nickname || "" });
+        } else {
+            enrollChatRoomHandler({ nickname: user?.nickname || "" });
+        }
     };
 
     if (isError) {

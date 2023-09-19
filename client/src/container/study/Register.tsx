@@ -208,6 +208,7 @@ export default function Register() {
                         placeholder="스터디를 자세히 설명해주세요."
                         value={inputs.content}
                         onChange={handleInput}
+                        maxlength={250}
                         borderStyle={""}
                     />
                     <div className="my-10 p-10">

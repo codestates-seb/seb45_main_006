@@ -227,6 +227,7 @@ export default function Register() {
                         placeholder="프로젝트를 자세히 설명해주세요."
                         value={inputs.content}
                         onChange={handleInput}
+                        maxlength={250}
                         borderStyle="outline-project"
                         disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />

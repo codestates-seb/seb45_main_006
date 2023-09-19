@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useSetRecoilState } from "recoil";
 import { chatBotStatusAtom, isChatBotShowAtom, chatRoomIdAtom, chatRoomsAtom } from "@feature/chat";
@@ -12,8 +12,6 @@ export const useCheckChat = () => {
     const setIsChatBotShow = useSetRecoilState(isChatBotShowAtom);
     const setChatRoomId = useSetRecoilState(chatRoomIdAtom);
     const setChatRooms = useSetRecoilState(chatRoomsAtom);
-
-    const [isChatRoomExisted, setIsAlreadyExisted] = useState(false);
 
     // 정리해서 나누기
     const { data: chats, refetch: refetchChatRooms } = useGetChatRooms();
@@ -34,16 +32,19 @@ export const useCheckChat = () => {
     const checkIsChatRoomExist = ({ memberId }: { memberId: number }) => {
         refetchChatRooms();
 
+        let chatRoomId = 0;
+        console.log("chats", chats, memberId);
         if (chats && Array.isArray(chats)) {
             chats.map((v) => {
                 if (v.membersId.includes(memberId)) {
-                    setIsAlreadyExisted(true);
+                    chatRoomId = v.chatRoomId;
+                    console.log("settedCHatromId", v.chatRoomId);
                     setChatRoomId(v.chatRoomId);
                 }
             });
         }
 
-        return { isChatRoomExisted };
+        return { chatRoomId };
     };
 
     const createChatRoom = ({ nickname, memberId }: { nickname: string; memberId: number }) => {
@@ -68,7 +69,7 @@ export const useCheckChat = () => {
         );
     };
 
-    const enrollChatRoomHandler = ({ nickname }: { nickname: string }) => {
+    const enrollChatRoomHandler = ({ nickname, chatRoomId }: { nickname: string; chatRoomId: number }) => {
         console.log("3", "???");
         refetchChatRooms();
         setChatBotStatus("DETAIL");

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 import { MessageItem } from "@hook/useWebStompClient";
 import { getItemFromStorage } from "@util/localstorage-helper";
@@ -9,20 +9,29 @@ import Typography from "@component/Typography";
 import ChatRommItemNotice from "./ChatRommItemNotice";
 import { MessageItemContent, ChatMessageContent } from "./ChatRoomItemContent";
 
-import { GetResEnrollChatRoom, ChatMessage } from "@type/chat/chat.res.dto";
+import { ChatMessage } from "@type/chat/chat.res.dto";
 
 import * as Webstomp from "webstomp-client";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useGetEnrollChatRoom } from "@api/chat/hook";
+import { useRecoilValue } from "recoil";
+import { chatRoomIdAtom } from "@feature/chat";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const VITE_APP_WEB_SOCKET_HOST_NAME = import.meta.env.VITE_APP_WEB_SOCKET_HOST_NAME || "";
 
-function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) {
+function ChatRoomItem() {
+    const chatRoomId = useRecoilValue(chatRoomIdAtom);
+    console.log("1", chatRoomId);
+
+    const { data: chatMessages } = useGetEnrollChatRoom({ chatRoomId });
+    const chatBox: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
     const [client, setClient] = useState<Webstomp.Client | null>(null);
     // 기존 채팅 내용 중 공지
     const [notice, setNotice] = useState<Array<ChatMessage>>([]);
@@ -111,11 +120,12 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
     }, [chatMessages.chatRoomId]);
 
     useEffect(() => {
-        const element = document.querySelector("#chatBox");
-        if (element) {
-            element.scrollTop = element.scrollHeight;
+        if (chatBox && chatBox.current) {
+            console.dir("chatBox.current.scrollTop", chatBox.current);
+            console.log("chatBox.current.scrollHeight", chatBox.current.scrollHeight);
+            chatBox.current.scrollTop = chatBox.current.scrollHeight;
         }
-    }, [chatList]);
+    }, [chatList, chatBox]);
 
     const onSendMessage = () => {
         if (client && client.connected) {
@@ -153,12 +163,10 @@ function ChatRoomItem({ chatMessages }: { chatMessages: GetResEnrollChatRoom }) 
             <div className="relative mb-8 flex min-h-423 flex-1 flex-col justify-between bg-white">
                 <ChatRommItemNotice notice={notice} latestNotice={latestNotice} />
                 <div className="h-63"></div>
-                <div className="h-373 py-8">
-                    <div className="flex max-h-373 w-full flex-col overflow-y-scroll px-4" id="chatBox">
+                <div className="h-373 max-h-373 overflow-y-scroll py-8">
+                    <div className="flex w-full flex-col flex-wrap px-4" ref={chatBox}>
                         {basic.length > 0 && basic.map((v) => <ChatMessageContent key={v.createAt} v={v} />)}
-                        {chatList.map((v) => (
-                            <MessageItemContent key={v.createAt} v={v} />
-                        ))}
+                        {chatList.length > 0 && chatList.map((v) => <MessageItemContent key={v.createAt} v={v} />)}
                     </div>
                 </div>
             </div>
