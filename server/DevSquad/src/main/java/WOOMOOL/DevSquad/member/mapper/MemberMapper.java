@@ -66,8 +66,8 @@ public interface MemberMapper {
                         memberProfile.getNickname(),
                         memberProfile.getGithubId(),
                         memberProfile.getPositions().stream().map(position -> position.getPositionName()).collect(Collectors.toSet()),
-                        memberProfile.getStackTags().stream().map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet())))
-                .collect(Collectors.toList());
+                        memberProfile.getStackTags().stream().map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()))
+                ).collect(Collectors.toList());
 
     }
     // 유저리스트 유저 정보 상세보기 Mapping

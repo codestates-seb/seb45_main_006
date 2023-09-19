@@ -53,7 +53,7 @@ public class MemberProfile {
     private LocalDateTime createAt = LocalDateTime.now();
 
     @Column
-    private LocalDateTime modifiedAt = LocalDateTime.now();
+    private LocalDateTime modifiedAt;
 
     @Column
     private boolean listEnroll = true;

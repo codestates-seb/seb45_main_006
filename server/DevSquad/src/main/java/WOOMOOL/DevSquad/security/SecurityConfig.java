@@ -45,11 +45,6 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
 
-//    @Value("${spring.security.oauth2.client.registration.google.clientId}")
-//    private String clientId;
-//
-//    @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
-//    private String clientSecret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -70,29 +65,12 @@ public class SecurityConfig {
                 .apply(new CustomFilterConfiguration())
                 .and()
                 .authorizeHttpRequests()
-                .anyRequest().permitAll()
-                .and()
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository))
-                );
+                .anyRequest().permitAll();
+//                .oauth2Login(oauth2 -> oauth2
+//                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository))
 
         return http.build();
     }
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(){
-//        var clientRegistration = clientRegistration();
-//
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//
-//    }
-//    private ClientRegistration clientRegistration(){
-//        return CommonOAuth2Provider
-//                .GOOGLE
-//                .getBuilder("google")
-//                .clientId(clientId)
-//                .clientSecret(clientSecret)
-//                .build();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -128,8 +106,8 @@ public class SecurityConfig {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
-                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+//                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
 
 
         }
