@@ -5,19 +5,21 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
-      format_sql: true
-      highlight_sql: true
+#      format_sql: true
+#      highlight_sql: true
+
+
 
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${G_CLIENT_ID}
-            client-secret: ${G_CLIENT_SECRET}
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
             scope:
               - email
               - profile

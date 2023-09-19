@@ -1,5 +1,5 @@
 package WOOMOOL.DevSquad.auth.oauth2;
-import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
+import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
 import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-
-import static WOOMOOL.DevSquad.member.entity.Member.MemberType.OAUTH2;
 
 @Transactional
 @RequiredArgsConstructor

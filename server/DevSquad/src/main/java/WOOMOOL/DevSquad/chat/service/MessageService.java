@@ -55,7 +55,7 @@ public class MessageService {
 
         Message startMessage = Message.builder()
                 .nickname("공지")
-                .content("대화가 이제 막 시작되었습니다.")
+                .content("대화가 시작되었습니다.")
                 .chatRoom(chatRoom)
                 .createAt(LocalDateTime.now())
                 .type(Message.Type.NOTICE)
