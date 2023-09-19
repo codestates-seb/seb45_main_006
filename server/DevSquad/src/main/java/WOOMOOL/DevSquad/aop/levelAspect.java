@@ -23,7 +23,7 @@ public class levelAspect {
             "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..)) || " +
             "execution(public * WOOMOOL.DevSquad.likes.service..*(..)) || " +
             "execution(public * WOOMOOL.DevSquad.comment.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.answer.service..*(..))")
+            "execution(public * WOOMOOL.DevSquad.answer.service..*(..)) ")
     public void afterActivity() {
     }
 
