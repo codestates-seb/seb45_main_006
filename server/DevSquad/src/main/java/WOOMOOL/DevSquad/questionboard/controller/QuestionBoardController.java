@@ -60,7 +60,7 @@ public class QuestionBoardController {
     }
     @GetMapping("/{board-id}")
     public ResponseEntity getQuestionBoard(@PathVariable("board-id") @Positive long boardId) {
-        QuestionBoard questionBoard = questionBoardService.findVerifiedQuestionBoard(boardId);
+        QuestionBoard questionBoard = questionBoardService.getQuestionBoard(boardId);
 
         return new ResponseEntity<>(mapper.QuestionBoardToQuestionBoardResponseDto(questionBoard), HttpStatus.OK);
     }

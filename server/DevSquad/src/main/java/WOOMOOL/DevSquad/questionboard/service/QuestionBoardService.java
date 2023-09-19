@@ -52,6 +52,11 @@ public class QuestionBoardService {
 
         return questionBoardRepository.save(findQuestionBoard);
     }
+    public QuestionBoard getQuestionBoard(Long boardId) {
+        QuestionBoard questionBoard = findVerifiedQuestionBoard(boardId);
+        questionBoard.setViewCount(questionBoard.getViewCount()+1);
+        return questionBoardRepository.save(questionBoard);
+    }
 
     //질문게시판 페이징
     public Page<QuestionBoard> getQuestionBoardList(Long memberId, int page){

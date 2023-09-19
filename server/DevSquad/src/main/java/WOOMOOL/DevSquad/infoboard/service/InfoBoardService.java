@@ -81,6 +81,11 @@ public class InfoBoardService {
 
         return result;
     }
+    public InfoBoard getInfoBoard(long boardId) {
+        InfoBoard infoBoard = findVerifiedInfoBoard(boardId);
+        infoBoard.setViewCount(infoBoard.getViewCount()+1);
+        return infoBoardRepository.save(infoBoard);
+    }
 
     public void deleteInfoBoard(long boardId) {
         InfoBoard findInfoBoard = findVerifiedInfoBoard(boardId);

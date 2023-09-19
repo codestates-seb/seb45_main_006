@@ -60,7 +60,7 @@ public class InfoBoardController {
     }
     @GetMapping("/{board-id}")
     public ResponseEntity getInfoBoard(@PathVariable("board-id") @Positive long boardId) {
-        InfoBoard infoBoard = infoBoardService.findVerifiedInfoBoard(boardId);
+        InfoBoard infoBoard = infoBoardService.getInfoBoard(boardId);
 
         return new ResponseEntity<>(mapper.InfoBoardToInfoBoardResponseDto(infoBoard), HttpStatus.OK);
     }
