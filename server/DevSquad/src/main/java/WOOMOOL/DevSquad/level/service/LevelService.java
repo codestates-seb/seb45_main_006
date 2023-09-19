@@ -23,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -54,6 +56,8 @@ public class LevelService {
 
         // 토큰 들어오면 로직 실행
         MemberProfile memberProfile = memberService.findMemberFromToken().getMemberProfile();
+        // 회원 활동 시간 수정
+        memberProfile.setModifiedAt(LocalDateTime.now());
         Long memberProfileId = memberProfile.getMemberProfileId();
         Level level = memberProfile.getLevel();
         String memberGrade = memberProfile.getLevel().getGrade();
