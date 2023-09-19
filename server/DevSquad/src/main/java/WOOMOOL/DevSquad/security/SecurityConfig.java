@@ -44,13 +44,7 @@ public class SecurityConfig {
     private final MemberAuthority memberAuthority;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    private final MemberProfileRepository memberProfileRepository;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-//    private String clientId;
-//
-//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-//    private String clientSecret;
 
 
     @Bean
@@ -80,22 +74,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        var clientRegistration = clientRegistration();
-//
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//    }
-//
-//    private ClientRegistration clientRegistration() {
-//        return CommonOAuth2Provider
-//                .GOOGLE
-//                .getBuilder("google")
-//                .clientId(clientId)
-//                .clientSecret(clientSecret)
-//                .build();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
