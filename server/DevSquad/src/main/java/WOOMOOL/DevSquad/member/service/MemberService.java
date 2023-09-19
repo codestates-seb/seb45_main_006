@@ -333,10 +333,9 @@ public class MemberService {
         int pageSize = 8;
         int totalElements = filteringMemberProfileList.size();
         // 최근 활동 순으로 정렬
-        Sort sort = Sort.by("modifiedAt").descending();
 
         // 페이징 처리된 결과 페이지 생성
-        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
 
         List<MemberProfile> content = filteringMemberProfileList.subList(page * pageSize, Math.min((page + 1) * pageSize, totalElements));
         Page<MemberProfile> memberProfilePage = new PageImpl<>(content, pageRequest, totalElements);
@@ -477,6 +476,7 @@ public class MemberService {
                     "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
 
         }
+        jpql.append(" ORDER BY mp.modifiedAt DESC");
 
         TypedQuery<MemberProfile> query = entityManager.createQuery(jpql.toString(), MemberProfile.class);
 
