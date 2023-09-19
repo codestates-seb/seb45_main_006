@@ -33,10 +33,10 @@ import {
 } from "@type/member/member.res.dto";
 
 // 유저 리스트 - 멤버 리스트 조회하기
-export const useGetAllMembers = ({ page, stacks, posiions, blockedMemberId }: GetReqAllMembers) => {
+export const useGetAllMembers = ({ page, stacks, posiions, blockedMemberId, nickname }: GetReqAllMembers) => {
     return useQuery<GetResAllMembers, AxiosError, GetResAllMembers>({
-        queryKey: memberKeyFactory.all({ page, stacks, posiions, blockedMemberId }),
-        queryFn: () => getAllMembers({ page, stacks, posiions, blockedMemberId }),
+        queryKey: memberKeyFactory.all({ page, stacks, posiions, blockedMemberId, nickname }),
+        queryFn: () => getAllMembers({ page, stacks, posiions, blockedMemberId, nickname }),
     });
 };
 
@@ -54,6 +54,7 @@ export const useGetMyDetail = () => {
     return useQuery<GetResMemberDetail, AxiosError, GetResMemberDetail>({
         queryKey: memberKeyFactory.my(),
         queryFn: getMyDetail,
+        enabled: !!localStorage.getItem("memberId"),
     });
 };
 

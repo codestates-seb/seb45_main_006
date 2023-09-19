@@ -8,11 +8,13 @@ function Bookmark({
     boardId,
     isBookmarked,
     setIsBookmarked,
+    refetch,
 }: {
     board: string;
     boardId: number;
     isBookmarked: boolean;
     setIsBookmarked: (v: boolean) => void;
+    refetch: () => void;
 }) {
     const { onClickBookmarkHandler } = useToggleLikeAndBookmark();
 
@@ -20,6 +22,7 @@ function Bookmark({
         <button
             onClick={(e) => {
                 e.stopPropagation();
+                refetch();
                 setIsBookmarked(!isBookmarked);
                 onClickBookmarkHandler({ board, boardId });
             }}

@@ -4,7 +4,7 @@ import { useMatches, useSearchParams } from "react-router-dom";
 import Typography from "@component/Typography";
 import { GetResMemberDetail } from "@type/member/member.res.dto";
 
-export type INav = "grade" | "edit" | "editPw" | "chat" | "management" | "bookmarks" | "likes" | "block";
+export type INav = "level" | "edit" | "editPw" | "chat" | "management" | "bookmarks" | "likes" | "block";
 
 type INavItem = {
     oauth: boolean;
@@ -15,7 +15,7 @@ type INavItem = {
 type INavItems = Array<INavItem>;
 
 const defaultNavItems: INavItems = [
-    { oauth: true, label: "나의 등급", nav: "grade", selected: false },
+    { oauth: true, label: "나의 등급", nav: "level", selected: false },
     { oauth: true, label: "회원정보 수정", nav: "edit", selected: true },
     { oauth: false, label: "비밀번호 수정", nav: "editPw", selected: true },
     { oauth: true, label: "채팅 관리", nav: "chat", selected: false },
@@ -28,17 +28,17 @@ const defaultNavItems: INavItems = [
 export const NavItem = ({
     item,
     onClickNavItem,
-    oauth,
+    isOauthUser,
 }: {
     item: INavItem;
     onClickNavItem: (item: INavItem) => void;
-    oauth: boolean;
+    isOauthUser: boolean;
 }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const auth = searchParams.get("auth") || "";
     const tab = searchParams.get("tab") || "project";
 
-    if (oauth && item.label === "비밀번호 수정") {
+    if (isOauthUser && item.label === "비밀번호 수정") {
         return <></>;
     }
 
@@ -124,7 +124,12 @@ function NavItems({ user }: { user: GetResMemberDetail }) {
             {user && (
                 <SideBar nickname={user.nickname}>
                     {navItems.map((v) => (
-                        <NavItem key={v.label} item={v} onClickNavItem={onClickNavItem} oauth={user.oauthUser} />
+                        <NavItem
+                            key={v.label}
+                            item={v}
+                            onClickNavItem={onClickNavItem}
+                            isOauthUser={user.memberType === "OAUTH2"}
+                        />
                     ))}
                 </SideBar>
             )}

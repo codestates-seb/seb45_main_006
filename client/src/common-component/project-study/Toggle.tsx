@@ -1,11 +1,11 @@
 import Typography from "@component/Typography";
 import { Switch } from "@material-tailwind/react";
 
-function Toggle({ status, setStatus }: { status: boolean; setStatus: (v: boolean) => void }) {
+function Toggle({ status, setStatus, label }: { status: boolean; setStatus: (v: boolean) => void; label: string }) {
     return (
         <>
             <div className="flex items-center justify-center gap-8">
-                <Typography type="Highlight" text="모집 중"></Typography>
+                <Typography type="Highlight" text={`모집 중인 ${label}만 보기`}></Typography>
                 <div>
                     <Switch
                         checked={status}

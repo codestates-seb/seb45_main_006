@@ -19,7 +19,7 @@ import { EditAnswer, ShowAnswer } from "@component/board/Answer";
 import Pagination from "@component/Pagination";
 import UserProfile from "@component/user/UserProfile";
 
-import { BsFillShareFill } from "react-icons/bs";
+// import { BsFillShareFill } from "react-icons/bs";
 import { QuestionDefaultType } from "@type/question/question.res.dto";
 import Bookmark from "@component/board/Bookmark";
 import LikeBtn from "@component/board/LikeBtn";
@@ -92,12 +92,13 @@ const QuestionTitle = ({
                             boardId={question.boardId}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={() => {}}
                         />
                     </>
                 )}
-                <button>
+                {/* <button onClick={}>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );
@@ -106,9 +107,11 @@ const QuestionTitle = ({
 function QuestionItem({
     question,
     onClickDeleteHandler,
+    isDetail = false,
 }: {
     question: QuestionDefaultType;
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+    isDetail?: boolean;
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -129,7 +132,7 @@ function QuestionItem({
     const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
     const { reqLoginToUserToast } = useToast();
 
-    const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(isDetail);
     const [answer, setAnswer] = useState<string>("");
     const { isMine } = useCheckUser({ memberId: question.memberId });
 

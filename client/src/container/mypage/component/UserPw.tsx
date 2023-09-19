@@ -37,11 +37,10 @@ function UserPw() {
             return;
         }
 
-        const isRawPasswordVaid = new RegExp(inputsRegex.password).test(inputs.rawPassword);
         const isPasswordVaid = new RegExp(inputsRegex.password).test(inputs.password);
         const isPasswordReVaid = new RegExp(inputsRegex.passwordRe).test(inputs.passwordRe);
 
-        if (!isRawPasswordVaid || !isPasswordVaid || !isPasswordReVaid) {
+        if (!isPasswordVaid || !isPasswordReVaid) {
             fireToast({
                 content: "형식에 맞지 않는 입력값이 존재합니다.",
                 isConfirm: false,
@@ -60,10 +59,7 @@ function UserPw() {
                     });
                     setSearchParams({ auth, tab, nav: "edit" });
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };

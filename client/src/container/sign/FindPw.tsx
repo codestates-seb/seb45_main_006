@@ -11,6 +11,7 @@ import SignInput from "@container/sign/component/SignInput";
 import SignButton from "@container/sign/component/SignButton";
 import Typography from "@component/Typography";
 import EmailGuide from "./component/EmailGuide";
+import Loading from "@assets/loading.gif";
 
 import { REGEX } from "@hook/useCheckValidValue";
 
@@ -76,10 +77,16 @@ const RequestEmailAuthenticate = ({
     email,
     setEmail,
     onHandleReqAuthForFindPw,
+    authEmail,
+    isRequestedAuthEmail,
+    setIsRequestedAuthEmail,
 }: {
     email: string;
     setEmail: (v: string) => void;
     onHandleReqAuthForFindPw: () => void;
+    authEmail: string;
+    isRequestedAuthEmail: boolean;
+    setIsRequestedAuthEmail: (v: boolean) => void;
 }) => {
     return (
         <div className="flex h-300 flex-col justify-between">
@@ -99,21 +106,29 @@ const RequestEmailAuthenticate = ({
             />
 
             <div className="flex justify-center">
-                <SignButton
-                    type="FILLED"
-                    onClickHandler={() => {
-                        // const randomId = getRandomID();
-                        // setItemToStorage("randomId", randomId);
-                        // 1. randomId를 로컬스토리지에 저장하고 서버에 전달
-                        // 2. randomId를 url 뒤 query로 리다이렉션
-                        //    ex) /login/find-pw?randomId=1694008589246
-                        // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
-                        //    비밀번호 재설정 가능
-                        onHandleReqAuthForFindPw();
-                    }}
-                >
-                    <Typography type="SmallLabel" text="임시 비밀번호 요청" color="text-white" styles="font-bold" />
-                </SignButton>
+                {isRequestedAuthEmail && !authEmail && (
+                    <div className="flex h-40 w-165 justify-center rounded bg-[#e0dce0] pr-4">
+                        <img src={Loading} alt="로딩 중" className="ml-12 h-40 min-w-63" />
+                    </div>
+                )}
+                {!isRequestedAuthEmail && !authEmail && (
+                    <SignButton
+                        type="FILLED"
+                        onClickHandler={() => {
+                            // const randomId = getRandomID();
+                            // setItemToStorage("randomId", randomId);
+                            // 1. randomId를 로컬스토리지에 저장하고 서버에 전달
+                            // 2. randomId를 url 뒤 query로 리다이렉션
+                            //    ex) /login/find-pw?randomId=1694008589246
+                            // 3. 로컬스토리지에 저장된 randomId와 리다이렉션 url query가 일치할 경우에만
+                            //    비밀번호 재설정 가능
+                            onHandleReqAuthForFindPw();
+                            setIsRequestedAuthEmail(true);
+                        }}
+                    >
+                        <Typography type="SmallLabel" text="임시 비밀번호 요청" color="text-white" styles="font-bold" />
+                    </SignButton>
+                )}
             </div>
         </div>
     );
@@ -125,9 +140,10 @@ function FindPw() {
     const redirectedEmail = searchParams.get("email");
     const authEmail = useRecoilValue(authEmailAtom);
     // const randomId = getItemFromStorage("randomId");
+    const [isRequestedAuthEmail, setIsRequestedAuthEmail] = useState(false);
 
     const [email, setEmail] = useState("");
-    const { reqAuthenticateEmail } = useAuthHelper();
+    const { reqTempPw } = useAuthHelper();
 
     if (isRedirected) {
         return (
@@ -143,10 +159,13 @@ function FindPw() {
                 <RequestEmailAuthenticate
                     email={email}
                     setEmail={setEmail}
-                    onHandleReqAuthForFindPw={() => reqAuthenticateEmail({ email })}
+                    onHandleReqAuthForFindPw={() => reqTempPw({ email })}
+                    isRequestedAuthEmail={isRequestedAuthEmail}
+                    authEmail={authEmail}
+                    setIsRequestedAuthEmail={setIsRequestedAuthEmail}
                 />
             ) : (
-                <EmailGuide />
+                <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
             )}
         </SignLayout>
     );

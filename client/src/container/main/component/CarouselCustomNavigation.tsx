@@ -15,9 +15,12 @@ function CarouselCustomNavigation() {
     const handleClickBoard = () => {
         navigate("/infos");
     };
+
     return (
         <Carousel
             className="h-360 rounded-xl"
+            autoplay={true}
+            loop={true}
             prevArrow={({ handlePrev }) => (
                 <IconButton
                     variant="text"

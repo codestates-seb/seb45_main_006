@@ -1,6 +1,5 @@
 package WOOMOOL.DevSquad.auth.oauth2;
-
-import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
+import WOOMOOL.DevSquad.auth.jwt.service.JwtService;
 import WOOMOOL.DevSquad.auth.refresh.RefreshToken;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
@@ -24,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+
+import static WOOMOOL.DevSquad.member.entity.Member.MemberType.OAUTH2;
 
 @Transactional
 @RequiredArgsConstructor
@@ -92,6 +93,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 받은 email 과 oAuth2 타입인 회원 정보를 찾아서 uri 생성
+
     private URI createURI(String accessToken, String refreshToken, String email) {
         Optional<Member> optionalMember = memberRepository.findOAuth2UserByEmail(email);
         MemberProfile findMemberProfile = optionalMember.get().getMemberProfile();

@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
-import { useRecoilValue } from "recoil";
-import { authNicknameAtom } from "@feature/Global";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authNicknameAtom, isLoggedInAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
 import { useAuthHelper } from "@hook/useCheckAuth";
@@ -16,16 +16,18 @@ import AutoCompletionTags from "@component/AutoCompletionTags";
 import { UserInfo as UserStackAndPos } from "@container/user/component/UserCardModal";
 
 import { GetResMemberDetail } from "@type/member/member.res.dto";
-import { getItemFromStorage } from "@util/localstorage-helper";
+import { clearStorage, getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
+import { useDeleteLogout } from "@api/sign/hook";
 
 function UserInfo({ user }: { user: GetResMemberDetail }) {
     const navigate = useNavigate();
     const checkboxRef = useRef(null);
 
     const authNickname = useRecoilValue(authNicknameAtom);
+    const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
 
     const email = getItemFromStorage("email");
 
@@ -42,13 +44,13 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
     const { postCheckNickname } = useAuthHelper();
 
     const onHandleCheckNickname = () => {
-        postCheckNickname({ nickname });
+        postCheckNickname({ nickname, setIsRequestedNickname: () => {} });
     };
     const { mutate: patchMember } = usePatchMember();
     const { mutate: deleteMember } = useDeleteMember();
 
     const onHandleEditUser = () => {
-        if (authNickname !== nickname) {
+        if (user.nickname !== nickname && authNickname !== nickname) {
             fireToast({
                 content: "닉네임을 중복검사를 진행해주세요.",
                 isConfirm: false,
@@ -61,7 +63,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
         patchMember(
             {
                 memberId: user.memberId,
-                nickname: authNickname,
+                nickname: authNickname || nickname,
                 profilePicture: user.profilePicture,
                 githubId,
                 introduction,
@@ -76,38 +78,41 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                         content: "수정 완료하였습니다.",
                         isConfirm: false,
                     });
+
+                    setItemToStorage("nickname", authNickname || nickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", user.profilePicture);
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
-                },
+                onError: (err) => errorToast(err),
             },
         );
     };
+
+    const { mutate: deleteLogout } = useDeleteLogout();
 
     const onHandleDeleteUser = () => {
         createToast({
             content: "탈퇴하시면 DevSquad에서 기록이 삭제됩니다. 정말 탈퇴하시겠습니까?🥺",
             isWarning: false,
             isConfirm: true,
-            callback: () =>
+            callback: () => {
+                deleteLogout({ email });
                 deleteMember(
                     { memberId: user.memberId },
                     {
                         onSuccess: () => {
-                            // TODO: 로그아웃
                             fireToast({
                                 content: "탈퇴 처리되었습니다.",
                                 isConfirm: false,
                             });
+                            setIsLoggedIn(false);
+                            clearStorage();
                             navigate("/");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
-                ),
+                );
+            },
         });
     };
 
@@ -212,7 +217,13 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                         <div className="min-w-100 p-4">
                             <Typography type="SmallLabel" text="유저 리스트 페이지 공개 여부" styles="font-bold" />
                         </div>
-                        <div onClick={() => setIsChecked(!isChecked)}>
+                        <div
+                            onClick={() => {
+                                if (isEdit) {
+                                    setIsChecked(!isChecked);
+                                }
+                            }}
+                        >
                             <Checkbox
                                 color="green"
                                 checked={isChecked}

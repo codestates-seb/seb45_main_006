@@ -24,8 +24,8 @@ export type PatchReqStudy = {
     title: string;
     content: string;
     stack: Array<string>;
-    recruiteNum: number;
-    projectStatus: STUDY_STATUS_TYPE;
+    recruitNum: number;
+    // projectStatus: STUDY_STATUS_TYPE;
 };
 
 export type DeleteReqStudy = {

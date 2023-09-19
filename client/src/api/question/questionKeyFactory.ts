@@ -5,4 +5,5 @@ export const questionKeyFactory = {
         "question",
         { page, size, search },
     ],
+    detail: ({ boardId }: { boardId: number }) => ["question", { boardId }],
 };

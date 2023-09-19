@@ -4,6 +4,8 @@ import { CommonResStudies } from "@type/study/study.res.dto";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 import { QuestionDefaultType } from "@type/question/question.res.dto";
 
+export type MemberType = "OAUTH2" | "REGULAR";
+
 // 멤버 리스트 중 하나의 객체
 export type OneMember = {
     memberId: number;
@@ -31,12 +33,12 @@ export type GetResMemberDetail = {
     position: Array<string>;
     stack: Array<string>;
     modifiedAt: string; // 날짜 string 형식으로 도착
-    oauthUser: boolean;
+    memberType: MemberType;
     blockMemberList: Array<number>;
     projectList: Array<CommonResProjects>;
     studyList: Array<CommonResStudies>;
     infoBoardList: Array<InfoDefaultType>;
-    questionList: Array<QuestionDefaultType>;
+    questionBoardList: Array<QuestionDefaultType>;
 };
 
 // 마이페이지 - 비밀번호 수정 - status code: 200

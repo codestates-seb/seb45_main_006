@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { usePatchMember } from "@api/member/hook";
+import { useGetMyDetail, usePatchMember } from "@api/member/hook";
 import { useToast } from "@hook/useToast";
 
 import SetPro1 from "./setProfile1";
@@ -9,7 +9,7 @@ import SetPro2 from "./setProfile2";
 import SetPro3 from "./setProfile3";
 import SetPro4 from "./setProfile4";
 import SetPro5 from "./setProfile5";
-import { getItemFromStorage } from "@util/localstorage-helper";
+import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
 function SetPro() {
     const navigate = useNavigate();
@@ -22,9 +22,12 @@ function SetPro() {
 
     const memberId = getItemFromStorage("memberId");
     const nickname = getItemFromStorage("nickname");
+    const profilePicture = getItemFromStorage("profilePicture");
 
     const { fireToast, errorToast } = useToast();
     const { mutate: patchMember } = usePatchMember();
+
+    const { refetch } = useGetMyDetail();
 
     const onHandleEditUser = ({ isChecked }: { isChecked: boolean }) => {
         // TODO: S3 업로드
@@ -45,18 +48,51 @@ function SetPro() {
                         content: "등록 완료하였습니다.",
                         isConfirm: false,
                     });
+                    setItemToStorage("nickname", nickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", profilePicture);
+                    refetch();
                     navigate("/");
                 },
-                onError: (err) => {
-                    console.log(err);
-                    errorToast();
+                onError: (err) => errorToast(err),
+            },
+        );
+    };
+
+    const onHandleNextEditBtn = () => {
+        // TODO: S3 업로드
+        patchMember(
+            {
+                memberId: memberId,
+                nickname: nickname,
+                profilePicture: "",
+                githubId: "",
+                introduction: "",
+                listEnroll: 1,
+                stack: selectedStack,
+                position: selectedPostion,
+            },
+            {
+                onSettled: () => {
+                    setItemToStorage("nickname", nickname);
+                    // TODO: S3 업로드 구현 후 수정하기
+                    setItemToStorage("profilePicture", profilePicture);
+                    refetch();
+                    navigate("/");
                 },
             },
         );
     };
 
     if (curStage === 1) {
-        return <SetPro1 setCurStage={setCurStage} selectedTags={selectedStack} setSelectedTags={setSelectedStack} />;
+        return (
+            <SetPro1
+                setCurStage={setCurStage}
+                selectedTags={selectedStack}
+                setSelectedTags={setSelectedStack}
+                onHandleNextEditBtn={onHandleNextEditBtn}
+            />
+        );
     }
 
     if (curStage === 2) {

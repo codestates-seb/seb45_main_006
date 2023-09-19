@@ -51,10 +51,7 @@ function UserBlockModal({
                         });
                         refetchAllMembers();
                     },
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+                    onError: (err) => errorToast(err),
                 },
             );
         }
@@ -93,9 +90,12 @@ function UserBlockModal({
                     borderStyle={`border-1 shadow-md ${isEmptyInput ? "border-warn" : "border-borderline"}`}
                 />
             </div>
-            <div className="flex justify-center">
-                <Button type="WARN" onClickHandler={onHandleBlock}>
+            <div className="flex justify-center gap-8">
+                <Button type="WARN" onClickHandler={onHandleBlock} styles="hover:bg-warn/70">
                     <Typography type="Highlight" text="차단하기" color="text-white" />
+                </Button>
+                <Button type="EXIT" onClickHandler={closeModal} styles="bg-borderline hover:bg-gray-600">
+                    <Typography type="Highlight" text="나가기" />
                 </Button>
             </div>
         </div>

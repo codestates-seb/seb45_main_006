@@ -1,4 +1,5 @@
 import { commonApi } from "@api/common/commonApi";
+import { withAuthApi } from "@api/common/withAuthApi";
 import { COMMON_API_PATH } from "@api/constant";
 import { PostReqNickname, PostReqMember, PostReqLogin, DeleteReqLogout } from "@type/sign/sign.req.dto";
 
@@ -23,10 +24,10 @@ export const postLogin = async (requestObj: PostReqLogin) => {
     return data;
 };
 
-// TODO: API 헤더 - 로그아웃
+// API 헤더 - 로그아웃
 export const deleteLogout = async (requestObj: DeleteReqLogout) => {
     const url = `${COMMON_API_PATH.SIGN.LOGOUT}`;
-    const { data } = await commonApi.delete(url, { data: requestObj });
+    const { data } = await withAuthApi.delete(url, { data: requestObj });
     return data;
 };
 

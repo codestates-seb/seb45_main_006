@@ -30,6 +30,7 @@ export default function Register() {
     const [selectedStack, setSelectedStack] = useState<Array<string>>([]);
     const [startDate, setStartDate] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
+    const [prevProjectStatus, setPrevProjectStatus] = useState("");
 
     const handleSelectOption = (option: string) => {
         setSelectedOption(option);
@@ -44,7 +45,7 @@ export default function Register() {
     const [inputs, setInputs] = useState({
         title: "",
         content: "",
-        recruitNum: 0,
+        recruitNum: "",
     });
 
     useEffect(() => {
@@ -56,17 +57,21 @@ export default function Register() {
                 deadline: prevDeadline,
                 recruitNum: prevRecruitNum,
                 stack: prevStack,
+                projectStatus,
             }: GetResDetailProject = location.state;
             setInputs({
                 ...inputs,
                 title: prevTitle,
                 content: prevContent,
-                recruitNum: prevRecruitNum,
+                recruitNum: prevRecruitNum.toString(),
             });
 
             setStartDate(`${dayjs().format("YYYY")}/${prevStartDate}`);
             setDeadline(`${dayjs().format("YYYY")}/${prevDeadline}`);
             setSelectedStack(prevStack || []);
+            setPrevProjectStatus(projectStatus);
+            if (projectStatus === "PROJECT_POSTED") setSelectedOption("모집중");
+            else setSelectedOption("모집완료");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [curActivity]);
@@ -80,6 +85,9 @@ export default function Register() {
         const { name, value } = e.target;
         if (!value) {
             setInputs({ ...inputs, [name]: "" });
+        }
+        if (value.length > 2) {
+            setInputs({ ...inputs, [name]: value.slice(0, 2) });
         }
         if (parseInt(value) >= 0) {
             setInputs({ ...inputs, [name]: value });
@@ -107,6 +115,7 @@ export default function Register() {
         postProject(
             {
                 ...inputs,
+                recruitNum: Number.parseInt(inputs.recruitNum || "1"),
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),
@@ -120,7 +129,7 @@ export default function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
+
                 onError: (err) => {
                     console.log(err);
                     fireToast({
@@ -136,15 +145,34 @@ export default function Register() {
     const onPatchClickHandler = () => {
         if (isEmpty()) return;
 
-        if (selectedOption === "모집완료") {
-            closeProject({ boardId: location.state.boardId });
+        if (prevProjectStatus && prevProjectStatus === "PROJECT_CLOSED" && selectedOption === "모집중") {
+            closeProject(
+                { boardId: location.state.boardId },
+                {
+                    onSuccess: () => {
+                        navigate(`/projects/${location.state.boardId}`);
+
+                        fireToast({
+                            content: "게시글이 수정되었습니다!",
+                            isConfirm: false,
+                        });
+                    },
+                },
+            );
+            return;
+        }
+
+        if (prevProjectStatus) {
+            if (prevProjectStatus === "PROJECT_POSTED" && selectedOption === "모집완료") {
+                closeProject({ boardId: location.state.boardId });
+            }
         }
 
         patchProject(
             {
                 ...inputs,
                 boardId: location.state.boardId,
-                recruitStatus: selectedOption === "모집완료" ? "PROJECT_DELETED" : "PROJECT_POSTED",
+                recruitNum: Number.parseInt(inputs.recruitNum || "1"),
                 stack: selectedStack,
                 startDate: dayjs(startDate).format("M/D"),
                 deadline: dayjs(deadline).format("M/D"),
@@ -161,7 +189,7 @@ export default function Register() {
                         isConfirm: false,
                     });
                 },
-                // TODO: 에러 분기
+
                 onError: (err) => {
                     console.log(err);
                     fireToast({
@@ -185,19 +213,22 @@ export default function Register() {
                         name="title"
                         label="프로젝트명"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="프로젝트명을 입력하세요."
                         value={inputs.title}
                         onChange={handleInput}
                         maxlength={20}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
                     <BoardTextarea
                         name="content"
                         label="프로젝트 상세내용"
                         required={true}
-                        placeholder="ex) 카메라 서비스 개발"
+                        placeholder="프로젝트를 자세히 설명해주세요."
                         value={inputs.content}
                         onChange={handleInput}
-                        borderStyle={""}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
                     />
                     <div className="my-10 p-10">
                         <div className="flex">
@@ -210,6 +241,7 @@ export default function Register() {
                             selectedTags={selectedStack}
                             setSelectedTags={setSelectedStack}
                             defaultSuggestions={defaultStack}
+                            borderColor="border-project"
                         />
                     </div>
                     {curActivity === "REGISTER" ? (
@@ -234,6 +266,7 @@ export default function Register() {
                         setStartDate={setStartDate}
                         deadline={deadline}
                         setDeadline={setDeadline}
+                        borderColor="border-project"
                     />
                     <InputForNumber
                         name="recruitNum"
@@ -242,6 +275,13 @@ export default function Register() {
                         placeholder="ex) 6"
                         value={inputs.recruitNum}
                         onChange={handleNumberInput}
+                        borderStyle="outline-project"
+                        disabled={prevProjectStatus === "PROJECT_CLOSED"}
+                    />
+                    <Typography
+                        type="Description"
+                        text="* 모집인원은 1 ~ 12 사이의 숫자로 입력해주세요."
+                        styles="ml-12 mb-12"
                     />
                     <div className="flex w-full justify-center">
                         {curActivity === "REGISTER" ? (

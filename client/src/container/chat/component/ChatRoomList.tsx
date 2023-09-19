@@ -2,13 +2,16 @@ import { useSetRecoilState } from "recoil";
 import { isChatBotShowAtom, chatBotStatusAtom, chatRoomIdAtom } from "@feature/chat";
 
 import { useGetMemberDetail } from "@api/member/hook";
+import { useDeleteResExitChatRoom } from "@api/chat/hook";
 import UserProfile from "@component/user/UserProfile";
 import Typography from "@component/Typography";
 
 import { getItemFromStorage } from "@util/localstorage-helper";
-import { ChatRoom, GetResChatRooms } from "@type/chat/chat.res.dto";
+import { ChatRoom } from "@type/chat/chat.res.dto";
+import { useToast } from "@hook/useToast";
+import { useCheckChat } from "@hook/useCheckChat";
 
-const ChatItem = ({ chat }: { chat: ChatRoom }) => {
+const ChatItem = ({ chat, refetchChatRooms }: { chat: ChatRoom; refetchChatRooms: () => void }) => {
     const { nicknames, lastMessage } = chat;
 
     const setChatBotStatus = useSetRecoilState(chatBotStatusAtom);
@@ -26,21 +29,62 @@ const ChatItem = ({ chat }: { chat: ChatRoom }) => {
         setChatRoomId(chat.chatRoomId);
     };
 
+    const { createToast, fireToast } = useToast();
+    const { mutate: exitChatRoom } = useDeleteResExitChatRoom();
+
+    const onClickDeleteHandler = () => {
+        createToast({
+            content: "채팅방을 나가시겠습니까?",
+            isConfirm: true,
+            callback: () => {
+                exitChatRoom(
+                    { chatRoomId: chat.chatRoomId },
+                    {
+                        onSuccess: () => {
+                            fireToast({
+                                content: "채팅방을 나갔습니다!",
+                                isConfirm: false,
+                            });
+                            refetchChatRooms();
+                        },
+                    },
+                );
+            },
+        });
+    };
+
     return (
-        <li className={`flex w-full cursor-pointer p-12 ${borderCss}`} onClick={onClickChatRoomHandler}>
-            <UserProfile size="sm" profilePicture={otherUser?.profilePicture} />
-            <div className="flex flex-col">
-                <div className="flex">
-                    <Typography type="SmallLabel" text={nicknames.join(", ")} styles="font-bold" />
+        <li
+            className={`flex w-full cursor-pointer items-center justify-between p-12 ${borderCss}`}
+            onClick={onClickChatRoomHandler}
+        >
+            <div className="flex">
+                <UserProfile size="sm" profilePicture={otherUser?.profilePicture} />
+                <div className="flex flex-col">
+                    <div className="flex">
+                        <Typography type="SmallLabel" text={nicknames.join(", ")} styles="font-bold" />
+                    </div>
+                    <Typography
+                        type="Description"
+                        text={lastMessage.length > 17 ? `${lastMessage.substring(0, 17)}...` : lastMessage}
+                    />
                 </div>
-                <Typography type="Description" text={lastMessage} />
             </div>
+            <button
+                className="h-fit rounded-sm bg-warn px-4 py-2"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClickDeleteHandler();
+                }}
+            >
+                <Typography text="삭제" type="Description" color="text-white" />
+            </button>
         </li>
     );
 };
 
-function ChatRoomList({ chats }: { chats: GetResChatRooms | undefined }) {
-    console.log(chats);
+function ChatRoomList() {
+    const { chats, reqRefetchChatRooms } = useCheckChat();
     return (
         <>
             {chats && Array.isArray(chats) && (
@@ -55,7 +99,11 @@ function ChatRoomList({ chats }: { chats: GetResChatRooms | undefined }) {
                             />
 
                             {chats.map((v) => (
-                                <ChatItem chat={v} key={`chat-${v.chatRoomId}`} />
+                                <ChatItem
+                                    chat={v}
+                                    key={`chat-${v.chatRoomId}`}
+                                    refetchChatRooms={reqRefetchChatRooms}
+                                />
                             ))}
                         </>
                     ) : (

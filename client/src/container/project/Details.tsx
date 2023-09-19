@@ -3,16 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Button from "@component/Button";
 import Typography from "@component/Typography";
-import Report from "@component/project-study/Report";
 
 import { useCheckUser } from "@hook/useCheckUser";
 import { useGetDetailProject } from "@api/project/hook";
 import { useDeleteProject } from "@api/project/hook";
 import { useToast } from "@hook/useToast";
+
 import Bookmark from "@component/board/Bookmark";
 import UserCard from "@component/board/UserCard";
 import DetailSkeleton from "./component/DetailSkeleton";
-import UserProfile from "@component/user/UserProfile";
+
+import { useGetComment, usePostComment } from "@api/comment/hook";
+import { EditComment, ShowComment } from "@component/board/Comment";
+import Pagination from "@component/Pagination";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 const Details = () => {
     const navigate = useNavigate();
@@ -23,19 +27,46 @@ const Details = () => {
     const {
         data: projectInputs,
         isLoading,
-        refetch,
+        refetch: refetchProject,
     } = useGetDetailProject({ boardId: Number.parseInt(boardId || "0") });
 
-    const [isBookmarked, setIsBookmarked] = useState(!!projectInputs?.bookmarked);
+    useEffect(() => {
+        refetchProject();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // 페이지 필터
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalItems, setTotalItems] = useState<number>(0);
+    const [comment, setComment] = useState<string>("");
+
+    const { data: commentList, refetch: refetchComment } = useGetComment({
+        board: "project",
+        boardId: Number.parseInt(boardId || "0"),
+        page: curPage,
+        size: 4,
+    });
+
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setComment(e.currentTarget.value);
+    };
+
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    useEffect(() => {
+        if (projectInputs && projectInputs.bookmarked) {
+            setIsBookmarked(!!projectInputs?.bookmarked);
+        }
+    }, [projectInputs]);
 
     const { fireToast, createToast, errorToast } = useToast();
-    const { isMine } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
+    const { isMine, isLoggedIn } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
     const { mutate: deleteProject } = useDeleteProject();
 
     useEffect(() => {
-        refetch();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        if (commentList && commentList?.pageInfo.totalElements) {
+            setTotalItems(commentList?.pageInfo.totalElements);
+        }
+    }, [commentList]);
 
     const onClickDeleteHandler = () => {
         createToast({
@@ -52,14 +83,36 @@ const Details = () => {
                             });
                             navigate("/projects");
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },
         });
+    };
+
+    const { alertWhenEmptyFn } = useCheckValidValue();
+    const { mutate: postComment } = usePostComment();
+
+    const onSubmitHanlder = () => {
+        const inputs = [{ name: "댓글", content: comment }];
+        const emptyNames = alertWhenEmptyFn(inputs);
+
+        if (emptyNames.length === 0) {
+            postComment(
+                { board: "project", boardId: Number.parseInt(boardId || "0"), content: comment },
+                {
+                    onSuccess: () => {
+                        fireToast({
+                            content: "댓글이 등록되었습니다!",
+                            isConfirm: false,
+                        });
+                        setComment("");
+                        refetchComment();
+                    },
+                    onError: (err) => errorToast(err),
+                },
+            );
+        }
     };
 
     if (isLoading) {
@@ -70,7 +123,6 @@ const Details = () => {
         <div>
             <div className="m-20 flex gap-20">
                 <section
-                    // eslint-disable-next-line tailwindcss/no-custom-classname
                     className={`relative flex w-3/4 justify-between rounded-2xl border-2 border-solid border-borderline ${
                         projectInputs?.projectStatus === "PROJECT_POSTED" ? "" : "bg-gray-300"
                     }`}
@@ -78,11 +130,11 @@ const Details = () => {
                     <div>
                         {projectInputs?.projectStatus === "PROJECT_POSTED" ? (
                             <div className="absolute left-16 top-10 flex h-28 w-56 items-center justify-center rounded bg-deadline ">
-                                <Typography type="SmallLabel" text="모집중" styles="text-white" />
+                                <Typography type="Recruit" text="모집중" styles="text-white font-gangwon" />
                             </div>
                         ) : (
                             <div className="absolute left-16 top-10 flex h-30 w-68 items-center justify-center rounded bg-gray-600">
-                                <Typography type="SmallLabel" text="모집완료" styles="text-white" />
+                                <Typography type="Recruit" text="모집완료" styles="text-white" />
                             </div>
                         )}
                         <h3 className="mx-20 mt-40">
@@ -91,13 +143,13 @@ const Details = () => {
                         <ul className="flex flex-col p-20">
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 상세내용" />
-                                <div className="mx-4 my-6">{projectInputs?.content || ""}</div>
+                                <Typography type="Recruit" text={projectInputs?.content || ""} />
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 요구 스택" />
 
                                 <Typography
-                                    type="Body"
+                                    type="Recruit"
                                     text={
                                         (projectInputs &&
                                             Array.isArray(projectInputs?.stack) &&
@@ -110,18 +162,21 @@ const Details = () => {
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 기간" />
                                 <div className="mx-4 my-6">
-                                    {projectInputs?.startDate || ""} ~ {projectInputs?.deadline || ""}
+                                    <Typography
+                                        type="Recruit"
+                                        text={`${projectInputs?.startDate || ""} ~ ${projectInputs?.deadline || ""}`}
+                                    />
                                 </div>
                             </li>
                             <li className="my-10">
                                 <Typography type="Label" styles="list-disc" text="• 인원" />
 
-                                <div className="mx-4 my-6">{projectInputs?.recruitNum || 0}명</div>
+                                <Typography type="Recruit" text={`${projectInputs?.recruitNum || 0}명`} />
                             </li>
                         </ul>
                     </div>
 
-                    <div className="flex flex-col items-center py-10">
+                    <div className="flex min-w-50 flex-col items-center py-10">
                         {isMine && (
                             <>
                                 <Button
@@ -143,8 +198,8 @@ const Details = () => {
                             boardId={projectInputs?.boardId || 0}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={refetchProject}
                         />
-                        <Report />
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
@@ -156,22 +211,25 @@ const Details = () => {
                             refetchAllMembers={() => {}}
                         />
                     )}
-                    <Button type="PROJECT_POINT" styles="font-semibold mr-0" isFullBtn={true}>
-                        <Typography type="Body" text="참여하기" />
-                    </Button>
                 </div>
             </div>
-            <div className="mb-10 ml-20">
-                <Typography type="Label" text="댓글 0개" />
-            </div>
-            <div className="mx-20 max-w-800">
-                <div className="mb-12 flex items-start justify-between">
-                    <UserProfile size="sm" mine={true} />
-                    <Button type="PROJECT_POINT" styles="font-semibold" isFullBtn={false}>
-                        <Typography type="Body" text="댓글등록" />
-                    </Button>
+
+            <div className="p-8">
+                <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
+                {isLoggedIn && <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />}
+                <div className="my-16">
+                    {commentList?.data &&
+                        Array.isArray(commentList.data) &&
+                        commentList.data.map((v) => (
+                            <ShowComment
+                                key={v.commentId}
+                                comment={v}
+                                writerId={projectInputs?.memberProfile.memberId || 0}
+                                refetchComment={refetchComment}
+                            />
+                        ))}
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
                 </div>
-                <textarea className="h-100 w-full rounded-xl border-2 border-solid border-borderline" />
             </div>
         </div>
     );

@@ -14,7 +14,8 @@ type IButton = {
         | "MAIN"
         | "SUB"
         | "WARN"
-        | "DISABLED";
+        | "DISABLED"
+        | "EXIT";
     children: ReactNode;
     isFullBtn?: boolean;
     styles?: string;
@@ -37,6 +38,7 @@ function Button({ children, type, styles, isFullBtn = false, onClickHandler }: I
         if (type === "MAIN") setBackground("bg-main");
         if (type === "SUB") setBackground("bg-sub");
         if (type === "WARN") setBackground("bg-warn");
+        if (type === "EXIT") setBackground("bg-gray-400");
     }, [type]);
 
     return (

@@ -9,6 +9,7 @@ import { useToast } from "@hook/useToast";
 
 import NavItems from "./component/NavItems";
 import TabItems, { ITab } from "./component/TabItems";
+import UserLevel from "./component/UserLevel";
 import UserBlock from "./component/UserBlock";
 import UserPw from "./component/UserPw";
 import UserInfo from "./component/UserInfo";
@@ -26,23 +27,28 @@ function MyPage() {
     const curNav = searchParams.get("nav");
     const auth = searchParams.get("auth");
 
-    // TODO: 로그인 후 마이페이지 조회
-    // const rawPassword = useRecoilValue(rawPasswordAtom);
     const myId = getItemFromStorage("memberId");
 
-    const { data: user, isError } = useGetMyDetail();
+    const { data: user, isError, refetch } = useGetMyDetail();
 
     const { fireToast, createToast } = useToast();
 
     useEffect(() => {
-        if (!auth || auth !== getItemFromStorage("randomId")) {
-            createToast({
-                content: "올바른 접근이 아닙니다. 메인화면으로 이동합니다.",
-                isConfirm: false,
-                isWarning: false,
-            });
-            navigate("/");
-            return;
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (user && user?.memberType !== "OAUTH2") {
+            if (!auth || auth !== getItemFromStorage("randomId")) {
+                createToast({
+                    content: "올바른 접근이 아닙니다. 메인화면으로 이동합니다.",
+                    isConfirm: false,
+                    isWarning: false,
+                });
+                navigate("/");
+                return;
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -74,6 +80,7 @@ function MyPage() {
                         <div className="flex-1">
                             {(curNav === "management" || curNav === "bookmarks" || curNav === "likes") && <TabItems />}
                             <div className="flex w-full justify-center">
+                                {curNav === "level" && <UserLevel />}
                                 {curNav === "edit" && <UserInfo user={user} />}
                                 {curNav === "editPw" && <UserPw />}
                                 {curNav === "management" && (

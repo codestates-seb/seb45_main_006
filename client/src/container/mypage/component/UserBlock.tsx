@@ -32,9 +32,13 @@ function UserBlock({ blockList }: { blockList: Array<number> }) {
     return (
         <div className="flex flex-1 flex-col items-center rounded-md bg-white p-12 shadow-md">
             <div className="w-full">
-                {blockList.map((v) => (
-                    <UserBlockItem key={`block-${v}`} memberId={v} />
-                ))}
+                {blockList.length > 0 ? (
+                    blockList.map((v) => <UserBlockItem key={`block-${v}`} memberId={v} />)
+                ) : (
+                    <div className="flex h-full flex-col items-center justify-center">
+                        <Typography text="차단된 유저가 없습니다." type="Description" styles="mb-8" />
+                    </div>
+                )}
             </div>
         </div>
     );

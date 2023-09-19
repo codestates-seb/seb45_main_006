@@ -55,9 +55,7 @@ function Board() {
     };
 
     const onClickSearchHandler = () => {
-        if (searchValue !== "") {
-            setSearch(searchValue);
-        }
+        setSearch(searchValue);
     };
 
     const onClickRegisterHandler = () => {
@@ -86,10 +84,7 @@ function Board() {
                             });
                             refetchQuestions();
                         },
-                        onError: (err) => {
-                            console.log(err);
-                            errorToast();
-                        },
+                        onError: (err) => errorToast(err),
                     },
                 );
             },

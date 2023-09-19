@@ -14,6 +14,13 @@ export const getAllInfo = async ({ search, category, page, size }: GetReqAllInfo
     return data;
 };
 
+export const getDetailInfo = async ({ boardId }: { boardId: number }) => {
+    const url = `${COMMON_API_PATH.INFO.PATH}/${boardId}`;
+
+    const { data } = await commonApi.get(url);
+    return data;
+};
+
 // 정보 게시판 - 등록
 export const postInfo = async (requstObj: PostReqInfo) => {
     const url = `${COMMON_API_PATH.INFO.PATH}`;

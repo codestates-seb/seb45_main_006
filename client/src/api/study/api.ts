@@ -11,10 +11,16 @@ import {
 
 // 스터디 - 전체 조회하기
 export const getAllStudies = async ({ page, size, stack, title, status }: GetReqAllStudies) => {
-    let url = `/study/list?page=${page}&size=${size}`;
+    let addedPath = "";
+
+    if (status === "STUDY_POSTED") {
+        addedPath = "/posted";
+    }
+
+    let url = `/study/list${addedPath}?page=${page}&size=${size}`;
     if (stack) url += `&stacks=${stack}`;
     if (title) url += `&title=${title}`;
-    if (status) url += `&status=${status}`;
+
     const { data } = await commonApi.get(url);
     return data;
 };
@@ -44,5 +50,12 @@ export const patchStudy = async ({ boardId, ...requstObj }: PatchReqStudy) => {
 export const deleteStudy = async ({ boardId }: DeleteReqStudy) => {
     const url = `${COMMON_API_PATH.STUDY.PATH}/${boardId}`;
     const { data } = await withAuthApi.delete(url);
+    return data;
+};
+
+// 프로젝트 - 모집 마감
+export const patchCloseStudy = async ({ boardId }: { boardId: number }) => {
+    const url = `${COMMON_API_PATH.STUDY.PATH}/${boardId}/close`;
+    const { data } = await withAuthApi.patch(url);
     return data;
 };

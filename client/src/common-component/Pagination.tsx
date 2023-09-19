@@ -26,7 +26,7 @@ function Pagination({ curPage, setCurPage, totalItems, size }: IPagination) {
     }, [curPage, endPage, totalItems, size]);
 
     return (
-        <ol className="flex w-full justify-center">
+        <ol className="my-40 flex w-full justify-center">
             {paginationArr[0] !== 1 ? (
                 <button className="mr-8" onClick={() => setCurPage(paginationArr[0] - 1)}>
                     <Typography type="Body" text="&lt;&lt;" />

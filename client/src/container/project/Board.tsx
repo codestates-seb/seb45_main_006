@@ -41,7 +41,7 @@ const Board = () => {
         size: 8,
         stack: selectedStacks.join(","),
         title: search,
-        status: status ? "PROJECT_POSTED" : "PROJECT_DELETED",
+        status: status ? "PROJECT_POSTED" : "PROJECT_CLOSED",
     });
 
     useEffect(() => {
@@ -54,9 +54,7 @@ const Board = () => {
     };
 
     const onClickSearchHandler = () => {
-        if (searchValue !== "") {
-            setSearch(searchValue);
-        }
+        setSearch(searchValue);
     };
 
     const onClickRegisterHandler = () => {
@@ -113,7 +111,7 @@ const Board = () => {
                         // setSelectedOrder={setSelectedOrder}
                     />
                 </div>
-                <Toggle status={status} setStatus={setStatus} />
+                <Toggle status={status} setStatus={setStatus} label="프로젝트" />
             </div>
             <>
                 {isLoading && (
@@ -126,7 +124,9 @@ const Board = () => {
                 {!isLoading && projects && projects.data && Array.isArray(projects.data) && (
                     <>
                         {projects.data.length > 0 ? (
-                            projects.data.map((v) => <BoardList project={v} key={`project-${v.boardId}`} />)
+                            projects.data.map((v) => (
+                                <BoardList project={v} key={`project-${v.boardId}`} refetch={refetch} />
+                            ))
                         ) : (
                             <div className="flex h-300 w-full items-center justify-center">
                                 <Typography

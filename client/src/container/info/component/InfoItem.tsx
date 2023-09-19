@@ -24,7 +24,7 @@ import { CATEGORY_TO_NAME } from "@api/info/constant";
 import { CATEGORY_TYPE } from "@type/info/common";
 import { InfoDefaultType } from "@type/info/info.res.dto";
 
-import { BsFillShareFill } from "react-icons/bs";
+// import { BsFillShareFill } from "react-icons/bs";
 import Pagination from "@component/Pagination";
 import LikeBtn from "@component/board/LikeBtn";
 
@@ -88,7 +88,7 @@ const InfoTitle = ({
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     {/* TODO: 댓글 수  */}
-                    <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" />
+                    {/* <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
@@ -100,12 +100,13 @@ const InfoTitle = ({
                             boardId={info.boardId}
                             isBookmarked={isBookmarked}
                             setIsBookmarked={setIsBookmarked}
+                            refetch={() => {}}
                         />
                     </>
                 )}
-                <button>
+                {/* <button>
                     <BsFillShareFill />
-                </button>
+                </button> */}
             </div>
         </div>
     );
@@ -114,9 +115,11 @@ const InfoTitle = ({
 function InfoItem({
     info,
     onClickDeleteHandler,
+    isDetail = false,
 }: {
     info: InfoDefaultType;
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
+    isDetail?: boolean;
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
@@ -138,7 +141,7 @@ function InfoItem({
     const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
     const { fireToast, errorToast } = useToast();
 
-    const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(isDetail);
     const [comment, setComment] = useState<string>("");
 
     const { mutate: postViewCount } = usePostViewCount();
@@ -166,11 +169,8 @@ function InfoItem({
                         setComment("");
                         refetchComment();
                     },
-                    // TODO: 에러 분기
-                    onError: (err) => {
-                        console.log(err);
-                        errorToast();
-                    },
+
+                    onError: (err) => errorToast(err),
                 },
             );
         }

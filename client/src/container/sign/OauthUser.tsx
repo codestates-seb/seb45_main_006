@@ -10,18 +10,21 @@ function OauthUser() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("oauth redirected url", new URL(location.href));
         // 1. 전달받은 정보 확인 -> 존재하는 정보 로컬스토리지에 저장
         const accessToken = new URL(location.href).searchParams.get("access_token");
         const refreshToken = new URL(location.href).searchParams.get("refresh_token");
         const memberId = new URL(location.href).searchParams.get("memberId");
         const nickname = new URL(location.href).searchParams.get("nickname");
-        setItemToStorage("accessToken", accessToken);
+
+        setItemToStorage("accessToken", accessToken?.split(" ")[1]);
         setItemToStorage("refreshToken", refreshToken);
         if (accessToken) {
             setItemToStorage("email", parseJwt(accessToken).username);
         }
         if (memberId) {
             setItemToStorage("memberId", Number.parseInt(memberId));
+            setItemToStorage("memberType", "OAUTH2");
         }
 
         if (nickname) {
