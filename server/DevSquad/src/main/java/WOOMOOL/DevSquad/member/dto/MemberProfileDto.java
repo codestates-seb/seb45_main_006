@@ -101,6 +101,8 @@ public class MemberProfileDto {
 
         private List<Long> blockMemberList;
 
+        private boolean attendanceChecked;
+
         private LocalDateTime modifiedAt;
     }
     @Getter

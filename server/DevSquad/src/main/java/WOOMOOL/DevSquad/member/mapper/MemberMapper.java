@@ -53,6 +53,7 @@ public interface MemberMapper {
                         .map(stackTag -> stackTag.getTagName()).collect(Collectors.toSet()),
                 memberProfile.getBlockList().stream()
                         .map(blockMember -> blockMember.getBlockMemberId()).collect(Collectors.toList()),
+                memberProfile.isAttendanceChecked(),
                 memberProfile.getModifiedAt()
         );
     }
