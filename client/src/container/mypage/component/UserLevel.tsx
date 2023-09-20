@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useGetMyLevel } from "@api/member-activity/hook";
 import Typography from "@component/Typography";
 
@@ -7,7 +8,6 @@ import FrogLegBack from "@assets/attendance/frog-leg-back.png";
 import FrogLegFront from "@assets/attendance/frog-leg-front.png";
 import BabyFrog from "@assets/attendance/baby-frog.png";
 import Frog from "@assets/attendance/frog.png";
-import { useEffect, useState } from "react";
 
 function UserLevel() {
     const { data: userLevel } = useGetMyLevel();
@@ -89,7 +89,7 @@ function UserLevel() {
                     <Typography type="SmallLabel" text="경험치: " styles="mr-8" />
                     <Typography
                         type="SmallLabel"
-                        text={userLevel?.maxExp.toString() || ""}
+                        text={userLevel?.currentExp.toString() || ""}
                         styles="mr-8"
                         color="text-main"
                     />
@@ -120,7 +120,7 @@ function UserLevel() {
                 <Typography text="각 등급은 이렇게 결정돼요!" type="SmallLabel" />
                 {levelDefaultInfo.map((v) => {
                     return (
-                        <div className="flex">
+                        <div className="flex" key={v.grade}>
                             <div className="mr-10 flex h-74 w-100 flex-col items-center justify-center">
                                 <div
                                     className={`h-50 w-50 overflow-hidden rounded p-8 ${

@@ -75,6 +75,7 @@ export const InfoItemHor = ({
 }) => {
     const [isLiked, setIsLiked] = useState(!!info.liked);
     const [isBookmarked, setIsBookmarked] = useState(!!info.bookmarked);
+    const [curLikeCount, setCurLikeCount] = useState(info.likeCount);
 
     return (
         <div className="my-10 flex max-w-700 flex-1 rounded-md border-1 border-borderline p-10">
@@ -90,12 +91,17 @@ export const InfoItemHor = ({
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회 수 ${info.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    {/* TODO: 댓글 수 */}
-                    {/* <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
+                    <Typography text={`좋아요 수 ${curLikeCount || 0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
-                <LikeBtn board="information" boardId={info.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                <LikeBtn
+                    board="information"
+                    boardId={info.boardId}
+                    isLiked={isLiked}
+                    setIsLiked={setIsLiked}
+                    setCurLikeCount={setCurLikeCount}
+                />
                 <Bookmark
                     board="information"
                     boardId={info.boardId}
@@ -120,6 +126,7 @@ export const QuestionItemHor = ({
 }) => {
     const [isLiked, setIsLiked] = useState(!!question.liked);
     const [isBookmarked, setIsBookmarked] = useState(!!question.bookmarked);
+    const [curLikeCount, setCurLikeCount] = useState(question.likeCount);
 
     return (
         <div className="my-10 flex max-w-700 flex-1 rounded-md border-1 border-borderline p-10">
@@ -134,12 +141,17 @@ export const QuestionItemHor = ({
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회 수 ${question.viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    {/* TODO: 답변수 */}
-                    {/* <Typography text={`답변 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
+                    <Typography text={`좋아요 수 ${curLikeCount || 0}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="flex w-40 flex-col items-center justify-start">
-                <LikeBtn board="question" boardId={question.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                <LikeBtn
+                    board="question"
+                    boardId={question.boardId}
+                    isLiked={isLiked}
+                    setIsLiked={setIsLiked}
+                    setCurLikeCount={setCurLikeCount}
+                />
                 <Bookmark
                     board="question"
                     boardId={question.boardId}
@@ -161,14 +173,12 @@ function UserCardModal({
     isUpperOpen,
     setIsUpperOpen,
     setBlockedMemberId,
-    refetchAllMembers,
 }: {
     memberId: number;
     closeModal: () => void;
     isUpperOpen: boolean;
     setIsUpperOpen: (v: boolean) => void;
     setBlockedMemberId: (v: number) => void;
-    refetchAllMembers: () => void;
 }) {
     const navigate = useNavigate();
 
@@ -220,7 +230,7 @@ function UserCardModal({
                     </div>
                     <div className="flex flex-1 items-center justify-center p-20">
                         <div className="max-w-300 flex-1 overflow-hidden rounded-xl">
-                            <UserProfile profilePicture={user.profilePicture} size="lg" />
+                            <UserProfile profilePicture={user.profilePicture} size="lg" memberId={user.memberId} />
                         </div>
                     </div>
                 </div>
@@ -348,12 +358,7 @@ function UserCardModal({
 
                 {user && isUpperOpen ? (
                     <Modal upperModal={isUpperOpen} closeModal={() => setIsUpperOpen(false)}>
-                        <UserBlockModal
-                            user={user}
-                            closeModal={closeModal}
-                            setBlockedMemberId={setBlockedMemberId}
-                            refetchAllMembers={refetchAllMembers}
-                        />
+                        <UserBlockModal user={user} closeModal={closeModal} setBlockedMemberId={setBlockedMemberId} />
                     </Modal>
                 ) : null}
             </>

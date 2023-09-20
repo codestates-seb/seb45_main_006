@@ -7,11 +7,13 @@ function LikeBtn({
     boardId,
     isLiked,
     setIsLiked,
+    setCurLikeCount,
 }: {
     board: string;
     boardId: number;
     isLiked: boolean;
     setIsLiked: (v: boolean) => void;
+    setCurLikeCount: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const { onClickLikeHandler } = useToggleLikeAndBookmark();
 
@@ -19,7 +21,13 @@ function LikeBtn({
         <button
             onClick={(e) => {
                 e.stopPropagation();
+                if (isLiked) {
+                    setCurLikeCount((prevCount: number) => prevCount - 1);
+                } else {
+                    setCurLikeCount((prevCount: number) => prevCount + 1);
+                }
                 setIsLiked(!isLiked);
+
                 onClickLikeHandler({ board, boardId });
             }}
         >

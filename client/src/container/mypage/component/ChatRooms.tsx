@@ -15,7 +15,7 @@ const ChatItem = ({ chat }: { chat: ChatRoom }) => {
 
     return (
         <div className="mb-8 flex w-full rounded-xl border-1 border-borderline p-12">
-            <UserProfile size="md" profilePicture={otherUser?.profilePicture} />
+            <UserProfile size="md" profilePicture={otherUser?.profilePicture} memberId={otherUser?.memberId || 0} />
             <div className="flex flex-col">
                 <div className="flex">
                     <Typography type="Highlight" text={nicknames.join(", ")} styles="font-bold" />

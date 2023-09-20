@@ -1,8 +1,15 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { isLoggedInAtom, isSignPageAtom } from "@feature/Global";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+    isLoggedInAtom,
+    isSignPageAtom,
+    isModalOpenAtom,
+    isUpperModalOpenAtom,
+    modalMemberIdAtom,
+    blockedNowIdAtom,
+} from "@feature/Global";
 import { defaultPostionAtom, defaultStackAtom } from "@feature/Global";
 import { useGetDefaultPostion, useGetDefaultStack } from "@api/default/hook";
 
@@ -11,9 +18,12 @@ import { useGetMyDetail } from "@api/member/hook";
 import Header from "@component/Header";
 import Navigation from "@component/Navigation";
 import ChatBot from "@container/chat/ChatBot";
+import Modal from "@component/Modal";
+import UserCardModal from "@container/user/component/UserCardModal";
 
 import { isExistToken } from "@util/token-helper";
 import { setItemToStorage } from "@util/localstorage-helper";
+import { useScrollControll } from "@hook/userScrollControl";
 
 const HEIGHT = {
     SIGN_HEADER: 60,
@@ -26,10 +36,15 @@ function Layout() {
 
     const [isSignPage, setIsSignPage] = useRecoilState(isSignPageAtom);
     const [isLoggined, setIsLoggined] = useRecoilState(isLoggedInAtom);
+    const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenAtom);
+    const [isUpperModalOpen, setIsUpperModalOpen] = useRecoilState(isUpperModalOpenAtom);
     const setDefaultStack = useSetRecoilState(defaultStackAtom);
     const setDefaultPosition = useSetRecoilState(defaultPostionAtom);
+    const setBlockMemberId = useSetRecoilState(blockedNowIdAtom);
+    const modalMemberId = useRecoilValue(modalMemberIdAtom);
 
     const [marginTop, setMarginTop] = useState<number>(HEIGHT.MAIN_HEADER);
+    const { openScroll } = useScrollControll();
 
     useEffect(() => {
         if (pathname.includes("/signup") || pathname.includes("/login") || pathname.includes("/setpro")) {
@@ -77,6 +92,12 @@ function Layout() {
         }
     }, [myInfo]);
 
+    const closeModal = () => {
+        setIsUpperModalOpen(false);
+        setIsModalOpen(false);
+        openScroll();
+    };
+
     return (
         <>
             <div className="fixed z-10 flex w-full max-w-screen-xl flex-col bg-white" ref={headerRef}>
@@ -91,6 +112,17 @@ function Layout() {
                     <Outlet />
                 </Suspense>
                 {!isSignPage && isLoggined && <ChatBot />}
+                {isModalOpen && (
+                    <Modal closeModal={closeModal} upperModal={isUpperModalOpen}>
+                        <UserCardModal
+                            memberId={modalMemberId}
+                            closeModal={closeModal}
+                            isUpperOpen={isUpperModalOpen}
+                            setIsUpperOpen={setIsUpperModalOpen}
+                            setBlockedMemberId={setBlockMemberId}
+                        />
+                    </Modal>
+                )}
             </main>
         </>
     );

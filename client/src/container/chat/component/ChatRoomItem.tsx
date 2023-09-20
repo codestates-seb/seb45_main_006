@@ -13,15 +13,9 @@ import { ChatMessage } from "@type/chat/chat.res.dto";
 
 import * as Webstomp from "webstomp-client";
 
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import { useGetEnrollChatRoom } from "@api/chat/hook";
 import { useRecoilValue } from "recoil";
 import { chatRoomIdAtom } from "@feature/chat";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const VITE_APP_WEB_SOCKET_HOST_NAME = import.meta.env.VITE_APP_WEB_SOCKET_HOST_NAME || "";
 
@@ -51,8 +45,14 @@ function ChatRoomItem() {
     // const memberId = getItemFromStorage("memberId");
     const accessToken = getItemFromStorage("accessToken");
 
-    // TODO: disconnection
-    // const disconnectWebSocket = () => {};
+    const socket = new WebSocket(VITE_APP_WEB_SOCKET_HOST_NAME as string);
+    const stompClient = Webstomp.over(socket);
+
+    const disconnectWebSocket = () => {
+        stompClient.disconnect(() => {
+            setIsConnected(false);
+        });
+    };
 
     useEffect(() => {
         setNotice([]);
@@ -84,9 +84,6 @@ function ChatRoomItem() {
         // setRecievedMsg([]);
 
         if (chatMessages && chatMessages.chatRoomId) {
-            const socket = new WebSocket(VITE_APP_WEB_SOCKET_HOST_NAME as string);
-            const stompClient = Webstomp.over(socket);
-
             stompClient.connect(
                 {},
                 () => {
@@ -118,12 +115,11 @@ function ChatRoomItem() {
 
             setClient(stompClient);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatMessages]);
 
     useEffect(() => {
         if (chatBox && chatBox.current) {
-            console.dir("chatBox.current.scrollTop", chatBox.current);
-            console.log("chatBox.current.scrollHeight", chatBox.current.scrollHeight);
             chatBox.current.scrollTop = chatBox.current.scrollHeight;
         }
     }, [chatList, chatBox]);
@@ -166,9 +162,10 @@ function ChatRoomItem() {
                     notice={notice}
                     latestNotice={latestNotice}
                     nicknames={chatMessages?.nicknames || ["", ""]}
+                    disconnectWebSocket={disconnectWebSocket}
                 />
-                <div className="min-h-65"></div>
-                <div className="h-371 max-h-371 overflow-y-scroll py-8">
+                <div className="min-h-80"></div>
+                <div className="h-355 max-h-355 overflow-y-scroll py-8">
                     <div className="flex w-full flex-col flex-wrap px-4" ref={chatBox}>
                         {basic.length > 0 && basic.map((v) => <ChatMessageContent key={v.createAt} v={v} />)}
                         {chatList.length > 0 && chatList.map((v) => <MessageItemContent key={v.createAt} v={v} />)}

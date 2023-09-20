@@ -23,7 +23,7 @@ import { useDeleteLogout } from "@api/sign/hook";
 
 import { REGEX } from "@hook/useCheckValidValue";
 
-function UserInfo({ user }: { user: GetResMemberDetail }) {
+function UserInfo({ user, refetch }: { user: GetResMemberDetail; refetch: () => void }) {
     const navigate = useNavigate();
     const checkboxRef = useRef(null);
 
@@ -86,6 +86,7 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                     setItemToStorage("nickname", authNickname || nickname);
                     // TODO: S3 업로드 구현 후 수정하기
                     setItemToStorage("profilePicture", user.profilePicture);
+                    refetch();
                 },
                 onError: (err) => errorToast(err),
             },
@@ -190,12 +191,14 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                                 <div className="min-w-88 p-4">
                                     <Typography type="SmallLabel" text="기술스택" styles="font-bold" />
                                 </div>
-                                <AutoCompletionTags
-                                    placeholder="기술 스택을 입력해주세요."
-                                    selectedTags={stacks}
-                                    setSelectedTags={setStacks}
-                                    defaultSuggestions={defaultStack}
-                                />
+                                <div className="flex-1">
+                                    <AutoCompletionTags
+                                        placeholder="기술 스택을 입력해주세요."
+                                        selectedTags={stacks}
+                                        setSelectedTags={setStacks}
+                                        defaultSuggestions={defaultStack}
+                                    />
+                                </div>
                             </>
                         ) : (
                             <UserStackAndPos user={user} type="stack" />
@@ -208,12 +211,14 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                                 <div className="min-w-88 p-4">
                                     <Typography type="SmallLabel" text="포지션" styles="font-bold" />
                                 </div>
-                                <AutoCompletionTags
-                                    placeholder="포지션을 입력해주세요."
-                                    selectedTags={position}
-                                    setSelectedTags={setPosition}
-                                    defaultSuggestions={defaultPosition}
-                                />
+                                <div className="flex-1">
+                                    <AutoCompletionTags
+                                        placeholder="포지션을 입력해주세요."
+                                        selectedTags={position}
+                                        setSelectedTags={setPosition}
+                                        defaultSuggestions={defaultPosition}
+                                    />
+                                </div>
                             </>
                         ) : (
                             <UserStackAndPos user={user} type="position" />

@@ -39,6 +39,7 @@ export type GetResMemberDetail = {
     studyList: Array<CommonResStudies>;
     infoBoardList: Array<InfoDefaultType>;
     questionBoardList: Array<QuestionDefaultType>;
+    attendanceChecked: boolean;
 };
 
 // 마이페이지 - 비밀번호 수정 - status code: 200

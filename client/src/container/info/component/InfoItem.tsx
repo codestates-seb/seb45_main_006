@@ -45,11 +45,12 @@ const InfoTitle = ({
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
 }) => {
     const navigate = useNavigate();
-    const { category, title, viewCount, modifiedAt, likeCount } = info;
+    const { category, title, viewCount, modifiedAt } = info;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
 
     const [isLiked, setIsLiked] = useState(info.liked);
     const [isBookmarked, setIsBookmarked] = useState(info.bookmarked);
+    const [curLikeCount, setCurLikeCount] = useState(info.likeCount);
 
     const onClickEditHandelr = () => navigate(`/infos/${info.boardId}/edit`, { state: info });
 
@@ -78,7 +79,7 @@ const InfoTitle = ({
                     <Typography text={title} type="Label" />
 
                     <div className="flex items-center">
-                        <UserProfile size="sm" profilePicture={info.profilePicture} />
+                        <UserProfile size="sm" profilePicture={info.profilePicture} memberId={info.memberId} />
                         <Typography text={info.nickname} type="Label" />
                     </div>
                 </div>
@@ -87,13 +88,19 @@ const InfoTitle = ({
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    <Typography text={`좋아요 수 ${likeCount}`} type="SmallLabel" color="text-gray-600" />
+                    <Typography text={`좋아요 수 ${curLikeCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
                 {isLoggedIn && (
                     <>
-                        <LikeBtn board="information" boardId={info.boardId} isLiked={isLiked} setIsLiked={setIsLiked} />
+                        <LikeBtn
+                            board="information"
+                            boardId={info.boardId}
+                            isLiked={isLiked}
+                            setIsLiked={setIsLiked}
+                            setCurLikeCount={setCurLikeCount}
+                        />
                         <Bookmark
                             board="information"
                             boardId={info.boardId}

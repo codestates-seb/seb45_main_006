@@ -180,7 +180,7 @@ function SignUp2() {
                 <SignInput
                     label="닉네임"
                     value={nickname}
-                    placeholder="닉네임 (공백없이 2자 ~ 8자)"
+                    placeholder="닉네임 (공백없이 2자 ~ 10자)"
                     disabled={authNickname.length > 0}
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
@@ -192,7 +192,11 @@ function SignUp2() {
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                         onClickHandler={() => {
                             if (!nickname || !isNicknameVaid({ nickname })) {
-                                fireToast({ content: "닉네임을 입력해주세요.", isConfirm: false });
+                                fireToast({
+                                    content: "닉네임이 형식에 맞지 앖습니다.",
+                                    isConfirm: false,
+                                    isWarning: true,
+                                });
                                 return;
                             }
                             setIsRequestedNickname(true);
@@ -205,7 +209,7 @@ function SignUp2() {
             </div>
             <SignInput
                 label="비밀번호"
-                type="password"
+                // type="password"
                 value={password}
                 onChange={(e) => setPassword(e.currentTarget.value)}
                 placeholder="비밀번호 (영문, 숫자, 특수문자 포함 8 ~ 20자)"

@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+import { useRecoilValue } from "recoil";
+import { blockedNowIdAtom } from "@feature/Global";
+
 import UserCard from "@component/board/UserCard";
 import Pagination from "@component/Pagination";
 import SearchFilter from "@container/user/component/SearchFilter";
@@ -18,13 +21,9 @@ function UserList() {
     const [selectedStacks, setSelectedStacks] = useState<Array<string>>([]);
     const [selectedPos, setSelectedPos] = useState<Array<string>>([]);
     // 차단 후 새로 데이터를 불러오기 위한 queryKey로서 사용
-    const [blockedMemberId, setBlockedMemberId] = useState(0);
+    const blockedMemberId = useRecoilValue(blockedNowIdAtom);
 
-    const {
-        data: users,
-        isLoading,
-        refetch: refetchAllMembers,
-    } = useGetAllMembers({
+    const { data: users, isLoading } = useGetAllMembers({
         page: curPage,
         stacks: selectedStacks.join(","),
         posiions: selectedPos.join(","),
@@ -55,14 +54,7 @@ function UserList() {
                 />
                 <div className="my-20 flex flex-wrap">
                     {!isLoading && users?.data ? (
-                        users.data.map((v, i) => (
-                            <UserCard
-                                key={`${v.nickname}${i}`}
-                                user={v}
-                                setBlockedMemberId={setBlockedMemberId}
-                                refetchAllMembers={refetchAllMembers}
-                            />
-                        ))
+                        users.data.map((v, i) => <UserCard key={`${v.nickname}${i}`} user={v} />)
                     ) : (
                         <>
                             {Array.from({ length: 8 }).map((_, i) => (

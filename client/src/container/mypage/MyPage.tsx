@@ -81,7 +81,7 @@ function MyPage() {
                             {(curNav === "management" || curNav === "bookmarks" || curNav === "likes") && <TabItems />}
                             <div className="flex w-full justify-center">
                                 {curNav === "level" && <UserLevel />}
-                                {curNav === "edit" && <UserInfo user={user} />}
+                                {curNav === "edit" && <UserInfo user={user} refetch={refetch} />}
                                 {curNav === "editPw" && <UserPw />}
                                 {curNav === "management" && (
                                     <UserActivity memberId={myId} tab={checkValidTab(curTab)} />
@@ -92,7 +92,7 @@ function MyPage() {
                                 {curNav === "likes" && (
                                     <UserLikeActivity memberId={myId} tab={checkValidTab(curTab)} type="likes" />
                                 )}
-                                {curNav === "block" && <UserBlock blockList={user.blockMemberList} />}
+                                {curNav === "block" && <UserBlock blockList={user.blockMemberList} refetch={refetch} />}
                                 {curNav === "chat" && <ChatRooms />}
                             </div>
                         </div>

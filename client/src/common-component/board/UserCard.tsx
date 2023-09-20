@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useSetRecoilState } from "recoil";
+import { isModalOpenAtom, modalMemberIdAtom } from "@feature/Global";
+
 import Typography from "@component/Typography";
-import Modal from "@component/Modal";
-import UserCardModal from "@container/user/component/UserCardModal";
 import UserProfile from "@component/user/UserProfile";
 
 import { useScrollControll } from "@hook/userScrollControl";
@@ -44,22 +44,13 @@ const UserInfo = ({ user, type }: { user: OneMember; type: "stack" | "position" 
     );
 };
 
-function UserCard({
-    user,
-    setBlockedMemberId,
-    refetchAllMembers,
-}: {
-    user: OneMember;
-    setBlockedMemberId: (v: number) => void;
-    refetchAllMembers: () => void;
-}) {
+function UserCard({ user }: { user: OneMember }) {
     const navigate = useNavigate();
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    // 열려있는 모달 위에 모달
-    const [isUpperOpen, setIsUpperOpen] = useState<boolean>(false);
+    const setIsOpen = useSetRecoilState(isModalOpenAtom);
+    const setModalMemberId = useSetRecoilState(modalMemberIdAtom);
 
-    const { lockScroll, openScroll } = useScrollControll();
+    const { lockScroll } = useScrollControll();
     const { isLoggedIn, isMine } = useCheckUser({ memberId: user.memberId });
     const { reqLoginToUserToast, createToast } = useToast();
 
@@ -78,14 +69,9 @@ function UserCard({
             return;
         }
 
+        setModalMemberId(user.memberId);
         setIsOpen(true);
         lockScroll();
-    };
-
-    const closeModal = () => {
-        setIsUpperOpen(false);
-        setIsOpen(false);
-        openScroll();
     };
 
     return (
@@ -94,24 +80,12 @@ function UserCard({
                 className="m-10 flex w-240 cursor-pointer flex-col rounded-md border-1 border-borderline p-12 font-ganpan transition-transform hover:scale-105"
                 onClick={showModal}
             >
-                <UserProfile profilePicture={user.profilePicture} size="lg" />
+                <UserProfile profilePicture={user.profilePicture} size="lg" memberId={user.memberId} />
                 <UserNickname nickname={user.nickname} githubId={user.githubId} />
 
                 <UserInfo user={user} type="stack" />
                 <UserInfo user={user} type="position" />
             </figure>
-            {isOpen && (
-                <Modal closeModal={closeModal} upperModal={isUpperOpen}>
-                    <UserCardModal
-                        memberId={user.memberId}
-                        closeModal={closeModal}
-                        isUpperOpen={isUpperOpen}
-                        setIsUpperOpen={setIsUpperOpen}
-                        setBlockedMemberId={setBlockedMemberId}
-                        refetchAllMembers={refetchAllMembers}
-                    />
-                </Modal>
-            )}
         </>
     );
 }
