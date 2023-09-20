@@ -4,6 +4,7 @@ import WOOMOOL.DevSquad.chat.dto.ChatRoomDto;
 import WOOMOOL.DevSquad.chat.entity.ChatRoom;
 import WOOMOOL.DevSquad.chat.mapper.ChatRoomMapper;
 import WOOMOOL.DevSquad.chat.service.ChatRoomService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
+@Slf4j
 public class ChatRoomController {
 
     private final ChatRoomMapper chatRoomMapper;
@@ -47,6 +49,7 @@ public class ChatRoomController {
 
         List<ChatRoom> chatRoomList = chatRoomService.getMyChatRooms();
         List<ChatRoomDto.listResponse> response = chatRoomMapper.entityToListResponse(chatRoomList);
+
 
         return new ResponseEntity(response,HttpStatus.OK);
 
