@@ -295,7 +295,7 @@ export const OneAnswer = ({
                     else setAnswerId(v.answerId);
                 }}
             >
-                <Typography text={`답글 ${commentList?.data.length || 0}개`} type="Description" />
+                <Typography text={`답글 ${commentList?.pageInfo.totalElements || 0}개`} type="Description" />
             </button>
             {answerId > 0 && (
                 <div className="my-12 flex-col">

@@ -10,7 +10,7 @@ import {
     usePostAuthForSignUp,
     usePostAuthForSignUpAuth,
 } from "@api/auth/hook";
-import { useCheckValidValue } from "./useCheckValidValue";
+import { useCheckValidValue } from "@hook/useCheckValidValue";
 
 export const useAuthHelper = () => {
     const { fireToast, createToast } = useToast();

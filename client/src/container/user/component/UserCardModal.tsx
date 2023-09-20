@@ -179,13 +179,13 @@ function UserCardModal({
     const { checkIsChatRoomExist, createChatRoom, enrollChatRoomHandler } = useCheckChat();
 
     const onClickChatBtn = () => {
-        closeModal();
-        console.log(checkIsChatRoomExist({ memberId }));
-        if (checkIsChatRoomExist({ memberId })) {
-            createChatRoom({ memberId, nickname: user?.nickname || "" });
-        }
+        const { chatRoomId } = checkIsChatRoomExist({ memberId });
 
-        enrollChatRoomHandler({ nickname: user?.nickname || "" });
+        if (chatRoomId === 0) {
+            createChatRoom({ memberId, nickname: user?.nickname || "", closeModal });
+        } else {
+            enrollChatRoomHandler({ nickname: user?.nickname || "", chatRoomId: chatRoomId, closeModal });
+        }
     };
 
     if (isError) {

@@ -1,18 +1,20 @@
 import { useParams, useNavigate } from "react-router-dom";
 
-import { useDeleteInfo, useGetDetailQuestion } from "@api/info/hook";
+import { useDeleteInfo, useGetDetailInfo, usePostViewCount } from "@api/info/hook";
 import { useToast } from "@hook/useToast";
 
 import InfoItem from "./component/InfoItem";
 import Typography from "@component/Typography";
 import HotBoard from "@component/board/HotBoard";
+import { useEffect } from "react";
 
 function Detail() {
     const { infoId } = useParams();
     const navigate = useNavigate();
     const boardId = Number.parseInt(infoId || "0");
 
-    const { data: question } = useGetDetailQuestion({ boardId });
+    const { data: infos } = useGetDetailInfo({ boardId });
+    const { mutate: postViewCount } = usePostViewCount();
     const { createToast, fireToast, errorToast } = useToast();
 
     const { mutate: deleteInfo } = useDeleteInfo();
@@ -39,25 +41,27 @@ function Detail() {
         });
     };
 
-    if (!question) {
-        return <div>hello</div>;
-    }
+    useEffect(() => {
+        postViewCount({ infoId: boardId });
+    }, [boardId, postViewCount]);
 
     return (
         <div className="mt-80 flex">
             <div className="flex flex-1 flex-col border-r-1 border-borderline">
                 <div className="p-12">
-                    <InfoItem
-                        info={question}
-                        key={boardId}
-                        onClickDeleteHandler={onClickDeleteHandler}
-                        isDetail={true}
-                    />
+                    {infos && (
+                        <InfoItem
+                            info={infos}
+                            key={boardId}
+                            onClickDeleteHandler={onClickDeleteHandler}
+                            isDetail={true}
+                        />
+                    )}
                 </div>
             </div>
             <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                 <Typography type="Label" text="🔥 HOT 게시글" />
-                <HotBoard board="question" />
+                <HotBoard board="information" />
             </div>
         </div>
     );

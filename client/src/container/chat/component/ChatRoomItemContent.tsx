@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 
 export const ChatMessageContent = ({ v }: { v: ChatMessage }) => {
     const memberId = getItemFromStorage("memberId");
+    console.log("v.senderId === memberId", v);
 
     return (
         <div

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -11,7 +11,6 @@ import { usePostViewCount } from "@api/question/hook";
 import { useGetAnswer } from "@api/answer/hook";
 
 import { useCheckUser } from "@hook/useCheckUser";
-import { useToast } from "@hook/useToast";
 
 import Typography from "@component/Typography";
 import CommonBtn from "@component/CommonBtn";
@@ -32,7 +31,7 @@ const QuestionTitle = ({
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
 }) => {
     const navigate = useNavigate();
-    const { title, viewCount, modifiedAt } = question;
+    const { title, viewCount, modifiedAt, likeCount } = question;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
     const [isLiked, setIsLiked] = useState(question.liked);
@@ -76,6 +75,8 @@ const QuestionTitle = ({
                     />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mr-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
+                    <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
+                    <Typography text={`좋아요 수 ${likeCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
@@ -115,22 +116,13 @@ function QuestionItem({
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: answerList, refetch: refetchAnswer } = useGetAnswer({
         page: curPage,
         size: 10,
         questionId: question.boardId,
     });
-
-    useEffect(() => {
-        if (answerList && answerList?.pageInfo.totalElements) {
-            setTotalItems(answerList?.pageInfo.totalElements);
-        }
-    }, [answerList]);
-
     const { isLoggedIn } = useCheckUser({ memberId: question.memberId });
-    const { reqLoginToUserToast } = useToast();
 
     const [isOpened, setIsOpened] = useState(isDetail);
     const [answer, setAnswer] = useState<string>("");
@@ -139,10 +131,6 @@ function QuestionItem({
     const { mutate: postViewCount } = usePostViewCount();
 
     const onAddViewCount = () => {
-        if (!isLoggedIn) {
-            reqLoginToUserToast();
-            return;
-        }
         if (!isOpened) {
             // 열기 버튼 클릭 시 - 조회수 증가 api 요청 -> 요청 성공/실패 처리 X
             postViewCount({ questionId: question.boardId });
@@ -208,7 +196,11 @@ function QuestionItem({
                                     isAcceptExisted={answerList.data.filter((v) => v.accepted).length > 0}
                                 />
                             ))}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={10} />
+                        <Pagination
+                            curPage={curPage}
+                            setCurPage={setCurPage}
+                            totalPages={answerList?.pageInfo.totalPages || 1}
+                        />
                     </div>
                 </div>
             )}

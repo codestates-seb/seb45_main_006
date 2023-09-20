@@ -184,6 +184,7 @@ function SignUp2() {
                     disabled={authNickname.length > 0}
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
+                    regex={REGEX.NICKNAME}
                 />
                 {!isRequestedNickname && authNickname.length === 0 && (
                     <Button

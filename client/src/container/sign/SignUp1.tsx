@@ -4,17 +4,17 @@ import Typography from "@component/Typography";
 import SignLayout from "@container/sign/component/SignLayout";
 
 import progress from "@assets/sign/progress_bar1.png";
-import googleImg from "@assets/sign/google.png";
-import githubImg from "@assets/sign/github.png";
+// import googleImg from "@assets/sign/google.png";
+// import githubImg from "@assets/sign/github.png";
 import fontImg from "@assets/sign/font.png";
 
-const endpoint = import.meta.env.VITE_APP_API_ENDPOINT;
+// const endpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 
 function SignUpContent1() {
-    const googleOauthHandler = () => {
-        const oAuthURL = `${endpoint}/oauth2/authorization/google`;
-        window.location.assign(oAuthURL);
-    };
+    // const googleOauthHandler = () => {
+    //     const oAuthURL = `${endpoint}/oauth2/authorization/google`;
+    //     window.location.assign(oAuthURL);
+    // };
 
     return (
         <div className="mb-70">
@@ -22,20 +22,21 @@ function SignUpContent1() {
             <Link to={"/signup/2"} className="m-auto flex w-320 justify-center rounded bg-black p-8">
                 <Typography type="Highlight" text="DevSquad로 가입하기" color="text-white" />
             </Link>
-            <button
+            {/* <button
                 className="m-auto mt-25 flex w-320 justify-center rounded border-2 border-solid border-black p-6"
                 onClick={googleOauthHandler}
             >
                 <img className="flex w-30 pr-5" src={googleImg} />
                 <Typography type="Highlight" text="Google 계정으로 가입" />
-            </button>
-            <button
+            </button> */}
+            {/* <button
                 className="m-auto mt-25 flex w-320 justify-center rounded border-2 border-solid border-black p-6"
                 onClick={() => {}}
             >
                 <img className="flex w-30 pr-5" src={githubImg} />
                 <Typography type="Highlight" text="GitHub 계정으로 가입" />
-            </button>
+            </button> */}
+            <div className="h-40 w-320"></div>
         </div>
     );
 }

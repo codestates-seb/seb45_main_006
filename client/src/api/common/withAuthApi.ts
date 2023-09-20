@@ -2,7 +2,7 @@ import axios from "axios";
 import { getItemFromStorage, clearStorage } from "@util/localstorage-helper";
 import { isValidToken } from "@util/token-helper";
 import { getRefreshToken } from "./refreshToken";
-import { setRandomNickname } from "./randomNicknameApi";
+// import { setRandomNickname } from "./randomNicknameApi";
 
 const apiEndpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 
@@ -65,11 +65,11 @@ withAuthApi.interceptors.request.use(async (config) => {
         return config;
     }
 
-    const nickname = getItemFromStorage("nickname");
+    // const nickname = getItemFromStorage("nickname");
 
-    if (!nickname) {
-        await setRandomNickname();
-    }
+    // if (!nickname) {
+    //     await setRandomNickname();
+    // }
 
     // 2. accessToken이 유효하지 않을 때
     //    refreshToken이 존재하고 유효하면 refreshToken으로 새로운 accessToken 요청

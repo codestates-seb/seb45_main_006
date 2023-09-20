@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 
-import { useDeleteQuestion, useGetDetailQuestion } from "@api/question/hook";
+import { useDeleteQuestion, useGetDetailQuestion, usePostViewCount } from "@api/question/hook";
 import { useToast } from "@hook/useToast";
 
 import QuestionItem from "./component/QuestionItem";
 import Typography from "@component/Typography";
 import HotBoard from "@component/board/HotBoard";
+import { useEffect } from "react";
 
 function Detail() {
     const { questionId } = useParams();
@@ -13,9 +14,14 @@ function Detail() {
     const boardId = Number.parseInt(questionId || "0");
 
     const { data: question } = useGetDetailQuestion({ boardId });
+    const { mutate: postViewCount } = usePostViewCount();
     const { createToast, fireToast, errorToast } = useToast();
 
     const { mutate: deleteQuestion } = useDeleteQuestion();
+
+    useEffect(() => {
+        postViewCount({ questionId: boardId });
+    }, [boardId, postViewCount]);
 
     const onClickDeleteHandler = ({ boardId }: { boardId: number }) => {
         createToast({
@@ -39,20 +45,18 @@ function Detail() {
         });
     };
 
-    if (!question) {
-        return <div>hello</div>;
-    }
-
     return (
         <div className="mt-80 flex">
             <div className="flex flex-1 flex-col border-r-1 border-borderline">
                 <div className="p-12">
-                    <QuestionItem
-                        question={question}
-                        key={boardId}
-                        onClickDeleteHandler={onClickDeleteHandler}
-                        isDetail={true}
-                    />
+                    {question && (
+                        <QuestionItem
+                            question={question}
+                            key={boardId}
+                            onClickDeleteHandler={onClickDeleteHandler}
+                            isDetail={true}
+                        />
+                    )}
                 </div>
             </div>
             <div className="hidden h-full w-300 flex-col p-8 lg:flex">

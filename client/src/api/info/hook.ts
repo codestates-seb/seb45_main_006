@@ -22,7 +22,7 @@ export const useGetAllInfo = ({ category, search, page, size }: GetReqAllInfo) =
     });
 };
 
-export const useGetDetailQuestion = ({ boardId }: { boardId: number }) => {
+export const useGetDetailInfo = ({ boardId }: { boardId: number }) => {
     return useQuery<InfoDefaultType, AxiosError, InfoDefaultType>({
         queryKey: infoKeyFactory.detail({ boardId }),
         queryFn: () => getDetailInfo({ boardId }),

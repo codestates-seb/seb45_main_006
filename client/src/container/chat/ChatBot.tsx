@@ -1,9 +1,7 @@
 import { RefObject, useRef, useState } from "react";
 
-import { useRecoilState, useRecoilValue } from "recoil";
-import { isChatBotShowAtom, chatBotStatusAtom, chatRoomIdAtom } from "@feature/chat";
-
-import { useGetEnrollChatRoom } from "@api/chat/hook";
+import { useRecoilState } from "recoil";
+import { isChatBotShowAtom, chatBotStatusAtom } from "@feature/chat";
 
 import IconLogo from "@assets/icon_logo.png";
 import Typography from "@component/Typography";
@@ -34,18 +32,13 @@ function ChatBot() {
     //     };
     // }, [isChatBotShow, setIsChatBotShow]);
 
-    const chatRoomId = useRecoilValue(chatRoomIdAtom);
-    const { data: chatMessages } = useGetEnrollChatRoom({ chatRoomId });
-
     return (
         <div ref={chatBtnRef}>
             {isChatBotShow && (
                 <ol className="fixed bottom-100 right-30 h-500 w-300 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
                     {chatBotStatus === "LIST" && <ChatRoomList />}
 
-                    {chatBotStatus === "DETAIL" && chatMessages && chatMessages.chatRoomId && (
-                        <ChatRoomItem chatMessages={chatMessages} />
-                    )}
+                    {chatBotStatus === "DETAIL" && <ChatRoomItem />}
                 </ol>
             )}
 
