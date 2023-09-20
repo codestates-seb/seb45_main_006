@@ -8,6 +8,7 @@ import {
     PatchReqProject,
     PostReqProject,
 } from "@type/project/project.req.dto";
+import { filterHelper } from "@util/filter-helper";
 
 // 프로젝트 - 전체 조회하기
 export const getAllProjects = async ({ page, size, stack, title, status }: GetReqAllProjects) => {
@@ -17,7 +18,7 @@ export const getAllProjects = async ({ page, size, stack, title, status }: GetRe
         addedPath = "/posted";
     }
     let url = `/project/list${addedPath}?page=${page}&size=${size}`;
-    if (stack) url += `&stacks=${stack}`;
+    if (stack) url += `&stacks=${filterHelper(stack)}`;
     if (title) url += `&title=${title}`;
 
     const { data } = await commonApi.get(url);

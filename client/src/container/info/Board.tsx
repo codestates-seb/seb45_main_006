@@ -26,7 +26,6 @@ function Board() {
 
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
     // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
     const [search, setSearch] = useState<string>("");
     // 검색 인풋 value 저장하기 위한 변수
@@ -48,12 +47,6 @@ function Board() {
         refetchInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        if (infos && infos?.pageInfo.totalElements) {
-            setTotalItems(infos?.pageInfo.totalElements);
-        }
-    }, [infos]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
@@ -134,7 +127,11 @@ function Board() {
                         )}
                     </div>
                     {/* 임시 */}
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={10} />
+                    <Pagination
+                        curPage={curPage}
+                        setCurPage={setCurPage}
+                        totalPages={infos?.pageInfo.totalPages || 1}
+                    />
                 </div>
                 <div className="hidden h-full w-300 flex-col p-8 lg:flex">
                     <Typography type="Label" text="🔥 HOT 게시글" />

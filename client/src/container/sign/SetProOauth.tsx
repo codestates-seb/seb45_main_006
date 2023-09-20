@@ -17,6 +17,8 @@ import SignButton from "./component/SignButton";
 
 import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
+import { REGEX } from "@hook/useCheckValidValue";
+
 function SetProOauth() {
     const memberId = getItemFromStorage("memberId");
 
@@ -80,6 +82,7 @@ function SetProOauth() {
                         disabled={authNickname.length > 0}
                         onChange={(e) => setNickname(e.currentTarget.value)}
                         description="닉네임 형식이 맞지 않습니다."
+                        regex={REGEX.NICKNAME}
                     />
                     {!isRequestedNickname && !authNickname && (
                         <Button

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -45,7 +45,7 @@ const InfoTitle = ({
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
 }) => {
     const navigate = useNavigate();
-    const { category, title, viewCount, modifiedAt } = info;
+    const { category, title, viewCount, modifiedAt, likeCount } = info;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: info.memberId });
 
     const [isLiked, setIsLiked] = useState(info.liked);
@@ -87,8 +87,7 @@ const InfoTitle = ({
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    {/* TODO: 댓글 수  */}
-                    {/* <Typography text={`댓글 수 ${0}`} type="SmallLabel" color="text-gray-600" /> */}
+                    <Typography text={`좋아요 수 ${likeCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
@@ -123,7 +122,6 @@ function InfoItem({
 }) {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: commentList, refetch: refetchComment } = useGetComment({
         board: "information",
@@ -131,12 +129,6 @@ function InfoItem({
         page: curPage,
         size: 4,
     });
-
-    useEffect(() => {
-        if (commentList && commentList?.pageInfo.totalElements) {
-            setTotalItems(commentList?.pageInfo.totalElements);
-        }
-    }, [commentList]);
 
     const { isLoggedIn } = useCheckUser({ memberId: info.memberId });
     const { fireToast, errorToast } = useToast();
@@ -204,7 +196,7 @@ function InfoItem({
             </div>
             {isOpened && (
                 <div className="p-8">
-                    <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
+                    <Typography type="Highlight" text={`댓글 ${commentList?.pageInfo.totalElements || 0}개`} />
                     {isLoggedIn && (
                         <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />
                     )}
@@ -219,7 +211,11 @@ function InfoItem({
                                     refetchComment={refetchComment}
                                 />
                             ))}
-                        <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                        <Pagination
+                            curPage={curPage}
+                            setCurPage={setCurPage}
+                            totalPages={commentList?.pageInfo.totalPages || 1}
+                        />
                     </div>
                 </div>
             )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import UserCard from "@component/board/UserCard";
 import Pagination from "@component/Pagination";
@@ -10,7 +10,6 @@ import { useGetAllMembers } from "@api/member/hook";
 function UserList() {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
     // 검색어 필터
     const [searchValue, setSearchValue] = useState<string>("");
     // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
@@ -32,12 +31,6 @@ function UserList() {
         blockedMemberId,
         nickname: search,
     });
-
-    useEffect(() => {
-        if (users?.pageInfo.totalElements) {
-            setTotalItems(users?.pageInfo.totalElements);
-        }
-    }, [users?.pageInfo.totalElements]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.currentTarget.value);
@@ -79,7 +72,7 @@ function UserList() {
                     )}
                 </div>
             </div>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={8} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalPages={users?.pageInfo.totalPages || 1} />
         </div>
     );
 }

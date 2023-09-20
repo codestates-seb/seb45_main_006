@@ -211,15 +211,6 @@ export const OneComment = ({
                     )}
                 </div>
             )}
-            {/* <button
-                className="my-8 w-fit border-1 border-borderline px-8 py-4"
-                onClick={() => {
-                    if (parentId) setParentId(0);
-                    else setParentId(v.commentId);
-                }}
-            >
-                <Typography text={`답글 ${v.commentList?.length || 0}개`} type="Description" />
-            </button> */}
             {parentId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">

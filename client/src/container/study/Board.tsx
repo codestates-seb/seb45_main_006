@@ -23,7 +23,6 @@ const Board = () => {
 
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
     // 검색어 필터
     const [searchValue, setSearchValue] = useState<string>("");
     // 검색 버튼 또는 엔터를 눌렀을 때 조회하기 위한 검색 파라미터
@@ -63,12 +62,6 @@ const Board = () => {
         refetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        if (studies && studies?.pageInfo && studies.pageInfo.totalElements) {
-            setTotalItems(studies?.pageInfo.totalElements);
-        }
-    }, [studies]);
 
     return (
         <div>
@@ -135,7 +128,7 @@ const Board = () => {
                     </>
                 )}
             </>
-            <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={8} />
+            <Pagination curPage={curPage} setCurPage={setCurPage} totalPages={studies?.pageInfo.totalPages || 1} />
         </div>
     );
 };

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { authNicknameAtom, isLoggedInAtom } from "@feature/Global";
+import { authNicknameAtom, defaultPostionAtom, defaultStackAtom, isLoggedInAtom } from "@feature/Global";
 
 import { useToast } from "@hook/useToast";
 import { useAuthHelper } from "@hook/useCheckAuth";
@@ -18,9 +18,10 @@ import { UserInfo as UserStackAndPos } from "@container/user/component/UserCardM
 import { GetResMemberDetail } from "@type/member/member.res.dto";
 import { clearStorage, getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
 
-import { defaultStack, defaultPosition } from "@component/mockData";
 import { Checkbox } from "@material-tailwind/react";
 import { useDeleteLogout } from "@api/sign/hook";
+
+import { REGEX } from "@hook/useCheckValidValue";
 
 function UserInfo({ user }: { user: GetResMemberDetail }) {
     const navigate = useNavigate();
@@ -28,6 +29,9 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
 
     const authNickname = useRecoilValue(authNicknameAtom);
     const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
+
+    const defaultPosition = useRecoilValue(defaultPostionAtom);
+    const defaultStack = useRecoilValue(defaultStackAtom);
 
     const email = getItemFromStorage("email");
 
@@ -138,6 +142,8 @@ function UserInfo({ user }: { user: GetResMemberDetail }) {
                             disabled={!isEdit}
                             onChange={(e) => setNickname(e.currentTarget.value)}
                             placeholder=""
+                            description="닉네임 형식이 맞지 않습니다."
+                            regex={REGEX.NICKNAME}
                         />
                         {isEdit && (
                             <button
