@@ -33,12 +33,10 @@ export const useCheckChat = () => {
         refetchChatRooms();
 
         let chatRoomId = 0;
-        console.log("chats", chats, memberId);
         if (chats && Array.isArray(chats)) {
             chats.map((v) => {
                 if (v.membersId.includes(memberId)) {
                     chatRoomId = v.chatRoomId;
-                    console.log("settedCHatromId", v.chatRoomId);
                     setChatRoomId(v.chatRoomId);
                 }
             });

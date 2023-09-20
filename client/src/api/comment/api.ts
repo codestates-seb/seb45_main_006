@@ -1,3 +1,4 @@
+import { commonApi } from "@api/common/commonApi";
 import { withAuthApi } from "@api/common/withAuthApi";
 import { MAKE_API_PATH } from "@api/constant";
 import {
@@ -11,7 +12,7 @@ import {
 // 일반 게시판 - 댓글 리스트
 export const getComment = async ({ board, boardId, page, size }: GetReqComment) => {
     const url = MAKE_API_PATH.COMMENT.list({ board, boardId, page, size });
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 

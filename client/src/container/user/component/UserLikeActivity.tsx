@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useGetInfoLiked, useGetProjectLiked, useGetQuestionLiked, useGetStudyLiked } from "@api/member-activity/hook";
 import { useDeleteInfo } from "@api/info/hook";
 import { useDeleteQuestion } from "@api/question/hook";
@@ -14,15 +14,8 @@ import StudyItem from "@container/study/component/BoardList";
 const ProjectOfMember = ({ memberId }: { memberId: number }) => {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: project, refetch } = useGetProjectLiked({ likedType: "bookmark", page: curPage });
-
-    useEffect(() => {
-        if (project?.pageInfo.totalElements) {
-            setTotalItems(project?.pageInfo.totalElements);
-        }
-    }, [project?.pageInfo.totalElements]);
 
     return (
         <>
@@ -39,7 +32,11 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
                     </div>
                 )}
                 {project?.data && Array.isArray(project.data) && project.data.length > 0 ? (
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                    <Pagination
+                        curPage={curPage}
+                        setCurPage={setCurPage}
+                        totalPages={project?.pageInfo.totalPages || 1}
+                    />
                 ) : null}
             </div>
         </>
@@ -49,15 +46,8 @@ const ProjectOfMember = ({ memberId }: { memberId: number }) => {
 const StudyOfMember = ({ memberId }: { memberId: number }) => {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: study, refetch } = useGetStudyLiked({ likedType: "bookmark", page: curPage });
-
-    useEffect(() => {
-        if (study?.pageInfo.totalElements) {
-            setTotalItems(study?.pageInfo.totalElements);
-        }
-    }, [study?.pageInfo.totalElements]);
 
     return (
         <>
@@ -74,7 +64,11 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
                     </div>
                 )}
                 {study?.data && Array.isArray(study?.data) && study?.data.length > 0 && (
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                    <Pagination
+                        curPage={curPage}
+                        setCurPage={setCurPage}
+                        totalPages={study?.pageInfo.totalPages || 1}
+                    />
                 )}
             </div>
         </>
@@ -84,15 +78,8 @@ const StudyOfMember = ({ memberId }: { memberId: number }) => {
 const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "bookmark" }) => {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: info, refetch: refetchInfo } = useGetInfoLiked({ page: curPage, likedType: type });
-
-    useEffect(() => {
-        if (info?.pageInfo.totalElements) {
-            setTotalItems(info?.pageInfo.totalElements);
-        }
-    }, [info?.pageInfo.totalElements]);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { mutate: deleteInfo } = useDeleteInfo();
@@ -141,7 +128,7 @@ const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "b
                 )}
 
                 {info?.data && Array.isArray(info?.data) && info.data.length > 0 && (
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                    <Pagination curPage={curPage} setCurPage={setCurPage} totalPages={info?.pageInfo.totalPages || 1} />
                 )}
             </div>
         </>
@@ -151,15 +138,8 @@ const InfoOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "b
 const QuestionOfMember = ({ memberId, type }: { memberId: number; type: "likes" | "bookmark" }) => {
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
 
     const { data: question, refetch: refetchQuestions } = useGetQuestionLiked({ page: curPage, likedType: type });
-
-    useEffect(() => {
-        if (question?.pageInfo.totalElements) {
-            setTotalItems(question?.pageInfo.totalElements);
-        }
-    }, [question?.pageInfo.totalElements]);
 
     const { fireToast, createToast, errorToast } = useToast();
     const { mutate: deleteQuestion } = useDeleteQuestion();
@@ -209,7 +189,11 @@ const QuestionOfMember = ({ memberId, type }: { memberId: number; type: "likes" 
                     </div>
                 )}
                 {question?.data && Array.isArray(question?.data) && question.data.length > 0 && (
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                    <Pagination
+                        curPage={curPage}
+                        setCurPage={setCurPage}
+                        totalPages={question?.pageInfo.totalPages || 1}
+                    />
                 )}
             </div>
         </>

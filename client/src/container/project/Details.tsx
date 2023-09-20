@@ -37,7 +37,6 @@ const Details = () => {
 
     // 페이지 필터
     const [curPage, setCurPage] = useState<number>(1);
-    const [totalItems, setTotalItems] = useState<number>(0);
     const [comment, setComment] = useState<string>("");
 
     const { data: commentList, refetch: refetchComment } = useGetComment({
@@ -61,12 +60,6 @@ const Details = () => {
     const { fireToast, createToast, errorToast } = useToast();
     const { isMine, isLoggedIn } = useCheckUser({ memberId: projectInputs?.memberProfile.memberId || 0 });
     const { mutate: deleteProject } = useDeleteProject();
-
-    useEffect(() => {
-        if (commentList && commentList?.pageInfo.totalElements) {
-            setTotalItems(commentList?.pageInfo.totalElements);
-        }
-    }, [commentList]);
 
     const onClickDeleteHandler = () => {
         createToast({
@@ -215,7 +208,7 @@ const Details = () => {
             </div>
 
             <div className="p-8">
-                <Typography type="Highlight" text={`댓글 ${commentList?.data?.length || 0}개`} />
+                <Typography type="Highlight" text={`댓글 ${commentList?.pageInfo.totalElements || 0}개`} />
                 {isLoggedIn && <EditComment value={comment} onChange={onChange} onSubmitHanlder={onSubmitHanlder} />}
                 <div className="my-16">
                     {commentList?.data &&
@@ -228,7 +221,11 @@ const Details = () => {
                                 refetchComment={refetchComment}
                             />
                         ))}
-                    <Pagination curPage={curPage} setCurPage={setCurPage} totalItems={totalItems || 0} size={4} />
+                    <Pagination
+                        curPage={curPage}
+                        setCurPage={setCurPage}
+                        totalPages={commentList?.pageInfo.totalPages || 1}
+                    />
                 </div>
             </div>
         </div>

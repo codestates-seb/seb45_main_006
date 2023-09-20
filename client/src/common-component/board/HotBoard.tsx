@@ -13,6 +13,7 @@ function HotBoard({ board }: { board: "information" | "question" }) {
                 hotList?.map((v, i) => {
                     return (
                         <li
+                            key={`/${board === "information" ? "infos" : "questions"}/${v.boardId}`}
                             className="mb-8 flex cursor-pointer hover:font-bold"
                             onClick={() => navigate(`/${board === "information" ? "infos" : "questions"}/${v.boardId}`)}
                         >

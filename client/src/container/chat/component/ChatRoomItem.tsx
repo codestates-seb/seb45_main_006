@@ -162,9 +162,13 @@ function ChatRoomItem() {
     return (
         <>
             <div className="relative mb-8 flex min-h-423 flex-1 flex-col justify-between bg-white">
-                <ChatRommItemNotice notice={notice} latestNotice={latestNotice} />
-                <div className="h-63"></div>
-                <div className="h-373 max-h-373 overflow-y-scroll py-8">
+                <ChatRommItemNotice
+                    notice={notice}
+                    latestNotice={latestNotice}
+                    nicknames={chatMessages?.nicknames || ["", ""]}
+                />
+                <div className="min-h-65"></div>
+                <div className="h-371 max-h-371 overflow-y-scroll py-8">
                     <div className="flex w-full flex-col flex-wrap px-4" ref={chatBox}>
                         {basic.length > 0 && basic.map((v) => <ChatMessageContent key={v.createAt} v={v} />)}
                         {chatList.length > 0 && chatList.map((v) => <MessageItemContent key={v.createAt} v={v} />)}

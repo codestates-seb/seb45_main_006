@@ -8,6 +8,7 @@ import {
     PatchReqStudy,
     PostReqStudy,
 } from "@type/study/study.req.dto";
+import { filterHelper } from "@util/filter-helper";
 
 // 스터디 - 전체 조회하기
 export const getAllStudies = async ({ page, size, stack, title, status }: GetReqAllStudies) => {
@@ -18,7 +19,7 @@ export const getAllStudies = async ({ page, size, stack, title, status }: GetReq
     }
 
     let url = `/study/list${addedPath}?page=${page}&size=${size}`;
-    if (stack) url += `&stacks=${stack}`;
+    if (stack) url += `&stacks=${filterHelper(stack)}`;
     if (title) url += `&title=${title}`;
 
     const { data } = await commonApi.get(url);
