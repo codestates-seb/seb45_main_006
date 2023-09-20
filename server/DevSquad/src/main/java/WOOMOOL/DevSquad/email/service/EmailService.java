@@ -37,7 +37,6 @@ public class EmailService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    // 인증번호 8자리 생성
     public void createAuthMail(Email email) throws MessagingException {
         // 인증 번호 생성
         String authCode = generateRandomCode();
@@ -149,7 +148,7 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
 
     }
-
+    // 인증번호 8자리 생성
     private String generateRandomCode() {
 
         SecureRandom secureRandom = new SecureRandom();
