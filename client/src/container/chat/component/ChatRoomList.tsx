@@ -12,7 +12,7 @@ import { useToast } from "@hook/useToast";
 import { useCheckChat } from "@hook/useCheckChat";
 
 const ChatItem = ({ chat, refetchChatRooms }: { chat: ChatRoom; refetchChatRooms: () => void }) => {
-    const { nicknames, lastMessage } = chat;
+    const { nicknames, lastMessage, lastMessageNickname } = chat;
 
     const setChatBotStatus = useSetRecoilState(chatBotStatusAtom);
     const setIsChatBotShow = useSetRecoilState(isChatBotShowAtom);
@@ -59,15 +59,28 @@ const ChatItem = ({ chat, refetchChatRooms }: { chat: ChatRoom; refetchChatRooms
             onClick={onClickChatRoomHandler}
         >
             <div className="flex">
-                <UserProfile size="sm" profilePicture={otherUser?.profilePicture} />
+                {/* <UserProfile size="sm" profilePicture={otherUser?.profilePicture} memberId={otherUser?.memberId || 0} /> */}
+
                 <div className="flex flex-col">
                     <div className="flex">
                         <Typography type="SmallLabel" text={nicknames.join(", ")} styles="font-bold" />
+                        <Typography text="의 채팅방" type="SmallLabel" />
                     </div>
-                    <Typography
-                        type="Description"
-                        text={lastMessage.length > 17 ? `${lastMessage.substring(0, 17)}...` : lastMessage}
-                    />
+                    <div className="flex items-center">
+                        <div className="mr-4 flex items-center bg-light-green-50 p-2">
+                            <UserProfile
+                                size="xs"
+                                profilePicture={otherUser?.profilePicture}
+                                memberId={otherUser?.memberId || 0}
+                            />
+                            <Typography type="Description" text={lastMessageNickname} styles="font-bold ml-2" />
+                        </div>
+
+                        <Typography
+                            type="SmallLabel"
+                            text={lastMessage.length > 20 ? `${lastMessage.substring(0, 20)}...` : lastMessage}
+                        />
+                    </div>
                 </div>
             </div>
             <button

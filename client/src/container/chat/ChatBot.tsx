@@ -35,7 +35,7 @@ function ChatBot() {
     return (
         <div ref={chatBtnRef}>
             {isChatBotShow && (
-                <ol className="fixed bottom-100 right-30 h-500 w-300 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
+                <ol className="fixed bottom-100 right-30 z-50 h-500 w-400 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
                     {chatBotStatus === "LIST" && <ChatRoomList />}
 
                     {chatBotStatus === "DETAIL" && <ChatRoomItem />}

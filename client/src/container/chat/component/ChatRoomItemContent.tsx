@@ -4,11 +4,11 @@ import { MessageItem } from "@hook/useWebStompClient";
 import { ChatMessage } from "@type/chat/chat.res.dto";
 
 import { getItemFromStorage } from "@util/localstorage-helper";
-import dayjs from "dayjs";
+import { localizedChatResponse } from "@util/date-helper";
 
 export const ChatMessageContent = ({ v }: { v: ChatMessage }) => {
     const memberId = getItemFromStorage("memberId");
-    console.log("v.senderId === memberId", v);
+    // console.log("v.senderId === memberId", v);
 
     return (
         <div
@@ -22,7 +22,7 @@ export const ChatMessageContent = ({ v }: { v: ChatMessage }) => {
             >
                 <Typography text={v.content} type="Description" styles="mb-4" />
                 <Typography
-                    text={dayjs(v.createAt).format("YYYY-MM-DD hh:mm")}
+                    text={localizedChatResponse(v.createAt)}
                     type="Description"
                     styles="text-[10px]"
                     color="text-gray-600"
@@ -46,12 +46,14 @@ export const MessageItemContent = ({ v }: { v: MessageItem }) => {
                 }`}
             >
                 <Typography text={v.content} type="Description" styles="mb-4" />
-                <Typography
-                    text={dayjs(v.createAt).format("YYYY-MM-DD hh:mm")}
-                    type="Description"
-                    styles="text-[10px]"
-                    color="text-gray-600"
-                />
+                {v.createAt && (
+                    <Typography
+                        text={localizedChatResponse(v.createAt)}
+                        type="Description"
+                        styles="text-[10px]"
+                        color="text-gray-600"
+                    />
+                )}
             </div>
         </div>
     );

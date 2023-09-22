@@ -31,10 +31,11 @@ const QuestionTitle = ({
     onClickDeleteHandler: ({ boardId }: { boardId: number }) => void;
 }) => {
     const navigate = useNavigate();
-    const { title, viewCount, modifiedAt, likeCount } = question;
+    const { title, viewCount, modifiedAt } = question;
     const { isLoggedIn, isMine } = useCheckUser({ memberId: question.memberId });
 
     const [isLiked, setIsLiked] = useState(question.liked);
+    const [curLikeCount, setCurLikeCount] = useState(question.likeCount);
     const [isBookmarked, setIsBookmarked] = useState(question.bookmarked);
 
     const onClickEditHandler = () => navigate(`/questions/${question.boardId}/edit`, { state: question });
@@ -62,7 +63,7 @@ const QuestionTitle = ({
                     <Typography text={title} type="Label" />
 
                     <div className="flex items-center">
-                        <UserProfile size="sm" profilePicture={question.profilePicture} />
+                        <UserProfile size="sm" profilePicture={question.profilePicture} memberId={question.memberId} />
                         <Typography text={question.nickname} type="Label" />
                     </div>
                 </div>
@@ -76,7 +77,7 @@ const QuestionTitle = ({
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mr-8" />
                     <Typography text={`조회수 ${viewCount}`} type="SmallLabel" color="text-gray-600" />
                     <Typography text="|" type="SmallLabel" color="text-gray-600" styles="mx-8" />
-                    <Typography text={`좋아요 수 ${likeCount}`} type="SmallLabel" color="text-gray-600" />
+                    <Typography text={`좋아요 수 ${curLikeCount}`} type="SmallLabel" color="text-gray-600" />
                 </div>
             </div>
             <div className="mb-8 flex w-50 flex-col items-center justify-center border-l-1 border-borderline">
@@ -87,6 +88,7 @@ const QuestionTitle = ({
                             boardId={question.boardId}
                             isLiked={isLiked}
                             setIsLiked={setIsLiked}
+                            setCurLikeCount={setCurLikeCount}
                         />
                         <Bookmark
                             board="question"
@@ -174,8 +176,8 @@ function QuestionItem({
                             />
                         </div>
                     )}
-                    <Typography type="SmallLabel" text={`답변 ${answerList?.data.length || 0}개`} />
-                    {isLoggedIn && (
+                    <Typography type="SmallLabel" text={`답변 ${answerList?.pageInfo.totalElements || 0}개`} />
+                    {!isMine && isLoggedIn && (
                         <EditAnswer
                             questionId={question.boardId}
                             content={answer}

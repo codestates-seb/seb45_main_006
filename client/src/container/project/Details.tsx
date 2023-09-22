@@ -200,8 +200,6 @@ const Details = () => {
                         <UserCard
                             key={`${projectInputs?.memberProfile.nickname}`}
                             user={projectInputs?.memberProfile}
-                            setBlockedMemberId={() => navigate("/projects")}
-                            refetchAllMembers={() => {}}
                         />
                     )}
                 </div>

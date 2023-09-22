@@ -77,6 +77,10 @@ export const addToastItem = selector({
             if (Array.isArray(newToast) && newToast[0] && newToast[0].id && toastIds.includes(newToast[0].id)) {
                 return [...prevToast];
             }
+
+            if (prevToast.length > 1) {
+                return [...(newToast as [])];
+            }
             return [...prevToast, ...(newToast as [])];
         });
     },
@@ -89,4 +93,25 @@ export const removeToastItem = selector({
         const deleteId = Array.isArray(deletedToast) ? deletedToast[0]?.id : undefined;
         set(toastState, (prevToast) => prevToast.filter((v: IToast) => v.id && v.id !== deleteId));
     },
+});
+
+export const isModalOpenAtom = atom({
+    key: "isModalOpenAtom",
+    default: false,
+});
+
+// 열려있는 모달 위에 모달
+export const isUpperModalOpenAtom = atom({
+    key: "isUpperModalOpenAtom",
+    default: false,
+});
+
+export const blockedNowIdAtom = atom({
+    key: "blockedNowIdAtom",
+    default: 0,
+});
+
+export const modalMemberIdAtom = atom({
+    key: "modalMemberIdAtom",
+    default: 0,
 });

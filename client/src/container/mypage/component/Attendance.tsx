@@ -5,17 +5,17 @@ import { isLoggedInAtom } from "@feature/Global";
 
 import { usePostAttendance } from "@api/member-activity/hook";
 import { useToast } from "@hook/useToast";
+import { useGetMyDetail } from "@api/member/hook";
 
 import dayjs from "dayjs";
 
 import CommonBtn from "@component/CommonBtn";
 import Typography from "@component/Typography";
 
-import { getItemFromStorage, setItemToStorage } from "@util/localstorage-helper";
-
 import BgAttendance from "@assets/bg-attendance.jpg";
 
 function Attendance() {
+    const { data: user } = useGetMyDetail();
     const { mutate: postAttendance } = usePostAttendance();
 
     const [isAttended, setIsAttended] = useState(false);
@@ -25,13 +25,10 @@ function Attendance() {
     const isLoggedIn = useRecoilValue(isLoggedInAtom);
 
     useEffect(() => {
-        const attendedDate = getItemFromStorage("attendedDate") || "";
-        const today = dayjs().format("YYYY-MM-DD");
-
-        if (attendedDate === today) {
-            setIsAttended(true);
+        if (user) {
+            setIsAttended(user.attendanceChecked);
         }
-    }, []);
+    }, [user]);
 
     const onClickAttendance = () => {
         if (!isLoggedIn) {
@@ -44,7 +41,6 @@ function Attendance() {
             {
                 onSuccess: () => {
                     setIsAttended(true);
-                    setItemToStorage("attendedDate", dayjs().format("YYYY-MM-DD"));
                     fireToast({
                         content: "오늘의 출석을 완료하셨습니다!",
                         isConfirm: false,
@@ -52,7 +48,6 @@ function Attendance() {
                 },
                 onError: (err) => {
                     errorToast(err);
-                    setItemToStorage("attendedDate", dayjs().format("YYYY-MM-DD"));
                 },
             },
         );

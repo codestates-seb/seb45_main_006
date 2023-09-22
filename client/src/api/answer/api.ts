@@ -25,7 +25,7 @@ export const getAnswer = async ({ page, size, questionId }: GetReqAnswer) => {
 // /question/{board-id}/answer/{answer-id}/comment?page=2&size=5
 export const getAnswerComments = async ({ page, size, questionId, answerId }: GetReqAnswerComment) => {
     const url = MAKE_API_PATH.ANSWER.commentList({ questionId, page, size, answerId });
-    const { data } = await withAuthApi.get(url);
+    const { data } = await commonApi.get(url);
     return data;
 };
 

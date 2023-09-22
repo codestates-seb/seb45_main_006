@@ -20,6 +20,7 @@ import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
+import { getItemFromStorage } from "@util/localstorage-helper";
 
 export const OneCommentAnswer = ({
     v,
@@ -46,6 +47,9 @@ export const OneCommentAnswer = ({
     const { mutate: patchAnswerComment } = usePatchAnswerComment();
     const { mutate: deleteAnswerComment } = useDeleteAnswerComment();
     const { mutate: postAnswerCommentRe } = usePostAnswerCommentRe();
+
+    const myId = getItemFromStorage("memberId");
+    const myPicture = getItemFromStorage("profilePicture");
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "댓글", content: curCommment }];
@@ -106,6 +110,7 @@ export const OneCommentAnswer = ({
                         });
                         setNextComment("");
                         refecthAnswerComments();
+                        setParentId(0);
                     },
 
                     onError: (err) => errorToast(err),
@@ -118,7 +123,7 @@ export const OneCommentAnswer = ({
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
-                    <UserProfile size="sm" profilePicture={v.profilePicture} />
+                    <UserProfile size="sm" profilePicture={v.profilePicture} memberId={v.memberId} />
                     <Typography type="Highlight" text={v.nickname} />
                     {isSameUser && (
                         <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
@@ -181,7 +186,8 @@ export const OneCommentAnswer = ({
                             <div className="flex rotate-180 items-end p-8">
                                 <BiReply />
                             </div>
-                            <UserProfile size="sm" mine={true} />
+                            {/* mine={true} */}
+                            <UserProfile size="sm" profilePicture={myPicture} memberId={myId} />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>

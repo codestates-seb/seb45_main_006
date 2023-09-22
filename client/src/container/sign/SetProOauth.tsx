@@ -78,17 +78,18 @@ function SetProOauth() {
                     <SignInput
                         label="닉네임"
                         value={nickname}
-                        placeholder="닉네임 (공백없이 2자 ~ 8자)"
+                        placeholder="닉네임 (공백없이 2자 ~ 10자)"
                         disabled={authNickname.length > 0}
                         onChange={(e) => setNickname(e.currentTarget.value)}
                         description="닉네임 형식이 맞지 않습니다."
                         regex={REGEX.NICKNAME}
                     />
-                    {!isRequestedNickname && !authNickname && (
+                    {!authNickname && (
                         <Button
                             type="STUDY"
                             styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                             onClickHandler={() => {
+                                console.log(isRequestedNickname);
                                 setIsRequestedNickname(true);
                                 postCheckNickname({ nickname, setIsRequestedNickname });
                             }}

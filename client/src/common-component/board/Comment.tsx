@@ -17,17 +17,22 @@ import { CommentDefaultTypeWithRe } from "@type/comment/comment.res.dto";
 import { BiPencil, BiReply } from "react-icons/bi";
 import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
 import UserProfile from "@component/user/UserProfile";
+import { getItemFromStorage } from "@util/localstorage-helper";
 
 interface IComment extends ITextarea {
     onSubmitHanlder: () => void;
 }
 
 export const EditComment = ({ value = "", onChange, onSubmitHanlder }: IComment) => {
+    const myId = getItemFromStorage("memberId");
+    const myPicture = getItemFromStorage("profilePicture");
+
     return (
         <div className="flex flex-col border-b-1 border-borderline py-12">
             <div className="flex flex-col">
                 <div className="flex justify-between">
-                    <UserProfile size="sm" mine={true} />
+                    {/* mine={true} */}
+                    <UserProfile size="sm" profilePicture={myPicture} memberId={myId} />
                     <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
                         <Typography type="Highlight" text="댓글 등록" color="text-white" />
                     </Button>
@@ -70,6 +75,9 @@ export const OneComment = ({
     const { mutate: patchComment } = usePatchComment();
     const { mutate: deleteComment } = useDeleteComment();
     const { mutate: postCommentRe } = usePostCommentRe();
+
+    const myId = getItemFromStorage("memberId");
+    const myPicture = getItemFromStorage("profilePicture");
 
     const onChangeCurComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setCurComment(e.currentTarget.value);
@@ -139,6 +147,7 @@ export const OneComment = ({
                         });
                         setNextComment("");
                         refetchComment();
+                        setParentId(0);
                     },
                     // TODO: 에러 분기
                     onError: (err) => errorToast(err),
@@ -151,7 +160,7 @@ export const OneComment = ({
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
-                    <UserProfile profilePicture={v.profilePicture} size="sm" />
+                    <UserProfile profilePicture={v.profilePicture} size="sm" memberId={v.memberId} />
                     <Typography type="Highlight" text={v.nickname} />
                     {isSameUser && (
                         <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
@@ -211,6 +220,19 @@ export const OneComment = ({
                     )}
                 </div>
             )}
+
+            {Array.isArray(v.commentList) &&
+                v.commentList.length > 0 &&
+                v.commentList.map((v) => (
+                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
+                        <div className="flex rotate-180 items-end p-8">
+                            <BiReply />
+                        </div>
+                        <div className="flex-1">
+                            <OneComment v={v} writerId={writerId} boardId={boardId} refetchComment={refetchComment} />
+                        </div>
+                    </div>
+                ))}
             {parentId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">
@@ -218,7 +240,8 @@ export const OneComment = ({
                             <div className="flex rotate-180 items-end p-8">
                                 <BiReply />
                             </div>
-                            <UserProfile mine={true} size="sm" />
+                            {/* mine={true} */}
+                            <UserProfile size="sm" profilePicture={myPicture} memberId={myId} />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>
@@ -240,19 +263,6 @@ export const OneComment = ({
                     </div>
                 </div>
             )}
-
-            {Array.isArray(v.commentList) &&
-                v.commentList.length > 0 &&
-                v.commentList.map((v) => (
-                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
-                        <div className="flex rotate-180 items-end p-8">
-                            <BiReply />
-                        </div>
-                        <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} boardId={boardId} refetchComment={refetchComment} />
-                        </div>
-                    </div>
-                ))}
         </>
     );
 };

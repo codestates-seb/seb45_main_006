@@ -13,12 +13,10 @@ function UserBlockModal({
     user,
     closeModal,
     setBlockedMemberId,
-    refetchAllMembers,
 }: {
     user: GetResMemberDetail;
     closeModal: () => void;
     setBlockedMemberId: (v: number) => void; // TODO: 유저 차단 시 콜백함수로 이름 바꿀 것
-    refetchAllMembers: () => void;
 }) {
     const [reportContent, setReportContent] = useState("");
     const [isEmptyInput, setIsEmptyInput] = useState(false);
@@ -49,7 +47,6 @@ function UserBlockModal({
                             content: `${user.nickname} 유저를 차단하였습니다.`,
                             isConfirm: false,
                         });
-                        refetchAllMembers();
                     },
                     onError: (err) => errorToast(err),
                 },

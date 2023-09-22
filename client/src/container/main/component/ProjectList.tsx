@@ -51,7 +51,11 @@ const ProjectList = ({ project }: { project: CommonResProjects }) => {
             </div>
             <hr />
             <div className="flex cursor-pointer items-center">
-                <UserProfile profilePicture={project.memberProfile.profilePicture} size="sm" />
+                <UserProfile
+                    profilePicture={project.memberProfile.profilePicture}
+                    size="sm"
+                    memberId={project.memberProfile.memberId}
+                />
                 <Typography type="Label" text={project.memberProfile.nickname} styles="mx-20" />
             </div>
         </div>

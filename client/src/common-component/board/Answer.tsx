@@ -28,7 +28,8 @@ import UserProfile from "@component/user/UserProfile";
 import { AnswerDefaultType } from "@type/answer/answer.res.dto";
 
 import { BiPencil, BiReply, BiSolidCheckSquare } from "react-icons/bi";
-import { RiReplyLine, RiDeleteBin5Line } from "react-icons/ri";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { getItemFromStorage } from "@util/localstorage-helper";
 
 export const EditAnswer = ({
     questionId,
@@ -46,6 +47,8 @@ export const EditAnswer = ({
 
     const { fireToast, errorToast } = useToast();
     const { alertWhenEmptyFn } = useCheckValidValue();
+    const myId = getItemFromStorage("memberId");
+    const myProfile = getItemFromStorage("profilePicture");
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "답변", content }];
@@ -74,7 +77,8 @@ export const EditAnswer = ({
         <div className="flex flex-col border-b-1 border-borderline py-12">
             <div className="mb-8 flex flex-col">
                 <div className="mb-8 flex justify-between">
-                    <UserProfile size="sm" mine={true} />
+                    {/* mine */}
+                    <UserProfile size="sm" profilePicture={myProfile} memberId={myId} />
                     <Button type="PROJECT_POINT" onClickHandler={onSubmitHanlder}>
                         <Typography type="Highlight" text="답변 등록" color="text-white" />
                     </Button>
@@ -103,7 +107,9 @@ export const OneAnswer = ({
     refetchAnswer: () => void;
     isAcceptExisted: boolean;
 }) => {
-    const { isLoggedIn, isMine, isSameUser } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
+    const myId = getItemFromStorage("memberId");
+    const myPicture = getItemFromStorage("profilePicture");
+    const { isLoggedIn, isMine } = useCheckUser({ memberId: v.memberId, comparedMemberId: writerId });
 
     const [isEdit, setIsEdit] = useState(false);
     const [curAnswer, setCurAnswer] = useState(v.content);
@@ -124,6 +130,7 @@ export const OneAnswer = ({
         questionId: boardId,
         answerId: v.answerId,
     });
+    console.log("commentList", commentList);
 
     const onSubmitHanlder = () => {
         const inputs = [{ name: "댓글", content: curAnswer }];
@@ -219,16 +226,11 @@ export const OneAnswer = ({
         <>
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center">
-                    <UserProfile size="sm" profilePicture={profilePicture} />
+                    <UserProfile size="sm" profilePicture={profilePicture} memberId={v.memberId} />
                     <Typography type="Highlight" text={v.nickname} />
                     {v.accepted && (
                         <div className="ml-12 rounded-sm border-1 border-main px-4 py-2">
                             <Typography type="SmallLabel" text="답변 채택" color="text-main" />
-                        </div>
-                    )}
-                    {isSameUser && (
-                        <div className="ml-12 rounded-sm border-1 border-blue-200 px-4 py-2">
-                            <Typography type="SmallLabel" text="작성자" color="text-blue-500" />
                         </div>
                     )}
                 </div>
@@ -248,28 +250,27 @@ export const OneAnswer = ({
                     />
                 )}
                 {isLoggedIn && !isEdit && (
-                    <div className="absolute right-0 top-32 flex flex-col items-end">
-                        <div className={`my-12 flex w-90 ${isMine ? "justify-between" : "justify-end"}`}>
-                            {!isAcceptExisted && (
-                                <button onClick={onAcceptHandler}>
-                                    <BiSolidCheckSquare size={"1.2rem"} color="#44AE4E" />
+                    <div className="absolute right-0 top-24 flex flex-col items-end">
+                        {!isAcceptExisted && writerId === Number.parseInt(myId) && (
+                            <div className="flex">
+                                <div className="font-gangwon">
+                                    <button onClick={onAcceptHandler} className="flex items-center">
+                                        <BiSolidCheckSquare size={"1.2rem"} color="#44AE4E" />
+                                        <p className="font-[8px] hover:text-main">채택하기</p>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        {isMine && (
+                            <div className="flex w-90 justify-end">
+                                <button onClick={() => setIsEdit(true)}>
+                                    <BiPencil size={"1.2rem"} color="#44AE4E" />
                                 </button>
-                            )}
-                            {isMine && (
-                                <>
-                                    <button onClick={() => setIsEdit(true)}>
-                                        <BiPencil size={"1.2rem"} color="#44AE4E" />
-                                    </button>
-                                    <button onClick={onDeleteHanlder}>
-                                        <RiDeleteBin5Line size={"1.2rem"} color="#44AE4E" />
-                                    </button>
-                                </>
-                            )}
-
-                            <button onClick={() => setAnswerId(v.answerId)}>
-                                <RiReplyLine size={"1.2rem"} color="#44AE4E" />
-                            </button>
-                        </div>
+                                <button onClick={onDeleteHanlder}>
+                                    <RiDeleteBin5Line size={"1.2rem"} color="#44AE4E" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -304,7 +305,8 @@ export const OneAnswer = ({
                             <div className="flex rotate-180 items-end p-8">
                                 <BiReply />
                             </div>
-                            <UserProfile size="sm" mine={true} />
+                            {/* mine={true} */}
+                            <UserProfile size="sm" profilePicture={myPicture} memberId={myId} />
                         </div>
 
                         <button onClick={onSubmitReHanlder}>

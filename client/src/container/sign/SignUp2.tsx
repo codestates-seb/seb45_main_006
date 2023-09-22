@@ -16,7 +16,6 @@ import Button from "@component/Button";
 import SignLayout from "@container/sign/component/SignLayout";
 import SignInput from "@container/sign/component/SignInput";
 import SignButton from "@container/sign/component/SignButton";
-import EmailGuide from "./component/EmailGuide";
 
 import progress from "@assets/sign/progress_bar2.png";
 import Loading from "@assets/loading.gif";
@@ -100,13 +99,13 @@ function SignUp2() {
         );
     };
 
-    if (authEmail && !redirectedEmail) {
-        return (
-            <SignLayout title="이메일 인증" subTitle="" progressImage={""}>
-                <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
-            </SignLayout>
-        );
-    }
+    // if (authEmail && !redirectedEmail) {
+    // return (
+    //     <SignLayout title="이메일 인증" subTitle="" progressImage={""}>
+    //         <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
+    //     </SignLayout>
+    // );
+    // }
 
     return (
         <SignLayout title="회원가입" subTitle="" progressImage={progress}>
@@ -145,6 +144,24 @@ function SignUp2() {
                 )}
             </div>
             {authEmail && (
+                <div className="mb-4 flex items-center justify-between">
+                    <Typography type="Description" text="혹시 이메일을 잘못 입력하셨다면?" color="text-gray-700" />
+                    <button
+                        onClick={() => {
+                            setAuthEmail("");
+                            setIsRequestedAuthEmail(false);
+                        }}
+                    >
+                        <Typography
+                            type="Description"
+                            text="이메일 재입력"
+                            styles="ml-8 font-bold underline"
+                            color="text-blue-500 hover:text-blue-700"
+                        />
+                    </button>
+                </div>
+            )}
+            {authEmail && (
                 <div className="flex items-center justify-between">
                     <SignInput
                         label="인증코드"
@@ -165,7 +182,7 @@ function SignUp2() {
 
                                 setIsRequestedAuthCode(true);
                                 postCheckAuthCode({
-                                    email: redirectedEmail || "",
+                                    email: authEmail,
                                     authCode: authCodeValue,
                                     setIsRequestedAuthCode,
                                 });
@@ -180,7 +197,7 @@ function SignUp2() {
                 <SignInput
                     label="닉네임"
                     value={nickname}
-                    placeholder="닉네임 (공백없이 2자 ~ 8자)"
+                    placeholder="닉네임 (공백없이 2자 ~ 10자)"
                     disabled={authNickname.length > 0}
                     onChange={(e) => setNickname(e.currentTarget.value)}
                     description="닉네임 형식이 맞지 않습니다."
@@ -192,7 +209,11 @@ function SignUp2() {
                         styles={`px-8 py-6 rounded-sm ml-12 flex flex-col hover:font-bold`}
                         onClickHandler={() => {
                             if (!nickname || !isNicknameVaid({ nickname })) {
-                                fireToast({ content: "닉네임을 입력해주세요.", isConfirm: false });
+                                fireToast({
+                                    content: "닉네임이 형식에 맞지 앖습니다.",
+                                    isConfirm: false,
+                                    isWarning: true,
+                                });
                                 return;
                             }
                             setIsRequestedNickname(true);
