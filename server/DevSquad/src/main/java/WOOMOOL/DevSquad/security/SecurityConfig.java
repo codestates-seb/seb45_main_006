@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.auth.handler.MemberDeniedHandler;
 import WOOMOOL.DevSquad.auth.jwt.JwtAuthenticationFilter;
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
 import WOOMOOL.DevSquad.auth.jwt.JwtVerificationFilter;
+import WOOMOOL.DevSquad.auth.oauth2.oAuth2SuccessHandler;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
@@ -13,11 +14,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -52,10 +59,13 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfiguration())
                 .and()
+                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests()
-                .anyRequest().permitAll();
-//                .oauth2Login(oauth2 -> oauth2
-//                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository))
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository)));
+
 
         return http.build();
     }
@@ -94,8 +104,8 @@ public class SecurityConfig {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
-//                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
 
 
         }

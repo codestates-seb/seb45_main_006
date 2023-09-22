@@ -9,6 +9,7 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
+import WOOMOOL.DevSquad.level.repository.LevelRepository;
 import WOOMOOL.DevSquad.likes.repository.LikesRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
@@ -62,6 +63,7 @@ public class MemberService {
     private final LikesRepository likesRepository;
     private final BookmarkRepository bookmarkRepository;
     private final EntityManager entityManager;
+    private final LevelRepository levelRepository;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -176,6 +178,10 @@ public class MemberService {
         Long memberId = findMember.getMemberId();
 
         findMember.getMemberProfile().setMemberStatus(MEMBER_QUIT);
+
+        // 회원 레벨 정보 삭제
+        Level level = findMember.getMemberProfile().getLevel();
+        levelRepository.delete(level);
 
         // 회원이 쓴 게시글 모두 삭제
         List<Project> projectList = getMemberProjectList(memberId);
