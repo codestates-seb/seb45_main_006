@@ -2,7 +2,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [develop]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -36,24 +36,22 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-      - name: Start Session Manager session
-        run: aws ssm start-session --target Me-0dd78dbf4eb8e5fa1
-      - name: Deploy to Server
+
+      - name: Set up SSH key
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-northeast-2
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          run: |
+            echo "$SSH_PRIVATE_KEY" > pathfinder.pem
+            chmod 600 pathfinder.pem
+
+      - name: Deploy to Server
         run: |
-          aws ssm send-command \
-            --instance-id i-01634e0fd4578a1dc \
-            --document-name "AWS-RunShellScript" \
-            --parameters "commands=[
-              'if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then',
-              '  sudo docker stop server',
-              '  sudo docker rm server',
-              'fi',
-              'sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}',
-              'sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad',
-              'sudo docker run -d --name server --env-file env_file -p 8080:8080 ehdals0405/devsquad:${GITHUB_SHA::7}'
-            ]" \
-            --output text
+          ssh -o StrictHostKeyChecking=no -i pathfinder.pem ubuntu@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash -s" <<EOF
+              if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then
+                sudo docker stop server
+                sudo docker rm server
+              fi 
+              sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}
+              sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad
+              sudo docker run -d --name server --env-file env_file -p 8080:8080 ehdals0405/devsquad:${GITHUB_SHA::7}
+              EOF 
