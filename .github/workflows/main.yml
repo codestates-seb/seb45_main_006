@@ -45,11 +45,11 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           echo "$SSH_PRIVATE_KEY" > pathfinder.pem
-          chmod 600 pathfinder.pem
+          chmod 400 pathfinder.pem
 
       - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no -i pathfinder.pem ubuntu@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash -s" <<EOF
+          ssh -o StrictHostKeyChecking=no -i pathfinder.pem ubuntu@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash && cd ~" <<EOF
             if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then
               sudo docker stop server
               sudo docker rm server
