@@ -45,7 +45,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           echo "$SSH_PRIVATE_KEY" > pathfinder.pem
-          chmod 400 pathfinder.pem
+          chmod 600 pathfinder.pem
 
       - name: Deploy to Server
         run: |
