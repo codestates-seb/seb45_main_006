@@ -46,7 +46,6 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > ehdalsKey.pem
           chmod 600 ehdalsKey.pem
-
       - name: Deploy to Server
         run: |
           ssh -i "ehdalsKey.pem" ec2-user@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash && cd ~" <<EOF
