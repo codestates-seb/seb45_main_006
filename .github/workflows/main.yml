@@ -56,6 +56,6 @@ jobs:
             fi 
             sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}
             sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad
-            sudo docker run -d --name server --env-file env_file -p 8080:8080 ehdals0405/devsquad:${GITHUB_SHA::7}
+            sudo docker run -d --name server --env-file env_file -p 8080:8080 devsquad
           EOF
 
