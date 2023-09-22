@@ -8,11 +8,11 @@ import Button from "@component/Button";
 import Input from "@component/Input";
 
 import Typography from "@component/Typography";
-// import googleImg from "@assets/sign/login_google.png";
+import googleImg from "@assets/sign/login_google.png";
 // import githubImg from "@assets/sign/login_github.png";
 import { isLoginFailedAtom } from "@feature/Global";
 
-// const endpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
+const endpoint = import.meta.env.VITE_APP_API_ENDPOINT || "";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -31,10 +31,10 @@ function Login() {
         }
     };
 
-    // const googleOauthHandler = () => {
-    //     const oAuthURL = `${endpoint}/oauth2/authorization/google`;
-    //     window.location.assign(oAuthURL);
-    // };
+    const googleOauthHandler = () => {
+        const oAuthURL = `${endpoint}/oauth2/authorization/google`;
+        window.location.assign(oAuthURL);
+    };
 
     return (
         <div className="flex h-708 w-full items-center justify-center bg-[url('@assets/sign/login_bg.png')]">
@@ -103,19 +103,19 @@ function Login() {
                                 <Typography type="Highlight" text="회원가입" />
                             </div>
                         </Link>
-                        {/* <div className="flex">
+                        <div className="flex">
                             <div className="mb-10 mr-10 flex w-80 border-b-1 border-solid border-[#A9A9A9]"></div>
                             <div className="flex pt-25 text-sm text-[#555555]">소설 계정으로 로그인</div>
                             <div className="mb-10 ml-10 flex w-80 border-b-1 border-solid border-[#A9A9A9]"></div>
                         </div>
                         <div className="mt-23 flex justify-center gap-30">
-                            <button>
+                            {/* <button>
                                 <img className="flex w-50" src={githubImg} />
-                            </button>
+                            </button> */}
                             <button onClick={googleOauthHandler}>
                                 <img className="flex w-50" src={googleImg} />
                             </button>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>
