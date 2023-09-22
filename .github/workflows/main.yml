@@ -30,7 +30,7 @@ jobs:
           docker push ehdals0405/devsquad:${GITHUB_SHA::7}
 
       - name: Configure AWS credentials
-        use: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
