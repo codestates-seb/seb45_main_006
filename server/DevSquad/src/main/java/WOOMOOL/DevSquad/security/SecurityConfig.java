@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.auth.handler.MemberDeniedHandler;
 import WOOMOOL.DevSquad.auth.jwt.JwtAuthenticationFilter;
 import WOOMOOL.DevSquad.auth.jwt.JwtTokenizer;
 import WOOMOOL.DevSquad.auth.jwt.JwtVerificationFilter;
+import WOOMOOL.DevSquad.auth.oauth2.oAuth2SuccessHandler;
 import WOOMOOL.DevSquad.auth.refresh.RefreshTokenRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -53,9 +55,11 @@ public class SecurityConfig {
                 .apply(new CustomFilterConfiguration())
                 .and()
                 .authorizeHttpRequests()
-                .anyRequest().permitAll();
-//                .oauth2Login(oauth2 -> oauth2
-//                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository))
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer, memberAuthority, memberRepository,refreshTokenRepository)));
+
 
         return http.build();
     }
@@ -94,8 +98,8 @@ public class SecurityConfig {
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
-//                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
 
 
         }
