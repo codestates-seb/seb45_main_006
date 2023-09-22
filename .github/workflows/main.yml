@@ -2,28 +2,31 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11 # JDK 설정, 점검
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'zulu'
 
-      - name: Grant execute permission for gradlew # 실행 권한 부여
+      - name: Grant execute permission for gradlew
         run: chmod +x server/DevSquad/gradlew
-      - name: Build with Gradle # ./gradlew 로 빌드
+
+      - name: Build with Gradle
         working-directory: server/DevSquad
         run: ./gradlew clean build
 
-
-      - name: Docker build # 도커로 이미지 생성 후 DockerHub에 배포
+      - name: Docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
           docker build -t devsquad -f server/DevSquad/Dockerfile .
@@ -40,18 +43,19 @@ jobs:
       - name: Set up SSH key
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          run: |
-            echo "$SSH_PRIVATE_KEY" > pathfinder.pem
-            chmod 600 pathfinder.pem
+        run: |
+          echo "$SSH_PRIVATE_KEY" > pathfinder.pem
+          chmod 600 pathfinder.pem
 
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no -i pathfinder.pem ubuntu@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash -s" <<EOF
-              if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then
-                sudo docker stop server
-                sudo docker rm server
-              fi 
-              sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}
-              sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad
-              sudo docker run -d --name server --env-file env_file -p 8080:8080 ehdals0405/devsquad:${GITHUB_SHA::7}
-              EOF 
+            if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then
+              sudo docker stop server
+              sudo docker rm server
+            fi 
+            sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}
+            sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad
+            sudo docker run -d --name server --env-file env_file -p 8080:8080 ehdals0405/devsquad:${GITHUB_SHA::7}
+          EOF
+
