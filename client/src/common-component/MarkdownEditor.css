@@ -3,6 +3,12 @@
     height: 50% !important;
 }
 
+.w-md-editor-input > p {
+    font-size: 16px;
+    color: #191a29;
+    font-family: "GangwonEdu_OTFBoldA";
+}
+
 .w-md-editor-preview {
     width: 100% !important;
     top: 50% !important;
@@ -10,7 +16,9 @@
 }
 
 .wmde-markdown > p {
-    font-size: 14px;
+    font-size: 16px;
+    color: #191a29;
+    font-family: "GangwonEdu_OTFBoldA";
 }
 
 @media (min-width: 960px) {

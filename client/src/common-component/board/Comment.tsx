@@ -147,6 +147,7 @@ export const OneComment = ({
                         });
                         setNextComment("");
                         refetchComment();
+                        setParentId(0);
                     },
                     // TODO: 에러 분기
                     onError: (err) => errorToast(err),
@@ -219,6 +220,19 @@ export const OneComment = ({
                     )}
                 </div>
             )}
+
+            {Array.isArray(v.commentList) &&
+                v.commentList.length > 0 &&
+                v.commentList.map((v) => (
+                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
+                        <div className="flex rotate-180 items-end p-8">
+                            <BiReply />
+                        </div>
+                        <div className="flex-1">
+                            <OneComment v={v} writerId={writerId} boardId={boardId} refetchComment={refetchComment} />
+                        </div>
+                    </div>
+                ))}
             {parentId > 0 && (
                 <div className="my-12 flex-col">
                     <div className="mb-8 flex items-center justify-between">
@@ -249,19 +263,6 @@ export const OneComment = ({
                     </div>
                 </div>
             )}
-
-            {Array.isArray(v.commentList) &&
-                v.commentList.length > 0 &&
-                v.commentList.map((v) => (
-                    <div className="flex" key={`${v.commentId}-${v.memberId}`}>
-                        <div className="flex rotate-180 items-end p-8">
-                            <BiReply />
-                        </div>
-                        <div className="flex-1">
-                            <OneComment v={v} writerId={writerId} boardId={boardId} refetchComment={refetchComment} />
-                        </div>
-                    </div>
-                ))}
         </>
     );
 };

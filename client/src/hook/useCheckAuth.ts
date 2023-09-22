@@ -24,7 +24,7 @@ export const useAuthHelper = () => {
 
     const { mutate: postNickname } = usePostNickname();
 
-    // 닉네임 중복 검사 GET 요청 api
+    // 닉네임 중복 검사 POST 요청 api
     const postCheckNickname = ({
         nickname,
         setIsRequestedNickname,

@@ -178,14 +178,7 @@ const Details = () => {
                     </div>
                 </section>
                 <div className="flex w-1/4 flex-col items-center">
-                    {study && (
-                        <UserCard
-                            key={`${study?.memberProfile.nickname}`}
-                            user={study?.memberProfile}
-                            setBlockedMemberId={() => navigate("/projects")}
-                            refetchAllMembers={() => {}}
-                        />
-                    )}
+                    {study && <UserCard key={`${study?.memberProfile.nickname}`} user={study?.memberProfile} />}
                 </div>
             </div>
             <div className="p-8">

@@ -1,6 +1,6 @@
 import { RefObject, useRef, useState } from "react";
 
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { isChatBotShowAtom, chatBotStatusAtom } from "@feature/chat";
 
 import IconLogo from "@assets/icon_logo.png";
@@ -13,7 +13,7 @@ import ChatRoomItem from "./component/ChatRoomItem";
 function ChatBot() {
     const chatBtnRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
-    const chatBotStatus = useRecoilValue(chatBotStatusAtom);
+    const [chatBotStatus, setChatBotStatus] = useRecoilState(chatBotStatusAtom);
     const [isChatBotShow, setIsChatBotShow] = useRecoilState(isChatBotShowAtom);
 
     const [isDescriptionShow, setIsDescriptionShow] = useState(true);
@@ -35,7 +35,7 @@ function ChatBot() {
     return (
         <div ref={chatBtnRef}>
             {isChatBotShow && (
-                <ol className="fixed bottom-100 right-30 h-500 w-400 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
+                <ol className="fixed bottom-100 right-30 z-50 h-500 w-400 overflow-auto rounded-md border-1 border-main bg-white shadow-sm shadow-main">
                     {chatBotStatus === "LIST" && <ChatRoomList />}
 
                     {chatBotStatus === "DETAIL" && <ChatRoomItem />}
@@ -59,6 +59,7 @@ function ChatBot() {
                 onClick={() => {
                     setIsChatBotShow(!isChatBotShow);
                     setIsDescriptionShow(false);
+                    setChatBotStatus("LIST");
                 }}
             >
                 <div className="relative">

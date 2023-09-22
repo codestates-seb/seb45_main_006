@@ -2,8 +2,8 @@ import { useToast } from "./useToast";
 
 export const REGEX = {
     EMAIL: new RegExp("[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"),
-    NICKNAME: new RegExp("^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,10}$"),
-    PASSWORD: new RegExp("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$@!%*#?&])[a-zA-Z0-9$@!%*#?&]{8,20}$"),
+    NICKNAME: new RegExp("^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,9}$"),
+    PASSWORD: new RegExp("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[$@!%*#?&])[a-zA-Z0-9$@!%*#?&]{8,20}$"),
 } as const;
 
 type InputSummary = {

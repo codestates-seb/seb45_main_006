@@ -10,7 +10,6 @@ import SignLayout from "@container/sign/component/SignLayout";
 import SignInput from "@container/sign/component/SignInput";
 import SignButton from "@container/sign/component/SignButton";
 import Typography from "@component/Typography";
-import EmailGuide from "./component/EmailGuide";
 import Loading from "@assets/loading.gif";
 
 import { REGEX } from "@hook/useCheckValidValue";
@@ -145,28 +144,24 @@ function FindPw() {
     const [email, setEmail] = useState("");
     const { reqTempPw } = useAuthHelper();
 
-    if (isRedirected) {
+    if (authEmail || isRedirected) {
         return (
             <SignLayout title="비밀번호 재설정">
-                <FindPwContent email={redirectedEmail || ""} />
+                <FindPwContent email={redirectedEmail || authEmail || ""} />
             </SignLayout>
         );
     }
 
     return (
         <SignLayout title="비밀번호 재설정">
-            {!authEmail ? (
-                <RequestEmailAuthenticate
-                    email={email}
-                    setEmail={setEmail}
-                    onHandleReqAuthForFindPw={() => reqTempPw({ email })}
-                    isRequestedAuthEmail={isRequestedAuthEmail}
-                    authEmail={authEmail}
-                    setIsRequestedAuthEmail={setIsRequestedAuthEmail}
-                />
-            ) : (
-                <EmailGuide setIsRequestedAuthEmail={setIsRequestedAuthEmail} />
-            )}
+            <RequestEmailAuthenticate
+                email={email}
+                setEmail={setEmail}
+                onHandleReqAuthForFindPw={() => reqTempPw({ email })}
+                isRequestedAuthEmail={isRequestedAuthEmail}
+                authEmail={authEmail}
+                setIsRequestedAuthEmail={setIsRequestedAuthEmail}
+            />
         </SignLayout>
     );
 }
