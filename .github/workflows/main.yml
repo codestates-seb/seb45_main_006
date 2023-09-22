@@ -29,7 +29,6 @@ jobs:
           docker tag devsquad ehdals0405/devsquad:${GITHUB_SHA::7}
           docker push ehdals0405/devsquad:${GITHUB_SHA::7}
 
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
