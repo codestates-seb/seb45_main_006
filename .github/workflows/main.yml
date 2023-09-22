@@ -52,7 +52,7 @@ jobs:
               '  sudo docker rm server',
               'fi',
               'sudo docker pull ehdals0405/devsquad:${GITHUB_SHA::7}',
-              'sudo docker tag ehdals0405/devsquad:${GITHUB_SHAT::7} devsquad',
+              'sudo docker tag ehdals0405/devsquad:${GITHUB_SHA::7} devsquad',
               'sudo docker run --env-file env_file -d --name server -p 8080:8080 devsquad'
             ]" \
             --output text
