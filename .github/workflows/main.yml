@@ -37,7 +37,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
       - name: Start Session Manager session
-        run: aws ssm start-session --target i-01634e0fd4578a1dc
+        run: aws ssm start-session --target Me-0dd78dbf4eb8e5fa1
       - name: Deploy to Server
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
