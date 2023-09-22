@@ -46,9 +46,10 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > ehdalsKey.pem
           chmod 600 ehdalsKey.pem
+
       - name: Deploy to Server
         run: |
-          ssh -i "ehdalsKey.pem" ec2-user@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash && cd ~" <<EOF
+          ssh -o StrictHostKeyChecking=no -i "ehdalsKey.pem" ec2-user@ec2-43-202-24-155.ap-northeast-2.compute.amazonaws.com "bash && cd ~" <<EOF
             if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then
               sudo docker stop server
               sudo docker rm server
