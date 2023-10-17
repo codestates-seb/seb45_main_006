@@ -17,13 +17,13 @@ public class levelAspect {
     }
 
     // 활동 공통 기능
-    @Pointcut("execution(public * WOOMOOL.DevSquad.projectboard.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.studyboard.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.infoboard.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.questionboard.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.likes.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.comment.service..*(..)) || " +
-            "execution(public * WOOMOOL.DevSquad.answer.service..*(..)) ")
+    @Pointcut("execution(public * WOOMOOL.DevSquad.projectboard.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.studyboard.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.infoboard.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.questionboard.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.likes.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.comment.controller..*(..)) || " +
+            "execution(public * WOOMOOL.DevSquad.answer.controller..*(..)) ")
     public void afterActivity() {
     }
 
