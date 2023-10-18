@@ -67,7 +67,8 @@ public class MemberProfile {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToOne(mappedBy = "memberProfile",fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "levelId")
     private Level level;
 
     @ManyToMany
@@ -129,13 +130,6 @@ public class MemberProfile {
 
     public void addBlockMember(Block block) {
         this.getBlockList().add(block);
-    }
-
-    public void addLevel(Level level) {
-        this.level = level;
-        if (level.getMemberProfile() != this) {
-            level.setMemberProfile(this);
-        }
     }
 
     public void addChatRoom(ChatRoom chatRoom) {

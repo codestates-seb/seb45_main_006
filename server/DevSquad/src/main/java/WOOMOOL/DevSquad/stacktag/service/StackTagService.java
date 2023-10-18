@@ -24,7 +24,6 @@ public class StackTagService {
         if (stackTagList.size() > 0) {
             for (String stackTags : stackTagList) {
                 StackTag stackTag = stackTagRepository.findByTagName(stackTags);
-                stackTag.getMemberProfiles().add(memberProfile);
                 memberProfile.getStackTags().add(stackTag);
             }
         }

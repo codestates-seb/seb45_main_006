@@ -21,7 +21,4 @@ public class Position {
     @Column(nullable = false)
     private String positionName;
 
-    @ManyToMany(mappedBy = "positions")
-    private Set<MemberProfile> memberProfiles = new HashSet<>();
-
 }

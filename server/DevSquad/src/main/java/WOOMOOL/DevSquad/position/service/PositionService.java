@@ -28,7 +28,6 @@ public class PositionService {
         if(positionList.size() > 0) {
             for (String positions : positionList) {
                 Position position = positionRepository.findByPositionName(positions);
-                position.getMemberProfiles().add(memberProfile);
                 memberProfile.getPositions().add(position);
             }
         }

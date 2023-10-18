@@ -40,10 +40,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberType memberType = MemberType.REGULAR;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     List<String> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "member",cascade = CascadeType.ALL)
     private MemberProfile memberProfile;
 
     public void addProfile(MemberProfile memberProfile){

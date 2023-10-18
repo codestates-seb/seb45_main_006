@@ -10,7 +10,6 @@ public interface LevelMapper {
     default LevelDto.Response entityToResponse(Level level){
 
         return new LevelDto.Response(
-                level.getMemberProfile().getMemberProfileId(),
                 level.getGrade(),
                 level.getCurrentExp(),
                 level.getMaxExp()

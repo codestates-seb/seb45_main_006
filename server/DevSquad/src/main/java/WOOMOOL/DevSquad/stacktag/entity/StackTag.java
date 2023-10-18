@@ -24,8 +24,6 @@ public class StackTag {
 
     private String tagName;
 
-    @ManyToMany(mappedBy = "stackTags")
-    private List<MemberProfile> memberProfiles = new ArrayList<>();
 //    @ManyToMany(mappedBy = "stackTags")
 //    private Set<Study> studyBoardList = new HashSet<>();
 //    @ManyToMany(mappedBy = "stackTags")

@@ -79,7 +79,7 @@ public class MemberService {
 
         // 레벨 시스템 추가
         Level level = new Level();
-        memberProfile.addLevel(level);
+        memberProfile.setLevel(level);
 
         // 권한 추가
         List<String> roles = memberAuthority.createRoles(member.getEmail());
@@ -449,28 +449,33 @@ public class MemberService {
     private List<MemberProfile> getFilteredMemberProfileList(String nickname, List<String> positions, List<String> stacks) {
 
         // jpql 쿼리 문 작성
-        StringBuilder jpql = new StringBuilder("SELECT mp FROM MemberProfile mp WHERE 1 = 1");
+        StringBuilder jpql = new StringBuilder("SELECT DISTINCT mp FROM MemberProfile mp " +
+                " LEFT JOIN FETCH mp.positions p" +
+                " LEFT JOIN FETCH mp.stackTags st" +
+                " WHERE 1 = 1");
 
         // 필터 조건에 따라 쿼리문 추가
-        if (nickname != null) {
-            jpql.append(" AND LOWER(mp.nickname) LIKE CONCAT('%', LOWER(:nickname), '%') ");
-        }
 
         if (positions != null) {
             jpql.append(" AND mp IN (SELECT DISTINCT mp FROM MemberProfile mp JOIN mp.positions p " +
-                    "WHERE p.positionName IN :positionNames " +
-                    "GROUP BY mp HAVING COUNT(p) IN :positionCount)");
+                    " WHERE p.positionName IN :positionNames " +
+                    " GROUP BY mp HAVING COUNT(p) = :positionCount)");
         }
 
         if (stacks != null) {
             jpql.append(" AND mp IN (SELECT DISTINCT mp FROM MemberProfile mp JOIN mp.stackTags st " +
-                    "WHERE st.tagName IN :tagNames " +
-                    "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
+                    " WHERE st.tagName IN :tagNames " +
+                    " GROUP BY mp HAVING COUNT(st) = :tagCount)");
 
         }
-        // 리스트에 나올 공통 조건
-        jpql.append("AND mp.memberStatus = 'MEMBER_ACTIVE' " +
-                "AND mp.listEnroll = true");
+
+        if (nickname != null) {
+            jpql.append(" AND LOWER(mp.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')");
+        }
+
+
+        jpql.append(" AND mp.memberStatus = 'MEMBER_ACTIVE'" +
+                " AND mp.listEnroll = true");
 
         // 최근 활동 순으로 정렬
         jpql.append(" ORDER BY mp.modifiedAt DESC");
