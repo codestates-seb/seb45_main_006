@@ -59,8 +59,8 @@ public class LevelService {
         // 회원 활동 시간 수정
         memberProfile.setModifiedAt(LocalDateTime.now());
         Long memberProfileId = memberProfile.getMemberProfileId();
-        Level level = memberProfile.getLevel();
-        String memberGrade = memberProfile.getLevel().getGrade();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        String memberGrade = level.getGrade();
 
         switch (memberGrade) {
 

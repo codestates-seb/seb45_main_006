@@ -13,7 +13,7 @@ public class LevelDto {
     @AllArgsConstructor
     public static class Response{
 
-        private Long memberId;
+//        private Long memberId;
 
         private String grade;
 

@@ -1,9 +1,6 @@
 package WOOMOOL.DevSquad.member.service;
 
-import WOOMOOL.DevSquad.answer.entity.Answer;
-import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
-import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.bookmark.repository.BookmarkRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
@@ -82,7 +79,7 @@ public class MemberService {
 
         // 레벨 시스템 추가
         Level level = new Level();
-        memberProfile.addLevel(level);
+        memberProfile.setLevel(level);
 
         // 권한 추가
         List<String> roles = memberAuthority.createRoles(member.getEmail());
@@ -142,10 +139,10 @@ public class MemberService {
 
     // 유저 리스트 필터링
     @Transactional(readOnly = true)
-    public Page<MemberProfile> getFilteredMemberProfile(int page,String nickname,List<String> positions,List<String> stacks){
+    public Page<MemberProfile> getFilteredMemberProfile(int page, String nickname, List<String> positions, List<String> stacks) {
 
-        List<MemberProfile> memberProfileList = getFilteredMemberProfileList(nickname, positions,stacks);
-        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page,memberProfileList);
+        List<MemberProfile> memberProfileList = getFilteredMemberProfileList(nickname, positions, stacks);
+        Page<MemberProfile> memberProfilePage = getMemberProfilePage(page, memberProfileList);
 
         return memberProfilePage;
     }
@@ -178,10 +175,6 @@ public class MemberService {
         Long memberId = findMember.getMemberId();
 
         findMember.getMemberProfile().setMemberStatus(MEMBER_QUIT);
-
-        // 회원 레벨 정보 삭제
-        Level level = findMember.getMemberProfile().getLevel();
-        levelRepository.delete(level);
 
         // 회원이 쓴 게시글 모두 삭제
         List<Project> projectList = getMemberProjectList(memberId);
@@ -416,10 +409,10 @@ public class MemberService {
 //// 여기까지
 
     // 출석체크
-    public void attendanceCheck(){
-      
+    public void attendanceCheck() {
+
         MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
-        Level level = memberProfile.getLevel();
+        Level level = levelRepository.findByMemberProfileId(memberProfile.getMemberProfileId());
 
         isAttendanceChecked();
 
@@ -456,48 +449,50 @@ public class MemberService {
     private List<MemberProfile> getFilteredMemberProfileList(String nickname, List<String> positions, List<String> stacks) {
 
         // jpql 쿼리 문 작성
-        StringBuilder jpql = new StringBuilder("SELECT mp FROM MemberProfile mp WHERE 1 = 1");
+        StringBuilder jpql = new StringBuilder("SELECT DISTINCT mp FROM MemberProfile mp " +
+                " LEFT JOIN FETCH mp.positions p" +
+                " LEFT JOIN FETCH mp.stackTags st" +
+                " WHERE 1 = 1");
 
         // 필터 조건에 따라 쿼리문 추가
-        if (nickname != null) {
-            jpql.append(" AND LOWER(mp.nickname) LIKE CONCAT('%', LOWER(:nickname), '%') " +
-                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
-                    "AND mp.listEnroll = true");
-        }
 
         if (positions != null) {
-            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp " +
-                    "JOIN mp.positions p " +
-                    "WHERE p.positionName IN :positionNames " +
-                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
-                    "AND mp.listEnroll = true " +
-                    "GROUP BY mp HAVING COUNT(p) IN :positionCount)");
+            jpql.append(" AND mp IN (SELECT DISTINCT mp FROM MemberProfile mp JOIN mp.positions p " +
+                    " WHERE p.positionName IN :positionNames " +
+                    " GROUP BY mp HAVING COUNT(p) = :positionCount)");
         }
 
-        if(stacks != null){
-            jpql.append(" AND mp IN (SELECT mp FROM MemberProfile mp JOIN mp.stackTags st " +
-                    "WHERE st.tagName IN :tagNames " +
-                    "AND mp.memberStatus = 'MEMBER_ACTIVE' " +
-                    "AND mp.listEnroll = true " +
-                    "GROUP BY mp HAVING COUNT(st) IN :tagCount)");
+        if (stacks != null) {
+            jpql.append(" AND mp IN (SELECT DISTINCT mp FROM MemberProfile mp JOIN mp.stackTags st " +
+                    " WHERE st.tagName IN :tagNames " +
+                    " GROUP BY mp HAVING COUNT(st) = :tagCount)");
 
         }
+
+        if (nickname != null) {
+            jpql.append(" AND LOWER(mp.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')");
+        }
+
+
+        jpql.append(" AND mp.memberStatus = 'MEMBER_ACTIVE'" +
+                " AND mp.listEnroll = true");
+
         // 최근 활동 순으로 정렬
         jpql.append(" ORDER BY mp.modifiedAt DESC");
 
         TypedQuery<MemberProfile> query = entityManager.createQuery(jpql.toString(), MemberProfile.class);
 
         // 쿼리 파라미터 추가
-        if(nickname != null) {
+        if (nickname != null) {
             query.setParameter("nickname", nickname);
         }
 
-        if(positions != null) {
+        if (positions != null) {
             query.setParameter("positionNames", positions);
             query.setParameter("positionCount", positions.stream().count());
         }
 
-        if(stacks != null) {
+        if (stacks != null) {
             query.setParameter("tagNames", stacks);
             query.setParameter("tagCount", stacks.stream().count());
         }

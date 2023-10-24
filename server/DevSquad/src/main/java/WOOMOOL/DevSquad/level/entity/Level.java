@@ -25,7 +25,7 @@ public class Level {
     @Column
     private int maxExp = 0;
 
-    @OneToOne
-    @JoinColumn(name = "memberProfileId")
-    private MemberProfile memberProfile;
+//    @OneToOne
+//    @JoinColumn(name = "memberProfileId")
+//    private MemberProfile memberProfile;
 }

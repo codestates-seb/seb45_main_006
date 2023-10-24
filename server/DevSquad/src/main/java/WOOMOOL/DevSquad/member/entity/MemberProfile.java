@@ -28,7 +28,7 @@ import static WOOMOOL.DevSquad.member.entity.MemberProfile.MemberStatus.MEMBER_A
 @AllArgsConstructor
 public class MemberProfile {
 
-    public MemberProfile(String nickname){
+    public MemberProfile(String nickname) {
         this.nickname = nickname;
     }
 
@@ -63,11 +63,12 @@ public class MemberProfile {
     private MemberStatus memberStatus = MEMBER_ACTIVE;
 
     ////////매핑////////
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToOne(mappedBy = "memberProfile", cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "levelId")
     private Level level;
 
     @ManyToMany
@@ -84,7 +85,7 @@ public class MemberProfile {
     )
     private Set<StackTag> stackTags;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "memberProfileChatRoom",
             joinColumns = @JoinColumn(name = "memberProfileId"),
             inverseJoinColumns = @JoinColumn(name = "chatRoomId")
@@ -92,25 +93,25 @@ public class MemberProfile {
     private List<ChatRoom> chatRoomList;
 
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Block> blockList;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Project> projectlist;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Study> studyList;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<InfoBoard> infoBoardList;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<QuestionBoard> questionBoardList;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Bookmark> bookmarkList;
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Likes> likesList;
 
     private boolean attendanceChecked;
@@ -131,13 +132,7 @@ public class MemberProfile {
         this.getBlockList().add(block);
     }
 
-    public void addLevel(Level level) {
-        this.level = level;
-        if (level.getMemberProfile() != this) {
-            level.setMemberProfile(this);
-        }
-    }
-    public void addChatRoom(ChatRoom chatRoom){
+    public void addChatRoom(ChatRoom chatRoom) {
         this.chatRoomList.add(chatRoom);
     }
 }

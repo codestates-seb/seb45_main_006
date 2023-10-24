@@ -61,7 +61,7 @@ public class oAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         member.addProfile(memberProfile);
 
         Level level = new Level();
-        memberProfile.addLevel(level);
+        memberProfile.setLevel(level);
 
         memberRepository.save(member);
     }

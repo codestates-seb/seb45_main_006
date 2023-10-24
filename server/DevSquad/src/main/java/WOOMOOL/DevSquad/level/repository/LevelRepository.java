@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface LevelRepository extends JpaRepository<Level, Long> {
 
-    @Query("SELECT l FROM Level l WHERE l.memberProfile.memberProfileId = :memberProfileId")
+    @Query("SELECT l FROM Level l WHERE l.levelId = :memberProfileId")
     Level findByMemberProfileId(Long memberProfileId);
 }
