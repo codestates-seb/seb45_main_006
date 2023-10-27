@@ -2,6 +2,7 @@ package WOOMOOL.DevSquad.auth.jwt;
 
 import WOOMOOL.DevSquad.auth.userdetails.MemberAuthority;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
+import WOOMOOL.DevSquad.exception.ExceptionCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
-        } catch (ExpiredJwtException e) {
-            throw new BusinessLogicException(TOKEN_EXPIRED);
-        } catch (SignatureException e) {
-            throw new BusinessLogicException(INVALID_TOKEN);
         } catch (Exception e) {
-            throw new BusinessLogicException(BAD_REQUEST);
+
+            handleException(response, e);
         }
 
         filterChain.doFilter(request, response);
@@ -67,5 +65,25 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         List<GrantedAuthority> authorities = memberAuthority.createAuthority(roles);
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    // 필터 예외처리
+    private void handleException(HttpServletResponse response, Exception e) throws IOException {
+        int statusCode;
+        String errorMessage;
+
+        if (e instanceof ExpiredJwtException) {
+            statusCode = HttpServletResponse.SC_UNAUTHORIZED;
+            errorMessage = "토큰이 만료되었습니다.";
+        } else if (e instanceof SignatureException) {
+            statusCode = HttpServletResponse.SC_UNAUTHORIZED;
+            errorMessage = "유효하지 않은 토큰입니다.";
+        } else {
+            statusCode = HttpServletResponse.SC_BAD_REQUEST;
+            errorMessage = "잘못된 요청입니다.";
+        }
+
+        response.setStatus(statusCode);
+        response.getWriter().write(errorMessage);
     }
 }

@@ -113,7 +113,8 @@ public class LevelService {
 
     public void getExpFromActivity(MemberProfile memberProfile) {
 
-        Level level = memberProfile.getLevel();
+        Long memberProfileId = memberProfile.getMemberProfileId();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
         // 게시판작성, 댓글, 답변달기 경험치 +1
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 게시판을 5개 이상일 경우 5개 마다 경험치 +3
