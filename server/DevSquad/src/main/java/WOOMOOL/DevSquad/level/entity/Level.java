@@ -24,4 +24,7 @@ public class Level {
     private int currentExp = 0;
     @Column
     private int maxExp = 0;
+
+    @OneToOne(mappedBy = "memberProfile")
+    private MemberProfile memberProfile;
 }
