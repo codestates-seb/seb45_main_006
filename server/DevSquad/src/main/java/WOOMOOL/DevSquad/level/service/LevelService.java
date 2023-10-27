@@ -113,7 +113,8 @@ public class LevelService {
 
     public void getExpFromActivity(MemberProfile memberProfile) {
 
-        Level level = getMemberProfileLevel(memberProfile);
+        Long memberProfileId = memberProfile.getMemberProfileId();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
         // 게시판작성, 댓글, 답변달기 경험치 +1
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 게시판을 5개 이상일 경우 5개 마다 경험치 +3
@@ -129,7 +130,8 @@ public class LevelService {
     public void getExpFrom10MoreLikes(InfoBoard infoBoard) {
 
         // 회원 레벨 정보
-        Level level = getMemberProfileLevel(infoBoard.getMemberProfile());
+        Long memberProfileId = infoBoard.getMemberProfile().getMemberProfileId();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
 
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 좋아요 계수
@@ -147,7 +149,8 @@ public class LevelService {
     public void getExpFrom10MoreLikes(QuestionBoard questionBoard) {
 
         // 회원 레벨 정보
-        Level level = getMemberProfileLevel(questionBoard.getMemberProfile());
+        Long memberProfileId = questionBoard.getMemberProfile().getMemberProfileId();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
 
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 좋아요 계수
@@ -164,7 +167,8 @@ public class LevelService {
 
     public void getExpFromAcceptedAnswer(Answer answer) {
 
-        Level level = getMemberProfileLevel(answer.getMemberProfile());
+        Long memberProfileId = answer.getMemberProfile().getMemberProfileId();
+        Level level = levelRepository.findByMemberProfileId(memberProfileId);
 
         level.setCurrentExp(level.getCurrentExp() + 10);
     }
@@ -200,11 +204,5 @@ public class LevelService {
         int questionNum = questionBoardRepository.findAllBy10MoreLikedByMemberProfile(memberProfileId).size();
 
         return infoNum + questionNum;
-    }
-
-    // 회원 레벨 정보 가져오기
-    private Level getMemberProfileLevel(MemberProfile memberProfile) {
-
-        return memberProfile.getLevel();
     }
 }
