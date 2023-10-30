@@ -13,9 +13,12 @@
 ### 배포
 
 [배포주소](http://dev-squad.s3-website.ap-northeast-2.amazonaws.com/)
-테스트 계정
-ID : test01@test.com
-PW : abc123!!
+
+`테스트 계정`
+
+`ID` : `test01@test.com`
+
+`PW` : `abc123!!`
 
 ### 🛠️ Tech Stack
 
