@@ -412,7 +412,7 @@ public class MemberService {
     public void attendanceCheck() {
 
         MemberProfile memberProfile = findMemberFromToken().getMemberProfile();
-        Level level = levelRepository.findByMemberProfileId(memberProfile.getMemberProfileId());
+        Level level = memberProfile.getLevel();
 
         isAttendanceChecked();
 

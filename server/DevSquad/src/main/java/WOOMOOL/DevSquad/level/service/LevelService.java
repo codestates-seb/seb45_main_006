@@ -45,7 +45,7 @@ public class LevelService {
 
         Member findMember = memberService.findMemberFromToken();
 
-        return levelRepository.findByMemberProfileId(findMember.getMemberId());
+        return findMember.getMemberProfile().getLevel();
     }
 
     public void leveling() {
@@ -59,7 +59,7 @@ public class LevelService {
         // 회원 활동 시간 수정
         memberProfile.setModifiedAt(LocalDateTime.now());
         Long memberProfileId = memberProfile.getMemberProfileId();
-        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        Level level = memberProfile.getLevel();
         String memberGrade = level.getGrade();
 
         switch (memberGrade) {
@@ -113,8 +113,7 @@ public class LevelService {
 
     public void getExpFromActivity(MemberProfile memberProfile) {
 
-        Long memberProfileId = memberProfile.getMemberProfileId();
-        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        Level level = memberProfile.getLevel();
         // 게시판작성, 댓글, 답변달기 경험치 +1
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 게시판을 5개 이상일 경우 5개 마다 경험치 +3
@@ -130,8 +129,8 @@ public class LevelService {
     public void getExpFrom10MoreLikes(InfoBoard infoBoard) {
 
         // 회원 레벨 정보
-        Long memberProfileId = infoBoard.getMemberProfile().getMemberProfileId();
-        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        MemberProfile memberProfile = infoBoard.getMemberProfile();
+        Level level =  memberProfile.getLevel();
 
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 좋아요 계수
@@ -149,8 +148,8 @@ public class LevelService {
     public void getExpFrom10MoreLikes(QuestionBoard questionBoard) {
 
         // 회원 레벨 정보
-        Long memberProfileId = questionBoard.getMemberProfile().getMemberProfileId();
-        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        MemberProfile memberProfile = questionBoard.getMemberProfile();
+        Level level =  memberProfile.getLevel();
 
         if (level.getCurrentExp() < level.getMaxExp()) {
             // 좋아요 계수
@@ -167,8 +166,8 @@ public class LevelService {
 
     public void getExpFromAcceptedAnswer(Answer answer) {
 
-        Long memberProfileId = answer.getMemberProfile().getMemberProfileId();
-        Level level = levelRepository.findByMemberProfileId(memberProfileId);
+        MemberProfile memberProfile = answer.getMemberProfile();
+        Level level = memberProfile.getLevel();
 
         level.setCurrentExp(level.getCurrentExp() + 10);
     }
