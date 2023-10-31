@@ -1,13 +1,12 @@
 package WOOMOOL.DevSquad;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DevSquadApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
+public class DevSquadApplicationTests {
+    @Test
+    public void contextLoads() {
+    }
 
 }
