@@ -79,7 +79,7 @@ public class MemberService {
 
         // 레벨 시스템 추가
         Level level = new Level();
-        memberProfile.setLevel(level);
+        memberProfile.addLevel(level);
 
         // 권한 추가
         List<String> roles = memberAuthority.createRoles(member.getEmail());

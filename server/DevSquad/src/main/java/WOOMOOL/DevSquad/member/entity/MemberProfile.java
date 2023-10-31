@@ -134,6 +134,10 @@ public class MemberProfile {
             this.status = status;
         }
     }
+    public void addLevel(Level level) {
+        this.level = level;
+        level.setMemberProfile(this);
+    }
 
     public void addBlockMember(Block block) {
         this.getBlockList().add(block);
