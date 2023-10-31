@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.security;
 
+import WOOMOOL.DevSquad.auth.handler.MemberAuthenticationEntryPoint;
 import WOOMOOL.DevSquad.auth.handler.MemberAuthenticationFailureHandler;
 import WOOMOOL.DevSquad.auth.handler.MemberAuthenticationSuccessHandler;
 import WOOMOOL.DevSquad.auth.handler.MemberDeniedHandler;
@@ -56,6 +57,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .exceptionHandling()
                 .accessDeniedHandler(new MemberDeniedHandler())
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
                 .and()
                 .apply(new CustomFilterConfiguration())
                 .and()
