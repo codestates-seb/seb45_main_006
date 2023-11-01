@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.bookmark.entity.Bookmark;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.likes.entity.Likes;
+import WOOMOOL.DevSquad.notification.entity.Notification;
 import WOOMOOL.DevSquad.position.entity.Position;
 import WOOMOOL.DevSquad.projectboard.entity.Project;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
@@ -30,6 +31,9 @@ public class MemberProfile {
 
     public MemberProfile(String nickname) {
         this.nickname = nickname;
+    }
+    public MemberProfile(Long memberId){
+        this.memberProfileId = memberId;
     }
 
 
@@ -63,11 +67,11 @@ public class MemberProfile {
     private MemberStatus memberStatus = MEMBER_ACTIVE;
 
     ////////매핑////////
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "levelId")
     private Level level;
 
@@ -114,6 +118,9 @@ public class MemberProfile {
     @OneToMany(mappedBy = "memberProfile", fetch = FetchType.LAZY)
     private List<Likes> likesList;
 
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<Notification> notificationList;
+
     private boolean attendanceChecked;
 
     public enum MemberStatus {
@@ -126,6 +133,10 @@ public class MemberProfile {
         MemberStatus(String status) {
             this.status = status;
         }
+    }
+    public void addLevel(Level level) {
+        this.level = level;
+        level.setMemberProfile(this);
     }
 
     public void addBlockMember(Block block) {

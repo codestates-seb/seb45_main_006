@@ -1,7 +1,5 @@
 package WOOMOOL.DevSquad.comment.service;
 
-import WOOMOOL.DevSquad.answer.entity.Answer;
-import WOOMOOL.DevSquad.answer.repository.AnswerRepository;
 import WOOMOOL.DevSquad.answer.service.AnswerService;
 import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.board.repository.BoardRepository;
@@ -9,9 +7,13 @@ import WOOMOOL.DevSquad.comment.entity.Comment;
 import WOOMOOL.DevSquad.comment.repository.CommentRepository;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
-import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.level.service.LevelService;
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.notification.entity.Notification;
+import WOOMOOL.DevSquad.notification.service.NotificationService;
+import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -33,14 +36,8 @@ public class CommentService {
     private final MemberService memberService;
 
     private final LevelService levelService;
-
-    public CommentService(CommentRepository commentRepository, BoardRepository boardRepository, AnswerService answerService, MemberService memberService, LevelService levelService) {
-        this.commentRepository = commentRepository;
-        this.boardRepository = boardRepository;
-        this.answerService = answerService;
-        this.memberService = memberService;
-        this.levelService = levelService;
-    }
+    private final NotificationService notificationService;
+    private final QuestionBoardRepository questionBoardRepository;
 
     public Comment createComment(long boardId, Comment comment) {
         comment.setBoard(boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND)));
@@ -54,6 +51,9 @@ public class CommentService {
         }
 
         levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
+
+//        MemberProfile memberProfile = questionBoardRepository.findById(boardId).get().getMemberProfile();
+//        notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment, "test", "url");
 
         return commentRepository.save(comment);
     }
