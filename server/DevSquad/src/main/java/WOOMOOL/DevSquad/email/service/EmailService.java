@@ -12,6 +12,7 @@ import WOOMOOL.DevSquad.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class EmailService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
+//    @Async
     public void createAuthMail(Email email) throws MessagingException {
         // 인증 번호 생성
         String authCode = generateRandomCode();
@@ -53,6 +55,7 @@ public class EmailService {
     }
 
 
+    @Async
     public void createFindPasswordEmail(Email email) throws MessagingException {
 
         // 비밀번호를 찾을 이메일

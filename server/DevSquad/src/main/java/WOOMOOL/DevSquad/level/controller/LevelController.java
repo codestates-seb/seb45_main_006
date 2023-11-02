@@ -5,6 +5,7 @@ import WOOMOOL.DevSquad.level.entity.Level;
 import WOOMOOL.DevSquad.level.mapper.LevelMapper;
 import WOOMOOL.DevSquad.level.repository.LevelRepository;
 import WOOMOOL.DevSquad.level.service.LevelService;
+import WOOMOOL.DevSquad.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LevelController {
 
     private final LevelMapper levelMapper;
-    private final LevelService levelService;
+    private final MemberService memberService;
     @GetMapping()
     public ResponseEntity getMemberLevel(){
 
-        Level level = levelService.getMemberLevel();
+        Level level = memberService.findMemberFromToken().getMemberProfile().getLevel();
         LevelDto.Response response = levelMapper.entityToResponse(level);
 
         return new ResponseEntity(response, HttpStatus.OK);

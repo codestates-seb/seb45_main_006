@@ -7,7 +7,7 @@ import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
-import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.utils.Notify;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
