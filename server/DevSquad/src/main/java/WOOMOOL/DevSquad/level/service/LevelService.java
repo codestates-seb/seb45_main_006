@@ -31,36 +31,19 @@ import java.time.LocalDateTime;
 @Slf4j
 public class LevelService {
 
-    private final MemberService memberService;
     private final CommentRepository commentRepository;
     private final ProjectRepository projectRepository;
     private final StudyRepository studyRepository;
     private final InfoBoardRepository infoBoardRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final AnswerRepository answerRepository;
-    private final LevelRepository levelRepository;
     private final LikesRepository likesRepository;
 
-    public Level getMemberLevel(){
+    public void leveling(MemberProfile memberProfile) {
 
-        Member findMember = memberService.findMemberFromToken();
-
-        return findMember.getMemberProfile().getLevel();
-    }
-
-    public void leveling() {
-
-        // 토큰 없으면 실행 안함
-        if (SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser"))
-            return;
-
-        // 토큰 들어오면 로직 실행
-        MemberProfile memberProfile = memberService.findMemberFromToken().getMemberProfile();
-        // 회원 활동 시간 수정
-        memberProfile.setModifiedAt(LocalDateTime.now());
-        Long memberProfileId = memberProfile.getMemberProfileId();
-        Level level = memberProfile.getLevel();
-        String memberGrade = level.getGrade();
+       Level level = memberProfile.getLevel();
+       String memberGrade = level.getGrade();
+       Long memberProfileId = memberProfile.getMemberProfileId();
 
         switch (memberGrade) {
 
@@ -114,14 +97,16 @@ public class LevelService {
     public void getExpFromActivity(MemberProfile memberProfile) {
 
         Level level = memberProfile.getLevel();
+        int coefficient = memberProfile.getBoardExp();
         // 게시판작성, 댓글, 답변달기 경험치 +1
         if (level.getCurrentExp() < level.getMaxExp()) {
-            // 게시판을 5개 이상일 경우 5개 마다 경험치 +3
-            if (countBoard(memberProfile.getMemberProfileId()) % 5 == 0) {
-
+            int num = countBoard(memberProfile.getMemberProfileId()) + countComment(memberProfile.getMemberProfileId());
+            // 게시판, 댓글 5개 마다 경험치 +3
+            if (num % 5 * coefficient == 0) {
                 level.setCurrentExp(level.getCurrentExp() + 3);
+                memberProfile.setBoardExp(coefficient + 1);
             }
-            level.setCurrentExp(level.getCurrentExp() + 1);
+            else level.setCurrentExp(level.getCurrentExp() + 1);
         }
 
     }
@@ -137,7 +122,6 @@ public class LevelService {
             int coefficient = infoBoard.getLikeExp();
             // 정보게시판이 정보가 들어오고 좋아요가 10개 받을 때마다 경험치 +5
             if (infoBoard.getLikesList().size() % 10 * coefficient == 0) {
-
                 level.setCurrentExp(level.getCurrentExp() + 5);
                 // 계수 1 증가
                 infoBoard.setLikeExp(coefficient + 1);

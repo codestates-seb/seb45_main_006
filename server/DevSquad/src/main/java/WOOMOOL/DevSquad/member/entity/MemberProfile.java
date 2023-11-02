@@ -123,6 +123,9 @@ public class MemberProfile {
 
     private boolean attendanceChecked;
 
+    // 게시글 경험치용 계수
+    private int boardExp = 1;
+
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
         MEMBER_QUIT("탈퇴함");
