@@ -6,7 +6,7 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.entity.Level;
-import WOOMOOL.DevSquad.level.repository.LevelRepository;
+import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.likes.repository.LikesRepository;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
@@ -60,7 +60,7 @@ public class MemberService {
     private final LikesRepository likesRepository;
     private final BookmarkRepository bookmarkRepository;
     private final EntityManager entityManager;
-    private final LevelRepository levelRepository;
+    private final LevelService levelService;
 
     // 멤버 생성
     public Member createMember(Member member) {
@@ -115,11 +115,11 @@ public class MemberService {
     }
 
     // 프로필 조회
-    @Transactional(readOnly = true)
     public MemberProfile getMyProfile() {
 
         Member findMember = findMemberFromToken();
         MemberProfile findMemberProfile = findMember.getMemberProfile();
+        levelService.leveling(findMemberProfile);
 
         return findMemberProfile;
     }
