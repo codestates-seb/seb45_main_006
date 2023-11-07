@@ -57,6 +57,7 @@ public class NotificationService {
 
         NotificationDto.Response notificationResponseDto = notificationMapper.entityToResponse(notification);
 
+        // 해당 이미터로 알림 전송
         emitters.forEach(
                 (id, emitter) -> sendNotification(emitter, eventId, id, notificationResponseDto)
         );

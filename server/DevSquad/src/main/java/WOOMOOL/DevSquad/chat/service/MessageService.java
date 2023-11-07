@@ -9,6 +9,8 @@ import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.repository.MemberRepository;
+import WOOMOOL.DevSquad.notification.entity.Notification;
+import WOOMOOL.DevSquad.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ public class MessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
     private final JwtTokenizer jwtTokenizer;
+    private final NotificationService notificationService;
 
     // 메세지 보내기
     public Message saveMessage(Message message, Long chatRoomId, String accessToken) {
@@ -47,6 +50,10 @@ public class MessageService {
                 .build();
 
         findChatRoom.getMessageList().add(saveMessage);
+
+        Long senderId = member.getMemberId();
+        // 수신자에게 알림 보내기
+        chatNotificationToReceiver(findChatRoom,senderId);
 
         return messageRepository.save(saveMessage);
     }
@@ -106,5 +113,18 @@ public class MessageService {
         Member member = optionalMember.orElseThrow(() -> new BusinessLogicException(MEMBER_NOT_FOUND));
 
         return member;
+    }
+
+    // 수신자에게 알림 보내기
+    private void chatNotificationToReceiver(ChatRoom chatRoom, Long senderId) {
+
+        Long chatRoomId = chatRoom.getChatRoomId();
+        // 메시지를 받는 회원에게 알림 보내기
+        chatRoom.getMemberProfileList().stream().filter(memberProfile -> memberProfile.getMemberProfileId() != senderId)
+                .forEach(memberProfile -> notificationService.sendToClient(
+                        memberProfile,
+                        Notification.NotificationType.Chat,
+                        "채팅방에 메시지가 도착했습니다.",
+                        String.valueOf(chatRoomId)));
     }
 }

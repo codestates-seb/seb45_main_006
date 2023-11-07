@@ -7,7 +7,6 @@ import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.service.LevelService;
 import WOOMOOL.DevSquad.member.service.MemberService;
-import WOOMOOL.DevSquad.utils.Notify;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
