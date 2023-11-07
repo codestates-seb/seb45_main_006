@@ -1,5 +1,6 @@
 package WOOMOOL.DevSquad.chat.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ public class ChatRoomDto {
     @Getter
     @Setter
     public static class Post{
-
+        @ApiModelProperty(value = "채팅을 시작할 회원 아이디", example = "1")
         private Long memberId;
     }
     @Getter

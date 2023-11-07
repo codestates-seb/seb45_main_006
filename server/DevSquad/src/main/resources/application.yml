@@ -4,6 +4,9 @@ spring:
     url: jdbc:mysql://devsquad.cgbzoy0x62zh.ap-northeast-2.rds.amazonaws.com:13306/DevSquad?serverTimezone=Asia/Seoul
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
 #    show-sql: true
     hibernate:

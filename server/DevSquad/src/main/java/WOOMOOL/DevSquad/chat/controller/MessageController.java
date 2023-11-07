@@ -7,6 +7,9 @@ import WOOMOOL.DevSquad.chat.mapper.ChatRoomMapper;
 import WOOMOOL.DevSquad.chat.mapper.MessageMapper;
 import WOOMOOL.DevSquad.chat.service.ChatRoomService;
 import WOOMOOL.DevSquad.chat.service.MessageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +29,6 @@ public class MessageController {
 
     private final MessageMapper messageMapper;
     private final MessageService messageService;
-
     @MessageMapping("/chat/{chatRoom-id}") // app/chat/{chatRoom-id} 로 요청이 오면 메서드 실행
     @SendTo("/topic/chat/{chatRoom-id}") // topic/chat/{chatRoom-id} 를 구독하고 있는 사람들에게 response
     public ResponseEntity sendMessage(@DestinationVariable("chatRoom-id") Long chatRoomId,

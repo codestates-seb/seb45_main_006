@@ -6,9 +6,14 @@ import WOOMOOL.DevSquad.block.entity.Block;
 import WOOMOOL.DevSquad.exception.BusinessLogicException;
 import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.level.service.LevelService;
+import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
+import WOOMOOL.DevSquad.notification.entity.Notification;
+import WOOMOOL.DevSquad.notification.service.NotificationService;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
+import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.questionboard.service.QuestionBoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,18 +28,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AnswerService {
     private final AnswerRepository answerRepository;
     private final MemberService memberService;
     private final QuestionBoardService questionBoardService;
     private final LevelService levelService;
-
-    public AnswerService(AnswerRepository answerRepository, MemberService memberService, QuestionBoardService questionBoardService, LevelService levelService) {
-        this.answerRepository = answerRepository;
-        this.memberService = memberService;
-        this.questionBoardService = questionBoardService;
-        this.levelService = levelService;
-    }
+    private final NotificationService notificationService;
+    private final QuestionBoardRepository questionBoardRepository;
 
     public Answer createAnswer(Answer answer) {
         answer.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
@@ -43,6 +44,11 @@ public class AnswerService {
         answer.setQuestionBoard(questionBoard);
 
         levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
+
+        // 게시판 쓴 사람 정보 가져와서 넣어주기
+        Long boardId = questionBoard.getBoardId();
+        MemberProfile memberProfile = questionBoardRepository.findById(boardId).get().getMemberProfile();
+        notificationService.sendToClient(memberProfile, Notification.NotificationType.Answer, "게시글에 답변이 달렸습니다.", String.valueOf(boardId));
 
         return answerRepository.save(answer);
     }
