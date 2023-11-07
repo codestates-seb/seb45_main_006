@@ -6,6 +6,7 @@ import WOOMOOL.DevSquad.projectboard.dto.ProjectDto;
 import WOOMOOL.DevSquad.questionboard.dto.QuestionBoardDto;
 import WOOMOOL.DevSquad.questionboard.entity.QuestionBoard;
 import WOOMOOL.DevSquad.studyboard.dto.StudyDto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -20,15 +21,22 @@ public class MemberProfileDto {
     @Setter
     @NoArgsConstructor
     public static class Patch{
+        @ApiModelProperty(value = "닉네임", example = "닉네임")
         @NotBlank(message = "닉네임을 입력해주세요")
         @Pattern(regexp = "^[A-Za-z0-9가-힣]{2,8}$",
                 message = "닉네임은 2~8글자로 이루어져야 합니다.")
         private String nickname;
+        @ApiModelProperty(value = "프로필사진", example = "URL")
         private String profilePicture;
+        @ApiModelProperty(value = "깃헙아이디", example = "ehdals0405")
         private String githubId;
+        @ApiModelProperty(value = "자기소개", example = "안녕하세요")
         private String introduction;
+        @ApiModelProperty(value = "회원리스트 등록여부", example = "1")
         private boolean listEnroll;
+        @ApiModelProperty(value = "포지션", example = "Backend,DevOps")
         private Set<String> position;
+        @ApiModelProperty(value = "기술스택", example = "Java,Ruby")
         private Set<String> stack;
 
 
