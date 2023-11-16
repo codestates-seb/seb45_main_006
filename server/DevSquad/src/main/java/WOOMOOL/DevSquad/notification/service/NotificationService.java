@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -93,7 +94,23 @@ public class NotificationService {
     // 알림 페이징
     public Page<Notification> getMemberNotificationList(int page) {
         Long memberId = memberService.findMemberFromToken().getMemberId();
-        return notificationRepository.findByMemberIdOrderByCreateAtDesc(memberId, PageRequest.of(page, 5));
+        return notificationRepository.findByMemberId(memberId, PageRequest.of(page, 5));
+    }
+
+    // 읽음 처리
+    public void readNotification(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).get();
+        notification.setIsRead(true);
+
+        notificationRepository.save(notification);
+    }
+
+    // 알림 개수
+    public int countNotification(Long memberId) {
+
+        return (int) notificationRepository.findByMemberId(memberId).stream().
+                filter(notification -> !notification.getIsRead())
+                .count();
     }
 
     // 알림 하나 삭제
@@ -105,7 +122,7 @@ public class NotificationService {
     // 알림 모두 삭제
     public void deleteAllNotification() {
 
-        Long memberId = memberService.findMemberFromToken().getMemberProfile().getMemberProfileId();
+        Long memberId = memberService.findMemberFromToken().getMemberId();
         notificationRepository.deleteAllByReceiverId(memberId);
     }
 }
