@@ -38,7 +38,7 @@ public class NotificationController {
 
     // 알림 가져오기
     @GetMapping
-    private ResponseEntity getNotifications(int page) {
+    private ResponseEntity getNotifications(@RequestParam int page) {
 
         Page<Notification> notificationPage = notificationService.getMemberNotificationList(page - 1);
         List<Notification> notificationList = notificationPage.getContent();
@@ -48,9 +48,26 @@ public class NotificationController {
 
     }
 
+    // 읽음 처리
+    @PatchMapping("/read/{notificationId}")
+    private ResponseEntity readNotification(@PathVariable("notificationId") Long notificationId){
+
+        notificationService.readNotification(notificationId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @GetMapping("/count/{memberId}")
+    private ResponseEntity countNotification(@PathVariable("memberId") Long memberId){
+
+       int count = notificationService.countNotification(memberId);
+
+        return new ResponseEntity(count,HttpStatus.OK);
+
+    }
+
     // 알림 삭제하기
     @DeleteMapping("/{notificationId}")
-    private ResponseEntity deleteNotification(@PathVariable Long notificationId) {
+    private ResponseEntity deleteNotification(@PathVariable("notificationId") Long notificationId) {
 
         notificationService.deleteNotification(notificationId);
 
@@ -61,7 +78,6 @@ public class NotificationController {
     // 알림 모두 삭제
     @DeleteMapping
     private ResponseEntity deleteNotifications() {
-
 
         notificationService.deleteAllNotification();
 

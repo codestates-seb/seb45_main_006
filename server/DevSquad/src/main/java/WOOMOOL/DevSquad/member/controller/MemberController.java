@@ -27,6 +27,7 @@ import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import WOOMOOL.DevSquad.utils.PageResponseDto;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;

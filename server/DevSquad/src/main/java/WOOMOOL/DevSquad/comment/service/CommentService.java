@@ -12,6 +12,7 @@ import WOOMOOL.DevSquad.exception.ExceptionCode;
 import WOOMOOL.DevSquad.infoboard.entity.InfoBoard;
 import WOOMOOL.DevSquad.infoboard.repository.InfoBoardRepository;
 import WOOMOOL.DevSquad.level.service.LevelService;
+import WOOMOOL.DevSquad.member.entity.Member;
 import WOOMOOL.DevSquad.member.entity.MemberProfile;
 import WOOMOOL.DevSquad.member.service.MemberService;
 import WOOMOOL.DevSquad.notification.entity.Notification;
@@ -23,6 +24,7 @@ import WOOMOOL.DevSquad.questionboard.repository.QuestionBoardRepository;
 import WOOMOOL.DevSquad.studyboard.entity.Study;
 import WOOMOOL.DevSquad.studyboard.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
@@ -51,25 +54,35 @@ public class CommentService {
     private final InfoBoardRepository infoBoardRepository;
 
     public Comment createComment(long boardId, Comment comment) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
+
         comment.setBoard(boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND)));
         comment.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
         comment.setAnswer(null);
+
+        MemberProfile memberProfile;
+        String content;
+        String url;
+
         if (comment.getParent().getCommentId() == null) {
             comment.setParent(null);
 
-            // 게시판 쓴 사람 정보 가져와서 넣고 알림 보내기
-            MemberProfile memberProfile = findBoardOwner(boardId);
-            notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment, "게시글에 댓글이 달렸습니다.", String.valueOf(boardId));
-        }
-        else {
-            commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+            // 게시판 쓴 사람 정보
+            memberProfile = findBoardOwner(boardId);
+            content = "게시글에 댓글이 달렸습니다.";
+            url = String.valueOf(boardId);
+
+        } else {
+
+            Comment parentComment = commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
             comment.setBoard(null);
 
-            // 댓글 쓴 사람 정보 가져와서 넣고 알림 보내기
-            MemberProfile memberProfile = comment.getMemberProfile();
-            notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment,"댓글에 대댓글이 달렸습니다.", String.valueOf(comment.getCommentId()));
+            // 댓글 쓴 사람 정보
+            memberProfile = parentComment.getMemberProfile();
+            content = "댓글에 대댓글이 달렸습니다.";
+            url = String.valueOf(comment.getParent().getCommentId());
         }
+        // 자신 외의 사람이 댓글을 달았을 때만 알림 보내기
+        sendCommentNotification(memberProfile,content,url);
 
         levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
@@ -82,22 +95,31 @@ public class CommentService {
         comment.setAnswer(answer);
         comment.setMemberProfile(memberService.findMemberFromToken().getMemberProfile());
 
+        MemberProfile memberProfile;
+        String content;
+        String url;
+
         if (comment.getParent().getCommentId() == null) {
             comment.setParent(null);
 
-            // 답변 쓴 사람 정보 가져와서 넣고 알림 보내기
-            MemberProfile memberProfile = answer.getMemberProfile();
+            // 답변 쓴 사람 정보
+            memberProfile = answer.getMemberProfile();
+            content = "답변에 댓글이 달렸습니다.";
             Long boardId = answer.getQuestionBoard().getBoardId();
-            notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment, "답변에 댓글이 달렸습니다.", String.valueOf(boardId));
-        }
-        else {
-            commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+            url = String.valueOf(boardId);
+
+        } else {
+            Comment parentComment = commentRepository.findById(comment.getParent().getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
             comment.setAnswer(null);
 
-            // 댓글 쓴 사람 정보 가져와서 넣고 알림 보내기
-            MemberProfile memberProfile = comment.getMemberProfile();
-            notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment,"댓글에 대댓글이 달렸습니다.", String.valueOf(comment.getCommentId()));
+            // 댓글 쓴 사람 정보
+            memberProfile = parentComment.getMemberProfile();
+            content = "댓글에 대댓글이 달렸습니다.";
+            url = String.valueOf(comment.getCommentId());
         }
+
+        // 자신 외의 사람이 댓글을 달았을 때만 알림 보내기
+        sendCommentNotification(memberProfile,content,url);
 
         return commentRepository.save(comment);
     }
@@ -181,5 +203,13 @@ public class CommentService {
         } else memberProfile = infoBoard.get().getMemberProfile();
 
         return memberProfile;
+    }
+
+    private void sendCommentNotification(MemberProfile memberProfile, String content, String url){
+
+        Long memberId = memberService.findMemberFromToken().getMemberProfile().getMemberProfileId();
+        if (memberProfile.getMemberProfileId() != memberId) {
+            notificationService.sendToClient(memberProfile, Notification.NotificationType.Comment,content,url);
+        }
     }
 }

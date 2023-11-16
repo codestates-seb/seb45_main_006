@@ -18,6 +18,7 @@ public interface NotificationMapper {
                 .content(notification.getContent())
                 .url(notification.getUrl())
                 .notificationType(String.valueOf(notification.getNotificationType()))
+                .isRead(notification.getIsRead())
                 .createAt(notification.getCreateAt())
                 .build();
     }
@@ -31,6 +32,7 @@ public interface NotificationMapper {
                         .content(notification.getContent())
                         .url(notification.getUrl())
                         .notificationType(String.valueOf(notification.getNotificationType()))
+                        .isRead(notification.getIsRead())
                         .createAt(notification.getCreateAt())
                         .build())
                 .collect(Collectors.toList());
