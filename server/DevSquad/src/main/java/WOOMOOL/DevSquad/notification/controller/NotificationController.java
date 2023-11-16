@@ -38,7 +38,7 @@ public class NotificationController {
 
     // 알림 가져오기
     @GetMapping
-    private ResponseEntity getNotifications(int page) {
+    private ResponseEntity getNotifications(@RequestParam int page) {
 
         Page<Notification> notificationPage = notificationService.getMemberNotificationList(page - 1);
         List<Notification> notificationList = notificationPage.getContent();
