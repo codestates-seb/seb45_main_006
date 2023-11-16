@@ -19,6 +19,7 @@ public class NotificationDto {
         private String content;
         private String url;
         private String notificationType;
+        private boolean isRead;
         private LocalDateTime createAt;
     }
 }

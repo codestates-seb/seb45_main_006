@@ -45,10 +45,12 @@ public class AnswerService {
 
         levelService.getExpFromActivity(memberService.findMemberFromToken().getMemberProfile());
 
-        // 게시판 쓴 사람 정보 가져와서 넣어주기
+        // 게시판 쓴 사람 정보
         Long boardId = questionBoard.getBoardId();
         MemberProfile memberProfile = questionBoardRepository.findById(boardId).get().getMemberProfile();
-        notificationService.sendToClient(memberProfile, Notification.NotificationType.Answer, "게시글에 답변이 달렸습니다.", String.valueOf(boardId));
+
+        // 알림 보내기
+        sendAnswerNotification(memberProfile, "게시글에 답변이 달렸습니다.", String.valueOf(boardId));
 
         return answerRepository.save(answer);
     }
@@ -128,4 +130,11 @@ public class AnswerService {
             throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
     }
 
+    private void sendAnswerNotification(MemberProfile memberProfile, String content, String url) {
+
+        Long memberId = memberService.findMemberFromToken().getMemberProfile().getMemberProfileId();
+        if (memberProfile.getMemberProfileId() != memberId) {
+            notificationService.sendToClient(memberProfile, Notification.NotificationType.Answer, content, url);
+        }
+    }
 }
